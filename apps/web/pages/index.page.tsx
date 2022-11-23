@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div>
       <h1 className={styles.heading}>Web</h1>
-      <Button />
+      <Button>Boop</Button>
     </div>
   );
 }
