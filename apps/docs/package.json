@@ -6,7 +6,7 @@
     "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "TIMING=1 eslint \"**/*.{js,jsx,ts,tsx}\" --ignore-path ../../.lintignore"
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.9.2",

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "TIMING=1 eslint \"**/*.{js,jsx,ts,tsx}\" --ignore-path ../../.lintignore",
     "test": "jest --watch"
   },
   "dependencies": {
