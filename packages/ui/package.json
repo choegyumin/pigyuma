@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.{js,jsx,ts,tsx}\" --ignore-path ../../.lintignore",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path ../../.lintignore",
     "test": "jest --watch"
   },
   "dependencies": {
@@ -28,6 +29,7 @@
     "@vanilla-extract/jest-transform": "^1.0.1",
     "eslint": "^7.23.0",
     "eslint-config-custom": "*",
+    "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsconfig": "*",

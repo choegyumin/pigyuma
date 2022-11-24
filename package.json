@@ -10,7 +10,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "TIMING=1 eslint \"./*.{js,jsx,ts,tsx}\" --ignore-path ./.lintignore && turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .lintignore",
     "test": "turbo run test"
   },
   "engines": {
