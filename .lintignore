@@ -20,5 +20,8 @@ build
 # swc
 .swc
 
+# husky
+.husky
+
 # Editor
 .vscode
