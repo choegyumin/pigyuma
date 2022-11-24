@@ -4946,6 +4946,15 @@ eslint-config-turbo@latest:
   languageName: node
   linkType: hard
 
+"husky@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "husky@npm:8.0.2"
+  bin:
+    husky: lib/bin.js
+  checksum: e101656fcb56163d610488f186448c78b132626aa427094489d886ce9374955a90274912b0f3a34af3326eaa74977883b032e5f701d7aaf4554daa5a7931be43
+  languageName: node
+  linkType: hard
+
 "iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
@@ -6859,11 +6868,22 @@ eslint-config-turbo@latest:
   dependencies:
     eslint: ^7.32.0
     eslint-config-custom: "*"
+    husky: ^8.0.2
+    pinst: ^3.0.0
     prettier: ^2.7.1
     turbo: latest
     typescript: ^4.7.4
   languageName: unknown
   linkType: soft
+
+"pinst@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "pinst@npm:3.0.0"
+  bin:
+    pinst: bin.js
+  checksum: 4ae48a6a60f79c37071233af51b4d91bfc85cfa3c12b66ccda60cdb642b4d14a4ab0cb3587afc55b1f6192cea1772a5e4822026a0d0d3528296edef00cc2d61f
+  languageName: node
+  linkType: hard
 
 "pirates@npm:^4.0.4":
   version: 4.0.5
