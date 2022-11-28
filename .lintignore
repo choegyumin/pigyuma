@@ -25,3 +25,6 @@ build
 
 # Editor
 .vscode
+
+# GitHub
+pull_request_template.md
