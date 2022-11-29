@@ -4,7 +4,17 @@ module.exports = {
     "type-enum": [
       2,
       "always",
-      ["feat", "fix", "docs", "style", "refactor", "test", "chore", "revert"],
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "test",
+        "chore",
+        "revert",
+        "wip",
+      ],
     ],
   },
   prompt: {
@@ -36,7 +46,7 @@ module.exports = {
             description:
               "A code change that improves performance nor improves productivity",
             title: "Code Refactoring",
-            emoji: "🛠",
+            emoji: "🏢",
           },
           test: {
             description: "Adding missing tests or correcting existing tests",
@@ -53,6 +63,11 @@ module.exports = {
             description: "Reverts a previous commit",
             title: "Reverts",
             emoji: "🗑",
+          },
+          wip: {
+            description: "Work-In-Progress",
+            title: "WIP",
+            emoji: "🛠",
           },
         },
       },
