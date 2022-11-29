@@ -9,3 +9,7 @@ type PlainObject<T extends {} = { [P in PropertyKey]: unknown }> = { ''?: unknow
 type EmptyObject = PlainObject<{}>;
 
 type Property<T extends {}, P extends PropertyKey, D = undefined> = P extends keyof T ? T[P] : D;
+
+type PickExisting<T extends {}, K extends keyof any> = {
+  [P in K]: Property<T, P>;
+};

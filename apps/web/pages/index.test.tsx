@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import Home from './index.page';
 
-describe('Home', () => {
-  it('renders a heading', () => {
+describe('<Home />', () => {
+  it('should render a heading', () => {
     render(<Home />);
-
     const heading = screen.getByRole('heading', {
       name: 'Web',
     });
