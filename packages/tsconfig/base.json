@@ -16,6 +16,7 @@
     "skipLibCheck": true,
     "strict": true,
     "paths": {
+      "@pigyuma/react-utility-types/*": ["../../packages/react-utility-types/*"],
       "@pigyuma/ui/*": ["../../packages/ui/*"],
       "@pigyuma/utils/*": ["../../packages/utils/*"]
     }

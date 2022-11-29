@@ -24,6 +24,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/jest-config-snippets"\
       },\
       {\
+        "name": "@pigyuma/react-utility-types",\
+        "reference": "workspace:packages/react-utility-types"\
+      },\
+      {\
         "name": "@pigyuma/tsconfig",\
         "reference": "workspace:packages/tsconfig"\
       },\
@@ -40,6 +44,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
       ["@pigyuma/jest-config-snippets", ["workspace:packages/jest-config-snippets"]],\
+      ["@pigyuma/react-utility-types", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types", "workspace:packages/react-utility-types"]],\
       ["@pigyuma/tsconfig", ["workspace:packages/tsconfig"]],\
       ["@pigyuma/ui", ["workspace:packages/ui"]],\
       ["@pigyuma/utils", ["workspace:packages/utils"]],\
@@ -1859,6 +1864,42 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@pigyuma/react-utility-types", [\
+        ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types", {\
+          "packageLocation": "./.yarn/__virtual__/@pigyuma-react-utility-types-virtual-160746624a/1/packages/react-utility-types/",\
+          "packageDependencies": [\
+            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
+            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
+            ["@types/node", "npm:18.11.9"],\
+            ["@types/react", "npm:18.0.25"],\
+            ["@types/react-dom", "npm:18.0.9"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
+            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["workspace:packages/react-utility-types", {\
+          "packageLocation": "./packages/react-utility-types/",\
+          "packageDependencies": [\
+            ["@pigyuma/react-utility-types", "workspace:packages/react-utility-types"],\
+            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
+            ["@types/node", "npm:18.11.9"],\
+            ["@types/react", "npm:18.0.25"],\
+            ["@types/react-dom", "npm:18.0.9"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
+            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@pigyuma/tsconfig", [\
         ["workspace:packages/tsconfig", {\
           "packageLocation": "./packages/tsconfig/",\
@@ -1874,6 +1915,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@pigyuma/ui", "workspace:packages/ui"],\
             ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
+            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
             ["@testing-library/jest-dom", "npm:5.16.5"],\
@@ -10912,6 +10954,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["web", "workspace:apps/web"],\
             ["@babel/core", "npm:7.20.2"],\
             ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
+            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/ui", "workspace:packages/ui"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
