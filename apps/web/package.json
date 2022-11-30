@@ -11,6 +11,7 @@
     "test": "jest --watch"
   },
   "dependencies": {
+    "@pigyuma/react-hooks": "*",
     "@pigyuma/react-utility-types": "*",
     "@pigyuma/ui": "*",
     "@pigyuma/utils": "*",
@@ -26,7 +27,6 @@
     "@pigyuma/tsconfig": "*",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.2.3",
     "@types/node": "^18.0.0",

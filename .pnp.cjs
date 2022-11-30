@@ -24,6 +24,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/jest-config-snippets"\
       },\
       {\
+        "name": "@pigyuma/react-hooks",\
+        "reference": "workspace:packages/react-hooks"\
+      },\
+      {\
         "name": "@pigyuma/react-utility-types",\
         "reference": "workspace:packages/react-utility-types"\
       },\
@@ -44,6 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
       ["@pigyuma/jest-config-snippets", ["workspace:packages/jest-config-snippets"]],\
+      ["@pigyuma/react-hooks", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks", "workspace:packages/react-hooks"]],\
       ["@pigyuma/react-utility-types", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types", "workspace:packages/react-utility-types"]],\
       ["@pigyuma/tsconfig", ["workspace:packages/tsconfig"]],\
       ["@pigyuma/ui", ["workspace:packages/ui"]],\
@@ -1864,6 +1869,64 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@pigyuma/react-hooks", [\
+        ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks", {\
+          "packageLocation": "./.yarn/__virtual__/@pigyuma-react-hooks-virtual-73807cc23d/1/packages/react-hooks/",\
+          "packageDependencies": [\
+            ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
+            ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
+            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
+            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
+            ["@pigyuma/utils", "workspace:packages/utils"],\
+            ["@testing-library/jest-dom", "npm:5.16.5"],\
+            ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
+            ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
+            ["@types/jest", "npm:29.2.3"],\
+            ["@types/node", "npm:18.11.9"],\
+            ["@types/react", "npm:18.0.25"],\
+            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/testing-library__jest-dom", "npm:5.14.5"],\
+            ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
+            ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
+            ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
+            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["workspace:packages/react-hooks", {\
+          "packageLocation": "./packages/react-hooks/",\
+          "packageDependencies": [\
+            ["@pigyuma/react-hooks", "workspace:packages/react-hooks"],\
+            ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
+            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
+            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
+            ["@pigyuma/utils", "workspace:packages/utils"],\
+            ["@testing-library/jest-dom", "npm:5.16.5"],\
+            ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
+            ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
+            ["@types/jest", "npm:29.2.3"],\
+            ["@types/node", "npm:18.11.9"],\
+            ["@types/react", "npm:18.0.25"],\
+            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/testing-library__jest-dom", "npm:5.14.5"],\
+            ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
+            ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
+            ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
+            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@pigyuma/react-utility-types", [\
         ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types", {\
           "packageLocation": "./.yarn/__virtual__/@pigyuma-react-utility-types-virtual-160746624a/1/packages/react-utility-types/",\
@@ -1915,12 +1978,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@pigyuma/ui", "workspace:packages/ui"],\
             ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
+            ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
             ["@testing-library/jest-dom", "npm:5.16.5"],\
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
-            ["@testing-library/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:8.0.1"],\
             ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
             ["@types/jest", "npm:29.2.3"],\
             ["@types/node", "npm:18.11.9"],\
@@ -2087,38 +2150,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/react-dom",\
             "@types/react",\
             "react-dom",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@testing-library/react-hooks", [\
-        ["npm:8.0.1", {\
-          "packageLocation": "./.yarn/cache/@testing-library-react-hooks-npm-8.0.1-e0c7be6ffb-7fe44352e9.zip/node_modules/@testing-library/react-hooks/",\
-          "packageDependencies": [\
-            ["@testing-library/react-hooks", "npm:8.0.1"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:8.0.1", {\
-          "packageLocation": "./.yarn/__virtual__/@testing-library-react-hooks-virtual-162ba36eaf/0/cache/@testing-library-react-hooks-npm-8.0.1-e0c7be6ffb-7fe44352e9.zip/node_modules/@testing-library/react-hooks/",\
-          "packageDependencies": [\
-            ["@testing-library/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:8.0.1"],\
-            ["@babel/runtime", "npm:7.20.1"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
-            ["@types/react-test-renderer", null],\
-            ["react", "npm:18.2.0"],\
-            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
-            ["react-error-boundary", "virtual:162ba36eaf243dd80d03080043272e8b754c6c0c0af41297417b1935da0a464339e7fee1e276a6c653ff3c657d7140896bbcf22e816302fa3569595a366c53b7#npm:3.1.4"],\
-            ["react-test-renderer", null]\
-          ],\
-          "packagePeers": [\
-            "@types/react-dom",\
-            "@types/react-test-renderer",\
-            "@types/react",\
-            "react-dom",\
-            "react-test-renderer",\
             "react"\
           ],\
           "linkType": "HARD"\
@@ -9305,29 +9336,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["react-error-boundary", [\
-        ["npm:3.1.4", {\
-          "packageLocation": "./.yarn/cache/react-error-boundary-npm-3.1.4-2310dba89e-f36270a5d7.zip/node_modules/react-error-boundary/",\
-          "packageDependencies": [\
-            ["react-error-boundary", "npm:3.1.4"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:162ba36eaf243dd80d03080043272e8b754c6c0c0af41297417b1935da0a464339e7fee1e276a6c653ff3c657d7140896bbcf22e816302fa3569595a366c53b7#npm:3.1.4", {\
-          "packageLocation": "./.yarn/__virtual__/react-error-boundary-virtual-5ce8199187/0/cache/react-error-boundary-npm-3.1.4-2310dba89e-f36270a5d7.zip/node_modules/react-error-boundary/",\
-          "packageDependencies": [\
-            ["react-error-boundary", "virtual:162ba36eaf243dd80d03080043272e8b754c6c0c0af41297417b1935da0a464339e7fee1e276a6c653ff3c657d7140896bbcf22e816302fa3569595a366c53b7#npm:3.1.4"],\
-            ["@babel/runtime", "npm:7.20.1"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["react", "npm:18.2.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/react",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["react-is", [\
         ["npm:16.13.1", {\
           "packageLocation": "./.yarn/cache/react-is-npm-16.13.1-a9b9382b4f-f7a19ac349.zip/node_modules/react-is/",\
@@ -10954,13 +10962,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["web", "workspace:apps/web"],\
             ["@babel/core", "npm:7.20.2"],\
             ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
+            ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/ui", "workspace:packages/ui"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
             ["@testing-library/jest-dom", "npm:5.16.5"],\
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
-            ["@testing-library/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:8.0.1"],\
             ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
             ["@types/jest", "npm:29.2.3"],\
             ["@types/node", "npm:18.11.9"],\

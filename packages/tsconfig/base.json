@@ -16,6 +16,7 @@
     "skipLibCheck": true,
     "strict": true,
     "paths": {
+      "@pigyuma/react-hooks/*": ["../../packages/react-hooks/*"],
       "@pigyuma/react-utility-types/*": ["../../packages/react-utility-types/*"],
       "@pigyuma/ui/*": ["../../packages/ui/*"],
       "@pigyuma/utils/*": ["../../packages/utils/*"]
