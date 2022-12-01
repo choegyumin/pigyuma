@@ -1279,6 +1279,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pigyuma/jest-config-snippets@*, @pigyuma/jest-config-snippets@workspace:packages/jest-config-snippets":
+  version: 0.0.0-use.local
+  resolution: "@pigyuma/jest-config-snippets@workspace:packages/jest-config-snippets"
+  languageName: unknown
+  linkType: soft
+
 "@pigyuma/tsconfig@*, @pigyuma/tsconfig@workspace:packages/tsconfig":
   version: 0.0.0-use.local
   resolution: "@pigyuma/tsconfig@workspace:packages/tsconfig"
@@ -1289,6 +1295,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pigyuma/ui@workspace:packages/ui"
   dependencies:
+    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/tsconfig": "*"
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
@@ -8819,6 +8826,7 @@ turbo@latest:
   resolution: "web@workspace:apps/web"
   dependencies:
     "@babel/core": ^7.0.0
+    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/tsconfig": "*"
     "@pigyuma/ui": "*"
     "@testing-library/jest-dom": ^5.16.5
