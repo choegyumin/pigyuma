@@ -9,8 +9,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "TIMING=1 eslint \"./*.{js,jsx,ts,tsx}\" --ignore-path ./.lintignore && turbo run lint",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .lintignore",
+    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
+    "lint": "TIMING=1 eslint \"{apps,packages,tools}/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
     "test": "turbo run test",
     "postinstall": "husky install",
     "commit": "git-cz"
@@ -47,11 +47,5 @@
     "commitizen": {
       "path": "@commitlint/cz-commitlint"
     }
-  },
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
   }
 }

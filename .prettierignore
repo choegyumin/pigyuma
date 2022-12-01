@@ -1,0 +1,33 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# config files
+.*ignore
+
+# dependencies
+node_modules
+.pnp
+.pnp.js
+.yarn
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+build
+
+# turbo
+.turbo
+
+# swc
+.swc
+
+# husky
+.husky
+
+# editor
+.vscode
+
+# GitHub
+pull_request_template.md
