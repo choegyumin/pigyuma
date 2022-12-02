@@ -1886,6 +1886,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:18.0.25"],\
             ["@types/react-dom", "npm:18.0.9"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
+            ["clsx", "npm:1.2.1"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
             ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
             ["react", "npm:18.2.0"],\
@@ -1917,6 +1918,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:18.0.25"],\
             ["@types/react-dom", "npm:18.0.9"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
+            ["clsx", "npm:1.2.1"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
             ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
             ["react", "npm:18.2.0"],\
@@ -1985,6 +1987,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/jest-dom", "npm:5.16.5"],\
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
             ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
+            ["@types/color", "npm:3.0.3"],\
             ["@types/jest", "npm:29.2.3"],\
             ["@types/node", "npm:18.11.9"],\
             ["@types/react", "npm:18.0.25"],\
@@ -1993,6 +1996,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vanilla-extract/css", "npm:1.9.2"],\
             ["@vanilla-extract/css-utils", "npm:0.1.3"],\
             ["@vanilla-extract/jest-transform", "npm:1.0.1"],\
+            ["clsx", "npm:1.2.1"],\
+            ["color", "npm:4.2.3"],\
+            ["csstype", "npm:3.1.1"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
             ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
             ["react", "npm:18.2.0"],\
@@ -2272,6 +2278,35 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/babel__traverse", "npm:7.18.2"],\
             ["@babel/types", "npm:7.20.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/color", [\
+        ["npm:3.0.3", {\
+          "packageLocation": "./.yarn/cache/@types-color-npm-3.0.3-dfc797f0a3-4a54a6eca6.zip/node_modules/@types/color/",\
+          "packageDependencies": [\
+            ["@types/color", "npm:3.0.3"],\
+            ["@types/color-convert", "npm:2.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/color-convert", [\
+        ["npm:2.0.0", {\
+          "packageLocation": "./.yarn/cache/@types-color-convert-npm-2.0.0-f59f3c146a-027b68665d.zip/node_modules/@types/color-convert/",\
+          "packageDependencies": [\
+            ["@types/color-convert", "npm:2.0.0"],\
+            ["@types/color-name", "npm:1.1.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/color-name", [\
+        ["npm:1.1.1", {\
+          "packageLocation": "./.yarn/cache/@types-color-name-npm-1.1.1-00b0925070-b71fcad728.zip/node_modules/@types/color-name/",\
+          "packageDependencies": [\
+            ["@types/color-name", "npm:1.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3926,6 +3961,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["clsx", [\
+        ["npm:1.2.1", {\
+          "packageLocation": "./.yarn/cache/clsx-npm-1.2.1-77792dc182-30befca801.zip/node_modules/clsx/",\
+          "packageDependencies": [\
+            ["clsx", "npm:1.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["co", [\
         ["npm:4.6.0", {\
           "packageLocation": "./.yarn/cache/co-npm-4.6.0-03f2d1feb6-5210d92230.zip/node_modules/co/",\
@@ -3940,6 +3984,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/collect-v8-coverage-npm-1.0.1-39dec86bad-4efe0a1fcc.zip/node_modules/collect-v8-coverage/",\
           "packageDependencies": [\
             ["collect-v8-coverage", "npm:1.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["color", [\
+        ["npm:4.2.3", {\
+          "packageLocation": "./.yarn/cache/color-npm-4.2.3-4a23227581-0579629c02.zip/node_modules/color/",\
+          "packageDependencies": [\
+            ["color", "npm:4.2.3"],\
+            ["color-convert", "npm:2.0.1"],\
+            ["color-string", "npm:1.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3974,6 +4029,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/color-name-npm-1.1.4-025792b0ea-b044585952.zip/node_modules/color-name/",\
           "packageDependencies": [\
             ["color-name", "npm:1.1.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["color-string", [\
+        ["npm:1.9.1", {\
+          "packageLocation": "./.yarn/cache/color-string-npm-1.9.1-dc020e56be-c13fe7cff7.zip/node_modules/color-string/",\
+          "packageDependencies": [\
+            ["color-string", "npm:1.9.1"],\
+            ["color-name", "npm:1.1.4"],\
+            ["simple-swizzle", "npm:0.2.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6526,6 +6592,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/is-arrayish-npm-0.2.1-23927dfb15-eef4417e3c.zip/node_modules/is-arrayish/",\
           "packageDependencies": [\
             ["is-arrayish", "npm:0.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.3.2", {\
+          "packageLocation": "./.yarn/cache/is-arrayish-npm-0.3.2-f856180f79-977e64f54d.zip/node_modules/is-arrayish/",\
+          "packageDependencies": [\
+            ["is-arrayish", "npm:0.3.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9781,6 +9854,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["simple-swizzle", [\
+        ["npm:0.2.2", {\
+          "packageLocation": "./.yarn/cache/simple-swizzle-npm-0.2.2-8dee37fad1-a7f3f2ab5c.zip/node_modules/simple-swizzle/",\
+          "packageDependencies": [\
+            ["simple-swizzle", "npm:0.2.2"],\
+            ["is-arrayish", "npm:0.3.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["sisteransi", [\
         ["npm:1.0.5", {\
           "packageLocation": "./.yarn/cache/sisteransi-npm-1.0.5-af60cc0cfa-aba6438f46.zip/node_modules/sisteransi/",\
@@ -10979,6 +11062,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vanilla-extract/css-utils", "npm:0.1.3"],\
             ["@vanilla-extract/jest-transform", "npm:1.0.1"],\
             ["@vanilla-extract/next-plugin", "virtual:e293270790bda2411a3626e57e15862403457209cbe755a222c752c37c8f53870ac5708914fca9c46ad11f81505a4af613c8b5e4bba765909191bb5f14d3b656#npm:2.1.1"],\
+            ["clsx", "npm:1.2.1"],\
             ["fork-ts-checker-webpack-plugin", "virtual:e293270790bda2411a3626e57e15862403457209cbe755a222c752c37c8f53870ac5708914fca9c46ad11f81505a4af613c8b5e4bba765909191bb5f14d3b656#npm:7.2.13"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
             ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\

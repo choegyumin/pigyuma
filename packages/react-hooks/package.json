@@ -10,7 +10,8 @@
     "test": "jest --watch"
   },
   "dependencies": {
-    "@pigyuma/utils": "*"
+    "@pigyuma/utils": "*",
+    "clsx": "^1.2.1"
   },
   "devDependencies": {
     "@pigyuma/jest-config-snippets": "*",
