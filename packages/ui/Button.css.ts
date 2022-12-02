@@ -1,8 +1,8 @@
-import { style } from "@vanilla-extract/css";
+import { style } from '@vanilla-extract/css';
 
 export default {
   root: style({
-    color: "white",
-    background: "blue",
+    color: 'white',
+    background: 'blue',
   }),
 };

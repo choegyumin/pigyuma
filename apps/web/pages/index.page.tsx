@@ -1,11 +1,14 @@
-import { Button } from "ui";
-import styles from "./index.css";
+import { Button } from 'ui';
+import styles from './index.css';
 
-export default function Home() {
+const Home = () => {
   return (
     <div>
       <h1 className={styles.heading}>Web</h1>
       <Button>Boop</Button>
     </div>
   );
-}
+};
+Home.displayName = 'Home';
+
+export default Home;

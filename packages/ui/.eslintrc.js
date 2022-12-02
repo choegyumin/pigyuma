@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: ["../../tools/eslint/react"],
+  extends: ['../../tools/eslint/react'],
 };

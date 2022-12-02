@@ -1,1 +1,1 @@
-module.exports = require("./workspaces.js");
+module.exports = require('./workspaces.js');

@@ -1,7 +1,7 @@
-import { style } from "@vanilla-extract/css";
+import { style } from '@vanilla-extract/css';
 
 export default {
   heading: style({
-    fontSize: "3rem",
+    fontSize: '3rem',
   }),
 };
