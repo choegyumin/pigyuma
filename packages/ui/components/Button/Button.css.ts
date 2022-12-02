@@ -1,8 +1,9 @@
 import { style } from '@vanilla-extract/css';
+import foundations from '@pigyuma/ui/styles/foundations';
 
 export default {
   root: style({
     color: 'white',
-    background: 'blue',
+    background: foundations.color.accent.primary,
   }),
 };

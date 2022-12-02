@@ -5,6 +5,7 @@ const Home = () => {
   return (
     <div>
       <h1 className={styles.heading}>Web</h1>
+      <input type="text" placeholder="Blah Blah" />
       <Button>Boop</Button>
     </div>
   );

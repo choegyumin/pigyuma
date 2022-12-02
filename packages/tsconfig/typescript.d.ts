@@ -10,6 +10,18 @@ type EmptyObject = PlainObject<{}>;
 
 type Property<T extends {}, P extends PropertyKey, D = undefined> = P extends keyof T ? T[P] : D;
 
+type DeepPartial<T extends {}> = {
+  [P in keyof T]?: DeepPartial<T[P]>;
+};
+
+type DeepRequired<T extends {}> = {
+  [P in keyof T]-?: DeepRequired<T[P]>;
+};
+
+type DeepReadonly<T> = {
+  readonly [P in keyof T]: DeepReadonly<T[P]>;
+};
+
 type PickExisting<T extends {}, K extends keyof any> = {
   [P in K]: Property<T, P>;
 };
