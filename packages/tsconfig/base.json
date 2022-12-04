@@ -16,7 +16,8 @@
     "skipLibCheck": true,
     "strict": true,
     "paths": {
-      "@pigyuma/ui/*": ["../../packages/ui/*"]
+      "@pigyuma/ui/*": ["../../packages/ui/*"],
+      "@pigyuma/utils/*": ["../../packages/utils/*"]
     }
   },
   "files": ["typescript.d.ts"],
