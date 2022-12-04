@@ -1,5 +1,5 @@
 {
-  "extends": "tsconfig/next.json",
+  "extends": "@pigyuma/tsconfig/next.json",
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

@@ -1279,6 +1279,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pigyuma/tsconfig@*, @pigyuma/tsconfig@workspace:packages/tsconfig":
+  version: 0.0.0-use.local
+  resolution: "@pigyuma/tsconfig@workspace:packages/tsconfig"
+  languageName: unknown
+  linkType: soft
+
+"@pigyuma/ui@*, @pigyuma/ui@workspace:packages/ui":
+  version: 0.0.0-use.local
+  resolution: "@pigyuma/ui@workspace:packages/ui"
+  dependencies:
+    "@pigyuma/tsconfig": "*"
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": ^13.4.0
+    "@testing-library/react-hooks": ^8.0.1
+    "@testing-library/user-event": ^14.4.3
+    "@types/jest": ^29.2.3
+    "@types/node": ^18.0.0
+    "@types/react": ^18.0.22
+    "@types/react-dom": ^18.0.7
+    "@types/testing-library__jest-dom": ^5.9.1
+    "@vanilla-extract/css": ^1.9.2
+    "@vanilla-extract/css-utils": ^0.1.3
+    "@vanilla-extract/jest-transform": ^1.0.1
+    jest: ^29.3.1
+    jest-environment-jsdom: ^29.3.1
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    ts-jest: ^29.0.3
+    typescript: ^4.7.4
+  languageName: unknown
+  linkType: soft
+
 "@pkgr/utils@npm:^2.3.1":
   version: 2.3.1
   resolution: "@pkgr/utils@npm:2.3.1"
@@ -8451,12 +8483,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig@*, tsconfig@workspace:packages/tsconfig":
-  version: 0.0.0-use.local
-  resolution: "tsconfig@workspace:packages/tsconfig"
-  languageName: unknown
-  linkType: soft
-
 "tslib@npm:^1.8.1":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
@@ -8633,32 +8659,6 @@ turbo@latest:
   languageName: node
   linkType: hard
 
-"ui@*, ui@workspace:packages/ui":
-  version: 0.0.0-use.local
-  resolution: "ui@workspace:packages/ui"
-  dependencies:
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": ^13.4.0
-    "@testing-library/react-hooks": ^8.0.1
-    "@testing-library/user-event": ^14.4.3
-    "@types/jest": ^29.2.3
-    "@types/node": ^18.0.0
-    "@types/react": ^18.0.22
-    "@types/react-dom": ^18.0.7
-    "@types/testing-library__jest-dom": ^5.9.1
-    "@vanilla-extract/css": ^1.9.2
-    "@vanilla-extract/css-utils": ^0.1.3
-    "@vanilla-extract/jest-transform": ^1.0.1
-    jest: ^29.3.1
-    jest-environment-jsdom: ^29.3.1
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    ts-jest: ^29.0.3
-    tsconfig: "*"
-    typescript: ^4.7.4
-  languageName: unknown
-  linkType: soft
-
 "unbox-primitive@npm:^1.0.2":
   version: 1.0.2
   resolution: "unbox-primitive@npm:1.0.2"
@@ -8819,6 +8819,8 @@ turbo@latest:
   resolution: "web@workspace:apps/web"
   dependencies:
     "@babel/core": ^7.0.0
+    "@pigyuma/tsconfig": "*"
+    "@pigyuma/ui": "*"
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
     "@testing-library/react-hooks": ^8.0.1
@@ -8839,9 +8841,7 @@ turbo@latest:
     react: ^18.2.0
     react-dom: ^18.2.0
     ts-jest: ^29.0.3
-    tsconfig: "*"
     typescript: ^4.7.4
-    ui: "*"
   languageName: unknown
   linkType: soft
 
