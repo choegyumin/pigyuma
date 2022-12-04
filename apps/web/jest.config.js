@@ -15,6 +15,8 @@ const customJestConfig = {
     // Handle module aliases (this will be automatically configured in Next.js for you soon)
     '^components/(.*)$': '<rootDir>/components/$1',
     '^pages/(.*)$': '<rootDir>/pages/$1',
+    '^store/(.*)$': '<rootDir>/store/$1',
+    '^utils/(.*)$': '<rootDir>/utils/$1',
   },
   transform: {
     '\\.css\\.ts$': '@vanilla-extract/jest-transform',

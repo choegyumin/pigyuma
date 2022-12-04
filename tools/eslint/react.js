@@ -13,6 +13,12 @@ module.exports = {
     'react/prop-types': 'off',
     'react/self-closing-comp': 'error',
 
+    'react-hooks/exhaustive-deps': [
+      'warn',
+      {
+        additionalHooks: 'useRecoilCallback',
+      },
+    ],
     'react-hooks/rules-of-hooks': 'error',
 
     '@next/next/no-html-link-for-pages': 'off',
