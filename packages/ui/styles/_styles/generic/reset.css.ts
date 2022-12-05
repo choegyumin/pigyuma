@@ -37,6 +37,7 @@ globalStyle('body', {
   fontVariant: foundations.system.base.fontVariant,
   fontWeight: foundations.system.base.fontWeight,
   overflowWrap: 'anywhere',
+  tabSize: '4',
   wordBreak: 'keep-all',
   wordWrap: 'break-word',
 });

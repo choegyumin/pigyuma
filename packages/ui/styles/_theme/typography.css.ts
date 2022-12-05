@@ -14,10 +14,10 @@ export const typographyFontFamilyNames: { typography: Pick<TypographyThemeTokens
 export const typographyFontFamilyTokens: { typography: Pick<TypographyThemeTokens, 'fontFamily'> } = {
   typography: {
     fontFamily: {
-      monospace: 'D2Coding, monospace',
-      sansSerif: 'sans-serif',
-      serif: 'serif',
-      systemUI: 'system-ui',
+      monospace: 'D2Coding, var(--monospace), monospace',
+      sansSerif: 'var(--sans-serif), sans-serif',
+      serif: 'var(--serif), serif',
+      systemUI: 'var(--system-ui), system-ui',
     },
   },
 };

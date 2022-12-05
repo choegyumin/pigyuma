@@ -17,7 +17,7 @@ customizeTheme({
       fontFamily: foundations.typography.fontFamily.sansSerif,
     },
     fontFamily: {
-      sansSerif: 'Spoqa Han Sans Neo, sans-serif',
+      sansSerif: 'Spoqa Han Sans Neo, var(--sans-serif)',
     },
   },
 });

@@ -1,124 +1,128 @@
-/*! normalize.css v8.0.1(custom) | MIT License | github.com/necolas/normalize.css */
+/*! modern-normalize v1.1.0(custom) | MIT License | https://github.com/sindresorhus/modern-normalize */
 
 import { globalStyle } from '@vanilla-extract/css';
 
-/* Document
-   ========================================================================== */
+/*
+Document
+========
+*/
 
 /**
- * 1. Correct the line height in all browsers.
- * 2. Prevent adjustments of font size after orientation changes in iOS.
- */
+Improve consistency of default fonts in all browsers (opinionated). (https://github.com/sindresorhus/modern-normalize/issues/3)
+1. Firefox supports `-apple-system` but not yet `system-ui`.
+*/
+
+globalStyle(':root', {
+  vars: {
+    '--cursive': 'cursive',
+    '--emoji': 'emoji',
+    '--fangsong': 'fangsong',
+    '--fantasy': 'fantasy',
+    '--math': 'math',
+    '--monospace': 'ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace' /* 1 */,
+    '--sans-serif': 'sans-serif',
+    '--serif': 'serif',
+    '--system-ui':
+      'system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"' /* 2 */,
+    '--ui-monospace': 'ui-monospace',
+    '--ui-rounded': 'ui-rounded',
+    '--ui-sans-serif': 'ui-sans-serif',
+    '--ui-serif': 'ui-serif',
+  },
+});
+
+/**
+Use a better box model (opinionated).
+*/
+
+// globalStyle('*, ::before, ::after', {
+//   boxSizing: 'border-box',
+// });
+
+/**
+1. Correct the line height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size (opinionated).
+*/
 
 globalStyle(':where(html)', {
   lineHeight: '1.15' /* 1 */,
-  textSizeAdjust: '100%',
+  textSizeAdjust: '100%' /* 2 */,
+  // tabSize: '4' /* 3 */,
 });
 
-/* Sections
-   ========================================================================== */
+/*
+Sections
+========
+*/
 
 /**
- * Remove the margin in all browsers.
- */
+1. Remove the margin in all browsers.
+2. Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
+*/
 
 globalStyle(':where(body)', {
-  margin: '0',
+  margin: '0' /* 1 */,
+  fontFamily: 'var(--system-ui)' /* 2 */,
 });
 
-/**
- * Render the `main` element consistently in IE.
- */
-
-globalStyle(':where(main)', {
-  display: 'block',
-});
+/*
+Grouping content
+================
+*/
 
 /**
- * Correct the font size and margin on `h1` elements within `section` and
- * `article` contexts in Chrome, Firefox, and Safari.
- */
-
-globalStyle(':where(h1)', {
-  fontSize: '2em',
-  margin: '0.67em 0',
-});
-
-/* Grouping content
-   ========================================================================== */
-
-/**
- * 1. Add the correct box sizing in Firefox.
- * 2. Show the overflow in Edge and IE.
- */
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+*/
 
 globalStyle(':where(hr)', {
-  boxSizing: 'content-box' /* 1 */,
   height: '0' /* 1 */,
-  overflow: 'visible' /* 2 */,
+  color: 'inherit' /* 2 */,
 });
 
-/**
- * 1. Correct the inheritance and scaling of font size in all browsers.
- * 2. Correct the odd `em` font sizing in all browsers.
- */
-
-globalStyle(':where(pre)', {
-  fontFamily: 'monospace, monospace' /* 1 */,
-  fontSize: '1em' /* 2 */,
-});
-
-/* Text-level semantics
-   ========================================================================== */
+/*
+Text-level semantics
+====================
+*/
 
 /**
- * Remove the gray background on active links in IE 10.
- */
-
-globalStyle(':where(a)', {
-  backgroundColor: 'transparent',
-});
-
-/**
- * 1. Remove the bottom border in Chrome 57-
- * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
- */
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
 
 globalStyle(':where(abbr[title])', {
-  borderBottom: 'none' /* 1 */,
-  textDecoration: ['underline', 'underline dotted'] /* 2 */,
+  textDecoration: 'underline dotted',
 });
 
 /**
- * Add the correct font weight in Chrome, Edge, and Safari.
- */
+Add the correct font weight in Edge and Safari.
+*/
 
 globalStyle(':where(b, strong)', {
   fontWeight: 'bolder',
 });
 
 /**
- * 1. Correct the inheritance and scaling of font size in all browsers.
- * 2. Correct the odd `em` font sizing in all browsers.
- */
+1. Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
+2. Correct the odd 'em' font sizing in all browsers.
+*/
 
-globalStyle(':where(code, kbd, samp)', {
-  fontFamily: 'monospace, monospace' /* 1 */,
+globalStyle(':where(code, kbd, samp, pre)', {
+  fontFamily: 'var(--monospace)' /* 1 */,
   fontSize: '1em' /* 2 */,
 });
 
 /**
- * Add the correct font size in all browsers.
- */
+Add the correct font size in all browsers.
+*/
 
 globalStyle(':where(small)', {
   fontSize: '80%',
 });
 
 /**
- * Prevent `sub` and `sup` elements from affecting the line height in
- * all browsers.
- */
+Prevent 'sub' and 'sup' elements from affecting the line height in all browsers.
+*/
 
 globalStyle(':where(sub, sup)', {
   fontSize: '75%',
@@ -135,24 +139,30 @@ globalStyle(':where(sup)', {
   top: '-0.5em',
 });
 
-/* Embedded content
-   ========================================================================== */
+/*
+Tabular data
+============
+*/
 
 /**
- * Remove the border on images inside links in IE 10.
- */
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+*/
 
-globalStyle(':where(img)', {
-  borderStyle: 'none',
+globalStyle(':where(table)', {
+  textIndent: '0' /* 1 */,
+  borderColor: 'inherit' /* 2 */,
 });
 
-/* Forms
-   ========================================================================== */
+/*
+Forms
+=====
+*/
 
 /**
- * 1. Change the font styles in all browsers.
- * 2. Remove the margin in Firefox and Safari.
- */
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+*/
 
 globalStyle(':where(button, input, optgroup, select, textarea)', {
   fontFamily: 'inherit' /* 1 */,
@@ -162,179 +172,108 @@ globalStyle(':where(button, input, optgroup, select, textarea)', {
 });
 
 /**
- * Show the overflow in IE.
- * 1. Show the overflow in Edge.
- */
+Remove the inheritance of text transform in Edge and Firefox.
+*/
 
-globalStyle(':where(button)', {
-  overflow: 'visible',
-});
-
-globalStyle(':where(input)', {
-  overflow: 'visible' /* 1 */,
-});
-
-/**
- * Remove the inheritance of text transform in Edge, Firefox, and IE.
- * 1. Remove the inheritance of text transform in Firefox.
- */
-
-globalStyle(':where(button)', {
+globalStyle(':where(button, select)', {
   textTransform: 'none',
 });
 
-globalStyle(':where(select)', {
-  textTransform: 'none' /* 1 */,
-});
-
 /**
- * Correct the inability to style clickable types in iOS and Safari.
- */
+Correct the inability to style clickable types in iOS and Safari.
+*/
 
-globalStyle(':where(button, [type="button"], [type="reset"], [type="submit"])', {
+globalStyle(':where(button, [type="button" i], [type="reset" i], [type="submit" i])', {
   appearance: 'button',
 });
 
 /**
- * Remove the inner border and padding in Firefox.
- */
+Remove the inner border and padding in Firefox.
+*/
 
-globalStyle(':where(button, [type="button"], [type="reset"], [type="submit"])::-moz-focus-inner', {
+globalStyle('::-moz-focus-inner', {
   borderStyle: 'none',
   padding: '0',
 });
 
 /**
- * Restore the focus styles unset by the previous rule.
- */
+Restore the focus styles unset by the previous rule.
+*/
 
-globalStyle(
-  ':where(button:-moz-focusring, [type="button"]:-moz-focusring, [type="reset"]:-moz-focusring, [type="submit"]:-moz-focusring)',
-  {
-    outline: '1px dotted ButtonText',
-  },
-);
-
-/**
- * Correct the padding in Firefox.
- */
-
-globalStyle(':where(fieldset)', {
-  padding: '0.35em 0.75em 0.625em',
+globalStyle(':-moz-focusring', {
+  outline: '1px dotted ButtonText',
 });
 
 /**
- * 1. Correct the text wrapping in Edge and IE.
- * 2. Correct the color inheritance from `fieldset` elements in IE.
- * 3. Remove the padding so developers are not caught out when they zero out
- *    `fieldset` elements in all browsers.
- */
+Remove the additional ':invalid' styles in Firefox.
+See: 'https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737
+*/
+
+globalStyle(':-moz-ui-invalid', {
+  boxShadow: 'none',
+});
+
+/**
+Remove the padding so developers are not caught out when they zero out 'fieldset' elements in all browsers.
+*/
 
 globalStyle(':where(legend)', {
-  boxSizing: 'border-box' /* 1 */,
-  color: 'inherit' /* 2 */,
-  display: 'table' /* 1 */,
-  maxWidth: '100%' /* 1 */,
-  padding: '0' /* 3 */,
-  whiteSpace: 'normal' /* 1 */,
+  padding: '0',
 });
 
 /**
- * Add the correct vertical alignment in Chrome, Firefox, and Opera.
- */
+Add the correct vertical alignment in Chrome and Firefox.
+*/
 
 globalStyle(':where(progress)', {
   verticalAlign: 'baseline',
 });
 
 /**
- * Remove the default vertical scrollbar in IE 10+.
- */
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
 
-globalStyle(':where(textarea)', {
-  overflow: 'auto',
-});
-
-/**
- * 1. Add the correct box sizing in IE 10.
- * 2. Remove the padding in IE 10.
- */
-
-globalStyle(':where([type="checkbox"], [type="radio"])', {
-  boxSizing: 'border-box' /* 1 */,
-  padding: '0' /* 2 */,
-});
-
-/**
- * Correct the cursor style of increment and decrement buttons in Chrome.
- */
-
-globalStyle(':where([type="number"])::-webkit-inner-spin-button, :where([type="number"])::-webkit-outer-spin-button', {
+globalStyle('::-webkit-inner-spin-button, ::-webkit-outer-spin-button', {
   height: 'auto',
 });
 
 /**
- * 1. Correct the odd appearance in Chrome and Safari.
- * 2. Correct the outline style in Safari.
- */
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
 
-globalStyle(':where([type="search"])', {
+globalStyle(':where([type="search" i])', {
   appearance: 'textfield' /* 1 */,
   outlineOffset: '-2px' /* 2 */,
 });
 
 /**
- * Remove the inner padding in Chrome and Safari on macOS.
- */
+Remove the inner padding in Chrome and Safari on macOS.
+*/
 
-globalStyle(':where([type="search"])::-webkit-search-decoration', {
+globalStyle('::-webkit-search-decoration', {
   appearance: 'none',
 });
 
 /**
- * 1. Correct the inability to style clickable types in iOS and Safari.
- * 2. Change font properties to `inherit` in Safari.
- */
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to 'inherit' in Safari.
+*/
 
 globalStyle('::-webkit-file-upload-button', {
   appearance: 'button' /* 1 */,
   font: 'inherit' /* 2 */,
 });
 
-/* Interactive
-   ========================================================================== */
+/*
+Interactive
+===========
+*/
 
 /*
- * Add the correct display in Edge, IE 10+, and Firefox.
- */
-
-globalStyle(':where(details)', {
-  display: 'block',
-});
-
-/*
- * Add the correct display in all browsers.
- */
+Add the correct display in Chrome and Safari.
+*/
 
 globalStyle(':where(summary)', {
   display: 'list-item',
-});
-
-/* Misc
-   ========================================================================== */
-
-/**
- * Add the correct display in IE 10+.
- */
-
-globalStyle(':where(template)', {
-  display: 'none',
-});
-
-/**
- * Add the correct display in IE 10.
- */
-
-globalStyle(':where([hidden])', {
-  display: 'none',
 });
