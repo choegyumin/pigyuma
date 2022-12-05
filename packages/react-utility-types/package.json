@@ -1,0 +1,24 @@
+{
+  "name": "@pigyuma/react-utility-types",
+  "version": "0.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
+  "scripts": {
+    "format": "cd ../../ && yarn prettier \"packages/react-utility-types/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
+    "lint": "cd ../../ && TIMING=1 yarn eslint \"packages/react-utility-types/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to ."
+  },
+  "devDependencies": {
+    "@pigyuma/tsconfig": "*",
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.0.22",
+    "@types/react-dom": "^18.0.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.7.4"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

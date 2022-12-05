@@ -9,8 +9,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "TIMING=1 eslint \"./*.{js,jsx,ts,tsx}\" --ignore-path ./.lintignore && turbo run lint",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .lintignore",
+    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
+    "lint": "TIMING=1 eslint \"{apps,packages,tools}/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
     "test": "turbo run test",
     "postinstall": "husky install",
     "commit": "git-cz"
@@ -24,9 +24,17 @@
     "@commitlint/config-conventional": "^17.3.0",
     "@commitlint/cz-commitlint": "^17.3.0",
     "@types/inquirer": "^8",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
     "commitizen": "^4.2.5",
-    "eslint": "^7.32.0",
-    "eslint-config-custom": "*",
+    "eslint": "^7.23.0",
+    "eslint-config-next": "13.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^3.0.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jsx-a11y": "6.5.1",
+    "eslint-plugin-react": "7.31.7",
+    "eslint-plugin-react-hooks": "4.5.0",
     "husky": "^8.0.2",
     "inquirer": "8",
     "lint-staged": "^13.0.3",
@@ -39,11 +47,5 @@
     "commitizen": {
       "path": "@commitlint/cz-commitlint"
     }
-  },
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
   }
 }

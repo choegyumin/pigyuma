@@ -1,0 +1,25 @@
+{
+  "name": "@pigyuma/utils",
+  "version": "0.0.0",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "license": "MIT",
+  "scripts": {
+    "format": "cd ../../ && yarn prettier \"packages/utils/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
+    "lint": "cd ../../ && TIMING=1 yarn eslint \"packages/utils/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
+    "test": "jest --watch"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.6"
+  },
+  "devDependencies": {
+    "@pigyuma/jest-config-snippets": "*",
+    "@pigyuma/tsconfig": "*",
+    "@types/jest": "^29.2.3",
+    "@types/lodash-es": "^4.17.6",
+    "@types/node": "^18.0.0",
+    "jest": "^29.3.1",
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.7.4"
+  }
+}

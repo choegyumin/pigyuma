@@ -1,10 +1,13 @@
 {
-  "name": "tsconfig",
+  "name": "@pigyuma/tsconfig",
   "version": "0.0.0",
   "private": true,
   "files": [
     "base.json",
     "next.json",
     "react-library.json"
-  ]
+  ],
+  "scripts": {
+    "format": "cd ../../ && yarn prettier \"packages/tsconfig/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write"
+  }
 }

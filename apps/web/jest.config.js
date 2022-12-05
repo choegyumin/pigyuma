@@ -1,21 +1,25 @@
-const nextJest = require("next/jest");
+const nextJest = require('next/jest');
+const { workspacesModuleNameMapper } = require('@pigyuma/jest-config-snippets');
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
-  dir: "./",
+  dir: './',
 });
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
-    // Handle module aliases (this will be automatically configured for you soon)
-    "^@/components/(.*)$": "<rootDir>/components/$1",
-    "^@/pages/(.*)$": "<rootDir>/pages/$1",
+    ...workspacesModuleNameMapper,
+    // Handle module aliases (this will be automatically configured in Next.js for you soon)
+    '^components/(.*)$': '<rootDir>/components/$1',
+    '^pages/(.*)$': '<rootDir>/pages/$1',
+    '^store/(.*)$': '<rootDir>/store/$1',
+    '^utils/(.*)$': '<rootDir>/utils/$1',
   },
-  testEnvironment: "jest-environment-jsdom",
   transform: {
-    "\\.css\\.ts$": "@vanilla-extract/jest-transform",
+    '\\.css\\.ts$': '@vanilla-extract/jest-transform',
   },
 };
 
