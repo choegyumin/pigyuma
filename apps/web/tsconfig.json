@@ -4,7 +4,13 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"],
-      "@/*": ["../../packages/react-utility-types/*", "../../packages/react-utils/*", "../../packages/ui/*", "../../packages/utils/*"]
+      "@/*": [
+        "../../packages/react-utility-types/*",
+        "../../packages/react-utils/*",
+        "../../packages/ui/*",
+        "../../packages/ui-design-tool/*",
+        "../../packages/utils/*"
+      ]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
