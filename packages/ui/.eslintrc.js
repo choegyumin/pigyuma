@@ -54,5 +54,6 @@ module.exports = {
         'newlines-between': 'ignore',
       },
     ],
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
 };

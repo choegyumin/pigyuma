@@ -36,6 +36,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/ui"\
       },\
       {\
+        "name": "@pigyuma/ui-design-tool",\
+        "reference": "workspace:packages/ui-design-tool"\
+      },\
+      {\
         "name": "@pigyuma/utils",\
         "reference": "workspace:packages/utils"\
       }\
@@ -47,6 +51,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@pigyuma/react-utils", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils", "workspace:packages/react-utils"]],\
       ["@pigyuma/tsconfig", ["workspace:packages/tsconfig"]],\
       ["@pigyuma/ui", ["workspace:packages/ui"]],\
+      ["@pigyuma/ui-design-tool", ["workspace:packages/ui-design-tool"]],\
       ["@pigyuma/utils", ["workspace:packages/utils"]],\
       ["pigyuma", ["workspace:."]],\
       ["web", ["workspace:apps/web"]]\
@@ -1881,8 +1886,42 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vanilla-extract/css", "npm:1.9.2"],\
             ["@vanilla-extract/css-utils", "npm:0.1.3"],\
             ["@vanilla-extract/jest-transform", "npm:1.0.1"],\
+            ["@vanilla-extract/private", "npm:1.0.3"],\
             ["clsx", "npm:1.2.1"],\
             ["color", "npm:4.2.3"],\
+            ["csstype", "npm:3.1.1"],\
+            ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
+            ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
+            ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
+            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@pigyuma/ui-design-tool", [\
+        ["workspace:packages/ui-design-tool", {\
+          "packageLocation": "./packages/ui-design-tool/",\
+          "packageDependencies": [\
+            ["@pigyuma/ui-design-tool", "workspace:packages/ui-design-tool"],\
+            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
+            ["@pigyuma/react-utils", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils"],\
+            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
+            ["@pigyuma/ui", "workspace:packages/ui"],\
+            ["@pigyuma/utils", "workspace:packages/utils"],\
+            ["@testing-library/jest-dom", "npm:5.16.5"],\
+            ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
+            ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
+            ["@types/jest", "npm:29.2.3"],\
+            ["@types/node", "npm:18.11.9"],\
+            ["@types/react", "npm:18.0.25"],\
+            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/testing-library__jest-dom", "npm:5.14.5"],\
+            ["@vanilla-extract/css", "npm:1.9.2"],\
+            ["@vanilla-extract/jest-transform", "npm:1.0.1"],\
+            ["@vanilla-extract/private", "npm:1.0.3"],\
+            ["clsx", "npm:1.2.1"],\
             ["csstype", "npm:3.1.1"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
             ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
@@ -10712,6 +10751,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@pigyuma/react-utils", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/ui", "workspace:packages/ui"],\
+            ["@pigyuma/ui-design-tool", "workspace:packages/ui-design-tool"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
             ["@testing-library/jest-dom", "npm:5.16.5"],\
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
@@ -10722,9 +10762,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:18.0.9"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@vanilla-extract/css", "npm:1.9.2"],\
-            ["@vanilla-extract/css-utils", "npm:0.1.3"],\
             ["@vanilla-extract/jest-transform", "npm:1.0.1"],\
             ["@vanilla-extract/next-plugin", "virtual:e293270790bda2411a3626e57e15862403457209cbe755a222c752c37c8f53870ac5708914fca9c46ad11f81505a4af613c8b5e4bba765909191bb5f14d3b656#npm:2.1.1"],\
+            ["@vanilla-extract/private", "npm:1.0.3"],\
             ["clsx", "npm:1.2.1"],\
             ["fork-ts-checker-webpack-plugin", "virtual:e293270790bda2411a3626e57e15862403457209cbe755a222c752c37c8f53870ac5708914fca9c46ad11f81505a4af613c8b5e4bba765909191bb5f14d3b656#npm:7.2.13"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
