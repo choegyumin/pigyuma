@@ -1,0 +1,142 @@
+diff --git a/common/function.d.ts b/common/function.d.ts
+index 76282784640823673800f4aee1ecb8ce471986d7..1e0a2494340d15b7c2f327aa427bc7de268e8d3e 100755
+--- a/common/function.d.ts
++++ b/common/function.d.ts
+@@ -399,7 +399,6 @@ declare module "../index" {
+     }
+     interface DebouncedFuncLeading<T extends (...args: any[]) => any> extends DebouncedFunc<T> {
+         (...args: Parameters<T>): ReturnType<T>;
+-        flush(): ReturnType<T>;
+     }
+     interface LoDashStatic {
+         /**
+@@ -422,8 +421,8 @@ declare module "../index" {
+          * @param options.trailing Specify invoking on the trailing edge of the timeout.
+          * @return Returns the new debounced function.
+          */
+-        debounce<T extends (...args: any) => any>(func: T, wait: number | undefined, options: DebounceSettingsLeading): DebouncedFuncLeading<T>;
+-        debounce<T extends (...args: any) => any>(func: T, wait?: number, options?: DebounceSettings): DebouncedFunc<T>;
++        debounce<T extends (...args: any[]) => any>(func: T, wait: number | undefined, options: DebounceSettingsLeading): DebouncedFuncLeading<T>;
++        debounce<T extends (...args: any[]) => any>(func: T, wait?: number, options?: DebounceSettings): DebouncedFunc<T>;
+     }
+     interface Function<T extends (...args: any) => any> {
+         /**
+@@ -1355,6 +1354,9 @@ declare module "../index" {
+          */
+         trailing?: boolean | undefined;
+     }
++    interface ThrottleSettingsNotLeading extends ThrottleSettings {
++        leading: false;
++    }
+     interface LoDashStatic {
+         /**
+          * Creates a throttled function that only invokes func at most once per every wait milliseconds. The throttled
+@@ -1372,25 +1374,34 @@ declare module "../index" {
+          * @param options.trailing Specify invoking on the trailing edge of the timeout.
+          * @return Returns the new throttled function.
+          */
+-        throttle<T extends (...args: any) => any>(func: T, wait?: number, options?: ThrottleSettings): DebouncedFunc<T>;
++        throttle<T extends (...args: any[]) => any>(func: T, wait: number | undefined, options: ThrottleSettingsNotLeading): DebouncedFunc<T>;
++        throttle<T extends (...args: any[]) => any>(func: T, wait?: number, options?: ThrottleSettings): DebouncedFuncLeading<T>;
+     }
+     interface Function<T extends (...args: any) => any> {
+         /**
+          * @see _.throttle
+          */
++        throttle(
++            wait: number | undefined,
++            options: ThrottleSettingsNotLeading
++        ): T extends (...args: any[]) => any ? Function<DebouncedFunc<T>> : never;
+         throttle(
+             wait?: number,
+             options?: ThrottleSettings
+-        ): T extends (...args: any[]) => any ? Function<DebouncedFunc<T>> : never;
++        ): T extends (...args: any[]) => any ? Function<DebouncedFuncLeading<T>> : never;
+     }
+     interface FunctionChain<T extends (...args: any) => any> {
+         /**
+          * @see _.throttle
+          */
++        throttle(
++            wait: number | undefined,
++            options: ThrottleSettingsNotLeading
++        ): T extends (...args: any[]) => any ? FunctionChain<DebouncedFunc<T>> : never;
+         throttle(
+             wait?: number,
+             options?: ThrottleSettings
+-        ): T extends (...args: any[]) => any ? FunctionChain<DebouncedFunc<T>> : never;
++        ): T extends (...args: any[]) => any ? FunctionChain<DebouncedFuncLeading<T>> : never;
+     }
+     interface LoDashStatic {
+         /**
+diff --git a/ts4.2/common/function.d.ts b/ts4.2/common/function.d.ts
+index 76282784640823673800f4aee1ecb8ce471986d7..1e0a2494340d15b7c2f327aa427bc7de268e8d3e 100755
+--- a/ts4.2/common/function.d.ts
++++ b/ts4.2/common/function.d.ts
+@@ -399,7 +399,6 @@ declare module "../index" {
+     }
+     interface DebouncedFuncLeading<T extends (...args: any[]) => any> extends DebouncedFunc<T> {
+         (...args: Parameters<T>): ReturnType<T>;
+-        flush(): ReturnType<T>;
+     }
+     interface LoDashStatic {
+         /**
+@@ -422,8 +421,8 @@ declare module "../index" {
+          * @param options.trailing Specify invoking on the trailing edge of the timeout.
+          * @return Returns the new debounced function.
+          */
+-        debounce<T extends (...args: any) => any>(func: T, wait: number | undefined, options: DebounceSettingsLeading): DebouncedFuncLeading<T>;
+-        debounce<T extends (...args: any) => any>(func: T, wait?: number, options?: DebounceSettings): DebouncedFunc<T>;
++        debounce<T extends (...args: any[]) => any>(func: T, wait: number | undefined, options: DebounceSettingsLeading): DebouncedFuncLeading<T>;
++        debounce<T extends (...args: any[]) => any>(func: T, wait?: number, options?: DebounceSettings): DebouncedFunc<T>;
+     }
+     interface Function<T extends (...args: any) => any> {
+         /**
+@@ -1355,6 +1354,9 @@ declare module "../index" {
+          */
+         trailing?: boolean | undefined;
+     }
++    interface ThrottleSettingsNotLeading extends ThrottleSettings {
++        leading: false;
++    }
+     interface LoDashStatic {
+         /**
+          * Creates a throttled function that only invokes func at most once per every wait milliseconds. The throttled
+@@ -1372,25 +1374,34 @@ declare module "../index" {
+          * @param options.trailing Specify invoking on the trailing edge of the timeout.
+          * @return Returns the new throttled function.
+          */
+-        throttle<T extends (...args: any) => any>(func: T, wait?: number, options?: ThrottleSettings): DebouncedFunc<T>;
++        throttle<T extends (...args: any[]) => any>(func: T, wait: number | undefined, options: ThrottleSettingsNotLeading): DebouncedFunc<T>;
++        throttle<T extends (...args: any[]) => any>(func: T, wait?: number, options?: ThrottleSettings): DebouncedFuncLeading<T>;
+     }
+     interface Function<T extends (...args: any) => any> {
+         /**
+          * @see _.throttle
+          */
++        throttle(
++            wait: number | undefined,
++            options: ThrottleSettingsNotLeading
++        ): T extends (...args: any[]) => any ? Function<DebouncedFunc<T>> : never;
+         throttle(
+             wait?: number,
+             options?: ThrottleSettings
+-        ): T extends (...args: any[]) => any ? Function<DebouncedFunc<T>> : never;
++        ): T extends (...args: any[]) => any ? Function<DebouncedFuncLeading<T>> : never;
+     }
+     interface FunctionChain<T extends (...args: any) => any> {
+         /**
+          * @see _.throttle
+          */
++        throttle(
++            wait: number | undefined,
++            options: ThrottleSettingsNotLeading
++        ): T extends (...args: any[]) => any ? FunctionChain<DebouncedFunc<T>> : never;
+         throttle(
+             wait?: number,
+             options?: ThrottleSettings
+-        ): T extends (...args: any[]) => any ? FunctionChain<DebouncedFunc<T>> : never;
++        ): T extends (...args: any[]) => any ? FunctionChain<DebouncedFuncLeading<T>> : never;
+     }
+     interface LoDashStatic {
+         /**

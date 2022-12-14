@@ -1,21 +1,19 @@
-import ReactTypes from '@pigyuma/react-utility-types';
 import React from 'react';
+import { AxisGrid } from '../AxisGrid/AxisGrid.component';
+import { PointerEventsPreventer } from '../PointerEventsPreventer/PointerEventsPreventer.component';
+import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay.component';
+import { TransformOverlay } from '../TransformOverlay/TransformOverlay.component';
 import * as styles from './InteractionController.css';
+import { InteractionControllerProps } from './types';
 
-export type InteractionControllerProps = ReactTypes.UnknownProps;
-
-export type InteractionControllerRef = HTMLDivElement;
-
-/**
- * @todo 마우스 인터랙션 기능 구현
- */
-export const InteractionController = React.memo(
-  React.forwardRef<InteractionControllerRef, InteractionControllerProps>((props, ref) => {
-    return (
-      <div ref={ref} className={styles.root}>
-        {null}
-      </div>
-    );
-  }),
-);
+export const InteractionController: React.FC<InteractionControllerProps> = React.memo(() => {
+  return (
+    <div className={styles.root}>
+      <AxisGrid />
+      <SelectionOverlay />
+      <TransformOverlay />
+      <PointerEventsPreventer />
+    </div>
+  );
+});
 InteractionController.displayName = 'InteractionController';

@@ -1530,7 +1530,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash-es@npm:^4":
+"@types/lodash-es@npm:4.17.6":
   version: 4.17.6
   resolution: "@types/lodash-es@npm:4.17.6"
   dependencies:
@@ -1539,10 +1539,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:*":
+"@types/lodash-es@patch:@types/lodash-es@npm%3A4.17.6#./.yarn/patches/@types-lodash-es-npm-4.17.6-fd5abbdc74.patch::locator=pigyuma%40workspace%3A.":
+  version: 4.17.6
+  resolution: "@types/lodash-es@patch:@types/lodash-es@npm%3A4.17.6#./.yarn/patches/@types-lodash-es-npm-4.17.6-fd5abbdc74.patch::version=4.17.6&hash=3e9480&locator=pigyuma%40workspace%3A."
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 363f938d70ca328316d3f96f3348418dd28f1379f3b3932cc2d64ecb6abff71831bcdb13cab9b05dfbbab6c5742d738aac02b0cfe1364aedc92b75b16b3a7df7
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:4.14.191":
   version: 4.14.191
   resolution: "@types/lodash@npm:4.14.191"
   checksum: ba0d5434e10690869f32d5ea49095250157cae502f10d57de0a723fd72229ce6c6a4979576f0f13e0aa9fbe3ce2457bfb9fa7d4ec3d6daba56730a51906d1491
+  languageName: node
+  linkType: hard
+
+"@types/lodash@patch:@types/lodash@npm%3A4.14.191#./.yarn/patches/@types-lodash-npm-4.14.191-67a04a969b.patch::locator=pigyuma%40workspace%3A.":
+  version: 4.14.191
+  resolution: "@types/lodash@patch:@types/lodash@npm%3A4.14.191#./.yarn/patches/@types-lodash-npm-4.14.191-67a04a969b.patch::version=4.14.191&hash=70e16b&locator=pigyuma%40workspace%3A."
+  checksum: 9ca292320d8446bbc98e064ea1ed055787c18ca65499e42dcb2895ae94ad070992f4724b1b3a69eb247da1262af6b7c843144c177f063d7d7f593bf4fb44bebc
   languageName: node
   linkType: hard
 

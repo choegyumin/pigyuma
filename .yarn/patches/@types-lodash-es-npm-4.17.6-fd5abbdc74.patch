@@ -1,0 +1,22 @@
+diff --git a/debounce.d.ts b/debounce.d.ts
+index f26b7a4c603209850f142c3eedd75f6eee8496f5..0247ead469fcc473ee88e1d020ed59eb24bdd68b 100755
+--- a/debounce.d.ts
++++ b/debounce.d.ts
+@@ -1,4 +1,4 @@
+-import { debounce, DebouncedFunc, DebounceSettings } from "lodash";
++import { debounce, DebouncedFunc, DebouncedFuncLeading, DebounceSettings, DebounceSettingsLeading } from "lodash";
+ 
+-export { DebounceSettings, DebouncedFunc };
++export { DebounceSettings, DebounceSettingsLeading, DebouncedFunc, DebouncedFuncLeading };
+ export default debounce;
+diff --git a/throttle.d.ts b/throttle.d.ts
+index 80676374e6ea541892d92c5269bcd1bf44b479b7..97f6c5cf87648d8949f1ab4ca48e30e4135f0971 100755
+--- a/throttle.d.ts
++++ b/throttle.d.ts
+@@ -1,4 +1,4 @@
+-import { throttle, ThrottleSettings } from "lodash";
++import { throttle, ThrottleSettings, ThrottleSettingsNotLeading } from "lodash";
+ 
+-export { ThrottleSettings };
++export { ThrottleSettings, ThrottleSettingsNotLeading };
+ export default throttle;

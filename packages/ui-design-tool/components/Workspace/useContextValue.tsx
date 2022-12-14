@@ -1,10 +1,12 @@
 import { UIRecordKey, UIRecordType } from '@/types/Identifier';
+import { UIRecordRect, UIRecordRectInit } from '@/types/Shape';
 import { flatUIRecords } from '@/utils/convert';
 import { hasUIRecordParent, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { setRef, useEvent, useEventListener, useStableCallback } from '@pigyuma/react-utils';
-import { kebabCase } from '@pigyuma/utils';
+import { cloneDeep, kebabCase } from '@pigyuma/utils';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Canvas } from '../Canvas/Canvas.model';
+import { Layer } from '../Layer/Layer.model';
 import { UIRecord, UIRecordData } from '../UIRecord/UIRecord.model';
 import { WorkspaceInteraction, WorkspaceStatus } from './types';
 import { UIRecordElementFilter, UIRecordElementFilterItem } from './Workspace.context';
@@ -29,6 +31,24 @@ const createSelector = (filter: UIRecordElementFilter) => {
  */
 export default function useContextValue(initialValues: { canvas: Canvas; elementRef: React.RefObject<HTMLDivElement> }) {
   const { canvas, elementRef } = initialValues;
+
+  const mousePointRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const modifierKeysRef = useRef<{ alt: boolean; ctrl: boolean; meta: boolean; shift: boolean }>({
+    alt: false,
+    ctrl: false,
+    meta: false,
+    shift: false,
+  });
+
+  const getBrowserMeta = useCallback(
+    () => ({
+      mouse: mousePointRef.current,
+      keyboard: modifierKeysRef.current,
+    }),
+    [],
+  );
+
+  const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
 
   const hoveredElementRef = useRef<HTMLElement>(null);
 
@@ -125,6 +145,39 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
     }
 
     Object.assign(targetValue, value);
+    listeners[targetKey]?.forEach((it) => it(targetValue));
+  });
+
+  const setRect = useStableCallback((targetKey: UIRecordKey, rect: UIRecordRect | UIRecordRectInit): void => {
+    const targetValue = records.get(targetKey);
+    if (targetValue == null) {
+      console.error(`UIRecord '${targetKey}' not found.`);
+      return;
+    }
+
+    if (!(targetValue instanceof Layer)) {
+      console.error(`UIRecord '${targetKey}' is not a layer. setRect() only supports layer. (e.g. ShapeLayer, TextLayer)`);
+      return;
+    }
+
+    if (!hasUIRecordParent(targetValue)) {
+      console.error(`UIRecord '${targetKey}' has no parent.`);
+      return;
+    }
+
+    const parentValue = targetValue.parent;
+    const parentElement = query({ key: parentValue.key });
+    const parentRect = parentElement != null ? UIRecordRect.fromElement(parentElement) : new UIRecordRect(0, 0, 0, 0, 0);
+
+    /** @todo px 외 lengthType(unit) 지원 (변환 시 소수점 셋째 자리에서 반올림) */
+    const newValue = cloneDeep(targetValue);
+    newValue.x.length = rect.x - parentRect.x;
+    newValue.y.length = rect.y - parentRect.y;
+    newValue.width.length = rect.width;
+    newValue.height.length = rect.height;
+    newValue.rotate.length = rect.rotate;
+
+    Object.assign(targetValue, newValue);
     listeners[targetKey]?.forEach((it) => it(targetValue));
   });
 
@@ -305,17 +358,27 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
 
   const fromMouse = useStableCallback((): HTMLElement | null => hoveredElementRef.current);
 
-  useEventListener(
-    document,
-    'mousemove',
-    useEvent((event: MouseEvent) => {
-      const { clientX, clientY } = event;
-      const target = fromPoint(clientX, clientY);
-      setRef(hoveredElementRef, target);
-    }),
-  );
+  const onMouseMove = useEvent((event: MouseEvent) => {
+    const { clientX, clientY } = event;
+    const target = fromPoint(clientX, clientY);
+    setRef(mousePointRef, { x: clientX, y: clientY });
+    setRef(hoveredElementRef, target);
+  });
+  useEventListener(document, 'mousemove', onMouseMove, { capture: true });
+
+  const onKeyDownUp = useEvent((event: KeyboardEvent) => {
+    const { altKey: alt, ctrlKey: ctrl, metaKey: meta, shiftKey: shift } = event;
+    setRef(modifierKeysRef, { alt, ctrl, meta, shift });
+  });
+  useEventListener(document, 'keydown', onKeyDownUp, { capture: true });
+  useEventListener(document, 'keyup', onKeyDownUp, { capture: true });
 
   return {
+    getBrowserMeta,
+
+    cursor,
+    setCursor,
+
     status,
     getStatus,
 
@@ -338,6 +401,7 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
     select,
 
     set,
+    setRect,
     move,
     append,
     prepend,

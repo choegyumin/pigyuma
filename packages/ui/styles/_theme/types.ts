@@ -13,6 +13,13 @@ export type ColorThemeTokens = {
   };
 };
 
+export type ShadowThemeTokens = {
+  box: {
+    level0: string;
+    level1: string;
+  };
+};
+
 export type SpacingThemeTokens = {
   scale: string;
 };
@@ -56,6 +63,7 @@ export type TypographyThemeTokens = {
 
 export type GlobalThemeTokens = {
   color: ColorThemeTokens;
+  shadow: ShadowThemeTokens;
   spacing: SpacingThemeTokens;
   system: SystemThemeTokens;
   typography: TypographyThemeTokens;

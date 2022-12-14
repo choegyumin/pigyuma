@@ -51,5 +51,9 @@
     "commitizen": {
       "path": "@commitlint/cz-commitlint"
     }
+  },
+  "resolutions": {
+    "@types/lodash-es@^4": "patch:@types/lodash-es@npm%3A4.17.6#./.yarn/patches/@types-lodash-es-npm-4.17.6-fd5abbdc74.patch",
+    "@types/lodash@*": "patch:@types/lodash@npm%3A4.14.191#./.yarn/patches/@types-lodash-npm-4.14.191-67a04a969b.patch"
   }
 }

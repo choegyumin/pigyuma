@@ -1620,7 +1620,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@pigyuma/utils", "workspace:packages/utils"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
-            ["@types/lodash-es", "npm:4.17.6"],\
+            ["@types/lodash-es", "patch:@types/lodash-es@npm%3A4.17.6#./.yarn/patches/@types-lodash-es-npm-4.17.6-fd5abbdc74.patch::version=4.17.6&hash=3e9480&locator=pigyuma%40workspace%3A."],\
             ["@types/node", "npm:18.11.18"],\
             ["@types/uuid", "npm:9.0.0"],\
             ["lodash-es", "npm:4.17.21"],\
@@ -1967,20 +1967,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/lodash", [\
-        ["npm:4.14.191", {\
-          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.191-67a04a969b-ba0d5434e1.zip/node_modules/@types/lodash/",\
+        ["patch:@types/lodash@npm%3A4.14.191#./.yarn/patches/@types-lodash-npm-4.14.191-67a04a969b.patch::version=4.14.191&hash=70e16b&locator=pigyuma%40workspace%3A.", {\
+          "packageLocation": "./.yarn/cache/@types-lodash-patch-e63b7bf2b4-9ca292320d.zip/node_modules/@types/lodash/",\
           "packageDependencies": [\
-            ["@types/lodash", "npm:4.14.191"]\
+            ["@types/lodash", "patch:@types/lodash@npm%3A4.14.191#./.yarn/patches/@types-lodash-npm-4.14.191-67a04a969b.patch::version=4.14.191&hash=70e16b&locator=pigyuma%40workspace%3A."]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@types/lodash-es", [\
-        ["npm:4.17.6", {\
-          "packageLocation": "./.yarn/cache/@types-lodash-es-npm-4.17.6-fd5abbdc74-9bd239dd52.zip/node_modules/@types/lodash-es/",\
+        ["patch:@types/lodash-es@npm%3A4.17.6#./.yarn/patches/@types-lodash-es-npm-4.17.6-fd5abbdc74.patch::version=4.17.6&hash=3e9480&locator=pigyuma%40workspace%3A.", {\
+          "packageLocation": "./.yarn/cache/@types-lodash-es-patch-46fc9b8ee1-363f938d70.zip/node_modules/@types/lodash-es/",\
           "packageDependencies": [\
-            ["@types/lodash-es", "npm:4.17.6"],\
-            ["@types/lodash", "npm:4.14.191"]\
+            ["@types/lodash-es", "patch:@types/lodash-es@npm%3A4.17.6#./.yarn/patches/@types-lodash-es-npm-4.17.6-fd5abbdc74.patch::version=4.17.6&hash=3e9480&locator=pigyuma%40workspace%3A."],\
+            ["@types/lodash", "patch:@types/lodash@npm%3A4.14.191#./.yarn/patches/@types-lodash-npm-4.14.191-67a04a969b.patch::version=4.14.191&hash=70e16b&locator=pigyuma%40workspace%3A."]\
           ],\
           "linkType": "HARD"\
         }]\

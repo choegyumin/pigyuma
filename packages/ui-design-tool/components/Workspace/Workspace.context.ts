@@ -24,6 +24,7 @@ export const uiDesignToolAPIMethods = [
   'getSelected',
   'select',
   'set',
+  'setRect',
   'move',
   'append',
   'prepend',
@@ -46,10 +47,45 @@ export type UIDesignToolAPIMethods = ArrayElements<typeof uiDesignToolAPIMethods
 export const contextKeysForSubscribe = ['subscribe', 'unsubscribe', 'get'] as const;
 export type ContextKeysForSubscribe = ArrayElements<typeof contextKeysForSubscribe>;
 
-export const [WorkspaceContextProvider, useUIDesignToolAPI, useContextForSubscribe] = constate(
+/**
+ * 인터랙션 제어를 위해 컴포넌트에서 사용하는 컨텍스트 키 모음
+ * `records` 데이터 추출 및 조작 메서드와 의도적으로 reconciliation을 유발하는 상태 및 함수만 가져와야 함 (의도치 않은 reconciliation이 발생해서는 안됨)
+ */
+export const contextKeysForInteraction = [
+  'getBrowserMeta',
+  'cursor',
+  'setCursor',
+  'status',
+  'interaction',
+  'setInteraction',
+  'subscribe',
+  'unsubscribe',
+  'records',
+  'selectedRecords',
+  'get',
+  'select',
+  'set',
+  'setRect',
+  'move',
+  'append',
+  'prepend',
+  'insertBefore',
+  'insertAfter',
+  'remove',
+  'matches',
+  'closest',
+  'query',
+  'queryAll',
+  'fromPoint',
+  'fromMouse',
+] as const;
+export type ContextKeysForInteraction = ArrayElements<typeof contextKeysForInteraction>;
+
+export const [WorkspaceContextProvider, useUIDesignToolAPI, useContextForSubscribe, useContextForInteraction] = constate(
   useContextValue,
   (value) => pick(value, uiDesignToolAPIMethods),
   (value) => pick(value, contextKeysForSubscribe),
+  (value) => pick(value, contextKeysForInteraction),
 );
 
 export type UIDesignToolAPI = ReturnType<typeof useUIDesignToolAPI>;
