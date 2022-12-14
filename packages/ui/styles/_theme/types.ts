@@ -14,7 +14,7 @@ export type ColorThemeTokens = {
 };
 
 export type SpacingThemeTokens = {
-  base: string;
+  scale: string;
 };
 
 export type SystemThemeTokens = {

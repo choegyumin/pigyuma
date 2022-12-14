@@ -7,11 +7,6 @@ globalFontFace('Spoqa Han Sans Neo', {
 });
 
 customizeTheme({
-  color: {
-    accent: {
-      primary: 'green',
-    },
-  },
   typography: {
     base: {
       fontFamily: foundations.typography.fontFamily.sansSerif,
