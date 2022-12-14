@@ -1,22 +1,22 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
 import { SpacingThemeTokens } from './types';
 
-export const spacingBaseNames: { spacing: Pick<SpacingThemeTokens, 'base'> } = {
+export const spacingScaleNames: { spacing: Pick<SpacingThemeTokens, 'scale'> } = {
   spacing: {
-    base: 'spacing',
+    scale: 'spacing',
   },
 };
-export const spacingBaseTokens: { spacing: Pick<SpacingThemeTokens, 'base'> } = {
+export const spacingScaleTokens: { spacing: Pick<SpacingThemeTokens, 'scale'> } = {
   spacing: {
-    base: '4px',
+    scale: '4px',
   },
 };
-export const spacingBaseContract = createGlobalThemeContract(spacingBaseNames);
-createGlobalTheme(':root', spacingBaseContract, spacingBaseTokens);
+export const spacingScaleContract = createGlobalThemeContract(spacingScaleNames);
+createGlobalTheme(':root', spacingScaleContract, spacingScaleTokens);
 const {
-  spacing: { base },
-} = spacingBaseContract;
+  spacing: { scale },
+} = spacingScaleContract;
 
 export default {
-  base,
+  scale,
 };
