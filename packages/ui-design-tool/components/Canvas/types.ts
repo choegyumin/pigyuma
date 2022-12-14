@@ -1,7 +1,7 @@
 import { Canvas } from './Canvas.model';
 
 export type CanvasProps = {
-  canvas: Canvas;
+  data: Canvas;
 };
 
 export type CanvasRef = HTMLDivElement;

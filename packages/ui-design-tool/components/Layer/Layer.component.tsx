@@ -1,23 +1,25 @@
 import React from 'react';
-import { ShapeLayerComponent } from '../ShapeLayer/ShapeLayer.component';
+import { RawShapeLayerComponent } from '../ShapeLayer/ShapeLayer.component';
 import { ShapeLayer } from '../ShapeLayer/ShapeLayer.model';
-import { TextLayerComponent } from '../TextLayer/TextLayer.component';
+import { RawTextLayerComponent } from '../TextLayer/TextLayer.component';
 import { TextLayer } from '../TextLayer/TextLayer.model';
+import withUIRecord from '../withUIRecord/withUIRecord.component';
 import { LayerProps, LayerRef } from './types';
 
-export const LayerComponent = React.memo(
-  React.forwardRef<LayerRef, LayerProps>((props, ref) => {
-    const { layer } = props;
+export const RawLayerComponent = React.forwardRef<LayerRef, LayerProps>((props, ref) => {
+  const { data: layer } = props;
 
-    if (layer instanceof ShapeLayer) {
-      return <ShapeLayerComponent ref={ref} shapeLayer={layer} />;
-    }
+  if (layer instanceof ShapeLayer) {
+    return <RawShapeLayerComponent ref={ref} data={layer} />;
+  }
 
-    if (layer instanceof TextLayer) {
-      return <TextLayerComponent ref={ref} textLayer={layer} />;
-    }
+  if (layer instanceof TextLayer) {
+    return <RawTextLayerComponent ref={ref} data={layer} />;
+  }
 
-    return null;
-  }),
-);
+  return null;
+});
+RawLayerComponent.displayName = 'RawLayer';
+
+export const LayerComponent = withUIRecord(RawLayerComponent);
 LayerComponent.displayName = 'Layer';

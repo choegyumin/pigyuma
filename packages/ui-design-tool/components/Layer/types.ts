@@ -1,7 +1,7 @@
 import { Layer } from './Layer.model';
 
 export type LayerProps = {
-  layer: Layer;
+  data: Layer;
 };
 
 export type LayerRef = HTMLDivElement;
