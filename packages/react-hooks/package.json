@@ -1,8 +1,8 @@
 {
   "name": "@pigyuma/react-hooks",
   "version": "0.0.0",
-  "main": "./src/index.tsx",
-  "types": "./src/index.tsx",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "license": "MIT",
   "scripts": {
     "format": "cd ../../ && yarn prettier \"packages/react-hooks/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",

@@ -1,2 +1,2 @@
-export * from './types';
-export * as default from './types';
+export * from './src';
+export * as default from './src';
