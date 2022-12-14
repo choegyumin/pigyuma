@@ -8,6 +8,7 @@ import {
   colorTextContract,
   colorTextTokens,
 } from './_theme/color.css';
+import { shadowBoxContract, shadowBoxTokens } from './_theme/shadow.css';
 import { spacingScaleContract, spacingScaleTokens } from './_theme/spacing.css';
 import { systemBaseContract, systemBaseTokens, systemInteractionContract, systemInteractionTokens } from './_theme/system.css';
 import { GlobalThemeTokens } from './_theme/types';
@@ -25,6 +26,7 @@ export const customizeTheme = (tokens: DeepPartial<GlobalThemeTokens>) => {
     [colorAccentContract, colorAccentTokens, { color: { accent: tokens.color?.accent } }],
     [colorNeutralContract, colorNeutralTokens, { color: { neutral: tokens.color?.neutral } }],
     [colorTextContract, colorTextTokens, { color: { text: tokens.color?.text } }],
+    [shadowBoxContract, shadowBoxTokens, { shadow: { box: tokens.shadow?.box } }],
     [spacingScaleContract, spacingScaleTokens, { spacing: { scale: tokens.spacing?.scale } }],
     [systemBaseContract, systemBaseTokens, { system: { base: tokens.system?.base } }],
     [systemInteractionContract, systemInteractionTokens, { system: { interaction: tokens.system?.interaction } }],
