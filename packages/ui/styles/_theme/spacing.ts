@@ -1,6 +1,6 @@
 import extensions from '@/styles/extensions';
-import spacing from './spacing.css';
+import spacingTokens from './spacing.css';
 
-export default (level: number) => {
-  return extensions.calc.multiply(spacing.base, level);
-};
+export default function spacing(level: number) {
+  return extensions.calc.multiply(spacingTokens.base, level);
+}

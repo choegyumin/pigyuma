@@ -1,5 +1,5 @@
-import { useInsertionEffect, useRef } from 'react';
 import ReactTypes from '@pigyuma/react-utility-types';
+import { useInsertionEffect, useRef } from 'react';
 import useImmutableCallback from './useImmutableCallback';
 
 export default function useStableCallback<T extends ReactTypes.CallbackFunction>(callback: T): T {
