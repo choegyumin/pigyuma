@@ -10,8 +10,8 @@
     "test": "vitest watch"
   },
   "dependencies": {
-    "@pigyuma/react-hooks": "*",
     "@pigyuma/react-utility-types": "*",
+    "@pigyuma/react-utils": "*",
     "@pigyuma/utils": "*",
     "@vanilla-extract/css": "^1.9.2",
     "@vanilla-extract/css-utils": "^0.1.3",

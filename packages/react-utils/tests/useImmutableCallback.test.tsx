@@ -1,19 +1,22 @@
+import useImmutableCallback from '@/src/useImmutableCallback';
 import { renderHook } from '@testing-library/react';
-import useImmutableCallback from './useImmutableCallback';
 
 describe('useImmutableCallback', () => {
-  test('should use immutable callback', () => {
+  test('should initialize callback function', () => {
     const { result } = renderHook(() => useImmutableCallback(() => 'return'));
 
     expect(result.current()).toBe('return');
   });
 
-  test('should not change function by updated new callback', () => {
+  test('should callback function is immutable', () => {
     const initialProps = { callback: () => 'initial' };
     const { rerender, result } = renderHook(({ callback }) => useImmutableCallback(callback), { initialProps });
+    const prevCallback = result.current;
 
     rerender({ callback: () => 'changed' });
+    const nextCallback = result.current;
 
     expect(result.current()).toBe('initial');
+    expect(nextCallback).toBe(prevCallback);
   });
 });

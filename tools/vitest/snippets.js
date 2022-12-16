@@ -9,7 +9,7 @@ const path = require('path');
 const rootDir = (...paths) => path.resolve(__dirname, ...paths);
 
 const appNames = ['web'];
-const packageNames = ['react-hooks', 'react-utility-types', 'ui', 'utils'];
+const packageNames = ['react-utility-types', 'react-utils', 'ui', 'utils'];
 
 const createCustomWorkspaceResolver = (workspaceType) => {
   return (replacedPath) => {

@@ -1,19 +1,22 @@
+import useEvent from '@/src/useEvent';
 import { renderHook } from '@testing-library/react';
-import useEvent from './useEvent';
 
 describe('useEvent', () => {
-  test('should use event callback', () => {
+  test('should initialize callback function', () => {
     const { result } = renderHook(() => useEvent(() => 'return'));
 
     expect(result.current()).toBe('return');
   });
 
-  test('should change function by updated new callback', () => {
+  test('should callback function is immutable, but return changed value by new callback function', () => {
     const initialProps = { callback: () => 'initial' };
     const { rerender, result } = renderHook(({ callback }) => useEvent(callback), { initialProps });
+    const prevCallback = result.current;
 
     rerender({ callback: () => 'changed' });
+    const nextCallback = result.current;
 
     expect(result.current()).toBe('changed');
+    expect(nextCallback).toBe(prevCallback);
   });
 });

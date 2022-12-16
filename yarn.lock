@@ -1121,9 +1121,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pigyuma/react-hooks@*, @pigyuma/react-hooks@workspace:packages/react-hooks":
+"@pigyuma/react-utility-types@*, @pigyuma/react-utility-types@workspace:packages/react-utility-types":
   version: 0.0.0-use.local
-  resolution: "@pigyuma/react-hooks@workspace:packages/react-hooks"
+  resolution: "@pigyuma/react-utility-types@workspace:packages/react-utility-types"
+  dependencies:
+    "@pigyuma/tsconfig": "*"
+    "@types/node": ^18
+    "@types/react": ^18
+    "@types/react-dom": ^18
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    typescript: ^4.7.4
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  languageName: unknown
+  linkType: soft
+
+"@pigyuma/react-utils@*, @pigyuma/react-utils@workspace:packages/react-utils":
+  version: 0.0.0-use.local
+  resolution: "@pigyuma/react-utils@workspace:packages/react-utils"
   dependencies:
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/tsconfig": "*"
@@ -1151,23 +1168,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pigyuma/react-utility-types@*, @pigyuma/react-utility-types@workspace:packages/react-utility-types":
-  version: 0.0.0-use.local
-  resolution: "@pigyuma/react-utility-types@workspace:packages/react-utility-types"
-  dependencies:
-    "@pigyuma/tsconfig": "*"
-    "@types/node": ^18
-    "@types/react": ^18
-    "@types/react-dom": ^18
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    typescript: ^4.7.4
-  peerDependencies:
-    react: ^18.0.0
-    react-dom: ^18.0.0
-  languageName: unknown
-  linkType: soft
-
 "@pigyuma/tsconfig@*, @pigyuma/tsconfig@workspace:packages/tsconfig":
   version: 0.0.0-use.local
   resolution: "@pigyuma/tsconfig@workspace:packages/tsconfig"
@@ -1178,8 +1178,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pigyuma/ui@workspace:packages/ui"
   dependencies:
-    "@pigyuma/react-hooks": "*"
     "@pigyuma/react-utility-types": "*"
+    "@pigyuma/react-utils": "*"
     "@pigyuma/tsconfig": "*"
     "@pigyuma/utils": "*"
     "@testing-library/dom": ^8.20.0
@@ -8311,8 +8311,8 @@ turbo@latest:
   resolution: "web@workspace:apps/web"
   dependencies:
     "@babel/core": ^7.0.0
-    "@pigyuma/react-hooks": "*"
     "@pigyuma/react-utility-types": "*"
+    "@pigyuma/react-utils": "*"
     "@pigyuma/tsconfig": "*"
     "@pigyuma/ui": "*"
     "@pigyuma/utils": "*"

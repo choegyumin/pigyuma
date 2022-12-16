@@ -1,12 +1,12 @@
 {
-  "name": "@pigyuma/react-hooks",
+  "name": "@pigyuma/react-utils",
   "version": "0.0.0",
   "main": "./index.ts",
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
-    "format": "cd ../../ && yarn prettier \"packages/react-hooks/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
-    "lint": "cd ../../ && TIMING=1 yarn eslint \"packages/react-hooks/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
+    "format": "cd ../../ && yarn prettier \"packages/react-utils/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
+    "lint": "cd ../../ && TIMING=1 yarn eslint \"packages/react-utils/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
     "test": "vitest watch"
   },
   "dependencies": {
