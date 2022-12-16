@@ -25,3 +25,7 @@ type DeepReadonly<T> = {
 type PickExisting<T extends {}, K extends keyof any> = {
   [P in K]: Property<T, P>;
 };
+
+type PickEnum<T, K extends T> = {
+  [P in keyof K]: P extends K ? P : never;
+};
