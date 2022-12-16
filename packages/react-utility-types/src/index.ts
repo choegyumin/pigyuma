@@ -7,7 +7,7 @@ export type UnknownProps = {};
 
 /**
  * A specific function type would not trigger implicit any.
- * See {@link https://github.com/DefinitelyTyped/DefinitelyTyped/issues/52873#issuecomment-845806435} for a comparison between `Function` and more specific types.
+ * @see {@link https://github.com/DefinitelyTyped/DefinitelyTyped/issues/52873#issuecomment-845806435} for a comparison between `Function` and more specific types.
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type CallbackFunction = Function;
