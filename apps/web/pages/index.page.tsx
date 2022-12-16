@@ -1,6 +1,6 @@
 import { Button } from '@pigyuma/ui';
 import { useRecoilValue } from 'recoil';
-import { myState } from 'store/sample';
+import { myState } from '~/store/sample';
 import styles from './index.css';
 
 const Home = () => {

@@ -7,21 +7,22 @@ const createJestConfig = nextJest({
 });
 
 // Add any custom config to be passed to Jest
+/** @type {import("ts-jest").JestConfigWithTsJest} */
 const customJestConfig = {
+  preset: 'ts-jest/presets/js-with-ts-esm',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
     ...workspacesModuleNameMapper,
-    // Handle module aliases (this will be automatically configured in Next.js for you soon)
-    '^components/(.*)$': '<rootDir>/components/$1',
-    '^pages/(.*)$': '<rootDir>/pages/$1',
-    '^store/(.*)$': '<rootDir>/store/$1',
-    '^utils/(.*)$': '<rootDir>/utils/$1',
   },
   transform: {
     '\\.css\\.ts$': '@vanilla-extract/jest-transform',
   },
+  transformIgnorePatterns: ['node_modules/(?!(lodash-es)/)'],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig);
+module.exports = async () => ({
+  ...(await createJestConfig(customJestConfig)()),
+  transformIgnorePatterns: customJestConfig.transformIgnorePatterns,
+});

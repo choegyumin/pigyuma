@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: ['../../tools/eslint/base'],
+  extends: ['../../tools/eslint/workspace/package'],
 };

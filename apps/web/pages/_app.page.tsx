@@ -3,7 +3,7 @@ import '@pigyuma/ui/styles/foundations';
 import '@pigyuma/ui/styles/globals';
 import './_app.css';
 
-import AppProvider from 'components/AppProvider';
+import AppProvider from '~/components/AppProvider';
 import type { AppProps } from 'next/app';
 import React from 'react';
 

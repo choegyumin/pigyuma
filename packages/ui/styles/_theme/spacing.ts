@@ -1,4 +1,4 @@
-import extensions from '@pigyuma/ui/styles/extensions';
+import extensions from '@/styles/extensions';
 import spacing from './spacing.css';
 
 export default (level: number) => {

@@ -1,4 +1,4 @@
-import { ForwardingPropsByBox } from '@pigyuma/ui/patterns/Box';
+import { ForwardingPropsByBox } from '@/patterns/Box';
 
 type BaseForwardingProps = ForwardingPropsByBox<'button'>;
 

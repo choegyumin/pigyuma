@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Package base",
+  "extends": "../_default/base.json"
+}

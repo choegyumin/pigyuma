@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import AppProvider from 'components/AppProvider';
+import AppProvider from '~/components/AppProvider';
 import Home from './index.page';
 
 describe('<Home />', () => {
