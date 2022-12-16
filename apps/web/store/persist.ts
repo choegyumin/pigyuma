@@ -1,5 +1,5 @@
 import { AtomEffect } from 'recoil';
-import { isServer } from 'utils/env';
+import { isServer } from '~/utils/env';
 
 /**
  * Local Storage Persistence

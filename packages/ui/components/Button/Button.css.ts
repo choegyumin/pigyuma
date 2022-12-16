@@ -1,5 +1,5 @@
+import foundations from '@/styles/foundations';
 import { style } from '@vanilla-extract/css';
-import foundations from '@pigyuma/ui/styles/foundations';
 
 export default {
   root: style({

@@ -1,7 +1,11 @@
 {
-  "extends": "@pigyuma/tsconfig/next.json",
+  "extends": "@pigyuma/tsconfig/app/next.json",
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"],
+      "@/*": ["../../packages/react-hooks/*", "../../packages/react-utility-types/*", "../../packages/ui/*", "../../packages/utils/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
