@@ -20,12 +20,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/web"\
       },\
       {\
-        "name": "@pigyuma/react-hooks",\
-        "reference": "workspace:packages/react-hooks"\
-      },\
-      {\
         "name": "@pigyuma/react-utility-types",\
         "reference": "workspace:packages/react-utility-types"\
+      },\
+      {\
+        "name": "@pigyuma/react-utils",\
+        "reference": "workspace:packages/react-utils"\
       },\
       {\
         "name": "@pigyuma/tsconfig",\
@@ -43,8 +43,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
-      ["@pigyuma/react-hooks", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks", "workspace:packages/react-hooks"]],\
       ["@pigyuma/react-utility-types", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types", "workspace:packages/react-utility-types"]],\
+      ["@pigyuma/react-utils", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils", "workspace:packages/react-utils"]],\
       ["@pigyuma/tsconfig", ["workspace:packages/tsconfig"]],\
       ["@pigyuma/ui", ["workspace:packages/ui"]],\
       ["@pigyuma/utils", ["workspace:packages/utils"]],\
@@ -1757,64 +1757,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@pigyuma/react-hooks", [\
-        ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks", {\
-          "packageLocation": "./.yarn/__virtual__/@pigyuma-react-hooks-virtual-73807cc23d/1/packages/react-hooks/",\
-          "packageDependencies": [\
-            ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
-            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
-            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
-            ["@pigyuma/utils", "workspace:packages/utils"],\
-            ["@testing-library/jest-dom", "npm:5.16.5"],\
-            ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
-            ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
-            ["@types/jest", "npm:29.2.3"],\
-            ["@types/node", "npm:18.11.9"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
-            ["@types/testing-library__jest-dom", "npm:5.14.5"],\
-            ["clsx", "npm:1.2.1"],\
-            ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
-            ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
-            ["react", "npm:18.2.0"],\
-            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
-            ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
-            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
-          ],\
-          "packagePeers": [\
-            "@types/react-dom",\
-            "@types/react",\
-            "react-dom",\
-            "react"\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["workspace:packages/react-hooks", {\
-          "packageLocation": "./packages/react-hooks/",\
-          "packageDependencies": [\
-            ["@pigyuma/react-hooks", "workspace:packages/react-hooks"],\
-            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
-            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
-            ["@pigyuma/utils", "workspace:packages/utils"],\
-            ["@testing-library/jest-dom", "npm:5.16.5"],\
-            ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
-            ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
-            ["@types/jest", "npm:29.2.3"],\
-            ["@types/node", "npm:18.11.9"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
-            ["@types/testing-library__jest-dom", "npm:5.14.5"],\
-            ["clsx", "npm:1.2.1"],\
-            ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
-            ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
-            ["react", "npm:18.2.0"],\
-            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
-            ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
-            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
       ["@pigyuma/react-utility-types", [\
         ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types", {\
           "packageLocation": "./.yarn/__virtual__/@pigyuma-react-utility-types-virtual-160746624a/1/packages/react-utility-types/",\
@@ -1851,6 +1793,64 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@pigyuma/react-utils", [\
+        ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils", {\
+          "packageLocation": "./.yarn/__virtual__/@pigyuma-react-utils-virtual-1666cf0dad/1/packages/react-utils/",\
+          "packageDependencies": [\
+            ["@pigyuma/react-utils", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils"],\
+            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
+            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
+            ["@pigyuma/utils", "workspace:packages/utils"],\
+            ["@testing-library/jest-dom", "npm:5.16.5"],\
+            ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
+            ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
+            ["@types/jest", "npm:29.2.3"],\
+            ["@types/node", "npm:18.11.9"],\
+            ["@types/react", "npm:18.0.25"],\
+            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/testing-library__jest-dom", "npm:5.14.5"],\
+            ["clsx", "npm:1.2.1"],\
+            ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
+            ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
+            ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
+            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["workspace:packages/react-utils", {\
+          "packageLocation": "./packages/react-utils/",\
+          "packageDependencies": [\
+            ["@pigyuma/react-utils", "workspace:packages/react-utils"],\
+            ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
+            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
+            ["@pigyuma/utils", "workspace:packages/utils"],\
+            ["@testing-library/jest-dom", "npm:5.16.5"],\
+            ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
+            ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
+            ["@types/jest", "npm:29.2.3"],\
+            ["@types/node", "npm:18.11.9"],\
+            ["@types/react", "npm:18.0.25"],\
+            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/testing-library__jest-dom", "npm:5.14.5"],\
+            ["clsx", "npm:1.2.1"],\
+            ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
+            ["jest-environment-jsdom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:29.3.1"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
+            ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
+            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@pigyuma/tsconfig", [\
         ["workspace:packages/tsconfig", {\
           "packageLocation": "./packages/tsconfig/",\
@@ -1865,8 +1865,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/ui/",\
           "packageDependencies": [\
             ["@pigyuma/ui", "workspace:packages/ui"],\
-            ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
+            ["@pigyuma/react-utils", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
             ["@testing-library/jest-dom", "npm:5.16.5"],\
@@ -10708,8 +10708,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["web", "workspace:apps/web"],\
             ["@babel/core", "npm:7.20.2"],\
-            ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
+            ["@pigyuma/react-utils", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/ui", "workspace:packages/ui"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\

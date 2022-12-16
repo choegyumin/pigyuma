@@ -1,5 +1,5 @@
+import useStableCallback from '@/src/useStableCallback';
 import { renderHook } from '@testing-library/react';
-import useStableCallback from './useStableCallback';
 
 describe('useStableCallback', () => {
   test('should use stable callback', () => {

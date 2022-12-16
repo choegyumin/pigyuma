@@ -1,5 +1,5 @@
+import useEvent from '@/src/useEvent';
 import { renderHook } from '@testing-library/react';
-import useEvent from './useEvent';
 
 describe('useEvent', () => {
   test('should use event callback', () => {

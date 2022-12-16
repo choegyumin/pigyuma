@@ -1,5 +1,5 @@
+import useImmutableCallback from '@/src/useImmutableCallback';
 import { renderHook } from '@testing-library/react';
-import useImmutableCallback from './useImmutableCallback';
 
 describe('useImmutableCallback', () => {
   test('should use immutable callback', () => {
