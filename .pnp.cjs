@@ -1622,8 +1622,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@types/lodash-es", "npm:4.17.6"],\
             ["@types/node", "npm:18.11.18"],\
+            ["@types/uuid", "npm:9.0.0"],\
             ["lodash-es", "npm:4.17.21"],\
             ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"],\
+            ["uuid", "npm:9.0.0"],\
             ["vite", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:4.0.4"],\
             ["vitest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:0.27.3"]\
           ],\
@@ -2135,6 +2137,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-tough-cookie-npm-4.0.2-9e61f877e6-e055556ffd.zip/node_modules/@types/tough-cookie/",\
           "packageDependencies": [\
             ["@types/tough-cookie", "npm:4.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/uuid", [\
+        ["npm:9.0.0", {\
+          "packageLocation": "./.yarn/cache/@types-uuid-npm-9.0.0-979023c16f-59ae56d954.zip/node_modules/@types/uuid/",\
+          "packageDependencies": [\
+            ["@types/uuid", "npm:9.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9715,6 +9726,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/util-deprecate-npm-1.0.2-e3fe1a219c-474acf1146.zip/node_modules/util-deprecate/",\
           "packageDependencies": [\
             ["util-deprecate", "npm:1.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["uuid", [\
+        ["npm:9.0.0", {\
+          "packageLocation": "./.yarn/cache/uuid-npm-9.0.0-46c41e3e43-8dd2c83c43.zip/node_modules/uuid/",\
+          "packageDependencies": [\
+            ["uuid", "npm:9.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

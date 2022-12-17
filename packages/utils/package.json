@@ -10,12 +10,14 @@
     "test": "vitest watch"
   },
   "dependencies": {
-    "lodash-es": "^4.17.6"
+    "lodash-es": "^4.17.6",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@pigyuma/tsconfig": "*",
     "@types/lodash-es": "^4",
     "@types/node": "^18",
+    "@types/uuid": "^9",
     "typescript": "^4.7.4",
     "vite": "^4.0.4",
     "vitest": "^0.27.1"

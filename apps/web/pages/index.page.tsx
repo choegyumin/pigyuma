@@ -1,17 +1,208 @@
-import { Button } from '@pigyuma/ui';
-import { useRecoilValue } from 'recoil';
-import { myState } from '~/store/sample';
-import styles from './index.css';
+import { ArtboardData, ShapeLayerData, TextLayerData, Workspace } from '@pigyuma/ui-design-tool';
+import React from 'react';
+import NoSSR from '~/components/NoSSR';
+
+const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
+  {
+    key: 'artboard-1',
+    type: 'artboard',
+    name: 'My Artboard',
+    x: 100,
+    y: 100,
+    width: 1024,
+    height: 768,
+    children: [
+      {
+        key: 'text-layer-wow',
+        type: 'layer',
+        layerType: 'text',
+        name: 'Text Layer Wow',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 28, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 400 },
+        letterSpacing: { length: 0, lengthType: 'px' },
+        content: 'WOW',
+      },
+      {
+        key: 'shape-layer-100',
+        type: 'layer',
+        layerType: 'shape',
+        name: 'Shape Layer 100',
+        shapeType: 'container',
+        x: { length: 100, lengthType: 'px' },
+        y: { length: 100, lengthType: 'px' },
+        rotate: { length: 0 },
+        width: { length: 100, lengthType: 'px' },
+        height: { length: 100, lengthType: 'px' },
+        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        fill: { color: '#faa' },
+        children: [
+          {
+            key: 'text-layer-100',
+            type: 'layer',
+            layerType: 'text',
+            name: 'Text Layer 100',
+            x: { length: 0, lengthType: 'auto' },
+            y: { length: 0, lengthType: 'auto' },
+            rotate: { length: 0 },
+            width: { length: 0, lengthType: 'flexible' },
+            height: { length: 0, lengthType: 'flexible' },
+            textColor: { color: 'black' },
+            fontSize: { length: 14, lengthType: 'px' },
+            lineHeight: { length: 150, lengthType: 'percent' },
+            fontWeight: { value: 400 },
+            letterSpacing: { length: 0, lengthType: 'px' },
+            content: '100',
+          },
+        ],
+      },
+      {
+        key: 'shape-layer-200',
+        type: 'layer',
+        layerType: 'shape',
+        name: 'Shape Layer 200',
+        shapeType: 'container',
+        x: { length: 300, lengthType: 'px' },
+        y: { length: 100, lengthType: 'px' },
+        rotate: { length: 0 },
+        width: { length: 200, lengthType: 'px' },
+        height: { length: 200, lengthType: 'px' },
+        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        fill: { color: '#afa' },
+        children: [
+          {
+            key: 'text-layer-200',
+            type: 'layer',
+            layerType: 'text',
+            name: 'Text Layer 200',
+            x: { length: 0, lengthType: 'auto' },
+            y: { length: 0, lengthType: 'auto' },
+            rotate: { length: 0 },
+            width: { length: 0, lengthType: 'flexible' },
+            height: { length: 0, lengthType: 'flexible' },
+            textColor: { color: 'black' },
+            fontSize: { length: 16, lengthType: 'px' },
+            lineHeight: { length: 150, lengthType: 'percent' },
+            fontWeight: { value: 400 },
+            letterSpacing: { length: 0, lengthType: 'px' },
+            content: '200',
+          },
+        ],
+      },
+      {
+        key: 'shape-layer-300',
+        type: 'layer',
+        layerType: 'shape',
+        name: 'Shape Layer 300',
+        shapeType: 'container',
+        x: { length: 600, lengthType: 'px' },
+        y: { length: 100, lengthType: 'px' },
+        rotate: { length: 0 },
+        width: { length: 300, lengthType: 'px' },
+        height: { length: 300, lengthType: 'px' },
+        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        fill: { color: '#aaf' },
+        children: [
+          {
+            key: 'text-layer-300',
+            type: 'layer',
+            layerType: 'text',
+            name: 'Text Layer 300',
+            x: { length: 0, lengthType: 'auto' },
+            y: { length: 0, lengthType: 'auto' },
+            rotate: { length: 0 },
+            width: { length: 0, lengthType: 'flexible' },
+            height: { length: 0, lengthType: 'flexible' },
+            textColor: { color: 'black' },
+            fontSize: { length: 20, lengthType: 'px' },
+            lineHeight: { length: 150, lengthType: 'percent' },
+            fontWeight: { value: 400 },
+            letterSpacing: { length: 0, lengthType: 'px' },
+            content: '300',
+          },
+        ],
+      },
+      {
+        key: 'shape-layer-inside',
+        type: 'layer',
+        layerType: 'shape',
+        name: 'Shape Layer Inside',
+        shapeType: 'container',
+        x: { length: 100, lengthType: 'px' },
+        y: { length: 550, lengthType: 'px' },
+        rotate: { length: 0 },
+        width: { length: 350, lengthType: 'px' },
+        height: { length: 350, lengthType: 'px' },
+        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        fill: { color: '#ffa' },
+        children: [
+          {
+            key: 'text-layer-inside',
+            type: 'layer',
+            layerType: 'text',
+            name: 'Text Layer Inside',
+            x: { length: 0, lengthType: 'auto' },
+            y: { length: 0, lengthType: 'auto' },
+            rotate: { length: 0 },
+            width: { length: 0, lengthType: 'flexible' },
+            height: { length: 0, lengthType: 'flexible' },
+            textColor: { color: 'black' },
+            fontSize: { length: 28, lengthType: 'px' },
+            lineHeight: { length: 150, lengthType: 'percent' },
+            fontWeight: { value: 400 },
+            letterSpacing: { length: 0, lengthType: 'px' },
+            content: 'inside Artboard',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'shape-layer-outside',
+    type: 'layer',
+    layerType: 'shape',
+    name: 'Shape Layer Outside',
+    shapeType: 'container',
+    x: { length: 650, lengthType: 'px' },
+    y: { length: 650, lengthType: 'px' },
+    rotate: { length: 0 },
+    width: { length: 350, lengthType: 'px' },
+    height: { length: 350, lengthType: 'px' },
+    stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+    fill: { color: '#faf' },
+    children: [
+      {
+        key: 'text-layer-outside',
+        type: 'layer',
+        layerType: 'text',
+        name: 'Text Layer Outside',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 28, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 400 },
+        letterSpacing: { length: 0, lengthType: 'px' },
+        content: 'outside Artboard',
+      },
+    ],
+  },
+];
 
 const Home = () => {
-  const { author } = useRecoilValue(myState);
-
   return (
-    <div>
-      <h1 className={styles.heading}>{author}</h1>
-      <input type="text" placeholder="Blah Blah" />
-      <Button>Boop</Button>
-    </div>
+    <NoSSR>
+      <Workspace data={dummyData} />
+    </NoSSR>
   );
 };
 Home.displayName = 'Home';
