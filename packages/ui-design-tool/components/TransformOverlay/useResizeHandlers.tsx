@@ -1,4 +1,4 @@
-import { UIRecordQuad, UIRecordRect } from '@/types/Shape';
+import { UIRecordQuad, UIRecordLayoutRect } from '@/types/Shape';
 import { useEvent } from '@pigyuma/react-utils';
 import { calcCoordByDistance, calcDistancePointFromLine } from '@pigyuma/utils';
 import { useCallback } from 'react';
@@ -52,7 +52,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     switchTransformUI();
     overlayStateRef.current = 'resizing';
     transformInitialStyleRef.current = { ...styleValues };
-    transformInitialRectRef.current = UIRecordRect.fromElement(layer);
+    transformInitialRectRef.current = UIRecordLayoutRect.fromElement(layer);
     resizingHandleTargetRef.current = handleTarget;
 
     const { degrees: _degreesStyleValue, ...resizingStyleValues } = styleValues;
@@ -103,7 +103,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
       y: event.clientY,
     };
 
-    const rect = transformInitialRectRef.current ?? UIRecordRect.fromElement(layer);
+    const rect = transformInitialRectRef.current ?? UIRecordLayoutRect.fromElement(layer);
     const quad = UIRecordQuad.fromRect(rect);
     transformInitialRectRef.current = rect;
 

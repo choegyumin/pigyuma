@@ -4,6 +4,7 @@ export { default as calcCoordByDistance } from './calcCoordByDistance';
 export { default as calcDegreesBetweenCoords } from './calcDegreesBetweenCoords';
 export { default as calcDistancePointFromLine } from './calcDistancePointFromLine';
 export { default as calcDistancePointFromPoint } from './calcDistancePointFromPoint';
+export { default as UNSAFE_calcLayoutFromBounds } from './calcLayoutFromBounds';
 export { default as calcLayoutFromPoints } from './calcLayoutFromPoints';
 export { default as calcRectPoints } from './calcRectPoints';
 export { default as clone } from 'lodash-es/clone';

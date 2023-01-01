@@ -1,4 +1,4 @@
-import { UIRecordQuad } from '@/types/Shape';
+import { UIRecordBoundingRect } from '@/types/Shape';
 import { useCallback } from 'react';
 import * as styles from './AxisGrid.css';
 import { AxisGridProps, AxisGridRef } from './types';
@@ -31,7 +31,7 @@ export default function useUIController(deps: UseUIControllerDependencys) {
         return;
       }
 
-      const { x: layerX, y: layerY, width: layerWidth, height: layerHeight } = UIRecordQuad.fromElement(layer).getBounds();
+      const { x: layerX, y: layerY, width: layerWidth, height: layerHeight } = UIRecordBoundingRect.fromElement(layer);
       const axisX = layerX + layerWidth / 2;
       const axisY = layerY + layerHeight / 2;
 
@@ -51,7 +51,7 @@ export default function useUIController(deps: UseUIControllerDependencys) {
         return;
       }
 
-      const { x: artboardX, y: artboardY } = UIRecordQuad.fromElement(artboard).getBounds();
+      const { x: artboardX, y: artboardY } = UIRecordBoundingRect.fromElement(artboard);
       const axisLength = {
         x: axisX - artboardX,
         y: axisY - artboardY,

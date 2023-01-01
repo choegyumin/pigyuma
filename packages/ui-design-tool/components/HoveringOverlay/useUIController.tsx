@@ -1,4 +1,4 @@
-import { UIRecordRect } from '@/types/Shape';
+import { UIRecordLayoutRect } from '@/types/Shape';
 import { useCallback } from 'react';
 import * as styles from './HoveringOverlay.css';
 import { HoveringOverlayProps, HoveringOverlayRef } from './types';
@@ -28,7 +28,7 @@ export default function useUIController(deps: UseUIControllerDependencys) {
         return;
       }
 
-      const { x, y, width, height, degrees } = UIRecordRect.fromElement(layer);
+      const { x, y, width, height, degrees } = UIRecordLayoutRect.fromElement(layer);
       setRootStyle({
         // resize, rotate를 고려해 중심축을 기준으로 함
         [styles.varNames.x]: `${x + width / 2}px`,

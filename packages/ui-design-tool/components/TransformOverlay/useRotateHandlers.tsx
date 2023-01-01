@@ -1,4 +1,4 @@
-import { UIRecordRect } from '@/types/Shape';
+import { UIRecordLayoutRect } from '@/types/Shape';
 import { useEvent } from '@pigyuma/react-utils';
 import { calcDegreesBetweenCoords, toDegrees360 } from '@pigyuma/utils';
 import { useCallback } from 'react';
@@ -43,7 +43,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
       return;
     }
 
-    const rect = transformInitialRectRef.current ?? UIRecordRect.fromElement(layer);
+    const rect = transformInitialRectRef.current ?? UIRecordLayoutRect.fromElement(layer);
     const { clientX, clientY } = event;
 
     const styleValues = getLayerShapeStyle(layer);
@@ -102,7 +102,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
       return;
     }
 
-    const rect = transformInitialRectRef.current ?? UIRecordRect.fromElement(layer);
+    const rect = transformInitialRectRef.current ?? UIRecordLayoutRect.fromElement(layer);
     transformInitialRectRef.current = rect;
     const { clientX, clientY } = event;
 

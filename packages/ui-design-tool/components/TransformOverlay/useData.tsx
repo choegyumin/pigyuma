@@ -1,4 +1,4 @@
-import { UIRecordRect } from '@/types/Shape';
+import { UIRecordLayoutRect } from '@/types/Shape';
 import { useDOMStyle } from '@pigyuma/react-utils';
 import { useRef } from 'react';
 import { OvrlayState, ResizingHandleTarget, TransformOverlayProps, TransformOverlayRef } from '../TransformOverlay/types';
@@ -19,7 +19,7 @@ export default function useData(deps: UseDataDependencys) {
   const overlayStateRef = useRef<OvrlayState>(OvrlayState.idle);
 
   const transformInitialStyleRef = useRef<{ x: string; y: string; width: string; height: string; degrees: string }>();
-  const transformInitialRectRef = useRef<UIRecordRect>();
+  const transformInitialRectRef = useRef<UIRecordLayoutRect>();
 
   const resizingHandleTargetRef = useRef<ResizingHandleTarget>();
 

@@ -1,4 +1,4 @@
-import { UIRecordRect } from '@/types/Shape';
+import { UIRecordLayoutRect } from '@/types/Shape';
 import { UIRecordStyle } from '@/types/Style';
 import { getUIRecordStyleValue, setUIRecordStyleValue } from '@/utils/style';
 import { useCallback } from 'react';
@@ -28,7 +28,7 @@ export default function useUIController(deps: UseUIControllerDependencys) {
   }, []);
 
   const getOverlayShapeStyle = useCallback((layer: HTMLElement) => {
-    const { x, y, width, height, degrees } = UIRecordRect.fromElement(layer);
+    const { x, y, width, height, degrees } = UIRecordLayoutRect.fromElement(layer);
     return {
       // resize, rotate를 고려해 중심축을 기준으로 함
       x: `${x + width / 2}px`,
