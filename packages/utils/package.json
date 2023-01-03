@@ -10,11 +10,13 @@
     "test": "vitest watch"
   },
   "dependencies": {
-    "lodash-es": "^4.17.6"
+    "lodash-es": "^4.17.6",
+    "mathjs": "^11.5.0"
   },
   "devDependencies": {
     "@pigyuma/tsconfig": "*",
     "@types/lodash-es": "^4",
+    "@types/mathjs": "^9",
     "@types/node": "^18",
     "typescript": "^4.7.4",
     "vite": "^4.0.4",
