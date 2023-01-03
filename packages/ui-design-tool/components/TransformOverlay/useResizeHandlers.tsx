@@ -1,6 +1,6 @@
 import { UIRecordQuad, UIRecordRect } from '@/types/Shape';
 import { useEvent } from '@pigyuma/react-utils';
-import { calcCoordByDistance, calcDistancePointFromLine } from '@pigyuma/utils';
+import { calcDistancePointFromLine } from '@pigyuma/utils';
 import { useCallback } from 'react';
 import { ResizingHandleTarget, TransformOverlayProps, TransformOverlayRef } from './types';
 import { UseDataType } from './useData';
@@ -107,62 +107,105 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     const quad = UIRecordQuad.fromRect(rect);
     transformInitialRectRef.current = rect;
 
-    const newQuadPoints = quad.toJSON();
+    const boundingRect = UIRecordQuad.fromRect({
+      x: rect.x,
+      y: rect.y,
+      width: rect.width,
+      height: rect.height,
+      degrees: rect.degrees,
+    }).getBounds();
 
-    /** @todo calcDistancePointFromLines는 절댓값만 반환해야 하므로, 음수 좌표를 대체할 수 있는 로직 작성 */
-    const left = (flip = false) => {
-      const distance = -calcDistancePointFromLine([newQuadPoints.p1, newQuadPoints.p4], cursor);
-      newQuadPoints.p1 = calcCoordByDistance(newQuadPoints.p1, rect.degrees + 180, flip ? -distance : distance);
-      newQuadPoints.p4 = calcCoordByDistance(newQuadPoints.p4, rect.degrees + 180, flip ? -distance : distance);
-      return rect.width + distance < 0;
-    };
-    const top = () => {
-      const distance = calcDistancePointFromLine([newQuadPoints.p1, newQuadPoints.p2], cursor);
-      newQuadPoints.p1 = calcCoordByDistance(newQuadPoints.p1, rect.degrees + 90, distance);
-      newQuadPoints.p2 = calcCoordByDistance(newQuadPoints.p2, rect.degrees + 90, distance);
-      return rect.height + distance < 0;
-    };
-    const right = (flip = false) => {
-      const distance = calcDistancePointFromLine([newQuadPoints.p2, newQuadPoints.p3], cursor);
-      newQuadPoints.p2 = calcCoordByDistance(newQuadPoints.p2, rect.degrees + 0, flip ? -distance : distance);
-      newQuadPoints.p3 = calcCoordByDistance(newQuadPoints.p3, rect.degrees + 0, flip ? -distance : distance);
-      return rect.width + distance < 0;
-    };
-    const bottom = () => {
-      const distance = -calcDistancePointFromLine([newQuadPoints.p4, newQuadPoints.p3], cursor);
-      newQuadPoints.p3 = calcCoordByDistance(newQuadPoints.p3, rect.degrees + 270, distance);
-      newQuadPoints.p4 = calcCoordByDistance(newQuadPoints.p4, rect.degrees + 270, distance);
-      return rect.height + distance < 0;
-    };
-
-    switch (resizingHandleTargetRef.current) {
-      // prettier-ignore
-      case ResizingHandleTarget.top: { top(); break; }
-      // prettier-ignore
-      case ResizingHandleTarget.left: { left(); break; }
-      // prettier-ignore
-      case ResizingHandleTarget.right: { right(); break; }
-      // prettier-ignore
-      case ResizingHandleTarget.bottom: { bottom(); break; }
-      // prettier-ignore
-      case ResizingHandleTarget.topLeft: { left(top()); break; }
-      // prettier-ignore
-      case ResizingHandleTarget.topRight: { right(top()); break; }
-      // prettier-ignore
-      case ResizingHandleTarget.bottomLeft: { left(bottom()); break; }
-      // prettier-ignore
-      case ResizingHandleTarget.bottomRight: { right(bottom()); break; }
-    }
-
-    const newRect = UIRecordQuad.fromQuad(newQuadPoints).getLayout();
     const styleValues = getLayerShapeStyle(layer);
     const xStyleValue = parseFloat(transformInitialStyleRef.current?.x || '0');
     const yStyleValue = parseFloat(transformInitialStyleRef.current?.y || '0');
 
-    styleValues.x = `${Math.round(xStyleValue - rect.x + newRect.x)}px`;
-    styleValues.y = `${Math.round(yStyleValue - rect.y + newRect.y)}px`;
-    styleValues.width = `${Math.round(newRect.width)}px`;
-    styleValues.height = `${Math.round(newRect.height)}px`;
+    const left = () => {
+      const distance = calcDistancePointFromLine([quad.p1, quad.p4], cursor);
+      const size = rect.width + distance;
+      const flip = size < 0;
+      styleValues.width = `${Math.round(Math.abs(size))}px`;
+      if (flip) {
+        styleValues.x = `${Math.round(xStyleValue + rect.width)}px`;
+      } else {
+        styleValues.x = `${Math.round(xStyleValue - distance)}px`;
+      }
+    };
+    const top = () => {
+      const distance = -calcDistancePointFromLine([quad.p1, quad.p2], cursor);
+      const size = rect.height + distance;
+      const flip = size < 0;
+      styleValues.height = `${Math.round(Math.abs(size))}px`;
+      if (flip) {
+        styleValues.y = `${Math.round(yStyleValue + rect.height)}px`;
+      } else {
+        styleValues.y = `${Math.round(yStyleValue - distance)}px`;
+      }
+    };
+    const right = () => {
+      const distance = -calcDistancePointFromLine([quad.p2, quad.p3], cursor);
+      const size = rect.width + distance;
+      const flip = size < 0;
+      const zeroBounds = UIRecordQuad.fromRect({ ...rect.toJSON(), width: 0 }).getBounds();
+      const transformedBounds = UIRecordQuad.fromRect({ ...rect.toJSON(), width: Math.abs(size) }).getBounds();
+      const movement = {
+        x: boundingRect.x - transformedBounds.x,
+        y: boundingRect.y - transformedBounds.y,
+      };
+      if (flip) {
+        movement.x = -movement.x + (boundingRect.x - zeroBounds.x) * 2 + size;
+        movement.y = -movement.y + (boundingRect.y - zeroBounds.y) * 2;
+      }
+      if (0 < rect.degrees && rect.degrees < 180) {
+        movement.y = -movement.y;
+      }
+      if (90 < rect.degrees && rect.degrees < 270) {
+        movement.x = boundingRect.width - transformedBounds.width - (transformedBounds.x - boundingRect.x);
+        if (flip) {
+          const asdf = boundingRect.width - zeroBounds.width - (zeroBounds.x - boundingRect.x);
+          movement.x = asdf - (transformedBounds.x - zeroBounds.x);
+        }
+      }
+      styleValues.x = `${Math.round(xStyleValue + movement.x)}px`;
+      styleValues.y = `${Math.round(yStyleValue + movement.y)}px`;
+      styleValues.width = `${Math.round(Math.abs(size))}px`;
+    };
+    const bottom = () => {
+      const distance = -calcDistancePointFromLine([quad.p3, quad.p4], cursor);
+      const size = rect.height + distance;
+      const flip = size < 0;
+      styleValues.height = `${Math.round(Math.abs(size))}px`;
+      if (flip) {
+        styleValues.y = `${Math.round(yStyleValue + size)}px`;
+      }
+    };
+    if (resizingHandleTargetRef.current === ResizingHandleTarget.top) {
+      top();
+    }
+    if (resizingHandleTargetRef.current === ResizingHandleTarget.left) {
+      left();
+    }
+    if (resizingHandleTargetRef.current === ResizingHandleTarget.right) {
+      right();
+    }
+    if (resizingHandleTargetRef.current === ResizingHandleTarget.bottom) {
+      bottom();
+    }
+    if (resizingHandleTargetRef.current === ResizingHandleTarget.topLeft) {
+      top();
+      left();
+    }
+    if (resizingHandleTargetRef.current === ResizingHandleTarget.topRight) {
+      top();
+      right();
+    }
+    if (resizingHandleTargetRef.current === ResizingHandleTarget.bottomLeft) {
+      bottom();
+      left();
+    }
+    if (resizingHandleTargetRef.current === ResizingHandleTarget.bottomRight) {
+      bottom();
+      right();
+    }
 
     const { degrees: _degreesStyleValue, ...resizingStyleValues } = styleValues;
     transformLayer(layer, styleValues);
