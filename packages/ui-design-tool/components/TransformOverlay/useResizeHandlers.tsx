@@ -1,9 +1,9 @@
-import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '@/types/Shape';
+import { UIRecordQuad, UIRecordRect, UIRecordRectInit } from '@/types/Shape';
 import { isUIRecordKey } from '@/utils/model';
 import { getUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
-import { calcCoordByDistance, calcDistancePointFromLine, pick } from '@pigyuma/utils';
+import { calcDistancePointFromLine, pick } from '@pigyuma/utils';
 import { WorkspaceInteraction } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { HandlePlacement } from './types';
@@ -23,55 +23,73 @@ const getTransformedRect = (
   rect: UIRecordRect,
   mousePoint: { x: number; y: number },
   handlePlacement: HandlePlacement,
+  /** @todo */
+  // eslint-disable-next-line
   resizeFromCenter: boolean,
 ) => {
   const quad = UIRecordQuad.fromRect(rect);
+  const boundingRect = quad.getBounds();
 
-  const newQuadInit: UIRecordQuadInit = quad.toJSON();
+  const newRectInit: UIRecordRectInit = pick(quad.getLayout().toJSON(), ['x', 'y', 'width', 'height', 'rotate']);
 
-  const left = (flip = false) => {
-    const distance = -calcDistancePointFromLine([newQuadInit.p1, newQuadInit.p4], mousePoint, { abs: false });
-    newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 180, flip ? -distance : distance);
-    newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 180, flip ? -distance : distance);
-    if (resizeFromCenter) {
-      newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 180, flip ? distance : -distance);
-      newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 180, flip ? distance : -distance);
+  const left = () => {
+    const distance = calcDistancePointFromLine([quad.p1, quad.p4], mousePoint);
+    const size = rect.width + distance;
+    const flip = size < 0;
+    newRectInit.width = Math.abs(size);
+    if (flip) {
+      newRectInit.x = rect.x + rect.width;
+    } else {
+      newRectInit.x = rect.x - distance;
     }
-    const diff = distance * (resizeFromCenter ? 2 : 1);
-    return rect.width + diff < 0;
   };
   const top = () => {
-    const distance = calcDistancePointFromLine([newQuadInit.p1, newQuadInit.p2], mousePoint, { abs: false });
-    newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 90, distance);
-    newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 90, distance);
-    if (resizeFromCenter) {
-      newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 90, -distance);
-      newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 90, -distance);
+    const distance = -calcDistancePointFromLine([quad.p1, quad.p2], mousePoint);
+    const size = rect.height + distance;
+    const flip = size < 0;
+    newRectInit.height = Math.abs(size);
+    if (flip) {
+      newRectInit.y = rect.y + rect.height;
+    } else {
+      newRectInit.y = rect.y - distance;
     }
-    const diff = distance * (resizeFromCenter ? 2 : 1);
-    return rect.height + diff < 0;
   };
-  const right = (flip = false) => {
-    const distance = calcDistancePointFromLine([newQuadInit.p2, newQuadInit.p3], mousePoint, { abs: false });
-    newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 0, flip ? -distance : distance);
-    newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 0, flip ? -distance : distance);
-    if (resizeFromCenter) {
-      newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 0, flip ? distance : -distance);
-      newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 0, flip ? distance : -distance);
+  const right = () => {
+    const distance = -calcDistancePointFromLine([quad.p2, quad.p3], mousePoint);
+    const size = rect.width + distance;
+    const flip = size < 0;
+    const zeroBounds = UIRecordQuad.fromRect({ ...rect.toJSON(), width: 0 }).getBounds();
+    const transformedBounds = UIRecordQuad.fromRect({ ...rect.toJSON(), width: Math.abs(size) }).getBounds();
+    const movement = {
+      x: boundingRect.x - transformedBounds.x,
+      y: boundingRect.y - transformedBounds.y,
+    };
+    if (flip) {
+      movement.x = -movement.x + (boundingRect.x - zeroBounds.x) * 2 + size;
+      movement.y = -movement.y + (boundingRect.y - zeroBounds.y) * 2;
     }
-    const diff = distance * (resizeFromCenter ? 2 : 1);
-    return rect.width + diff < 0;
+    if (0 < rect.rotate && rect.rotate < 180) {
+      movement.y = -movement.y;
+    }
+    if (90 < rect.rotate && rect.rotate < 270) {
+      movement.x = boundingRect.width - transformedBounds.width - (transformedBounds.x - boundingRect.x);
+      if (flip) {
+        const asdf = boundingRect.width - zeroBounds.width - (zeroBounds.x - boundingRect.x);
+        movement.x = asdf - (transformedBounds.x - zeroBounds.x);
+      }
+    }
+    newRectInit.x = rect.x + movement.x;
+    newRectInit.y = rect.y + movement.y;
+    newRectInit.width = Math.abs(size);
   };
   const bottom = () => {
-    const distance = -calcDistancePointFromLine([newQuadInit.p4, newQuadInit.p3], mousePoint, { abs: false });
-    newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 270, distance);
-    newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 270, distance);
-    if (resizeFromCenter) {
-      newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 270, -distance);
-      newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 270, -distance);
+    const distance = -calcDistancePointFromLine([quad.p3, quad.p4], mousePoint);
+    const size = rect.height + distance;
+    const flip = size < 0;
+    newRectInit.height = Math.abs(size);
+    if (flip) {
+      newRectInit.y = rect.y + size;
     }
-    const diff = distance * (resizeFromCenter ? 2 : 1);
-    return rect.height + diff < 0;
   };
 
   switch (handlePlacement) {
@@ -84,22 +102,14 @@ const getTransformedRect = (
     // prettier-ignore
     case HandlePlacement.bottom: { bottom(); break; }
     // prettier-ignore
-    case HandlePlacement.topLeft: { left(top()); break; }
+    case HandlePlacement.topLeft: { top(); left(); break; }
     // prettier-ignore
-    case HandlePlacement.topRight: { right(top()); break; }
+    case HandlePlacement.topRight: { top(); right(); break; }
     // prettier-ignore
-    case HandlePlacement.bottomLeft: { left(bottom()); break; }
+    case HandlePlacement.bottomLeft: { bottom(); left(); break; }
     // prettier-ignore
-    case HandlePlacement.bottomRight: { right(bottom()); break; }
+    case HandlePlacement.bottomRight: { bottom(); right(); break; }
   }
-
-  const newRectInit: UIRecordRectInit = pick(UIRecordQuad.fromQuad(newQuadInit).getLayout().toJSON(), [
-    'x',
-    'y',
-    'width',
-    'height',
-    'rotate',
-  ]);
 
   newRectInit.x = Math.round(newRectInit.x);
   newRectInit.y = Math.round(newRectInit.y);
