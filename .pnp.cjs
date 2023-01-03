@@ -843,6 +843,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["regenerator-runtime", "npm:0.13.11"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:7.20.7", {\
+          "packageLocation": "./.yarn/cache/@babel-runtime-npm-7.20.7-69d8df458c-4629ce5c46.zip/node_modules/@babel/runtime/",\
+          "packageDependencies": [\
+            ["@babel/runtime", "npm:7.20.7"],\
+            ["regenerator-runtime", "npm:0.13.11"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@babel/runtime-corejs3", [\
@@ -1941,10 +1949,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@types/jest", "npm:29.2.3"],\
             ["@types/lodash-es", "npm:4.17.6"],\
+            ["@types/mathjs", "npm:9.4.2"],\
             ["@types/node", "npm:18.11.9"],\
             ["@types/uuid", "npm:9.0.0"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
             ["lodash-es", "npm:4.17.21"],\
+            ["mathjs", "npm:11.5.0"],\
             ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
             ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"],\
             ["uuid", "npm:9.0.0"]\
@@ -2324,6 +2334,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/lodash-es", "npm:4.17.6"],\
             ["@types/lodash", "npm:4.14.191"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/mathjs", [\
+        ["npm:9.4.2", {\
+          "packageLocation": "./.yarn/cache/@types-mathjs-npm-9.4.2-42ad0441bd-13d4e7a707.zip/node_modules/@types/mathjs/",\
+          "packageDependencies": [\
+            ["@types/mathjs", "npm:9.4.2"],\
+            ["mathjs", "npm:11.5.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4018,6 +4038,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["complex.js", [\
+        ["npm:2.1.1", {\
+          "packageLocation": "./.yarn/cache/complex.js-npm-2.1.1-2beaccef20-a0802cc3f0.zip/node_modules/complex.js/",\
+          "packageDependencies": [\
+            ["complex.js", "npm:2.1.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["concat-map", [\
         ["npm:0.0.1", {\
           "packageLocation": "./.yarn/cache/concat-map-npm-0.0.1-85a921b7ee-902a9f5d89.zip/node_modules/concat-map/",\
@@ -4373,6 +4402,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/decimal.js-npm-10.4.2-0119c97ba5-536cd6816a.zip/node_modules/decimal.js/",\
           "packageDependencies": [\
             ["decimal.js", "npm:10.4.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:10.4.3", {\
+          "packageLocation": "./.yarn/cache/decimal.js-npm-10.4.3-e7d483387c-796404dcfa.zip/node_modules/decimal.js/",\
+          "packageDependencies": [\
+            ["decimal.js", "npm:10.4.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4802,6 +4838,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/escalade-npm-3.1.1-e02da076aa-a3e2a99f07.zip/node_modules/escalade/",\
           "packageDependencies": [\
             ["escalade", "npm:3.1.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["escape-latex", [\
+        ["npm:1.2.0", {\
+          "packageLocation": "./.yarn/cache/escape-latex-npm-1.2.0-1481ca81a7-73a787319f.zip/node_modules/escape-latex/",\
+          "packageDependencies": [\
+            ["escape-latex", "npm:1.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5572,6 +5617,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["asynckit", "npm:0.4.0"],\
             ["combined-stream", "npm:1.0.8"],\
             ["mime-types", "npm:2.1.35"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["fraction.js", [\
+        ["npm:4.2.0", {\
+          "packageLocation": "./.yarn/cache/fraction.js-npm-4.2.0-28efe4afc7-8c76a6e21d.zip/node_modules/fraction.js/",\
+          "packageDependencies": [\
+            ["fraction.js", "npm:4.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6790,6 +6844,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["javascript-natural-sort", [\
+        ["npm:0.7.1", {\
+          "packageLocation": "./.yarn/cache/javascript-natural-sort-npm-0.7.1-9018625996-161e2c512c.zip/node_modules/javascript-natural-sort/",\
+          "packageDependencies": [\
+            ["javascript-natural-sort", "npm:0.7.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["javascript-stringify", [\
         ["npm:2.1.0", {\
           "packageLocation": "./.yarn/cache/javascript-stringify-npm-2.1.0-3da58139d2-009981ec84.zip/node_modules/javascript-stringify/",\
@@ -7956,6 +8019,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/map-obj-npm-4.3.0-d53e32935d-fbc554934d.zip/node_modules/map-obj/",\
           "packageDependencies": [\
             ["map-obj", "npm:4.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["mathjs", [\
+        ["npm:11.5.0", {\
+          "packageLocation": "./.yarn/cache/mathjs-npm-11.5.0-098b8e7091-46d73a1040.zip/node_modules/mathjs/",\
+          "packageDependencies": [\
+            ["mathjs", "npm:11.5.0"],\
+            ["@babel/runtime", "npm:7.20.7"],\
+            ["complex.js", "npm:2.1.1"],\
+            ["decimal.js", "npm:10.4.3"],\
+            ["escape-latex", "npm:1.2.0"],\
+            ["fraction.js", "npm:4.2.0"],\
+            ["javascript-natural-sort", "npm:0.7.1"],\
+            ["seedrandom", "npm:3.0.5"],\
+            ["tiny-emitter", "npm:2.1.0"],\
+            ["typed-function", "npm:4.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9509,6 +9590,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["seedrandom", [\
+        ["npm:3.0.5", {\
+          "packageLocation": "./.yarn/cache/seedrandom-npm-3.0.5-6946e8f8db-728b56bc3b.zip/node_modules/seedrandom/",\
+          "packageDependencies": [\
+            ["seedrandom", "npm:3.0.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["semver", [\
         ["npm:5.7.1", {\
           "packageLocation": "./.yarn/cache/semver-npm-5.7.1-40bcea106b-57fd0acfd0.zip/node_modules/semver/",\
@@ -10131,6 +10221,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["tiny-emitter", [\
+        ["npm:2.1.0", {\
+          "packageLocation": "./.yarn/cache/tiny-emitter-npm-2.1.0-2a4d94f487-fbcfb51457.zip/node_modules/tiny-emitter/",\
+          "packageDependencies": [\
+            ["tiny-emitter", "npm:2.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["tiny-glob", [\
         ["npm:0.2.9", {\
           "packageLocation": "./.yarn/cache/tiny-glob-npm-0.2.9-068f4ab3f8-aea5801eb6.zip/node_modules/tiny-glob/",\
@@ -10543,6 +10642,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/type-fest-npm-0.8.1-351ad028fe-d61c4b2eba.zip/node_modules/type-fest/",\
           "packageDependencies": [\
             ["type-fest", "npm:0.8.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["typed-function", [\
+        ["npm:4.1.0", {\
+          "packageLocation": "./.yarn/cache/typed-function-npm-4.1.0-fe0bfcf8e1-5d512a1350.zip/node_modules/typed-function/",\
+          "packageDependencies": [\
+            ["typed-function", "npm:4.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
