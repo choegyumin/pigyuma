@@ -1181,20 +1181,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pigyuma/jest-config-snippets@*, @pigyuma/jest-config-snippets@workspace:packages/jest-config-snippets":
-  version: 0.0.0-use.local
-  resolution: "@pigyuma/jest-config-snippets@workspace:packages/jest-config-snippets"
-  languageName: unknown
-  linkType: soft
-
 "@pigyuma/react-hooks@*, @pigyuma/react-hooks@workspace:packages/react-hooks":
   version: 0.0.0-use.local
   resolution: "@pigyuma/react-hooks@workspace:packages/react-hooks"
   dependencies:
-    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/tsconfig": "*"
     "@pigyuma/utils": "*"
+    "@testing-library/dom": ^8.20.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^14.4.3
@@ -1243,11 +1237,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pigyuma/ui@workspace:packages/ui"
   dependencies:
-    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/react-hooks": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/tsconfig": "*"
     "@pigyuma/utils": "*"
+    "@testing-library/dom": ^8.20.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^14.4.3
@@ -1276,7 +1270,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pigyuma/utils@workspace:packages/utils"
   dependencies:
-    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/tsconfig": "*"
     "@types/jest": ^29
     "@types/lodash-es": ^4
@@ -1333,6 +1326,22 @@ __metadata:
   dependencies:
     tslib: ^2.4.0
   checksum: 736857d524b41a8a4db81094e9b027f554004e0fa3e86325d85bdb38f7e6459ce022db079edb6c61ba0f46fe8583b3e663e95f7acbd13e51b8da6c34e45bba2e
+  languageName: node
+  linkType: hard
+
+"@testing-library/dom@npm:^8.20.0":
+  version: 8.20.0
+  resolution: "@testing-library/dom@npm:8.20.0"
+  dependencies:
+    "@babel/code-frame": ^7.10.4
+    "@babel/runtime": ^7.12.5
+    "@types/aria-query": ^5.0.1
+    aria-query: ^5.0.0
+    chalk: ^4.1.0
+    dom-accessibility-api: ^0.5.9
+    lz-string: ^1.4.4
+    pretty-format: ^27.0.2
+  checksum: 1e599129a2fe91959ce80900a0a4897232b89e2a8e22c1f5950c36d39c97629ea86b4986b60b173b5525a05de33fde1e35836ea597b03de78cc51b122835c6f0
   languageName: node
   linkType: hard
 
@@ -1431,6 +1440,13 @@ __metadata:
   version: 4.2.2
   resolution: "@types/aria-query@npm:4.2.2"
   checksum: 6f2ce11d91e2d665f3873258db19da752d91d85d3679eb5efcdf9c711d14492287e1e4eb52613b28e60375841a9e428594e745b68436c963d8bad4bf72188df3
+  languageName: node
+  linkType: hard
+
+"@types/aria-query@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "@types/aria-query@npm:5.0.1"
+  checksum: 69fd7cceb6113ed370591aef04b3fd0742e9a1b06dd045c43531448847b85de181495e4566f98e776b37c422a12fd71866e0a1dfd904c5ec3f84d271682901de
   languageName: node
   linkType: hard
 
@@ -8721,12 +8737,12 @@ turbo@latest:
   resolution: "web@workspace:apps/web"
   dependencies:
     "@babel/core": ^7.0.0
-    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/react-hooks": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/tsconfig": "*"
     "@pigyuma/ui": "*"
     "@pigyuma/utils": "*"
+    "@testing-library/dom": ^8.20.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^14.4.3

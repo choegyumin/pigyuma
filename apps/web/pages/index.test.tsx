@@ -3,7 +3,7 @@ import AppProvider from '~/components/AppProvider';
 import Home from './index.page';
 
 describe('<Home />', () => {
-  it('should render a heading', () => {
+  test('should render a heading', () => {
     render(
       <AppProvider>
         <Home />

@@ -13,7 +13,6 @@
     "lodash-es": "^4.17.6"
   },
   "devDependencies": {
-    "@pigyuma/jest-config-snippets": "*",
     "@pigyuma/tsconfig": "*",
     "@types/jest": "^29",
     "@types/lodash-es": "^4",

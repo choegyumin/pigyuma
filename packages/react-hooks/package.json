@@ -14,9 +14,9 @@
     "clsx": "^1.2.1"
   },
   "devDependencies": {
-    "@pigyuma/jest-config-snippets": "*",
     "@pigyuma/react-utility-types": "*",
     "@pigyuma/tsconfig": "*",
+    "@testing-library/dom": "^8.20.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",

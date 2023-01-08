@@ -1,4 +1,4 @@
-const { workspacesModuleNameMapper } = require('@pigyuma/jest-config-snippets');
+const { transformIgnoreESMPatterns, workspacesModuleNameMapper } = require('../../tools/jest/snippets');
 
 /** @type {import("ts-jest").JestConfigWithTsJest} */
 module.exports = {
@@ -11,4 +11,5 @@ module.exports = {
   transform: {
     '\\.css\\.ts$': '@vanilla-extract/jest-transform',
   },
+  transformIgnorePatterns: [...transformIgnoreESMPatterns],
 };
