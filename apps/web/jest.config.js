@@ -1,5 +1,5 @@
 const nextJest = require('next/jest');
-const { workspacesModuleNameMapper } = require('@pigyuma/jest-config-snippets');
+const { transformIgnoreESMPatterns, workspacesModuleNameMapper } = require('../../tools/jest/snippets');
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
@@ -18,7 +18,7 @@ const customJestConfig = {
   transform: {
     '\\.css\\.ts$': '@vanilla-extract/jest-transform',
   },
-  transformIgnorePatterns: ['node_modules/(?!(lodash-es)/)'],
+  transformIgnorePatterns: [...transformIgnoreESMPatterns],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

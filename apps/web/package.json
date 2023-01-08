@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
-    "@pigyuma/jest-config-snippets": "*",
     "@pigyuma/tsconfig": "*",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

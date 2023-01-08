@@ -1181,17 +1181,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pigyuma/jest-config-snippets@*, @pigyuma/jest-config-snippets@workspace:packages/jest-config-snippets":
-  version: 0.0.0-use.local
-  resolution: "@pigyuma/jest-config-snippets@workspace:packages/jest-config-snippets"
-  languageName: unknown
-  linkType: soft
-
 "@pigyuma/react-hooks@*, @pigyuma/react-hooks@workspace:packages/react-hooks":
   version: 0.0.0-use.local
   resolution: "@pigyuma/react-hooks@workspace:packages/react-hooks"
   dependencies:
-    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/tsconfig": "*"
     "@pigyuma/utils": "*"
@@ -1243,7 +1236,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pigyuma/ui@workspace:packages/ui"
   dependencies:
-    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/react-hooks": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/tsconfig": "*"
@@ -1276,7 +1268,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pigyuma/utils@workspace:packages/utils"
   dependencies:
-    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/tsconfig": "*"
     "@types/jest": ^29.2.3
     "@types/lodash-es": ^4.17.6
@@ -8684,7 +8675,6 @@ turbo@latest:
   resolution: "web@workspace:apps/web"
   dependencies:
     "@babel/core": ^7.0.0
-    "@pigyuma/jest-config-snippets": "*"
     "@pigyuma/react-hooks": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/tsconfig": "*"

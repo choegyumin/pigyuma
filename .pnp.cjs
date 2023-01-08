@@ -20,10 +20,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/web"\
       },\
       {\
-        "name": "@pigyuma/jest-config-snippets",\
-        "reference": "workspace:packages/jest-config-snippets"\
-      },\
-      {\
         "name": "@pigyuma/react-hooks",\
         "reference": "workspace:packages/react-hooks"\
       },\
@@ -47,7 +43,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
-      ["@pigyuma/jest-config-snippets", ["workspace:packages/jest-config-snippets"]],\
       ["@pigyuma/react-hooks", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks", "workspace:packages/react-hooks"]],\
       ["@pigyuma/react-utility-types", ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types", "workspace:packages/react-utility-types"]],\
       ["@pigyuma/tsconfig", ["workspace:packages/tsconfig"]],\
@@ -1762,21 +1757,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@pigyuma/jest-config-snippets", [\
-        ["workspace:packages/jest-config-snippets", {\
-          "packageLocation": "./packages/jest-config-snippets/",\
-          "packageDependencies": [\
-            ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
       ["@pigyuma/react-hooks", [\
         ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks", {\
           "packageLocation": "./.yarn/__virtual__/@pigyuma-react-hooks-virtual-73807cc23d/1/packages/react-hooks/",\
           "packageDependencies": [\
             ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
-            ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
@@ -1808,7 +1793,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/react-hooks/",\
           "packageDependencies": [\
             ["@pigyuma/react-hooks", "workspace:packages/react-hooks"],\
-            ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
@@ -1881,7 +1865,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/ui/",\
           "packageDependencies": [\
             ["@pigyuma/ui", "workspace:packages/ui"],\
-            ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
             ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
@@ -1916,7 +1899,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/utils/",\
           "packageDependencies": [\
             ["@pigyuma/utils", "workspace:packages/utils"],\
-            ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@types/jest", "npm:29.2.3"],\
             ["@types/lodash-es", "npm:4.17.6"],\
@@ -10726,7 +10708,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["web", "workspace:apps/web"],\
             ["@babel/core", "npm:7.20.2"],\
-            ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
             ["@pigyuma/react-hooks", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-hooks"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\

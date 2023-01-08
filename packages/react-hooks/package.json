@@ -14,7 +14,6 @@
     "clsx": "^1.2.1"
   },
   "devDependencies": {
-    "@pigyuma/jest-config-snippets": "*",
     "@pigyuma/react-utility-types": "*",
     "@pigyuma/tsconfig": "*",
     "@testing-library/jest-dom": "^5.16.5",

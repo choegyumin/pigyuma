@@ -1,4 +1,7 @@
+const esm = ['lodash-es'];
+
 module.exports = {
+  transformIgnoreESMPatterns: [`node_modules/(?!(${esm.join('|')})/)`],
   workspacesModuleNameMapper: {
     // Alias in worksapce
     '^~/(.*)$': ['<rootDir>/../../apps/web/$1'],
