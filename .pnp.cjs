@@ -1881,10 +1881,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/jest-dom", "npm:5.16.5"],\
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
             ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
-            ["@types/jest", "npm:29.2.3"],\
-            ["@types/node", "npm:18.11.9"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/jest", "npm:29.2.5"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["clsx", "npm:1.2.1"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
@@ -1913,10 +1913,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/jest-dom", "npm:5.16.5"],\
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
             ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
-            ["@types/jest", "npm:29.2.3"],\
-            ["@types/node", "npm:18.11.9"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/jest", "npm:29.2.5"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["clsx", "npm:1.2.1"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
@@ -1935,9 +1935,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
-            ["@types/node", "npm:18.11.9"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
             ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
@@ -1955,9 +1955,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@pigyuma/react-utility-types", "workspace:packages/react-utility-types"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
-            ["@types/node", "npm:18.11.9"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
             ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
@@ -1988,10 +1988,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
             ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
             ["@types/color", "npm:3.0.3"],\
-            ["@types/jest", "npm:29.2.3"],\
-            ["@types/node", "npm:18.11.9"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/jest", "npm:29.2.5"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@vanilla-extract/css", "npm:1.9.2"],\
             ["@vanilla-extract/css-utils", "npm:0.1.3"],\
@@ -2016,9 +2016,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@pigyuma/utils", "workspace:packages/utils"],\
             ["@pigyuma/jest-config-snippets", "workspace:packages/jest-config-snippets"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
-            ["@types/jest", "npm:29.2.3"],\
+            ["@types/jest", "npm:29.2.5"],\
             ["@types/lodash-es", "npm:4.17.6"],\
-            ["@types/node", "npm:18.11.9"],\
+            ["@types/node", "npm:18.11.18"],\
             ["jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.3.1"],\
             ["lodash-es", "npm:4.17.21"],\
             ["ts-jest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:29.0.3"],\
@@ -2147,8 +2147,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
             ["@babel/runtime", "npm:7.20.1"],\
             ["@testing-library/dom", "npm:8.19.0"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"]\
           ],\
@@ -2369,6 +2369,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pretty-format", "npm:29.3.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:29.2.5", {\
+          "packageLocation": "./.yarn/cache/@types-jest-npm-29.2.5-d5d1737a1f-d668470f00.zip/node_modules/@types/jest/",\
+          "packageDependencies": [\
+            ["@types/jest", "npm:29.2.5"],\
+            ["expect", "npm:29.3.1"],\
+            ["pretty-format", "npm:29.3.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@types/jsdom", [\
@@ -2437,6 +2446,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
+        ["npm:18.11.18", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.11.18-d61e8a4a20-03f17f9480.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:18.11.18"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:18.11.9", {\
           "packageLocation": "./.yarn/cache/@types-node-npm-18.11.9-d21dd6ec05-cc0aae109e.zip/node_modules/@types/node/",\
           "packageDependencies": [\
@@ -2491,13 +2507,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["csstype", "npm:3.1.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:18.0.26", {\
+          "packageLocation": "./.yarn/cache/@types-react-npm-18.0.26-d708995a34-b62f0ea3cd.zip/node_modules/@types/react/",\
+          "packageDependencies": [\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/prop-types", "npm:15.7.5"],\
+            ["@types/scheduler", "npm:0.16.2"],\
+            ["csstype", "npm:3.1.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@types/react-dom", [\
-        ["npm:18.0.9", {\
-          "packageLocation": "./.yarn/cache/@types-react-dom-npm-18.0.9-e52458db76-e744e3feba.zip/node_modules/@types/react-dom/",\
+        ["npm:18.0.10", {\
+          "packageLocation": "./.yarn/cache/@types-react-dom-npm-18.0.10-97fe360927-ff8282d500.zip/node_modules/@types/react-dom/",\
           "packageDependencies": [\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["@types/react", "npm:18.0.25"]\
           ],\
           "linkType": "HARD"\
@@ -8612,8 +8638,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/helpers", "npm:0.4.11"],\
             ["@types/fibers", null],\
             ["@types/node-sass", null],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["@types/sass", null],\
             ["caniuse-lite", "npm:1.0.30001434"],\
             ["fibers", null],\
@@ -9406,7 +9432,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/react-dom-virtual-74420d3ad7/0/cache/react-dom-npm-18.2.0-dd675bca1c-7d323310be.zip/node_modules/react-dom/",\
           "packageDependencies": [\
             ["react-dom", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:18.2.0"],\
-            ["@types/react", "npm:18.0.25"],\
+            ["@types/react", "npm:18.0.26"],\
             ["loose-envify", "npm:1.4.0"],\
             ["react", "npm:18.2.0"],\
             ["scheduler", "npm:0.23.0"]\
@@ -9500,8 +9526,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/recoil-virtual-293aa79175/0/cache/recoil-npm-0.7.6-6f8de04e3d-2b31dd29a7.zip/node_modules/recoil/",\
           "packageDependencies": [\
             ["recoil", "virtual:e293270790bda2411a3626e57e15862403457209cbe755a222c752c37c8f53870ac5708914fca9c46ad11f81505a4af613c8b5e4bba765909191bb5f14d3b656#npm:0.7.6"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["@types/react-native", null],\
             ["hamt_plus", "npm:1.0.2"],\
             ["react", "npm:18.2.0"],\
@@ -10299,7 +10325,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", null],\
             ["@types/babel-plugin-macros", null],\
             ["@types/babel__core", null],\
-            ["@types/react", "npm:18.0.25"],\
+            ["@types/react", "npm:18.0.26"],\
             ["babel-plugin-macros", null],\
             ["client-only", "npm:0.0.1"],\
             ["react", "npm:18.2.0"]\
@@ -10555,7 +10581,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel-jest", null],\
             ["@types/babel__core", null],\
             ["@types/esbuild", null],\
-            ["@types/jest", "npm:29.2.3"],\
+            ["@types/jest", "npm:29.2.5"],\
             ["@types/jest__types", null],\
             ["@types/typescript", null],\
             ["babel-jest", null],\
@@ -10596,7 +10622,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel-jest", null],\
             ["@types/babel__core", null],\
             ["@types/esbuild", null],\
-            ["@types/jest", "npm:29.2.3"],\
+            ["@types/jest", "npm:29.2.5"],\
             ["@types/jest__types", null],\
             ["@types/typescript", null],\
             ["babel-jest", null],\
@@ -10988,7 +11014,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/use-sync-external-store-virtual-4b29f034bd/0/cache/use-sync-external-store-npm-1.2.0-44f75d2564-5c639e0f8d.zip/node_modules/use-sync-external-store/",\
           "packageDependencies": [\
             ["use-sync-external-store", "virtual:a52a7db7a4bceb30aeefd1f442860353101906beeb2f20c53103cbe44bdfb9a71de3c97f58576467ed24cab382a967157ca3c671b94dc2cece9e38371f6b5036#npm:1.2.0"],\
-            ["@types/react", "npm:18.0.25"],\
+            ["@types/react", "npm:18.0.26"],\
             ["react", "npm:18.2.0"]\
           ],\
           "packagePeers": [\
@@ -11093,10 +11119,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/jest-dom", "npm:5.16.5"],\
             ["@testing-library/react", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:13.4.0"],\
             ["@testing-library/user-event", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:14.4.3"],\
-            ["@types/jest", "npm:29.2.3"],\
-            ["@types/node", "npm:18.11.9"],\
-            ["@types/react", "npm:18.0.25"],\
-            ["@types/react-dom", "npm:18.0.9"],\
+            ["@types/jest", "npm:29.2.5"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["@types/react-dom", "npm:18.0.10"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@vanilla-extract/css", "npm:1.9.2"],\
             ["@vanilla-extract/css-utils", "npm:0.1.3"],\
