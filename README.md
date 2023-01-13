@@ -23,7 +23,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 #### Tools
 
 - `eslint`: `eslint` configuration presets.
-- `jest`: `jest` configuration helpers.
+- `vitest`: `vitest` configuration helpers.
 
 ### Utilities
 

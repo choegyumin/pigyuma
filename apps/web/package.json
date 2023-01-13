@@ -8,7 +8,7 @@
     "start": "next start",
     "format": "cd ../../ && yarn prettier \"apps/web/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
     "lint": "cd ../../ && TIMING=1 yarn eslint \"apps/web/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
-    "test": "jest --watch"
+    "test": "vitest watch"
   },
   "dependencies": {
     "@pigyuma/react-hooks": "*",

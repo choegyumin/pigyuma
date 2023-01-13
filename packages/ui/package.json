@@ -7,7 +7,7 @@
   "scripts": {
     "format": "cd ../../ && yarn prettier \"packages/ui/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
     "lint": "cd ../../ && TIMING=1 yarn eslint \"packages/ui/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
-    "test": "jest --watch"
+    "test": "vitest watch"
   },
   "dependencies": {
     "@pigyuma/react-hooks": "*",

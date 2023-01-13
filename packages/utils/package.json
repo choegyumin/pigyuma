@@ -7,7 +7,7 @@
   "scripts": {
     "format": "cd ../../ && yarn prettier \"packages/utils/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
     "lint": "cd ../../ && TIMING=1 yarn eslint \"packages/utils/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
-    "test": "jest --watch"
+    "test": "vitest watch"
   },
   "dependencies": {
     "lodash-es": "^4.17.6"

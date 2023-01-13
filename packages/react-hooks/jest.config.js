@@ -1,4 +1,4 @@
-const { transformIgnoreESMPatterns, workspacesModuleNameMapper } = require('../../tools/jest/snippets');
+const { workspacesModuleNameMapper } = require('../../tools/jest/snippets');
 
 /** @type {import("ts-jest").JestConfigWithTsJest} */
 module.exports = {
@@ -8,5 +8,4 @@ module.exports = {
   moduleNameMapper: {
     ...workspacesModuleNameMapper,
   },
-  transformIgnorePatterns: [...transformIgnoreESMPatterns],
 };
