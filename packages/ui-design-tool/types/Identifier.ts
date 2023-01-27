@@ -17,3 +17,10 @@ export const LayerType = {
   text: 'text',
 } as const;
 export type LayerType = keyof typeof LayerType;
+
+export const UIRecordIdentifiers = {
+  key: 'key',
+  type: 'type',
+  layerType: 'layerType',
+} as const;
+export type UIRecordIdentifiers = keyof typeof UIRecordIdentifiers;

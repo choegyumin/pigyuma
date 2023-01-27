@@ -1,7 +1,7 @@
 import { Artboard } from './Artboard.model';
 
 export type ArtboardProps = {
-  artboard: Artboard;
+  data: Artboard;
 };
 
 export type ArtboardRef = HTMLDivElement;

@@ -1,5 +1,7 @@
-import { ArtboardData, ShapeLayerData, TextLayerData, Workspace } from '@pigyuma/ui-design-tool';
-import React from 'react';
+import { useEvent } from '@pigyuma/react-utils';
+import { Button } from '@pigyuma/ui';
+import { ArtboardData, ShapeLayer, ShapeLayerData, TextLayer, TextLayerData, Workspace, WorkspaceRef } from '@pigyuma/ui-design-tool';
+import React, { useEffect, useRef } from 'react';
 import NoSSR from '~/components/NoSSR';
 
 const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
@@ -199,9 +201,112 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
 ];
 
 const Home = () => {
+  const workspaceRef = useRef<WorkspaceRef>(null);
+
+  useEffect(() => {
+    /** @todo NoSSR을 위한 hook 구현 */
+    window.requestAnimationFrame(() => {
+      console.log('Records: ', workspaceRef.current?.api.getAll());
+    });
+  }, []);
+
+  const onButtonClick = useEvent(() => {
+    const workspace = workspaceRef.current;
+    if (workspace == null) {
+      return;
+    }
+    workspace.api.set<ShapeLayer>('shape-layer-inside', { y: { length: 700, lengthType: 'px' } });
+    workspace.api.set<ShapeLayer>('shape-layer-100', { fill: { color: '#faf' } });
+    workspace.api.set<TextLayer>('text-layer-100', { textColor: { color: 'white' }, content: 'Setted' });
+    workspace.api.prepend('shape-layer-200', {
+      type: 'layer',
+      layerType: 'text',
+      name: 'prepend()',
+      x: { length: 0, lengthType: 'auto' },
+      y: { length: 0, lengthType: 'auto' },
+      rotate: { length: 0 },
+      width: { length: 0, lengthType: 'flexible' },
+      height: { length: 0, lengthType: 'flexible' },
+      textColor: { color: 'black' },
+      fontSize: { length: 16, lengthType: 'px' },
+      lineHeight: { length: 150, lengthType: 'percent' },
+      fontWeight: { value: 900 },
+      letterSpacing: { length: 20, lengthType: 'percent' },
+      content: 'Prepended',
+    });
+    workspace.api.append(
+      'shape-layer-200',
+      new TextLayer({
+        name: 'append()',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 16, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 900 },
+        letterSpacing: { length: 20, lengthType: 'percent' },
+        content: 'Appended',
+      }),
+    );
+    workspace.api.insertBefore('text-layer-300', {
+      type: 'layer',
+      layerType: 'text',
+      name: 'insertBefore()',
+      x: { length: 0, lengthType: 'auto' },
+      y: { length: 0, lengthType: 'auto' },
+      rotate: { length: 0 },
+      width: { length: 0, lengthType: 'flexible' },
+      height: { length: 0, lengthType: 'flexible' },
+      textColor: { color: 'black' },
+      fontSize: { length: 16, lengthType: 'px' },
+      lineHeight: { length: 150, lengthType: 'percent' },
+      fontWeight: { value: 900 },
+      letterSpacing: { length: 20, lengthType: 'percent' },
+      content: 'Inserted before',
+    });
+    workspace.api.insertAfter(
+      'text-layer-300',
+      new TextLayer({
+        name: 'insertAfter()',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 16, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 900 },
+        letterSpacing: { length: 20, lengthType: 'percent' },
+        content: 'Inserted after',
+      }),
+    );
+    workspace.api.remove('shape-layer-outside');
+
+    console.log('Records: ', workspace.api.getAll());
+  });
+
   return (
     <NoSSR>
-      <Workspace data={dummyData} />
+      <Workspace ref={workspaceRef} initialData={dummyData} />
+      <Button
+        style={{
+          position: 'fixed',
+          top: 16,
+          right: 16,
+          border: 0,
+          borderRadius: 8,
+          padding: 12,
+          boxShadow: '0 2px 4px hsl(0 0% 0% / 50%)',
+          fontSize: 14,
+        }}
+        onClick={onButtonClick}
+      >
+        ui-design-tool API Call Test
+      </Button>
     </NoSSR>
   );
 };

@@ -1,7 +1,7 @@
 import { ShapeLayer } from './ShapeLayer.model';
 
 export type ShapeLayerProps = {
-  shapeLayer: ShapeLayer;
+  data: ShapeLayer;
 };
 
 export type ShapeLayerRef = HTMLDivElement;

@@ -1,9 +1,14 @@
+export { default as camelCase } from 'lodash-es/camelCase';
 export { default as clone } from 'lodash-es/clone';
+export { default as cloneDeep } from 'lodash-es/cloneDeep';
 export { default as isUnitlessCSSNumber } from './isUnitlessCSSNumber';
+export { default as kebabCase } from 'lodash-es/kebabCase';
 export { default as mapEntries } from './mapEntries';
 export { default as mapKeys } from './mapKeys';
 export { default as mapValues } from './mapValues';
 export { default as merge } from 'lodash-es/merge';
 export { default as omit } from 'lodash-es/omit';
+export { default as pascalCase } from './pascalCase';
 export { default as pick } from 'lodash-es/pick';
+export { default as snakeCase } from 'lodash-es/snakeCase';
 export * as uuid from 'uuid';

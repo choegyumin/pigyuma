@@ -1,3 +1,8 @@
+import { Artboard } from '@/components/Artboard/Artboard.model';
+import { Canvas } from '@/components/Canvas/Canvas.model';
+import { ShapeLayer } from '@/components/ShapeLayer/ShapeLayer.model';
+import { UIRecord } from '@/components/UIRecord/UIRecord.model';
+import { UIRecordKey } from '@/types/Identifier';
 import {
   FontSizeLengthTypeValue,
   HeightLengthTypeValue,
@@ -80,4 +85,19 @@ export const convertStrokePatternValue = ({ pattern }: StrokeValueObject): Style
 };
 export const convertStrokeWidthValue = ({ width }: StrokeValueObject): StyleValue => {
   return typeof width === 'number' ? `${width}` : `${width.top} ${width.right} ${width.bottom} ${width.left}`;
+};
+
+export const flatUIRecords = (records: Array<UIRecord>, result: Map<UIRecordKey, UIRecord> = new Map()): Map<UIRecordKey, UIRecord> => {
+  const nextRecords: typeof records = [];
+
+  records.forEach((record) => {
+    if (record instanceof Artboard || record instanceof Canvas || record instanceof ShapeLayer) {
+      record.children.forEach((childLayer) => {
+        nextRecords.push(childLayer);
+      });
+    }
+    result.set(record.key, record);
+  });
+
+  return nextRecords.length > 0 ? flatUIRecords(nextRecords, result) : result;
 };
