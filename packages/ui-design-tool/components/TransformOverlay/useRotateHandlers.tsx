@@ -1,127 +1,149 @@
 import { UIRecordRect, UIRecordRectInit } from '@/types/Shape';
-import { isUIRecordKey } from '@/utils/model';
-import { getUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
-import { cursor } from '@pigyuma/ui/styles/extensions';
 import { calcDegreesBetweenCoords, pick, toDegrees360 } from '@pigyuma/utils';
-import { WorkspaceInteraction } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
+import { useCallback } from 'react';
+import { UIDesignToolAPI } from '../Workspace/Workspace.context';
+import { TransformOverlayProps, TransformOverlayRef } from './types';
 import { UseDataType } from './useData';
+import { UseUIControllerType } from './useUIController';
 
 export type UseRotateHandlersDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+  api: UIDesignToolAPI;
+  props: TransformOverlayProps;
+  ref: React.ForwardedRef<TransformOverlayRef>;
   data: UseDataType;
-};
-
-const getRotateCursor = (element: Element, mousePoint: { x: number; y: number }) => {
-  const rect = element.getBoundingClientRect();
-  return cursor.rotatePoint({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mousePoint);
-};
-
-const getTransformedRect = (rect: UIRecordRect, mousePoint: { x: number; y: number }, handleCoordDegrees: number) => {
-  const newRectInit: UIRecordRectInit = pick(rect, ['x', 'y', 'width', 'height', 'rotate']);
-
-  let rotate = calcDegreesBetweenCoords(
-    {
-      x: rect.x + rect.width / 2,
-      y: rect.y + rect.height / 2,
-    },
-    mousePoint,
-  );
-  rotate -= handleCoordDegrees;
-  rotate += rect.rotate;
-  rotate = Math.round(rotate);
-
-  newRectInit.rotate = toDegrees360(rotate);
-
-  return UIRecordRect.fromRect(newRectInit);
+  uiController: UseUIControllerType;
 };
 
 export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
   const {
-    context,
-    data: { selectedRecordKey, transformInitialRectRef, transformLastRectRef, rotateHandleCoordDegreesRef },
+    api,
+    props: { onTransformStart, onTransform, onTransformEnd },
+    data: {
+      selectedRecordRef,
+      infoTextRef,
+      transformStatusRef,
+      transformInitialRectRef,
+      transformLastRectRef,
+      rotatingHandleCoordDegreesRef,
+    },
+    uiController: { switchSelectedUI, switchTransformUI },
   } = deps;
 
-  const onRotateHandleMouseDown = useEvent(() => {
-    const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
-    if (record == null || target == null) {
+  const changeDegreesText = useCallback(
+    (rotate: number | null) => {
+      if (infoTextRef.current) {
+        infoTextRef.current.textContent = rotate != null ? `${toDegrees360(rotate)}°` : '';
+      }
+    },
+    [infoTextRef],
+  );
+
+  const onRotateHandleMouseDown = useEvent((event: React.MouseEvent<HTMLElement>) => {
+    const record = selectedRecordRef.current;
+    const recordKey = record?.key;
+    const target = api.query({ key: recordKey || '' });
+    if (target == null) {
       return;
     }
 
-    const mouseMeta = context.getBrowserMeta().mouse;
+    const rect = UIRecordRect.fromElement(target);
 
-    const rotate = parseFloat(getUIRecordStyleValue(target, 'rotate')) || 0;
-    const rect = UIRecordRect.fromRect({ ...UIRecordRect.fromElement(target).toJSON(), rotate });
+    const cursor = {
+      x: event.clientX,
+      y: event.clientY,
+    };
 
+    switchTransformUI();
+    setRef(transformStatusRef, 'rotating');
     setRef(transformInitialRectRef, rect);
     setRef(transformLastRectRef, transformInitialRectRef.current);
-    setRef(rotateHandleCoordDegreesRef, calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseMeta));
-    context.setCursor(getRotateCursor(target, mouseMeta));
-    context.setInteraction(WorkspaceInteraction.rotating);
+    setRef(rotatingHandleCoordDegreesRef, calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, cursor));
+
+    changeDegreesText(rect.rotate);
+    onTransformStart?.({ target, record, type: 'rotate', rect });
   });
 
-  const onDocumentMouseUpForRotate = useEvent(() => {
-    if (context.status !== 'rotating') {
+  const onMouseUpForRotate = useEvent(() => {
+    if (transformStatusRef.current !== 'rotating') {
       return;
     }
 
-    const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
+    const record = selectedRecordRef.current;
+    const recordKey = record?.key;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const target = api.query({ key: recordKey || '' });
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
 
     const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
 
+    switchSelectedUI();
+    setRef(transformStatusRef, 'idle');
     setRef(transformInitialRectRef, undefined);
     setRef(transformLastRectRef, undefined);
-    setRef(rotateHandleCoordDegreesRef, undefined);
-    context.setRect(record.key, rect);
-    context.setInteraction(WorkspaceInteraction.idle);
+    setRef(rotatingHandleCoordDegreesRef, undefined);
+
+    changeDegreesText(null);
+    onTransformEnd?.({ target, record, type: 'rotate', rect });
   });
 
-  const onDocumentMouseMoveForRotate = useEvent(() => {
-    if (context.status !== 'rotating') {
+  const onMouseMoveForRotate = useEvent((event: MouseEvent) => {
+    if (transformStatusRef.current !== 'rotating') {
       return;
     }
 
-    const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
+    const record = selectedRecordRef.current;
+    const recordKey = record?.key;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const target = api.query({ key: recordKey || '' });
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
 
-    const initialRect = transformInitialRectRef.current;
-    if (initialRect == null) {
+    const rect = transformInitialRectRef.current;
+    if (rect == null) {
       throw new Error("'rotate' event was not properly initialized.");
     }
 
-    const mouseMeta = context.getBrowserMeta().mouse;
-    const handleCoordDegrees = rotateHandleCoordDegreesRef.current ?? 0;
+    const cursor = {
+      x: event.clientX,
+      y: event.clientY,
+    };
 
-    const newRect = getTransformedRect(initialRect, mouseMeta, handleCoordDegrees);
+    const newRectInit: UIRecordRectInit = pick(rect, ['x', 'y', 'width', 'height', 'rotate']);
+
+    let rotate = calcDegreesBetweenCoords(
+      {
+        x: rect.x + rect.width / 2,
+        y: rect.y + rect.height / 2,
+      },
+      cursor,
+    );
+    rotate -= rotatingHandleCoordDegreesRef.current ?? 0;
+    rotate += rect.rotate;
+    rotate = Math.round(rotate);
+
+    newRectInit.rotate = toDegrees360(rotate);
+
+    const newRect = UIRecordRect.fromRect(newRectInit);
     setRef(transformLastRectRef, newRect);
-    context.setRect(record.key, newRect);
-    context.setCursor(getRotateCursor(target, mouseMeta));
+
+    changeDegreesText(rotate);
+    onTransform?.({ target, record, type: 'rotate', rect: newRect });
   });
 
   return {
     onRotateHandleMouseDown,
-    onDocumentMouseUpForRotate,
-    onDocumentMouseMoveForRotate,
+    onMouseUpForRotate,
+    onMouseMoveForRotate,
   };
 }
 

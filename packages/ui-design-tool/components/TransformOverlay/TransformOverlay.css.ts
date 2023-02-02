@@ -73,10 +73,10 @@ export const outline = style({
 export const resizeHandle = style({
   position: 'absolute',
   opacity: '0',
-  cursor: 'grab',
   pointerEvents: 'auto',
 });
 
+/** @todo UIRecord.rotate 값에 따라 커서를 교체하도록 커서 스타일 클래스 분리 */
 export const resizeHandle$ = styleVariants({
   top: [
     resizeHandle,
@@ -85,6 +85,7 @@ export const resizeHandle$ = styleVariants({
       left: '0',
       right: '0',
       height: getter.handleSize,
+      cursor: 'ns-resize',
     },
   ],
   right: [
@@ -94,6 +95,7 @@ export const resizeHandle$ = styleVariants({
       top: '0',
       bottom: '0',
       width: getter.handleSize,
+      cursor: 'ew-resize',
     },
   ],
   bottom: [
@@ -103,6 +105,7 @@ export const resizeHandle$ = styleVariants({
       left: '0',
       right: '0',
       height: getter.handleSize,
+      cursor: 'ns-resize',
     },
   ],
   left: [
@@ -112,17 +115,18 @@ export const resizeHandle$ = styleVariants({
       top: '0',
       bottom: '0',
       width: getter.handleSize,
+      cursor: 'ew-resize',
     },
   ],
 });
 
+/** @todo UIRecord.rotate 값에 따라 커서를 교체하도록 커서 스타일 클래스 분리 */
 export const resizeCornerHandle = style({
   visibility: vars.handleVisibility,
   position: 'absolute',
   width: getter.handleSize,
   height: getter.handleSize,
   padding: '3px',
-  cursor: 'grab',
   pointerEvents: 'auto',
   selectors: {
     '&::before': {
@@ -142,6 +146,7 @@ export const resizeCornerHandle$ = styleVariants({
     {
       bottom: getter.handleCoordinate,
       right: getter.handleCoordinate,
+      cursor: 'nwse-resize',
     },
   ],
   topRight: [
@@ -149,6 +154,7 @@ export const resizeCornerHandle$ = styleVariants({
     {
       bottom: getter.handleCoordinate,
       left: getter.handleCoordinate,
+      cursor: 'nesw-resize',
     },
   ],
   bottomRight: [
@@ -156,6 +162,7 @@ export const resizeCornerHandle$ = styleVariants({
     {
       top: getter.handleCoordinate,
       left: getter.handleCoordinate,
+      cursor: 'nwse-resize',
     },
   ],
   bottomLeft: [
@@ -163,6 +170,7 @@ export const resizeCornerHandle$ = styleVariants({
     {
       top: getter.handleCoordinate,
       right: getter.handleCoordinate,
+      cursor: 'nesw-resize',
     },
   ],
 });
@@ -172,16 +180,17 @@ export const rotateHandle = style({
   width: `calc(${getter.handleSize} * 1.5)`,
   height: `calc(${getter.handleSize} * 1.5)`,
   opacity: '0',
-  cursor: 'grab',
   pointerEvents: 'auto',
 });
 
+/** @todo UIRecord.rotate 값에 따라 커서를 교체하도록 커서 스타일 클래스 분리 */
 export const rotateHandle$ = styleVariants({
   topLeft: [
     rotateHandle,
     {
       bottom: getter.handleCoordinate,
       right: getter.handleCoordinate,
+      cursor: 'var(--nw-rotate)',
     },
   ],
   topRight: [
@@ -189,6 +198,7 @@ export const rotateHandle$ = styleVariants({
     {
       bottom: getter.handleCoordinate,
       left: getter.handleCoordinate,
+      cursor: 'var(--ne-rotate)',
     },
   ],
   bottomRight: [
@@ -196,6 +206,7 @@ export const rotateHandle$ = styleVariants({
     {
       top: getter.handleCoordinate,
       left: getter.handleCoordinate,
+      cursor: 'var(--se-rotate)',
     },
   ],
   bottomLeft: [
@@ -203,6 +214,7 @@ export const rotateHandle$ = styleVariants({
     {
       top: getter.handleCoordinate,
       right: getter.handleCoordinate,
+      cursor: 'var(--sw-rotate)',
     },
   ],
 });

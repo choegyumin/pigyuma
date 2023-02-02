@@ -1,23 +1,38 @@
-import { WorkspaceStatus } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
+import { useDOMStyle } from '@pigyuma/react-utils';
+import { useRef } from 'react';
+import { AxisGridProps, AxisGridRef } from '../AxisGrid/types';
+import { UIDesignToolAPI } from '../Workspace/Workspace.context';
+import * as styles from './AxisGrid.css';
 
 export type UseDataDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+  api: UIDesignToolAPI;
+  props: AxisGridProps;
+  ref: React.ForwardedRef<AxisGridRef>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useData(deps: UseDataDependencys) {
-  const { context } = deps;
+  const rootRef = useRef<HTMLDivElement>(null);
 
-  const hasSelectedOneOnly = context.selectedRecords.size === 1;
-
-  const isActive = context.status === WorkspaceStatus.idle && hasSelectedOneOnly;
-
-  const [selectedRecordKey] = isActive ? context.selectedRecords.keys() : ([] as undefined[]);
+  const [rootStyle, setRootStyle] = useDOMStyle(
+    {
+      [styles.varNames.x]: 0,
+      [styles.varNames.y]: 0,
+      [styles.varNames.axisXLeft]: 'unset',
+      [styles.varNames.axisXRight]: 'unset',
+      [styles.varNames.axisXLength]: 0,
+      [styles.varNames.axisYTop]: 'unset',
+      [styles.varNames.axisYBottom]: 'unset',
+      [styles.varNames.axisYLength]: 0,
+      [styles.varNames.visibility]: 'hidden',
+    },
+    () => [rootRef.current],
+  );
 
   return {
-    isActive,
-    selectedRecordKey,
+    rootRef,
+    rootStyle,
+    setRootStyle,
   };
 }
 

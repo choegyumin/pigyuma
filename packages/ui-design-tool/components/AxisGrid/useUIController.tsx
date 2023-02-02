@@ -1,41 +1,41 @@
-import { UIRecordType } from '@/types/Identifier';
+import { UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { UIRecordQuad } from '@/types/Shape';
 import { hasUIRecordParent } from '@/utils/model';
 import { useCallback } from 'react';
-import { Layer } from '../Layer/Layer.model';
-import { UIRecord } from '../UIRecord/UIRecord.model';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
+import { UIDesignToolAPI } from '../Workspace/Workspace.context';
 import * as styles from './AxisGrid.css';
+import { AxisGridProps, AxisGridRef } from './types';
+import { UseDataType } from './useData';
 
-export type UseRenderUtilsDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+export type UseUIControllerDependencys = {
+  api: UIDesignToolAPI;
+  props: AxisGridProps;
+  ref: React.ForwardedRef<AxisGridRef>;
+  data: UseDataType;
 };
 
-const initialStyle = {
-  [styles.varNames.x]: 0,
-  [styles.varNames.y]: 0,
-  [styles.varNames.axisXLeft]: 'unset',
-  [styles.varNames.axisXRight]: 'unset',
-  [styles.varNames.axisXLength]: 0,
-  [styles.varNames.axisYTop]: 'unset',
-  [styles.varNames.axisYBottom]: 'unset',
-  [styles.varNames.axisYLength]: 0,
-  [styles.varNames.visibility]: 'hidden',
-};
+export default function useUIController(deps: UseUIControllerDependencys) {
+  const {
+    api,
+    data: { setRootStyle },
+  } = deps;
 
-export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
-  const { context } = deps;
-
-  const getRootStyle = useCallback(
-    (record: UIRecord) => {
-      if (!(record instanceof Layer)) {
-        return initialStyle;
-      }
-
-      const layerElement = context.query({ key: record.key });
+  const getOverlayShapeStyle = useCallback(
+    (recordKey: UIRecordKey) => {
+      const layerRecord = api.get(recordKey);
+      const layerElement = api.query({ key: recordKey });
       if (layerElement == null) {
-        console.error(`element not found with key ${record.key}.`);
-        return initialStyle;
+        console.warn(`element not found with key ${recordKey}.`);
+        return {
+          [styles.varNames.x]: 0,
+          [styles.varNames.y]: 0,
+          [styles.varNames.axisXLeft]: 'unset',
+          [styles.varNames.axisXRight]: 'unset',
+          [styles.varNames.axisXLength]: 0,
+          [styles.varNames.axisYTop]: 'unset',
+          [styles.varNames.axisYBottom]: 'unset',
+          [styles.varNames.axisYLength]: 0,
+        };
       }
 
       const { x: layerX, y: layerY, width: layerWidth, height: layerHeight } = UIRecordQuad.fromElement(layerElement).getBounds();
@@ -43,7 +43,6 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
       const axisY = layerY + layerHeight / 2;
 
       const styleValues = {} as React.CSSProperties;
-      styleValues[styles.varNames.visibility] = 'visible';
       styleValues[styles.varNames.x] = `${axisX}px`;
       styleValues[styles.varNames.y] = `${axisY}px`;
       styleValues[styles.varNames.axisXLeft] = 'unset';
@@ -53,9 +52,9 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
       styleValues[styles.varNames.axisYBottom] = 'unset';
       styleValues[styles.varNames.axisYLength] = 0;
 
-      const artboardRecord = hasUIRecordParent(record) ? record.parent : null;
+      const artboardRecord = hasUIRecordParent(layerRecord) ? layerRecord.parent : null;
       const artboardElement = layerElement.parentElement;
-      if (artboardRecord == null || artboardElement == null || !context.matches(artboardElement, { type: UIRecordType.artboard })) {
+      if (artboardRecord == null || artboardElement == null || !api.matches(artboardElement, { type: UIRecordType.artboard })) {
         return styleValues;
       }
 
@@ -83,10 +82,34 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
 
       return styleValues;
     },
-    [context],
+    [api],
   );
 
-  return { getRootStyle };
+  const setOverlayShapeStyle = useCallback(
+    (recordKey: UIRecordKey) => {
+      setRootStyle(getOverlayShapeStyle(recordKey));
+    },
+    [setRootStyle, getOverlayShapeStyle],
+  );
+
+  const showUI = useCallback(() => {
+    setRootStyle({
+      [styles.varNames.visibility]: 'visible',
+    });
+  }, [setRootStyle]);
+
+  const hideUI = useCallback(() => {
+    setRootStyle({
+      [styles.varNames.visibility]: 'hidden',
+    });
+  }, [setRootStyle]);
+
+  return {
+    getOverlayShapeStyle,
+    setOverlayShapeStyle,
+    showUI,
+    hideUI,
+  };
 }
 
-export type UseRenderUtilsType = ReturnType<typeof useRenderUtils>;
+export type UseUIControllerType = ReturnType<typeof useUIController>;

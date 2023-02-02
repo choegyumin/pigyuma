@@ -1,14 +1,16 @@
-import { Artboard, ArtboardData } from '@/components/Artboard/Artboard.model';
-import { Canvas, CanvasData } from '@/components/Canvas/Canvas.model';
-import { Layer, LayerData } from '@/components/Layer/Layer.model';
-import { ShapeLayer, ShapeLayerData } from '@/components/ShapeLayer/ShapeLayer.model';
-import { TextLayer, TextLayerData } from '@/components/TextLayer/TextLayer.model';
-import { UIRecord, UIRecordData } from '@/components/UIRecord/UIRecord.model';
+import { Artboard } from '@/components/Artboard/Artboard.model';
+import { Canvas } from '@/components/Canvas/Canvas.model';
+import { Layer } from '@/components/Layer/Layer.model';
+import { ShapeLayer } from '@/components/ShapeLayer/ShapeLayer.model';
+import { TextLayer } from '@/components/TextLayer/TextLayer.model';
+import {
+  UIRecord,
+  UIRecordChildrenAttributes,
+  UIRecordData,
+  UIRecordJSON,
+  UIRecordParentAttributes,
+} from '@/components/UIRecord/UIRecord.model';
 import { UIRecordKey } from '@/types/Identifier';
-
-type UIRecordWithParent = Artboard | Layer | ShapeLayer | TextLayer;
-type UIRecordWithChildren = Artboard | Canvas | ShapeLayer;
-type RotatableUIRecord = Layer | ShapeLayer | TextLayer;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isUIRecordKey = (object: any): object is UIRecordKey => {
@@ -16,40 +18,35 @@ export const isUIRecordKey = (object: any): object is UIRecordKey => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isUIRecordWithParent = (object: any): object is UIRecordWithParent => {
+export const isUIRecordWithParent = (object: any): object is UIRecordJSON & UIRecordParentAttributes => {
   // 타입 검증이므로 parent가 null이어도 존재하는 걸로 판단함
   return UIRecord.isModel(object) && (object as AnyObject).parent !== undefined;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const hasUIRecordParent = (object: any): object is UIRecordWithParent & NonNullableRequired<Pick<UIRecordWithParent, 'parent'>> => {
+export const hasUIRecordParent = (object: any): object is UIRecordJSON & NonNullableRequired<UIRecordParentAttributes> => {
   return isUIRecordWithParent(object) && object.parent != null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isUIRecordWithChildren = (object: any): object is UIRecordWithChildren => {
+export const isUIRecordWithChildren = (object: any): object is UIRecordJSON & UIRecordChildrenAttributes => {
   return UIRecord.isModel(object) && Array.isArray((object as AnyObject).children);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const hasUIRecordChildren = (object: any): object is UIRecordWithChildren => {
+export const hasUIRecordChildren = (object: any): object is UIRecordJSON & UIRecordChildrenAttributes => {
   return isUIRecordWithChildren(object) && object.children.length > 0;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isRotatableUIRecord = (object: any): object is RotatableUIRecord => {
-  return UIRecord.isModel(object) && (object as AnyObject).rotate != null;
 };
 
 export interface ToUIRecordInstanceOptions {
   replaceParent?: boolean;
 }
 
-export const toUIRecordInstance = <T extends Artboard | Canvas | ShapeLayer | TextLayer | Layer | UIRecord>(
-  current: ArtboardData | CanvasData | ShapeLayerData | TextLayerData | LayerData | UIRecordData,
+export const toUIRecordInstance = (
+  current: UIRecordData,
   parent: UIRecordData | null = null,
   options: ToUIRecordInstanceOptions = {},
-): T => {
+): UIRecord | Canvas | Artboard | Layer | ShapeLayer | TextLayer => {
   const { replaceParent = false } = options;
   const parentRecord = parent && toUIRecordInstance(parent);
 
@@ -57,30 +54,30 @@ export const toUIRecordInstance = <T extends Artboard | Canvas | ShapeLayer | Te
     if (replaceParent) {
       Object.assign(current, { parent: parentRecord });
     }
-    return current as T;
+    return current;
   }
 
   /* Layer */
   if (ShapeLayer.isModel(current)) {
-    return new ShapeLayer(current, parentRecord as ConstructorParameters<typeof ShapeLayer>[1]) as T;
+    return new ShapeLayer(current, parentRecord as ConstructorParameters<typeof ShapeLayer>[1]);
   }
   if (TextLayer.isModel(current)) {
-    return new TextLayer(current, parentRecord as ConstructorParameters<typeof TextLayer>[1]) as T;
+    return new TextLayer(current, parentRecord as ConstructorParameters<typeof TextLayer>[1]);
   }
   if (Layer.isModel(current)) {
-    return new Layer(current, parentRecord as ConstructorParameters<typeof Layer>[1]) as T;
+    return new Layer(current, parentRecord as ConstructorParameters<typeof Layer>[1]);
   }
 
   /* Artboard */
   if (Artboard.isModel(current)) {
-    return new Artboard(current, parentRecord as ConstructorParameters<typeof Artboard>[1]) as T;
+    return new Artboard(current, parentRecord as ConstructorParameters<typeof Artboard>[1]);
   }
 
   /* Canvas */
   if (Canvas.isModel(current)) {
-    return new Canvas(current) as T;
+    return new Canvas(current);
   }
 
   /* Unknown */
-  return new UIRecord(current as ConstructorParameters<typeof UIRecord>[0]) as T;
+  return new UIRecord(current);
 };

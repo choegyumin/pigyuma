@@ -204,7 +204,7 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
       console.error(`children of UIRecord '${parentKey}' is not array.`);
       return;
     }
-    const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+    const targetValue = toUIRecordInstance(value, parentValue, { replaceParent: true });
 
     records.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -229,7 +229,7 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
       return;
     }
 
-    const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+    const targetValue = toUIRecordInstance(value, parentValue, { replaceParent: true });
 
     records.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -276,7 +276,7 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
         targetIndex += 1;
       }
 
-      const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+      const targetValue = toUIRecordInstance(value, parentValue, { replaceParent: true });
 
       records.set(targetValue.key, targetValue);
       parentValue.children.splice(targetIndex, 0, targetValue);

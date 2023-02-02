@@ -1,6 +1,14 @@
 import { UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { uuid } from '@pigyuma/utils';
 
+export interface UIRecordParentAttributes {
+  parent: UIRecord | null;
+}
+
+export interface UIRecordChildrenAttributes {
+  children: UIRecord[];
+}
+
 export interface UIRecordJSON {
   key: UIRecordKey;
   type: UIRecordType;

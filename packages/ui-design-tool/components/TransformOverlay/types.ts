@@ -1,9 +1,15 @@
 import { UIRecordKey } from '@/types/Identifier';
-import { UIRecordRect } from '@/types/Shape';
-import ReactTypes from '@pigyuma/react-utility-types';
+import { UIRecordRect, UIRecordRectInit } from '@/types/Shape';
 import { UIRecord } from '../UIRecord/UIRecord.model';
 
-export const HandlePlacement = {
+export const TransformStatus = {
+  idle: 'idle',
+  resizing: 'resizing',
+  rotating: 'rotating',
+} as const;
+export type TransformStatus = keyof typeof TransformStatus;
+
+export const ResizeHandlePlacement = {
   top: 'top',
   right: 'right',
   bottom: 'bottom',
@@ -12,25 +18,24 @@ export const HandlePlacement = {
   topRight: 'topRight',
   bottomRight: 'bottomRight',
   bottomLeft: 'bottomLeft',
-} as const;
-export type HandlePlacement = keyof typeof HandlePlacement;
+};
+export type ResizeHandlePlacement = keyof typeof ResizeHandlePlacement;
 
 export type TransformOverlayTransformEvent = {
   target: HTMLElement | null;
   record: UIRecord | undefined;
-  type: 'resizing' | 'resizingFromCenter' | 'resizingCorner' | 'resizingCornerFromCenter' | 'rotating';
+  type: 'resize' | 'rotate';
   rect: UIRecordRect;
 };
 
-export type TransformOverlayProps = ReactTypes.UnknownProps;
+export type TransformOverlayProps = {
+  onTransformStart?: (event: TransformOverlayTransformEvent) => void;
+  onTransform?: (event: TransformOverlayTransformEvent) => void;
+  onTransformEnd?: (event: TransformOverlayTransformEvent) => void;
+};
 
-export type TransformOverlayRendererProps = {
-  recordKey?: UIRecordKey;
-  onResizeHandleMouseDown: (event: React.MouseEvent<HTMLElement>) => void;
-  onDocumentMouseUpForResize: (event: MouseEvent) => void;
-  onDocumentMouseMoveForResize: (event: MouseEvent) => void;
-  onDocuemntKeyDownUpForResize: (event: KeyboardEvent) => void;
-  onRotateHandleMouseDown: (event: React.MouseEvent<HTMLElement>) => void;
-  onDocumentMouseUpForRotate: (event: MouseEvent) => void;
-  onDocumentMouseMoveForRotate: (event: MouseEvent) => void;
+export type TransformOverlayRef = {
+  select: (recordKey: UIRecordKey) => void;
+  deselect: () => void;
+  transform: (recordKey: UIRecordKey, rect: UIRecordRect | UIRecordRectInit) => void;
 };

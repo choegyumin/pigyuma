@@ -3,6 +3,7 @@ import ReactTypes from '@pigyuma/react-utility-types';
 
 export type AxisGridProps = ReactTypes.UnknownProps;
 
-export type AxisGridRendererProps = {
-  recordKey?: UIRecordKey;
+export type AxisGridRef = {
+  select: (recordKey: UIRecordKey) => void;
+  deselect: () => void;
 };

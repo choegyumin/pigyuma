@@ -1,26 +1,41 @@
+import { useEventListener } from '@pigyuma/react-utils';
 import React from 'react';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
-import { SelectionOverlayRenderer } from './SelectionOverlayRenderer.component';
-import { SelectionOverlayProps } from './types';
+import { useUIDesignToolAPI } from '../Workspace/Workspace.context';
+import * as styles from './SelectionOverlay.css';
+import { SelectionOverlayProps, SelectionOverlayRef } from './types';
 import useData from './useData';
+import useExposeRef from './useExposeRef';
 import useHandlers from './useHandlers';
+import useUIController from './useUIController';
 
-export const SelectionOverlay: React.FC<SelectionOverlayProps> = React.memo(() => {
-  const context = useContextForInteraction();
+export const SelectionOverlay = React.memo(
+  React.forwardRef<SelectionOverlayRef, SelectionOverlayProps>((props, ref) => {
+    const api = useUIDesignToolAPI();
 
-  const data = useData({ context });
-  const { hoveredRecordKey } = data;
+    const data = useData({ api, props, ref });
+    const { rootRef, rootStyle } = data;
 
-  const { onDocumentMouseMove, onDocumentMouseDown, onDocumentMouseUp } = useHandlers({ context, data });
+    const uiController = useUIController({ api, props, ref, data });
 
-  return (
-    <SelectionOverlayRenderer
-      /** @todo Range selection 기능 구현 (`{ recordKeys: UIRecordKey[] }` 타입으로 변경) */
-      recordKey={hoveredRecordKey}
-      onDocumentMouseMove={onDocumentMouseMove}
-      onDocumentMouseDown={onDocumentMouseDown}
-      onDocumentMouseUp={onDocumentMouseUp}
-    />
-  );
-});
+    const { onMouseMoveForSelection, onMouseDownForSelection, onMouseUpForSelection } = useHandlers({
+      api,
+      props,
+      ref,
+      data,
+      uiController,
+    });
+
+    useExposeRef({ api, props, ref, data, uiController });
+
+    useEventListener(document, 'mousemove', onMouseMoveForSelection);
+    useEventListener(document, 'mousedown', onMouseDownForSelection);
+    useEventListener(document, 'mouseup', onMouseUpForSelection);
+
+    return (
+      <div ref={rootRef} className={styles.root} style={rootStyle.freeze()}>
+        <div className={styles.outline} />
+      </div>
+    );
+  }),
+);
 SelectionOverlay.displayName = 'SelectionOverlay';

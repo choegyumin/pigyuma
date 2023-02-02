@@ -1,75 +1,77 @@
+import { UIRecordType } from '@/types/Identifier';
+import { isUIRecordKey } from '@/utils/model';
 import { setRef, useEvent } from '@pigyuma/react-utils';
-import { Layer } from '../Layer/Layer.model';
-import { WorkspaceInteraction } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
+import { UIDesignToolAPI } from '../Workspace/Workspace.context';
+import { SelectionOverlayProps, SelectionOverlayRef } from './types';
 import { UseDataType } from './useData';
+import { UseUIControllerType } from './useUIController';
 
 export type UseHandlersDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+  api: UIDesignToolAPI;
+  props: SelectionOverlayProps;
+  ref: React.ForwardedRef<SelectionOverlayRef>;
   data: UseDataType;
+  uiController: UseUIControllerType;
 };
 
 export default function useHandlers(deps: UseHandlersDependencys) {
   const {
-    context,
-    data: { isActive, setHoveredRecordKey, clickedTargetRef },
+    api,
+    props: { onChange },
+    data: { active, hoveredRecordRef, clickedTargetRef },
+    uiController: { setOverlayShapeStyle },
   } = deps;
 
-  const onDocumentMouseMove = useEvent(() => {
-    if (!isActive) {
-      setHoveredRecordKey(undefined);
-    }
+  const onMouseMoveForSelection = useEvent((event: MouseEvent) => {
+    const { clientX, clientY } = event;
 
-    const target = context.fromMouse();
-    const record = target != null ? context.get(target) : undefined;
+    const target = api.closest(document.elementFromPoint(clientX, clientY), { type: UIRecordType.layer }) ?? null;
+    const record = target != null ? api.get(target) : undefined;
+    const recordKey = record?.key;
 
-    // Artboard, Layer 모두 선택 가능하지만 Artboard는 스펙 상 API 호출로만 허용
-    const isLayer = record instanceof Layer;
-
-    setHoveredRecordKey(isLayer ? record.key : undefined);
-
-    /** @todo Range selection 기능 구현 */
-    // context.setInteraction(WorkspaceInteraction.selecting);
-    // context.select(records.map(({ key }) => key));
-  });
-
-  const onDocumentMouseDown = useEvent((event: MouseEvent) => {
-    if (!isActive) {
+    if (!isUIRecordKey(recordKey) || recordKey === hoveredRecordRef.current?.key) {
       return;
     }
 
-    setRef(clickedTargetRef, event.target);
-
-    /** @todo Range selection 기능 구현 */
-    // context.setInteraction(WorkspaceInteraction.selecting);
-    // context.select([]);
+    if (active) {
+      setRef(hoveredRecordRef, record);
+      setOverlayShapeStyle(recordKey);
+    } else {
+      setRef(hoveredRecordRef, undefined);
+    }
   });
 
-  const onDocumentMouseUp = useEvent((event: MouseEvent) => {
-    const lastClickedTarget = clickedTargetRef.current;
+  const onMouseDownForSelection = useEvent((event: MouseEvent) => {
+    if (!active) {
+      return;
+    }
+    setRef(clickedTargetRef, event.target);
+  });
+
+  const onMouseUpForSelection = useEvent((event: MouseEvent) => {
+    if (!active) {
+      return;
+    }
+
+    const clickedTarget = clickedTargetRef.current;
     setRef(clickedTargetRef, null);
 
-    if (!isActive || event.target !== lastClickedTarget) {
+    if (clickedTarget !== event.target) {
       return;
     }
 
-    const target = context.fromMouse();
-    const record = target != null ? context.get(target) : undefined;
+    const { clientX, clientY } = event;
 
-    // Artboard, Layer 모두 선택 가능하지만 Artboard는 스펙 상 API 호출로만 허용
-    const isLayer = record instanceof Layer;
+    const target = api.closest(document.elementFromPoint(clientX, clientY), { type: UIRecordType.layer }) ?? null;
+    const record = target != null ? api.get(target) : undefined;
 
-    /** @todo Range selection 기능 구현 */
-    const records = isLayer && record != null ? [record] : [];
-
-    context.setInteraction(WorkspaceInteraction.idle);
-    context.select(records.map(({ key }) => key));
+    onChange?.({ target, record });
   });
 
   return {
-    onDocumentMouseMove,
-    onDocumentMouseDown,
-    onDocumentMouseUp,
+    onMouseMoveForSelection,
+    onMouseDownForSelection,
+    onMouseUpForSelection,
   };
 }
 
