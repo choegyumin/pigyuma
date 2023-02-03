@@ -23,7 +23,7 @@ const getTransformedRect = (
   rect: UIRecordRect,
   mousePoint: { x: number; y: number },
   handlePlacement: HandlePlacement,
-  resizeFromCenter: boolean,
+  fromCenter: boolean,
 ) => {
   const quad = UIRecordQuad.fromRect(rect);
 
@@ -33,44 +33,44 @@ const getTransformedRect = (
     const distance = -calcDistancePointFromLine([newQuadInit.p1, newQuadInit.p4], mousePoint, { abs: false });
     newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 180, flip ? -distance : distance);
     newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 180, flip ? -distance : distance);
-    if (resizeFromCenter) {
+    if (fromCenter) {
       newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 180, flip ? distance : -distance);
       newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 180, flip ? distance : -distance);
     }
-    const diff = distance * (resizeFromCenter ? 2 : 1);
+    const diff = distance * (fromCenter ? 2 : 1);
     return rect.width + diff < 0;
   };
   const top = () => {
     const distance = calcDistancePointFromLine([newQuadInit.p1, newQuadInit.p2], mousePoint, { abs: false });
     newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 90, distance);
     newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 90, distance);
-    if (resizeFromCenter) {
+    if (fromCenter) {
       newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 90, -distance);
       newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 90, -distance);
     }
-    const diff = distance * (resizeFromCenter ? 2 : 1);
+    const diff = distance * (fromCenter ? 2 : 1);
     return rect.height + diff < 0;
   };
   const right = (flip = false) => {
     const distance = calcDistancePointFromLine([newQuadInit.p2, newQuadInit.p3], mousePoint, { abs: false });
     newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 0, flip ? -distance : distance);
     newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 0, flip ? -distance : distance);
-    if (resizeFromCenter) {
+    if (fromCenter) {
       newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 0, flip ? distance : -distance);
       newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 0, flip ? distance : -distance);
     }
-    const diff = distance * (resizeFromCenter ? 2 : 1);
+    const diff = distance * (fromCenter ? 2 : 1);
     return rect.width + diff < 0;
   };
   const bottom = () => {
     const distance = -calcDistancePointFromLine([newQuadInit.p4, newQuadInit.p3], mousePoint, { abs: false });
     newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 270, distance);
     newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 270, distance);
-    if (resizeFromCenter) {
+    if (fromCenter) {
       newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 270, -distance);
       newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 270, -distance);
     }
-    const diff = distance * (resizeFromCenter ? 2 : 1);
+    const diff = distance * (fromCenter ? 2 : 1);
     return rect.height + diff < 0;
   };
 
@@ -113,7 +113,7 @@ const getTransformedRect = (
 export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
   const {
     context,
-    data: { selectedRecordKey, transformInitialRectRef, transformLastRectRef, resizeFromCenterRef, resizeHandlePlacementRef },
+    data: { selectedRecordKey, transformInitialRectRef, transformLastRectRef, resizeHandlePlacementRef },
   } = deps;
 
   const onResizeHandleMouseDown = useEvent((event: React.MouseEvent<HTMLElement>) => {
@@ -133,7 +133,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
       return console.error(`element with recordKey of '${recordKey}' not found.`);
     }
 
-    const mouseMeta = context.getBrowserMeta().mouse;
+    const browserMeta = context.getBrowserMeta();
 
     const isGrabbingCorner = (
       [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
@@ -145,7 +145,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformInitialRectRef, rect);
     setRef(transformLastRectRef, transformInitialRectRef.current);
     setRef(resizeHandlePlacementRef, handle);
-    context.setCursor(isGrabbingCorner ? getResizeCursor(target, mouseMeta) : event.target.style.getPropertyValue('cursor'));
+    context.setCursor(isGrabbingCorner ? getResizeCursor(target, browserMeta.mouse) : event.target.style.getPropertyValue('cursor'));
     context.setInteraction(WorkspaceInteraction.resizing);
   });
 
@@ -195,25 +195,26 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
       throw new Error("'resize' event was not properly initialized.");
     }
 
-    const mouseMeta = context.getBrowserMeta().mouse;
+    const browserMeta = context.getBrowserMeta();
+
+    const fromCenter = browserMeta.keyboard.alt;
     const handlePlacement = resizeHandlePlacementRef.current;
-    const fromCenter = resizeFromCenterRef.current;
     const isGrabbingCorner = (
       [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
     ).includes(handlePlacement || '');
 
-    const newRect = handlePlacement ? getTransformedRect(initialRect, mouseMeta, handlePlacement, fromCenter) : initialRect;
+    const newRect = handlePlacement ? getTransformedRect(initialRect, browserMeta.mouse, handlePlacement, fromCenter) : initialRect;
 
     setRef(transformLastRectRef, newRect);
     context.setRect(record.key, newRect);
     if (isGrabbingCorner) {
-      context.setCursor(getResizeCursor(target, mouseMeta));
+      context.setCursor(getResizeCursor(target, browserMeta.mouse));
     }
   });
 
   const onDocuemntKeyDownUpForResize = useEvent(() => {
     if (context.status !== 'resizing') {
-      return setRef(resizeFromCenterRef, false);
+      return;
     }
 
     const recordKey = selectedRecordKey;
@@ -232,15 +233,13 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
       throw new Error("'resize' event was not properly initialized.");
     }
 
-    const keyboardMeta = context.getBrowserMeta().keyboard;
-    const fromCenter = keyboardMeta.alt;
+    const browserMeta = context.getBrowserMeta();
+
+    const fromCenter = browserMeta.keyboard.alt;
     const handlePlacement = resizeHandlePlacementRef.current;
 
-    const mouseMeta = context.getBrowserMeta().mouse;
+    const newRect = handlePlacement ? getTransformedRect(initialRect, browserMeta.mouse, handlePlacement, fromCenter) : initialRect;
 
-    const newRect = handlePlacement ? getTransformedRect(initialRect, mouseMeta, handlePlacement, fromCenter) : initialRect;
-
-    setRef(resizeFromCenterRef, fromCenter);
     setRef(transformLastRectRef, newRect);
     context.setRect(record.key, newRect);
   });

@@ -25,7 +25,7 @@ export interface CanvasArgs {
   children: CanvasData['children'];
 }
 
-export class Canvas extends UIRecord implements Canvas {
+export class Canvas extends UIRecord implements CanvasJSON {
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'canvas'>;
   readonly children: Array<Artboard | ShapeLayer | TextLayer>;

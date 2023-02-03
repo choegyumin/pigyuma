@@ -88,7 +88,7 @@ export interface TextLayerArgs {
   content: TextLayerData['content'];
 }
 
-export class TextLayer extends Layer implements TextLayer {
+export class TextLayer extends Layer implements TextLayerJSON {
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'layer'>;
   readonly layerType: Extract<LayerType, 'text'>;

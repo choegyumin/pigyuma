@@ -5,6 +5,7 @@ import { SelectionOverlayProps } from './types';
 import useData from './useData';
 import useHandlers from './useHandlers';
 
+/** @todo SelectionOverlay와 RangeSelectionOverlay 분리 */
 export const SelectionOverlay: React.FC<SelectionOverlayProps> = React.memo(() => {
   const context = useContextForInteraction();
 

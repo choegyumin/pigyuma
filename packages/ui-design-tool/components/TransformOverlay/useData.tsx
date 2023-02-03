@@ -12,8 +12,7 @@ export type UseDataDependencys = {
 export default function useData(deps: UseDataDependencys) {
   const { context } = deps;
 
-  /** @todo 여러 레이어를 묶어서 transform 할 수 있게 되면 `hasSelectedOneOnly` 대신 `hasSelected` 로 교체 (Range Selection, Layer Grouping 기능과 함께 구현) */
-  // const hasSelected = context.selectedRecords.size > 0;
+  /** @todo 여러 레이어를 묶어서 transform 할 수 있게 되면 `hasSelected` 로 값 변경 (Range Selection, Layer Grouping 기능과 함께 구현) */
   const hasSelectedOneOnly = context.selectedRecords.size === 1;
 
   const isActive =
@@ -21,12 +20,12 @@ export default function useData(deps: UseDataDependencys) {
     context.status === WorkspaceStatus.resizing ||
     (context.status === WorkspaceStatus.rotating && hasSelectedOneOnly);
 
+  /** @todo 여러 레이어를 묶어서 transform 할 수 있게 되면 `selectedRecordKeys` 로 값 변경 (Range Selection, Layer Grouping 기능과 함께 구현) */
   const [selectedRecordKey] = isActive ? context.selectedRecords.keys() : ([] as undefined[]);
 
   const transformInitialRectRef = useRef<UIRecordRect>();
   const transformLastRectRef = useRef<UIRecordRect>();
 
-  const resizeFromCenterRef = useRef<boolean>(false);
   const resizeHandlePlacementRef = useRef<HandlePlacement>();
 
   const rotateHandleCoordDegreesRef = useRef<number>();
@@ -36,7 +35,6 @@ export default function useData(deps: UseDataDependencys) {
     selectedRecordKey,
     transformInitialRectRef,
     transformLastRectRef,
-    resizeFromCenterRef,
     resizeHandlePlacementRef,
     rotateHandleCoordDegreesRef,
   };

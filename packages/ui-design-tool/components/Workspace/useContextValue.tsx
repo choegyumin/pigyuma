@@ -25,9 +25,16 @@ const createSelector = (filter: UIRecordElementFilter) => {
 };
 
 /**
- * @todo Exception 발생 및 처리 기준 정의
- * @todo apps/web 개발 시 Workspace 상위 컴포넌트에서의 API 사용 방식 변경 (records를 Workspace 상위에서 상태 관리하고 주입하지만, 조작은 API를 통해 이루어져야 함)
+ * @todo Design token 모델 및 관리 방식 설계
  * @todo History 관리 방식 설계
+ * @todo Exception 발생 및 처리 기준 정의
+ * @todo (apps/web 개발 진행 시) UIDesignToolAPI 제공 방식 변경
+ *     - 명령형 API 외 Hooks API 제공 (상태 관리가 필요할 때 `get()` 메서드 대신 `useUIRecord()` 와 같은 훅을 사용해야 함)
+ *     - Workspace 내부의 UIDesignToolAPIProvider 삭제 (더이상 API를 얻기 위해 ref를 사용하지 않음)
+ *     - Workspace 상위(앱 루트)에서 인스턴스(`new UIDesignTool({ records })`)를 생성해 UIDesignToolProvider로 전달하는 초기화 과정을 거침 (앱 전역에서 명령형 API를, 그리고 React Query 처럼 providing 해 react 앱 내부에서 Hooks API를 사용할 수 있게 함)
+ * @todo (UIDesignToolAPI 제공 방식 변경 시) 테스트 코드 작성
+ *     - context values가 react 외부로 분리됨에 따라, `cursor`, `interaction`, `status` 등 의도적으로 재조정을 유발하는 상태는 어떻게 관리할 것인지 고려해야 함
+ * @todo 명령형 API로 데이터를 조작했을 때, listener callback이 호출되어 컴포넌트의 상태가 업데이트 완료되기 전, 다시 명령형 API로 가져온 데이터의 무결성을 react의 수명 주기에 맞추어 보장해야 하는지 검토 (react 내부 상태는 deep cloning되어 참조가 끊어졌기 때문에 문제가 아닐 수도 있음. 명령은 명령대로, 상태는 상태대로,)
  */
 export default function useContextValue(initialValues: { canvas: Canvas; elementRef: React.RefObject<HTMLDivElement> }) {
   const { canvas, elementRef } = initialValues;
@@ -58,6 +65,7 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
     return interaction;
   });
 
+  /** @todo XState 도입 검토 (상태를 context에서 관리하고 constate로 분리하지 않아도 InteractionController 내에서 눈에 띄는 성능 저하는 없을 것으로 판단됨) */
   const status = useMemo<WorkspaceStatus>(() => {
     switch (interaction) {
       case WorkspaceInteraction.resizing:
@@ -334,9 +342,9 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
       }
 
       const parentKey = siblingValue.parent.key;
-      const parentValue = records.get(parentKey ?? '') || records.get(parentKey ?? '');
+      const parentValue = records.get(parentKey ?? '');
       if (parentKey == null || parentValue == null) {
-        console.error(`UIRecord '${parentKey}' not found.`);
+        console.error(`Parent ${parentKey} of UIRecord '${siblingKey}' not found.`);
         return;
       }
 
@@ -383,10 +391,10 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
       return;
     }
 
-    const { parent: parentValue } = targetValue;
-    const parentKey = parentValue.key;
+    const parentKey = targetValue.parent.key;
+    const parentValue = records.get(parentKey ?? '');
     if (parentValue == null) {
-      console.error(`UIRecord '${parentKey}' not found.`);
+      console.error(`Parent ${parentKey} of UIRecord '${targetKey}' not found.`);
       return;
     }
 

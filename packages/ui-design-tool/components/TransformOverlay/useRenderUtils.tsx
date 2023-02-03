@@ -92,7 +92,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
   const createDegreesInfoText = useCallback(
     (record: UIRecord) => {
       const element = context.query({ key: record.key });
-      /** @todo 우측 패널도 `Layer.rotate.length` 대신 `UIRecordRect.fromElement(element).rotate` 가 노출되어야 함 */
+      /** @todo 우측 패널도 `Layer.rotate.length` 대신 `UIRecordRect.fromElement(element).rotate` 가 노출되어야 함 (데이터를 nested·combined 값으로 조작하면 잦은 변경이 발생하므로 rotate 값만 예외 케이스로 적절한 설계 필요) */
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return rect != null ? `${toDegrees360(rect.rotate)}°` : '';
     },
@@ -130,13 +130,27 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
   );
 
   const getResizeHandleCursorMap = useCallback(
-    (record: UIRecord) => cursor.resizeMap(isRotatableUIRecord(record) ? record.rotate.length : 0),
-    [],
+    (record: UIRecord) => {
+      if (!isRotatableUIRecord(record)) {
+        return cursor.resizeMap(0);
+      }
+      const element = context.query({ key: record.key });
+      const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
+      return cursor.resizeMap(rect?.rotate || 0);
+    },
+    [context],
   );
 
   const getRotateHandleCursorMap = useCallback(
-    (record: UIRecord) => cursor.rotateMap(isRotatableUIRecord(record) ? record.rotate.length : 0),
-    [],
+    (record: UIRecord) => {
+      if (!isRotatableUIRecord(record)) {
+        return cursor.rotateMap(0);
+      }
+      const element = context.query({ key: record.key });
+      const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
+      return cursor.rotateMap(rect?.rotate || 0);
+    },
+    [context],
   );
 
   return { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap };

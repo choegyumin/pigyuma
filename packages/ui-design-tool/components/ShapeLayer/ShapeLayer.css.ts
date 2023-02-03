@@ -21,6 +21,7 @@ export const root = style({
     [getter.cssRotate]: `calc(${vars.rotate} * -1)`,
   },
   display: 'block',
+  /** @todo 부모 UIRecord와 자신 UIRecord의 스타일을 따라가도록 개선 */
   position: 'absolute',
   top: vars.y,
   left: vars.x,

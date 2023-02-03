@@ -45,7 +45,7 @@ export interface ArtboardArgs {
   children: Array<ShapeLayerData | TextLayerData>;
 }
 
-export class Artboard extends UIRecord implements Artboard {
+export class Artboard extends UIRecord implements ArtboardJSON {
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'artboard'>;
   readonly name: string;

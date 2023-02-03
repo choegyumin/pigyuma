@@ -93,7 +93,7 @@ export interface ShapeLayerArgs {
   children: ShapeLayerData['children'];
 }
 
-export class ShapeLayer extends Layer implements ShapeLayer {
+export class ShapeLayer extends Layer implements ShapeLayerJSON {
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'layer'>;
   readonly layerType: Extract<LayerType, 'shape'>;
