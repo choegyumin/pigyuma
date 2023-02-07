@@ -1,11 +1,11 @@
-import { UIRecordRect } from '@/types/Shape';
+import { UIRecordRect } from '@/types/Geometry';
+import { Artboard } from '@/ui-models/Artboard/model';
+import { Layer } from '@/ui-models/Layer/model';
+import { UIRecord } from '@/ui-models/UIRecord/model';
 import { isRotatableUIRecord } from '@/utils/model';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { toDegrees360 } from '@pigyuma/utils';
 import { useCallback } from 'react';
-import { Artboard } from '../Artboard/Artboard.model';
-import { Layer } from '../Layer/Layer.model';
-import { UIRecord } from '../UIRecord/UIRecord.model';
 import { WorkspaceStatus } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './TransformOverlay.css';

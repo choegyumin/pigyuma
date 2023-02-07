@@ -1,6 +1,6 @@
-import { UIRecord } from '@/components/UIRecord/UIRecord.model';
 import { useContextForSubscribe } from '@/components/Workspace/Workspace.context';
 import { UIRecordKey } from '@/types/Identifier';
+import { UIRecord } from '@/ui-models/UIRecord/model';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef } from '@pigyuma/react-utils';
 import { cloneDeep } from '@pigyuma/utils';

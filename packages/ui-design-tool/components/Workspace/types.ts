@@ -1,6 +1,6 @@
-import { ArtboardData } from '../Artboard/Artboard.model';
-import { ShapeLayerData } from '../ShapeLayer/ShapeLayer.model';
-import { TextLayerData } from '../TextLayer/TextLayer.model';
+import { ArtboardData } from '@/ui-models/Artboard/model';
+import { ShapeLayerData } from '@/ui-models/ShapeLayer/model';
+import { TextLayerData } from '@/ui-models/TextLayer/model';
 import { UIDesignToolAPI } from './Workspace.context';
 
 export const WorkspaceInteraction = {

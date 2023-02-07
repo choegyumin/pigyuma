@@ -1,4 +1,4 @@
-import { UIRecordRect, UIRecordRectInit } from '@/types/Shape';
+import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';

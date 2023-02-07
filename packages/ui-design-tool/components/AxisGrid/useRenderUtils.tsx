@@ -1,9 +1,9 @@
+import { UIRecordQuad } from '@/types/Geometry';
 import { UIRecordType } from '@/types/Identifier';
-import { UIRecordQuad } from '@/types/Shape';
+import { Layer } from '@/ui-models/Layer/model';
+import { UIRecord } from '@/ui-models/UIRecord/model';
 import { hasUIRecordParent } from '@/utils/model';
 import { useCallback } from 'react';
-import { Layer } from '../Layer/Layer.model';
-import { UIRecord } from '../UIRecord/UIRecord.model';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './AxisGrid.css';
 

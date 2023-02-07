@@ -1,7 +1,7 @@
+import { UIRecordRect } from '@/types/Geometry';
 import { UIRecordKey } from '@/types/Identifier';
-import { UIRecordRect } from '@/types/Shape';
+import { UIRecord } from '@/ui-models/UIRecord/model';
 import ReactTypes from '@pigyuma/react-utility-types';
-import { UIRecord } from '../UIRecord/UIRecord.model';
 
 export const HandlePlacement = {
   top: 'top',

@@ -1,4 +1,4 @@
-import { UIRecordRect } from '@/types/Shape';
+import { UIRecordRect } from '@/types/Geometry';
 import { useRef } from 'react';
 import { HandlePlacement } from '../TransformOverlay/types';
 import { WorkspaceStatus } from '../Workspace/types';

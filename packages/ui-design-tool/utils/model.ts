@@ -1,10 +1,10 @@
-import { Artboard, ArtboardData } from '@/components/Artboard/Artboard.model';
-import { Canvas, CanvasData } from '@/components/Canvas/Canvas.model';
-import { Layer, LayerData } from '@/components/Layer/Layer.model';
-import { ShapeLayer, ShapeLayerData } from '@/components/ShapeLayer/ShapeLayer.model';
-import { TextLayer, TextLayerData } from '@/components/TextLayer/TextLayer.model';
-import { UIRecord, UIRecordData } from '@/components/UIRecord/UIRecord.model';
 import { UIRecordKey } from '@/types/Identifier';
+import { Artboard, ArtboardData } from '@/ui-models/Artboard/model';
+import { Canvas, CanvasData } from '@/ui-models/Canvas/model';
+import { Layer, LayerData } from '@/ui-models/Layer/model';
+import { ShapeLayer, ShapeLayerData } from '@/ui-models/ShapeLayer/model';
+import { TextLayer, TextLayerData } from '@/ui-models/TextLayer/model';
+import { UIRecord, UIRecordData } from '@/ui-models/UIRecord/model';
 
 type UIRecordWithParent = Artboard | Layer | ShapeLayer | TextLayer;
 type UIRecordWithChildren = Artboard | Canvas | ShapeLayer;

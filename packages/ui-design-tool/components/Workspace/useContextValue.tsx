@@ -1,13 +1,13 @@
+import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { UIRecordKey, UIRecordType } from '@/types/Identifier';
-import { UIRecordRect, UIRecordRectInit } from '@/types/Shape';
-import { flatUIRecords } from '@/utils/convert';
+import { Canvas } from '@/ui-models/Canvas/model';
+import { Layer } from '@/ui-models/Layer/model';
+import { UIRecord, UIRecordData } from '@/ui-models/UIRecord/model';
 import { hasUIRecordParent, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
+import { flatUIRecords } from '@/utils/value';
 import { setRef, useEvent, useEventListener, useStableCallback } from '@pigyuma/react-utils';
 import { cloneDeep, kebabCase } from '@pigyuma/utils';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Canvas } from '../Canvas/Canvas.model';
-import { Layer } from '../Layer/Layer.model';
-import { UIRecord, UIRecordData } from '../UIRecord/UIRecord.model';
 import { WorkspaceInteraction, WorkspaceStatus } from './types';
 import { UIRecordElementFilter, UIRecordElementFilterItem } from './Workspace.context';
 

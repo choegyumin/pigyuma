@@ -1,7 +1,7 @@
-import { UIRecordRect } from '@/types/Shape';
+import { UIRecordRect } from '@/types/Geometry';
+import { Layer } from '@/ui-models/Layer/model';
+import { UIRecord } from '@/ui-models/UIRecord/model';
 import { useCallback } from 'react';
-import { Layer } from '../Layer/Layer.model';
-import { UIRecord } from '../UIRecord/UIRecord.model';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './SelectionOverlay.css';
 

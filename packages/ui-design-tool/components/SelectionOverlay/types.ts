@@ -1,6 +1,6 @@
 import { UIRecordKey } from '@/types/Identifier';
+import { UIRecord } from '@/ui-models/UIRecord/model';
 import ReactTypes from '@pigyuma/react-utility-types';
-import { UIRecord } from '../UIRecord/UIRecord.model';
 
 export type SelectionOverlayChangeEvent = {
   type: 'select' | 'rangeSelectionStart' | 'rangeSelectionChange' | 'rangeSelectionEnd';
