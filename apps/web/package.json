@@ -40,6 +40,7 @@
     "@vanilla-extract/vite-plugin": "^3.7.0",
     "@vitejs/plugin-react": "^3.0.1",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
+    "geometry-polyfill": "^1.0.7",
     "jsdom": "^20.0.3",
     "typescript": "^4.7.4",
     "vite": "^4.0.4",

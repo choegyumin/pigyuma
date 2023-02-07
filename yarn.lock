@@ -1156,6 +1156,7 @@ __metadata:
     "@types/testing-library__jest-dom": ^5
     "@vitejs/plugin-react": ^3.0.1
     clsx: ^1.2.1
+    geometry-polyfill: ^1.0.7
     jsdom: ^20.0.3
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -1199,6 +1200,7 @@ __metadata:
     clsx: ^1.2.1
     constate: ^3.3.2
     csstype: ^3.1.1
+    geometry-polyfill: ^1.0.7
     jsdom: ^20.0.3
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -1234,6 +1236,7 @@ __metadata:
     clsx: ^1.2.1
     color: ^4.2.3
     csstype: ^3.1.1
+    geometry-polyfill: ^1.0.7
     jsdom: ^20.0.3
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -4328,6 +4331,13 @@ __metadata:
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
   checksum: a7437e58c6be12aa6c90f7730eac7fa9833dc78872b4ad2963d2031b00a3367a93f98aec75f9aaac7220848e4026d67a8655e870b24f20a543d103c0d65952ec
+  languageName: node
+  linkType: hard
+
+"geometry-polyfill@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "geometry-polyfill@npm:1.0.7"
+  checksum: 1dcfa6581d5c26e070952e91f630d42be76e3693fe5c7a5116ef1128b7dd60f8f7b1ff67fc61b9b867fdff3e9fb66894f665a9a2c05b7200bb2353b9b898c17b
   languageName: node
   linkType: hard
 
@@ -8411,6 +8421,7 @@ turbo@latest:
     "@vitejs/plugin-react": ^3.0.1
     clsx: ^1.2.1
     fork-ts-checker-webpack-plugin: ^7.2.13
+    geometry-polyfill: ^1.0.7
     jsdom: ^20.0.3
     next: 13.0.0
     react: ^18.2.0
