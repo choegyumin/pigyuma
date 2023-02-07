@@ -1,6 +1,6 @@
 import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
-import { getUIRecordStyleValue } from '@/utils/style';
+import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { calcCoordByDistance, calcDistancePointFromLine, pick } from '@pigyuma/utils';
@@ -139,7 +139,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
       [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
     ).includes(handle || '');
 
-    const rotate = parseFloat(getUIRecordStyleValue(target, 'rotate')) || 0;
+    const rotate = parseFloat(getComputedUIRecordStyleValue(target, 'rotate')) || 0;
     const rect = UIRecordRect.fromRect({ ...UIRecordRect.fromElement(target).toJSON(), rotate });
 
     setRef(transformInitialRectRef, rect);

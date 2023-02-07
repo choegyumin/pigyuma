@@ -1,10 +1,8 @@
 import { CanvasKey, UIRecordKey, UIRecordType } from '@/types/Identifier';
-import { UIRecordTree } from '@/types/Tree';
 import { clone } from '@pigyuma/utils';
 import { Artboard, ArtboardJSON, ArtboardData } from '../Artboard/model';
-import { LayerData } from '../Layer/model';
-import { ShapeLayer, ShapeLayerJSON } from '../ShapeLayer/model';
-import { TextLayer, TextLayerJSON } from '../TextLayer/model';
+import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
+import { TextLayer, TextLayerData, TextLayerJSON } from '../TextLayer/model';
 import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
 
 export interface CanvasJSON extends UIRecordJSON {
@@ -15,8 +13,8 @@ export interface CanvasJSON extends UIRecordJSON {
 
 export interface CanvasData {
   key?: CanvasJSON['key'];
-  type?: CanvasJSON['type'];
-  children: Array<ArtboardData | LayerData>;
+  type: CanvasJSON['type'];
+  children: Array<ArtboardData | ShapeLayerData | TextLayerData>;
 }
 
 export interface CanvasArgs {
@@ -59,14 +57,6 @@ export class Canvas extends UIRecord implements CanvasJSON {
           return null;
         })
         .filter(Boolean) as typeof this.children) ?? [];
-  }
-
-  get tree(): UIRecordTree {
-    return {
-      key: this.key,
-      children: this.children.map((it) => it.key),
-      parent: undefined,
-    };
   }
 
   toJSON(): CanvasJSON {

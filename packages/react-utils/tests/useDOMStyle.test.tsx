@@ -1,5 +1,5 @@
 import useDOMStyle from '@/src/useDOMStyle';
-import { act, render, renderHook } from '@testing-library/react';
+import { render, renderHook } from '@testing-library/react';
 import { useRef } from 'react';
 
 describe('useDOMStyle', () => {
@@ -20,7 +20,7 @@ describe('useDOMStyle', () => {
 
     render(<div ref={refHook.result.current} style={style.freeze()} />);
 
-    act(() => setStyle({ color: 'red' }));
+    setStyle({ color: 'red' });
 
     expect(style).toEqual({ color: 'red', background: 'black' });
     expect(ref.current?.style.getPropertyValue('color')).toEqual('red');
@@ -47,7 +47,7 @@ describe('useDOMStyle', () => {
     const frozenStyle = style.freeze();
 
     setStyle({ color: 'red' });
-    act(() => setStyle({ background: 'blue' }));
+    setStyle({ background: 'blue' });
 
     expect(frozenStyle).toEqual({ color: 'white', background: 'black' });
   });

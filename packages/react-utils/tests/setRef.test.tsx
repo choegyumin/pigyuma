@@ -8,6 +8,8 @@ describe('setRef', () => {
       result: { current: ref },
     } = renderHook(() => useRef('initial'));
 
+    expect(ref.current).toBe('initial');
+
     setRef(ref, 'changed');
     expect(ref.current).toBe('changed');
   });
@@ -22,6 +24,8 @@ describe('setRef', () => {
     const {
       result: { current: refCallbackCallback },
     } = renderHook(() => useCallback((value: Parameters<typeof refCallback>[0]) => setRef(refCallback, value), []));
+
+    expect(refObject.current).toBe('initial');
 
     setRef(refCallback, 'changed');
     expect(refObject.current).toBe('changed');

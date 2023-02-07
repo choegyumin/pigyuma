@@ -84,3 +84,18 @@ export const toUIRecordInstance = <T extends Artboard | Canvas | ShapeLayer | Te
   /* Unknown */
   return new UIRecord(current as ConstructorParameters<typeof UIRecord>[0]) as T;
 };
+
+export const flatUIRecords = (records: Array<UIRecord>, result: Map<UIRecordKey, UIRecord> = new Map()): Map<UIRecordKey, UIRecord> => {
+  const nextRecords: typeof records = [];
+
+  records.forEach((record) => {
+    if (record instanceof Artboard || record instanceof Canvas || record instanceof ShapeLayer) {
+      record.children.forEach((childLayer) => {
+        nextRecords.push(childLayer);
+      });
+    }
+    result.set(record.key, record);
+  });
+
+  return nextRecords.length > 0 ? flatUIRecords(nextRecords, result) : result;
+};

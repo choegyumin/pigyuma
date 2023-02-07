@@ -1,5 +1,4 @@
 import { UIRecordKey, UIRecordType } from '@/types/Identifier';
-import { UIRecordTree } from '@/types/Tree';
 import { HeightLengthType, WidthLengthType, XLengthType, YLengthType } from '@/types/Unit';
 import { StyleValue } from '@/types/Value';
 import { convertHeightValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
@@ -88,14 +87,6 @@ export class Artboard extends UIRecord implements ArtboardJSON {
           return null;
         })
         .filter(Boolean) as typeof this.children) ?? [];
-  }
-
-  get tree(): UIRecordTree {
-    return {
-      key: this.key,
-      children: this.children.map((it) => it.key),
-      parent: this.parent?.key,
-    };
   }
 
   get style(): ArtboardStyle {

@@ -1,5 +1,4 @@
 import { UIRecordKey, LayerType, UIRecordType } from '@/types/Identifier';
-import { UIRecordTree } from '@/types/Tree';
 import { HeightValueObject, RotateValueObject, StyleValue, WidthValueObject, XValueObject, YValueObject } from '@/types/Value';
 import { convertHeightValue, convertRotateValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
 import { clone, uuid } from '@pigyuma/utils';
@@ -75,14 +74,6 @@ export class Layer extends UIRecord implements LayerJSON {
     this.height = args.height;
     this.rotate = args.rotate;
     this.parent = parent;
-  }
-
-  get tree(): UIRecordTree {
-    return {
-      key: this.key,
-      children: [],
-      parent: this.parent?.key,
-    };
   }
 
   get style(): LayerStyle {

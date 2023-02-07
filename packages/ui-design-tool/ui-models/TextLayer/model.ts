@@ -1,5 +1,4 @@
 import { UIRecordKey, LayerType, UIRecordType } from '@/types/Identifier';
-import { UIRecordTree } from '@/types/Tree';
 import {
   FontSizeValueObject,
   FontWeightValueObject,
@@ -131,14 +130,6 @@ export class TextLayer extends Layer implements TextLayerJSON {
     this.letterSpacing = args.letterSpacing;
     this.content = args.content;
     this.parent = parent;
-  }
-
-  get tree(): UIRecordTree {
-    return {
-      key: this.key,
-      children: [],
-      parent: this.parent?.key,
-    };
   }
 
   get style(): TextLayerStyle {

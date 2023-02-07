@@ -1,4 +1,4 @@
-import { getUIRecordStyleValue } from '@/utils/style';
+import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { calcBoundsFromPoints, calcDegreesBetweenCoords, calcLayoutFromPoints, calcRectPoints, toDegrees360 } from '@pigyuma/utils';
 import { UIRecordStyle } from './Style';
 
@@ -7,7 +7,7 @@ function getCombinedRotateDegrees(element: HTMLElement): number {
   let combinedDegrees = 0;
 
   while (currentElement) {
-    const degrees = parseFloat(getUIRecordStyleValue(currentElement, UIRecordStyle.rotate)) || 0;
+    const degrees = parseFloat(getComputedUIRecordStyleValue(currentElement, UIRecordStyle.rotate)) || 0;
     currentElement = currentElement.parentElement;
     combinedDegrees += degrees;
   }
@@ -30,7 +30,7 @@ export interface UIRecordRectInit {
   rotate: number;
 }
 
-export class UIRecordQuad implements DOMQuad {
+export class UIRecordQuad {
   readonly #quad: {
     p1: DOMPoint;
     p2: DOMPoint;
@@ -95,7 +95,7 @@ export class UIRecordQuad implements DOMQuad {
   }
 }
 
-export class UIRecordRect implements DOMRect {
+export class UIRecordRect {
   readonly #rect: {
     x: number;
     y: number;

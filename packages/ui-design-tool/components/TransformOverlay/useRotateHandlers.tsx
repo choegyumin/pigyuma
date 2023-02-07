@@ -1,6 +1,6 @@
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
-import { getUIRecordStyleValue } from '@/utils/style';
+import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { calcDegreesBetweenCoords, pick, toDegrees360 } from '@pigyuma/utils';
@@ -53,7 +53,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
 
     const mouseMeta = context.getBrowserMeta().mouse;
 
-    const rotate = parseFloat(getUIRecordStyleValue(target, 'rotate')) || 0;
+    const rotate = parseFloat(getComputedUIRecordStyleValue(target, 'rotate')) || 0;
     const rect = UIRecordRect.fromRect({ ...UIRecordRect.fromElement(target).toJSON(), rotate });
 
     setRef(transformInitialRectRef, rect);

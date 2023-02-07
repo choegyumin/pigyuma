@@ -5,7 +5,10 @@ import { SelectionOverlayProps } from './types';
 import useData from './useData';
 import useHandlers from './useHandlers';
 
-/** @todo SelectionOverlay와 RangeSelectionOverlay 분리 */
+/**
+ * @todo (설계가 일정 수준 이상 확정되면) 테스트 코드 작성
+ * @todo SelectionOverlay와 RangeSelectionOverlay 분리
+ */
 export const SelectionOverlay: React.FC<SelectionOverlayProps> = React.memo(() => {
   const context = useContextForInteraction();
 

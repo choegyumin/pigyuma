@@ -1,18 +1,20 @@
 import useForceUpdate from '@/src/useForceUpdate';
 import { act, renderHook } from '@testing-library/react';
+import { vi } from 'vitest';
 
 describe('useForceUpdate', () => {
   test('should force rerender component', () => {
-    let count = 0;
+    const spy = vi.fn();
 
     const { result } = renderHook(() => {
-      count++;
+      spy();
       return useForceUpdate();
     });
+    const forceUpdate = result.current;
 
-    expect(count).toEqual(1);
+    expect(spy).toHaveBeenCalledTimes(1);
 
-    act(result.current);
-    expect(count).toEqual(2);
+    act(forceUpdate);
+    expect(spy).toHaveBeenCalledTimes(2);
   });
 });

@@ -1,5 +1,4 @@
 import { UIRecordKey, LayerType, UIRecordType } from '@/types/Identifier';
-import { UIRecordTree } from '@/types/Tree';
 import {
   FillValueObject,
   HeightValueObject,
@@ -147,14 +146,6 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
           return null;
         })
         .filter(Boolean) as typeof this.children) ?? [];
-  }
-
-  get tree(): UIRecordTree {
-    return {
-      key: this.key,
-      children: this.children.map((it) => it.key),
-      parent: this.parent?.key,
-    };
   }
 
   get style(): ShapeLayerStyle {

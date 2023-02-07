@@ -7,7 +7,7 @@ type Matrix2D = {
   f: number;
 };
 
-/** @todo 테스트 코드 작성 */
+/** @todo 기울기 값 해결 후 테스트 코드 작성 */
 export default function decomposeDOMMatrix2D(matrix: Matrix2D) {
   const angle = Math.atan2(matrix.b, matrix.a);
   const denom = Math.pow(matrix.a, 2) + Math.pow(matrix.b, 2);

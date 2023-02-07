@@ -3,7 +3,7 @@ import { mapValues } from '@pigyuma/utils';
 export const NumberUnit = {
   deg: 'deg',
   em: 'em',
-  empty: '',
+  numeric: '',
   percent: '%',
   px: 'px',
 } as const;
@@ -54,6 +54,7 @@ export const LetterSpacingLengthType = mapValues(LetterSpacingLengthTypeValue, (
 };
 export type LetterSpacingLengthType = keyof typeof LetterSpacingLengthType;
 
+/** @todo Unitless line-height 추가 검토 (typography token이 잘 설계된 서비스는 디자인에서 이를 사용하지 않고, html 기본값 선언에서만 쓰일 듯) */
 export const LineHeightLengthTypeValue = {
   percent: NumberUnit.percent,
   px: NumberUnit.px,
@@ -90,12 +91,12 @@ export type YLengthTypeValue = keyof typeof YLengthTypeValue;
 export const YLengthType = mapValues(YLengthTypeValue, (value, key) => key) as { [P in YLengthTypeValue]: P };
 export type YLengthType = keyof typeof YLengthType;
 
-export const StrokeStyleTypeValue = {
+export const StrokeStylePatternValue = {
   solid: 'solid',
   dashed: 'dashed',
   dotted: 'dotted',
   double: 'double',
 };
-export type StrokeStyleTypeValue = keyof typeof StrokeStyleTypeValue;
-export const StrokeStyleType = mapValues(StrokeStyleTypeValue, (value, key) => key) as { [P in StrokeStyleTypeValue]: P };
-export type StrokeStyleType = keyof typeof StrokeStyleTypeValue;
+export type StrokeStylePatternValue = keyof typeof StrokeStylePatternValue;
+export const StrokeStylePattern = mapValues(StrokeStylePatternValue, (value, key) => key) as { [P in StrokeStylePatternValue]: P };
+export type StrokeStylePattern = keyof typeof StrokeStylePatternValue;

@@ -3,7 +3,7 @@ import {
   HeightLengthType,
   LetterSpacingLengthType,
   LineHeightLengthType,
-  StrokeStyleType,
+  StrokeStylePattern,
   WidthLengthType,
   XLengthType,
   YLengthType,
@@ -20,7 +20,7 @@ export type LineHeightValueObject = { length: number; lengthType: LineHeightLeng
 export type RotateValueObject = { length: number };
 export type StrokeValueObject = {
   color: string;
-  pattern: StrokeStyleType;
+  pattern: StrokeStylePattern;
   width: number | { top: number; right: number; bottom: number; left: number };
 };
 export type TextColorValueObject = { color: string };

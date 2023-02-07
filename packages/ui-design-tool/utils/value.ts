@@ -1,4 +1,3 @@
-import { UIRecordKey } from '@/types/Identifier';
 import {
   FontSizeLengthTypeValue,
   HeightLengthTypeValue,
@@ -28,15 +27,15 @@ import {
   XValueObject,
   YValueObject,
 } from '@/types/Value';
-import { Artboard } from '@/ui-models/Artboard/model';
-import { Canvas } from '@/ui-models/Canvas/model';
-import { ShapeLayer } from '@/ui-models/ShapeLayer/model';
-import { UIRecord } from '@/ui-models/UIRecord/model';
 
-export const convertNumberValue = (length: number, unitOrKeyword: NumberUnitValue | NumberKeywordValue = NumberUnit.empty): StyleValue => {
+export const convertNumberValue = (
+  length: number,
+  unitOrKeyword: NumberUnitValue | NumberKeywordValue = NumberUnit.numeric,
+): StyleValue => {
   if (Object.values(NumberKeyword).includes(unitOrKeyword as NumberKeywordValue)) {
     return unitOrKeyword ?? '';
   }
+  // 1em = 100%, 0.01em = 1%
   if (unitOrKeyword === NumberUnit.em) {
     return `${length / 100}${unitOrKeyword}`;
   }
@@ -76,7 +75,6 @@ export const convertLetterSpacingValue = ({ length, lengthType }: LetterSpacingV
 export const convertTextColorValue = ({ color }: TextColorValueObject): StyleValue => {
   return color;
 };
-
 export const convertStrokeColorValue = ({ color }: StrokeValueObject): StyleValue => {
   return `${color}`;
 };
@@ -84,20 +82,12 @@ export const convertStrokePatternValue = ({ pattern }: StrokeValueObject): Style
   return `${pattern}`;
 };
 export const convertStrokeWidthValue = ({ width }: StrokeValueObject): StyleValue => {
-  return typeof width === 'number' ? `${width}` : `${width.top} ${width.right} ${width.bottom} ${width.left}`;
-};
-
-export const flatUIRecords = (records: Array<UIRecord>, result: Map<UIRecordKey, UIRecord> = new Map()): Map<UIRecordKey, UIRecord> => {
-  const nextRecords: typeof records = [];
-
-  records.forEach((record) => {
-    if (record instanceof Artboard || record instanceof Canvas || record instanceof ShapeLayer) {
-      record.children.forEach((childLayer) => {
-        nextRecords.push(childLayer);
-      });
-    }
-    result.set(record.key, record);
-  });
-
-  return nextRecords.length > 0 ? flatUIRecords(nextRecords, result) : result;
+  if (typeof width === 'number') {
+    return convertNumberValue(width, NumberUnit.px);
+  }
+  const top = convertNumberValue(width.top, NumberUnit.px);
+  const right = convertNumberValue(width.right, NumberUnit.px);
+  const bottom = convertNumberValue(width.bottom, NumberUnit.px);
+  const left = convertNumberValue(width.left, NumberUnit.px);
+  return `${top} ${right} ${bottom} ${left}`;
 };

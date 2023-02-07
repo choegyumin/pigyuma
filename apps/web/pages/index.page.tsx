@@ -1,6 +1,7 @@
 import { useEvent } from '@pigyuma/react-utils';
 import { Button } from '@pigyuma/ui';
 import { ArtboardData, ShapeLayer, ShapeLayerData, TextLayer, TextLayerData, Workspace, WorkspaceRef } from '@pigyuma/ui-design-tool';
+import mixins from '@pigyuma/ui/styles/mixins';
 import React, { useEffect, useRef } from 'react';
 import NoSSR from '~/components/NoSSR';
 
@@ -309,24 +310,27 @@ const Home = () => {
   });
 
   return (
-    <NoSSR>
-      <Workspace ref={workspaceRef} initialData={dummyData} />
-      <Button
-        style={{
-          position: 'fixed',
-          top: 16,
-          right: 16,
-          border: 0,
-          borderRadius: 8,
-          padding: 12,
-          boxShadow: '0 2px 4px hsl(0 0% 0% / 50%)',
-          fontSize: 14,
-        }}
-        onClick={onButtonClick}
-      >
-        ui-design-tool API Call Test
-      </Button>
-    </NoSSR>
+    <>
+      <h1 className={mixins.blind}>Pigyuma</h1>
+      <NoSSR>
+        <Workspace ref={workspaceRef} initialData={dummyData} />
+        <Button
+          style={{
+            position: 'fixed',
+            top: 16,
+            right: 16,
+            border: 0,
+            borderRadius: 8,
+            padding: 12,
+            boxShadow: '0 2px 4px hsl(0 0% 0% / 50%)',
+            fontSize: 14,
+          }}
+          onClick={onButtonClick}
+        >
+          ui-design-tool API Call Test
+        </Button>
+      </NoSSR>
+    </>
   );
 };
 Home.displayName = 'Home';
