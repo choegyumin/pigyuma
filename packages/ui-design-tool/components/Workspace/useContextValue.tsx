@@ -181,10 +181,88 @@ export default function useContextValue(initialValues: { canvas: Canvas; element
     listeners[targetKey]?.forEach((it) => it(targetValue));
   });
 
-  /** @todo move API 구현 */
+  /** @todo (react 외부로 분리 시) Function Overloading */
   const move = useStableCallback(
     (method: 'append' | 'prepend' | 'insertBefore' | 'insertAfter', handleKey: UIRecordKey, destKey: UIRecordKey): void => {
-      console.log('@todo WorkspaceContext.move()', { method, handleKey, destKey });
+      const handleValue = records.get(handleKey);
+      if (handleValue == null) {
+        console.error(`UIRecord '${handleKey}' not found.`);
+        return;
+      }
+
+      const destValue = records.get(destKey);
+      if (destValue == null) {
+        console.error(`UIRecord '${destKey}' not found.`);
+        return;
+      }
+
+      if (!hasUIRecordParent(handleValue)) {
+        console.error(`UIRecord '${handleKey}' has no parent.`);
+        return;
+      }
+
+      const startKey = handleValue.parent.key;
+      const startValue = records.get(startKey);
+      if (startValue == null) {
+        console.error(`Parent ${startKey} of UIRecord '${handleKey}' not found.`);
+        return;
+      }
+
+      if (!isUIRecordWithChildren(startValue)) {
+        console.error(`children of UIRecord '${startKey}' is not array.`);
+        return;
+      }
+
+      const handleIndex = startValue.children.findIndex((it) => it.key === handleKey);
+      if (handleIndex < 0) {
+        console.error(`children of UIRecord '${destKey}' has no UIRecord '${handleKey}'.`);
+        return;
+      }
+
+      if (method === 'append' || method === 'prepend') {
+        if (!isUIRecordWithChildren(destValue)) {
+          console.error(`children of UIRecord '${destKey}' is not array.`);
+          return;
+        }
+
+        startValue.children.splice(handleIndex, 1);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        destValue.children[method === 'prepend' ? 'unshift' : 'push'](handleValue as any);
+        listeners[startKey]?.forEach((it) => it(startValue));
+        listeners[destKey]?.forEach((it) => it(destValue));
+      } else if (method === 'insertBefore' || method === 'insertAfter') {
+        if (!hasUIRecordParent(destValue)) {
+          console.error(`UIRecord '${destKey}' has no parent.`);
+          return;
+        }
+
+        const destParentKey = destValue.parent.key;
+        const destParentValue = records.get(destParentKey);
+        if (destParentValue == null) {
+          console.error(`Parent ${destParentKey} of UIRecord '${destKey}' not found.`);
+          return;
+        }
+
+        if (!isUIRecordWithChildren(destParentValue)) {
+          console.error(`children of UIRecord '${destParentKey}' is not array.`);
+          return;
+        }
+
+        let targetIndex = destParentValue.children.findIndex((it) => it.key === destKey);
+        if (targetIndex < 0) {
+          console.error(`children of UIRecord '${destParentKey}' has no UIRecord '${destKey}'.`);
+          return;
+        }
+        if (method === 'insertAfter') {
+          targetIndex += 1;
+        }
+
+        startValue.children.splice(handleIndex, 1);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        destParentValue.children.splice(targetIndex, 0, handleValue as any);
+        listeners[startKey]?.forEach((it) => it(startValue));
+        listeners[destParentKey]?.forEach((it) => it(destParentValue));
+      }
     },
   );
 

@@ -15,10 +15,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
     height: 768,
     children: [
       {
-        key: 'text-layer-wow',
+        key: 'text-layer-hi',
         type: 'layer',
         layerType: 'text',
-        name: 'Text Layer Wow',
+        name: 'Text Layer HI',
         x: { length: 0, lengthType: 'auto' },
         y: { length: 0, lengthType: 'auto' },
         rotate: { length: 0 },
@@ -29,7 +29,24 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         lineHeight: { length: 150, lengthType: 'percent' },
         fontWeight: { value: 400 },
         letterSpacing: { length: 0, lengthType: 'px' },
-        content: 'WOW',
+        content: 'HI',
+      },
+      {
+        key: 'text-layer-hello',
+        type: 'layer',
+        layerType: 'text',
+        name: 'Text Layer Hello',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 28, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 400 },
+        letterSpacing: { length: 0, lengthType: 'px' },
+        content: 'Hello',
       },
       {
         key: 'shape-layer-100',
@@ -285,6 +302,8 @@ const Home = () => {
       }),
     );
     workspace.api.remove('shape-layer-outside');
+    workspace.api.move('prepend', 'text-layer-hi', 'shape-layer-inside');
+    workspace.api.move('insertAfter', 'text-layer-hello', 'text-layer-inside');
 
     console.log('Records: ', workspace.api.getAll());
   });
