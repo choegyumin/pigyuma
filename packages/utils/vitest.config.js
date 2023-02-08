@@ -1,11 +1,11 @@
 const { defineConfig } = require('vitest/config');
-const { workspacesAlias } = require('../../tools/vitest/snippets');
+const { createWorkspacesAlias } = require('../../tools/vitest/snippets');
 
 module.exports = defineConfig({
   test: {
     globals: true,
     environment: 'node',
     setupFiles: ['./vitest.setup.ts'],
-    alias: [...workspacesAlias],
+    alias: [...createWorkspacesAlias('packages/utils')],
   },
 });

@@ -1,6 +1,6 @@
 import reactPlugin from '@vitejs/plugin-react';
 const { defineConfig } = require('vitest/config');
-const { workspacesAlias } = require('../../tools/vitest/snippets');
+const { createWorkspacesAlias } = require('../../tools/vitest/snippets');
 
 module.exports = defineConfig({
   plugins: [reactPlugin()],
@@ -8,6 +8,6 @@ module.exports = defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
-    alias: [...workspacesAlias],
+    alias: [...createWorkspacesAlias('packages/react-utils')],
   },
 });

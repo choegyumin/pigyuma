@@ -2,40 +2,84 @@
  * @typedef { import("vitest/config").UserConfig } UserConfig
  */
 
-const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
 
 const rootDir = (...paths) => path.resolve(__dirname, ...paths);
 
-const appNames = ['web'];
+const appRootRegExp = new RegExp('^~/');
+const packageRootRegExp = new RegExp('^@/');
+
 const packageNames = ['react-utility-types', 'react-utils', 'ui', 'ui-design-tool', 'utils'];
 
-const createCustomWorkspaceResolver = (workspaceType) => {
+const findResolvedFilePath = (baseDir, targetPath) => {
+  // 확장자가 없거나, path 바로 뒤에 붙어 있는 경로만 추출
+  // 'file' =>
+  // (O) 'file'
+  // (O) 'file.ts'
+  // (X) 'file.test.ts'
+  const anyExtensionGlobPattern = '?(.?!(*.*))';
+  const globPattern = rootDir(baseDir, `${targetPath}${anyExtensionGlobPattern}`);
+  const [found] = glob.sync(globPattern);
+  return found;
+};
+
+const createSinglePathCustomResolver = (baseDir = './') => {
+  return (replacedPath) => findResolvedFilePath(baseDir, replacedPath);
+};
+
+const createMultiPathsCustomResolver = (baseDirs = []) => {
   return (replacedPath) => {
-    const moduleNames = workspaceType === 'app' ? appNames : workspaceType === 'package' ? packageNames : [];
-    for (let i = 0; i < moduleNames.length; i++) {
-      const moduleName = moduleNames[i];
-      const globPattern = rootDir(`../../${workspaceType}s/${moduleName}`, `${replacedPath}?(.*)`);
-      const filePath = glob.sync(globPattern)[0];
-      if (filePath) {
-        return filePath;
+    for (let i = 0; i < baseDirs.length; i++) {
+      const baseDir = baseDirs[i];
+      const foundPath = findResolvedFilePath(baseDir, replacedPath);
+      if (foundPath) {
+        return foundPath;
       }
     }
-    return undefined;
   };
 };
 
-/** @type {UserConfig.test.alias} */
-const workspacesAlias = [
-  // Root inside app
-  { find: new RegExp('^~/'), replacement: '', customResolver: createCustomWorkspaceResolver('app') },
+const createNPMPackagesAlias = () => {
+  return packageNames.map((name) => ({ find: `^@pigyuma/${name}/(.*)$`, replacement: rootDir(`../../packages/${name}/$1`) }));
+};
+
+const createWorkspaceAppAlias = (appName) => {
+  return [
+    // Root inside app
+    { find: appRootRegExp, replacement: '', customResolver: createSinglePathCustomResolver(`../../apps/${appName}`) },
+    // Root inside package
+    {
+      find: packageRootRegExp,
+      replacement: '',
+      customResolver: createMultiPathsCustomResolver(packageNames.map((packageName) => `../../packages/${packageName}`)),
+    },
+  ];
+};
+
+const createWorkspacePackageAlias = (packageName) => {
   // Root inside package
-  { find: new RegExp('^@/'), replacement: '', customResolver: createCustomWorkspaceResolver('package') },
-  // Other packages
-  ...packageNames.map((name) => ({ find: `^@pigyuma/${name}/(.*)$`, replacement: rootDir(`../../packages/${name}/$1`) })),
-];
+  return [
+    {
+      find: packageRootRegExp,
+      replacement: '',
+      customResolver: createSinglePathCustomResolver(path.resolve('../../packages/', packageName)),
+    },
+  ];
+};
+
+/** @type {UserConfig.test.alias} */
+const createWorkspacesAlias = (workspace) => {
+  const [workspaceType = '', workspaceName = ''] = workspace.split('/');
+  const alias = createNPMPackagesAlias();
+  if (workspaceType === 'apps') {
+    alias.push(...createWorkspaceAppAlias(workspaceName));
+  } else if (workspaceType === 'packages') {
+    alias.push(...createWorkspacePackageAlias(workspaceName));
+  }
+  return alias;
+};
 
 module.exports = {
-  workspacesAlias,
+  createWorkspacesAlias,
 };
