@@ -8,10 +8,16 @@
     "dev": {
       "cache": false
     },
+    "format": {
+      "outputs": []
+    },
     "lint": {
       "outputs": []
     },
     "test": {
+      "outputs": []
+    },
+    "coverage": {
       "outputs": []
     }
   }

@@ -7,5 +7,6 @@ module.exports = defineConfig({
     environment: 'node',
     setupFiles: ['./vitest.setup.ts'],
     alias: [...createWorkspacesAlias('packages/utils')],
+    coverage: { provider: 'c8', reporter: ['text', 'html', 'lcovonly'] },
   },
 });

@@ -8,7 +8,8 @@
     "start": "next start",
     "format": "cd ../../ && yarn prettier \"apps/web/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
     "lint": "cd ../../ && TIMING=1 yarn eslint \"apps/web/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
-    "test": "vitest watch"
+    "test": "vitest watch --ui --open=false",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@pigyuma/react-utility-types": "*",
@@ -39,6 +40,8 @@
     "@vanilla-extract/next-plugin": "^2.1.1",
     "@vanilla-extract/vite-plugin": "^3.7.0",
     "@vitejs/plugin-react": "^3.0.1",
+    "@vitest/coverage-c8": "^0.28.4",
+    "@vitest/ui": "^0.28.4",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "geometry-polyfill": "^1.0.7",
     "jsdom": "^20.0.3",

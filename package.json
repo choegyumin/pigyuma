@@ -12,6 +12,7 @@
     "format": "prettier \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
     "lint": "TIMING=1 eslint \"{apps,packages,tools}/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
     "test": "turbo run test",
+    "coverage": "turbo run coverage",
     "postinstall": "husky install",
     "commit": "git-cz"
   },

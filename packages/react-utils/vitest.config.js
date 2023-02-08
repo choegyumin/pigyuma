@@ -1,6 +1,8 @@
 import reactPlugin from '@vitejs/plugin-react';
-const { defineConfig } = require('vitest/config');
+const { configDefaults, defineConfig } = require('vitest/config');
 const { createWorkspacesAlias } = require('../../tools/vitest/snippets');
+
+const exclude = ['**/*.css.{js,jsx,ts,tsx}'];
 
 module.exports = defineConfig({
   plugins: [reactPlugin()],
@@ -9,5 +11,7 @@ module.exports = defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     alias: [...createWorkspacesAlias('packages/react-utils')],
+    exclude: [...configDefaults.exclude, ...exclude],
+    coverage: { provider: 'c8', reporter: ['text', 'html', 'lcovonly'], exclude: [...configDefaults.coverage.exclude, ...exclude] },
   },
 });
