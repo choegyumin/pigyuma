@@ -10,7 +10,7 @@ describe('calcDistancePointFromPoint', () => {
     expect(calcDistancePointFromPoint({ x: 0, y: 0 }, { x: 0, y: -1 })).toEqual(1);
     expect(calcDistancePointFromPoint({ x: 0, y: 0 }, { x: 0, y: 1 })).toEqual(1);
 
-    expect(calcDistancePointFromPoint({ x: 0, y: 0 }, { x: 1, y: 1 })).toEqual(1.4142135623730951);
-    expect(calcDistancePointFromPoint({ x: 0, y: 0 }, { x: -1, y: -1 })).toEqual(1.4142135623730951);
+    expect(calcDistancePointFromPoint({ x: 0, y: 0 }, { x: 1, y: 1 })).toEqual(1.414213562373095);
+    expect(calcDistancePointFromPoint({ x: 0, y: 0 }, { x: -1, y: -1 })).toEqual(1.414213562373095);
   });
 });

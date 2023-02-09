@@ -1,4 +1,5 @@
 import calcBoundsFromPoints from './calcBoundsFromPoints';
+import toCorrectFloat from './toCorrectFloat';
 
 type Coord = { x: number; y: number };
 
@@ -25,9 +26,9 @@ export default function calcLayoutFromPoints({ p1, p2, p3, p4 }: Points) {
   const layoutY = minY + (bounds.height - layoutHeight) / 2;
 
   return {
-    x: layoutX,
-    y: layoutY,
-    width: layoutWidth,
-    height: layoutHeight,
+    x: toCorrectFloat(layoutX),
+    y: toCorrectFloat(layoutY),
+    width: toCorrectFloat(layoutWidth),
+    height: toCorrectFloat(layoutHeight),
   };
 }

@@ -1,3 +1,5 @@
+import toCorrectFloat from './toCorrectFloat';
+
 type Coord = { x: number; y: number };
 
 type Points = {
@@ -20,7 +22,7 @@ export default function calcBoundsFromPoints({ p1, p2, p3, p4 }: Points) {
   return {
     x: minX,
     y: minY,
-    width: maxX - minX,
-    height: maxY - minY,
+    width: toCorrectFloat(maxX - minX),
+    height: toCorrectFloat(maxY - minY),
   };
 }

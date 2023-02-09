@@ -3,10 +3,15 @@
 import toSafeFloat from '@/src/toSafeFloat';
 
 describe('toSafeFloat', () => {
-  test('should float number is rounded to 15 digits', () => {
-    expect(toSafeFloat(0.00000000000000111111)).toBe(0.000000000000001);
-    expect(toSafeFloat(0.00000000000000999999)).toBe(0.00000000000001);
+  test('should float number is rounded to 16 digits', () => {
+    expect(toSafeFloat(0)).toBe(0);
+    expect(toSafeFloat(-0)).toBe(-0);
     expect(toSafeFloat(0.99999999999999999999)).toBe(1);
+    expect(toSafeFloat(-0.99999999999999999999)).toBe(-1);
+    expect(toSafeFloat(0.00000000000000011111)).toBe(0.0000000000000001);
+    expect(toSafeFloat(-0.00000000000000011111)).toBe(-0.0000000000000001);
+    expect(toSafeFloat(0.00000000000000099999)).toBe(0.000000000000001);
+    expect(toSafeFloat(-0.00000000000000099999)).toBe(-0.000000000000001);
   });
 
   test('should float number is safety', () => {

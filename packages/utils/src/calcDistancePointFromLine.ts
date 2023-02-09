@@ -1,4 +1,5 @@
 import calcDistancePointFromPoint from './calcDistancePointFromPoint';
+import toCorrectFloat from './toCorrectFloat';
 import toUnsignedZero from './toUnsignedZero';
 
 export interface CalcDistancePointFromLineOptions {
@@ -21,5 +22,5 @@ export default function calcDistancePointFromLine(
   const b = line1.x - line2.x;
   const c = line2.x * line1.y - line1.x * line2.y;
 
-  return toUnsignedZero(absFn(a * point.x + b * point.y + c) / Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) || 0);
+  return toUnsignedZero(toCorrectFloat(absFn(a * point.x + b * point.y + c) / Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) || 0));
 }

@@ -1,3 +1,4 @@
+import toCorrectFloat from './toCorrectFloat';
 import toDegrees360 from './toDegrees360';
 import toRadians from './toRadians';
 import toUnsignedZero from './toUnsignedZero';
@@ -20,20 +21,20 @@ export default function calcRectPoints({ x = 0, y = 0, width, height, degrees = 
   const halfHeight = height / 2;
 
   const p1 = {
-    x: toUnsignedZero(-halfWidth * cos - -halfHeight * sin + (x + halfWidth)),
-    y: toUnsignedZero(-halfWidth * sin + -halfHeight * cos + (y + halfHeight)),
+    x: toUnsignedZero(toCorrectFloat(-halfWidth * cos - -halfHeight * sin + (x + halfWidth))),
+    y: toUnsignedZero(toCorrectFloat(-halfWidth * sin + -halfHeight * cos + (y + halfHeight))),
   };
   const p2 = {
-    x: toUnsignedZero(halfWidth * cos - -halfHeight * sin + (x + halfWidth)),
-    y: toUnsignedZero(halfWidth * sin + -halfHeight * cos + (y + halfHeight)),
+    x: toUnsignedZero(toCorrectFloat(halfWidth * cos - -halfHeight * sin + (x + halfWidth))),
+    y: toUnsignedZero(toCorrectFloat(halfWidth * sin + -halfHeight * cos + (y + halfHeight))),
   };
   const p3 = {
-    x: toUnsignedZero(halfWidth * cos - halfHeight * sin + (x + halfWidth)),
-    y: toUnsignedZero(halfWidth * sin + halfHeight * cos + (y + halfHeight)),
+    x: toUnsignedZero(toCorrectFloat(halfWidth * cos - halfHeight * sin + (x + halfWidth))),
+    y: toUnsignedZero(toCorrectFloat(halfWidth * sin + halfHeight * cos + (y + halfHeight))),
   };
   const p4 = {
-    x: toUnsignedZero(-halfWidth * cos - halfHeight * sin + (x + halfWidth)),
-    y: toUnsignedZero(-halfWidth * sin + halfHeight * cos + (y + halfHeight)),
+    x: toUnsignedZero(toCorrectFloat(-halfWidth * cos - halfHeight * sin + (x + halfWidth))),
+    y: toUnsignedZero(toCorrectFloat(-halfWidth * sin + halfHeight * cos + (y + halfHeight))),
   };
 
   if (0 < degrees && degrees <= 90) {

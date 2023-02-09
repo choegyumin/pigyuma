@@ -1,3 +1,4 @@
+import toCorrectFloat from './toCorrectFloat';
 import toRadians from './toRadians';
 
 type Rect = {
@@ -20,9 +21,9 @@ export default function calcBoundsFromLayout({ x = 0, y = 0, width, height, degr
   const boundingY = y - (boundingHeight - height) / 2;
 
   return {
-    x: boundingX,
-    y: boundingY,
-    width: boundingWidth,
-    height: boundingHeight,
+    x: toCorrectFloat(boundingX),
+    y: toCorrectFloat(boundingY),
+    width: toCorrectFloat(boundingWidth),
+    height: toCorrectFloat(boundingHeight),
   };
 }
