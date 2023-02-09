@@ -1,17 +1,22 @@
-import { render, screen } from '@testing-library/react';
-import AppProvider from 'components/AppProvider';
+import { render, screen, waitFor } from '@testing-library/react';
+import AppProvider from '~/components/AppProvider';
 import Home from './index.page';
 
 describe('<Home />', () => {
-  it('should render a heading', () => {
-    render(
-      <AppProvider>
-        <Home />
-      </AppProvider>,
+  test('should render heading', async () => {
+    await waitFor(() =>
+      render(
+        <AppProvider>
+          <Home />
+        </AppProvider>,
+      ),
     );
-    const heading = screen.getByRole('heading', {
-      name: 'choegyumin',
-    });
+
+    const heading = await waitFor(() =>
+      screen.getByRole('heading', {
+        name: 'Pigyuma',
+      }),
+    );
 
     expect(heading).toBeInTheDocument();
   });

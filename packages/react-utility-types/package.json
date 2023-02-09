@@ -10,9 +10,9 @@
   },
   "devDependencies": {
     "@pigyuma/tsconfig": "*",
-    "@types/node": "^18.0.0",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
+    "@types/node": "^18",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^4.7.4"

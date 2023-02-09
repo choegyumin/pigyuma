@@ -1,9 +1,0 @@
-{
-  "name": "@pigyuma/jest-config-snippets",
-  "version": "0.0.0",
-  "main": "index.js",
-  "private": true,
-  "scripts": {
-    "format": "cd ../../ && prettier --write \"packages/jest-config-snippets/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore"
-  }
-}

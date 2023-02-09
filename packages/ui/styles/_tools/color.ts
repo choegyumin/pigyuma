@@ -1,1 +1,1 @@
-export { default } from 'color';
+export { default as color } from 'color';

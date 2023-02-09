@@ -1,13 +1,21 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import React from 'react';
 import Button from './Button';
 
 describe('<Button />', () => {
-  it('should render a button', () => {
-    const text = 'children';
+  test('should render correctly', () => {
+    const { asFragment, container } = render(<Button />);
+    const button = container.firstElementChild;
 
-    render(<Button>{text}</Button>);
-    const button = screen.getByText(text);
+    expect(asFragment).toMatchSnapshot();
+    expect(button).toBeInstanceOf(HTMLButtonElement);
+  });
 
-    expect(button).toBeInTheDocument();
+  test('should ref is button element', () => {
+    const ref = React.createRef<HTMLButtonElement>();
+    const { container } = render(<Button ref={ref} />);
+    const button = container.firstElementChild;
+
+    expect(ref.current).toBe(button);
   });
 });

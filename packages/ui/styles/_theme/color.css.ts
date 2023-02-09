@@ -33,7 +33,7 @@ export const colorNeutralTokens: { color: Pick<ColorThemeTokens, 'neutral'> } = 
   color: {
     neutral: {
       black: 'hsl(0 0% 0%)',
-      white: 'hsl(0 0% 1000)',
+      white: 'hsl(0 0% 100%)',
     },
   },
 };

@@ -10,12 +10,14 @@ Commit message subject는 Pull request title 필드에 작성하세요.
 
 ## Description
 <!--
-변경 사항과 관련 이슈에 대한 요약을 작성하세요.
+변경 사항에 대한 요약을 작성하세요.
 작업의 목적과 의도 등 맥락이 충분히 포함되어야 합니다.
 재현하기 어려운 버그를 수정한 경우 재현 시나리오도 함께 작성하세요.
+관련 이슈가 있다면 키워드 또는 사이드바를 사용해 연결하세요.
+https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
 -->
 
-Fixes # .
+Fixes #.
 
 ## How to Test
 

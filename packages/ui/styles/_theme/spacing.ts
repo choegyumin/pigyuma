@@ -1,6 +1,6 @@
-import extensions from '@pigyuma/ui/styles/extensions';
-import spacing from './spacing.css';
+import { calc } from '@/styles/extensions';
+import spacingTokens from './spacing.css';
 
-export default (level: number) => {
-  return extensions.calc.multiply(spacing.base, level);
-};
+export default function spacing(level: number) {
+  return calc.multiply(spacingTokens.scale, level);
+}

@@ -1,17 +1,336 @@
+import { useEvent } from '@pigyuma/react-utils';
 import { Button } from '@pigyuma/ui';
-import { useRecoilValue } from 'recoil';
-import { myState } from 'store/sample';
-import styles from './index.css';
+import { ArtboardData, ShapeLayer, ShapeLayerData, TextLayer, TextLayerData, Workspace, WorkspaceRef } from '@pigyuma/ui-design-tool';
+import mixins from '@pigyuma/ui/styles/mixins';
+import React, { useEffect, useRef } from 'react';
+import NoSSR from '~/components/NoSSR';
+
+const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
+  {
+    key: 'artboard-1',
+    type: 'artboard',
+    name: 'My Artboard',
+    x: 100,
+    y: 100,
+    width: 1024,
+    height: 768,
+    children: [
+      {
+        key: 'text-layer-hi',
+        type: 'layer',
+        layerType: 'text',
+        name: 'Text Layer HI',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 28, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 400 },
+        letterSpacing: { length: 0, lengthType: 'px' },
+        content: 'HI',
+      },
+      {
+        key: 'text-layer-hello',
+        type: 'layer',
+        layerType: 'text',
+        name: 'Text Layer Hello',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 28, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 400 },
+        letterSpacing: { length: 0, lengthType: 'px' },
+        content: 'Hello',
+      },
+      {
+        key: 'shape-layer-100',
+        type: 'layer',
+        layerType: 'shape',
+        name: 'Shape Layer 100',
+        shapeType: 'container',
+        x: { length: 100, lengthType: 'px' },
+        y: { length: 100, lengthType: 'px' },
+        rotate: { length: 0 },
+        width: { length: 100, lengthType: 'px' },
+        height: { length: 100, lengthType: 'px' },
+        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        fill: { color: '#faa' },
+        children: [
+          {
+            key: 'text-layer-100',
+            type: 'layer',
+            layerType: 'text',
+            name: 'Text Layer 100',
+            x: { length: 0, lengthType: 'auto' },
+            y: { length: 0, lengthType: 'auto' },
+            rotate: { length: 0 },
+            width: { length: 0, lengthType: 'flexible' },
+            height: { length: 0, lengthType: 'flexible' },
+            textColor: { color: 'black' },
+            fontSize: { length: 14, lengthType: 'px' },
+            lineHeight: { length: 150, lengthType: 'percent' },
+            fontWeight: { value: 400 },
+            letterSpacing: { length: 0, lengthType: 'px' },
+            content: '100',
+          },
+        ],
+      },
+      {
+        key: 'shape-layer-200',
+        type: 'layer',
+        layerType: 'shape',
+        name: 'Shape Layer 200',
+        shapeType: 'container',
+        x: { length: 300, lengthType: 'px' },
+        y: { length: 100, lengthType: 'px' },
+        rotate: { length: 0 },
+        width: { length: 200, lengthType: 'px' },
+        height: { length: 200, lengthType: 'px' },
+        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        fill: { color: '#afa' },
+        children: [
+          {
+            key: 'text-layer-200',
+            type: 'layer',
+            layerType: 'text',
+            name: 'Text Layer 200',
+            x: { length: 0, lengthType: 'auto' },
+            y: { length: 0, lengthType: 'auto' },
+            rotate: { length: 0 },
+            width: { length: 0, lengthType: 'flexible' },
+            height: { length: 0, lengthType: 'flexible' },
+            textColor: { color: 'black' },
+            fontSize: { length: 16, lengthType: 'px' },
+            lineHeight: { length: 150, lengthType: 'percent' },
+            fontWeight: { value: 400 },
+            letterSpacing: { length: 0, lengthType: 'px' },
+            content: '200',
+          },
+        ],
+      },
+      {
+        key: 'shape-layer-300',
+        type: 'layer',
+        layerType: 'shape',
+        name: 'Shape Layer 300',
+        shapeType: 'container',
+        x: { length: 600, lengthType: 'px' },
+        y: { length: 100, lengthType: 'px' },
+        rotate: { length: 0 },
+        width: { length: 300, lengthType: 'px' },
+        height: { length: 300, lengthType: 'px' },
+        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        fill: { color: '#aaf' },
+        children: [
+          {
+            key: 'text-layer-300',
+            type: 'layer',
+            layerType: 'text',
+            name: 'Text Layer 300',
+            x: { length: 0, lengthType: 'auto' },
+            y: { length: 0, lengthType: 'auto' },
+            rotate: { length: 0 },
+            width: { length: 0, lengthType: 'flexible' },
+            height: { length: 0, lengthType: 'flexible' },
+            textColor: { color: 'black' },
+            fontSize: { length: 20, lengthType: 'px' },
+            lineHeight: { length: 150, lengthType: 'percent' },
+            fontWeight: { value: 400 },
+            letterSpacing: { length: 0, lengthType: 'px' },
+            content: '300',
+          },
+        ],
+      },
+      {
+        key: 'shape-layer-inside',
+        type: 'layer',
+        layerType: 'shape',
+        name: 'Shape Layer Inside',
+        shapeType: 'container',
+        x: { length: 100, lengthType: 'px' },
+        y: { length: 550, lengthType: 'px' },
+        rotate: { length: 0 },
+        width: { length: 350, lengthType: 'px' },
+        height: { length: 350, lengthType: 'px' },
+        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        fill: { color: '#ffa' },
+        children: [
+          {
+            key: 'text-layer-inside',
+            type: 'layer',
+            layerType: 'text',
+            name: 'Text Layer Inside',
+            x: { length: 0, lengthType: 'auto' },
+            y: { length: 0, lengthType: 'auto' },
+            rotate: { length: 0 },
+            width: { length: 0, lengthType: 'flexible' },
+            height: { length: 0, lengthType: 'flexible' },
+            textColor: { color: 'black' },
+            fontSize: { length: 28, lengthType: 'px' },
+            lineHeight: { length: 150, lengthType: 'percent' },
+            fontWeight: { value: 400 },
+            letterSpacing: { length: 0, lengthType: 'px' },
+            content: 'inside Artboard',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'shape-layer-outside',
+    type: 'layer',
+    layerType: 'shape',
+    name: 'Shape Layer Outside',
+    shapeType: 'container',
+    x: { length: 650, lengthType: 'px' },
+    y: { length: 650, lengthType: 'px' },
+    rotate: { length: 0 },
+    width: { length: 350, lengthType: 'px' },
+    height: { length: 350, lengthType: 'px' },
+    stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+    fill: { color: '#faf' },
+    children: [
+      {
+        key: 'text-layer-outside',
+        type: 'layer',
+        layerType: 'text',
+        name: 'Text Layer Outside',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 28, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 400 },
+        letterSpacing: { length: 0, lengthType: 'px' },
+        content: 'outside Artboard',
+      },
+    ],
+  },
+];
 
 const Home = () => {
-  const { author } = useRecoilValue(myState);
+  const workspaceRef = useRef<WorkspaceRef>(null);
+
+  useEffect(() => {
+    /** @todo NoSSR을 위한 hook 구현 */
+    window.requestAnimationFrame(() => {
+      console.log('Records: ', workspaceRef.current?.api.getAll());
+    });
+  }, []);
+
+  const onButtonClick = useEvent(() => {
+    const workspace = workspaceRef.current;
+    if (workspace == null) {
+      return;
+    }
+    workspace.api.set<ShapeLayer>('shape-layer-inside', { y: { length: 700, lengthType: 'px' } });
+    workspace.api.set<ShapeLayer>('shape-layer-100', { fill: { color: '#faf' } });
+    workspace.api.set<TextLayer>('text-layer-100', { textColor: { color: 'white' }, content: 'Setted' });
+    workspace.api.prepend('shape-layer-200', {
+      type: 'layer',
+      layerType: 'text',
+      name: 'prepend()',
+      x: { length: 0, lengthType: 'auto' },
+      y: { length: 0, lengthType: 'auto' },
+      rotate: { length: 0 },
+      width: { length: 0, lengthType: 'flexible' },
+      height: { length: 0, lengthType: 'flexible' },
+      textColor: { color: 'black' },
+      fontSize: { length: 16, lengthType: 'px' },
+      lineHeight: { length: 150, lengthType: 'percent' },
+      fontWeight: { value: 900 },
+      letterSpacing: { length: 20, lengthType: 'percent' },
+      content: 'Prepended',
+    });
+    workspace.api.append(
+      'shape-layer-200',
+      new TextLayer({
+        name: 'append()',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 16, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 900 },
+        letterSpacing: { length: 20, lengthType: 'percent' },
+        content: 'Appended',
+      }),
+    );
+    workspace.api.insertBefore('text-layer-300', {
+      type: 'layer',
+      layerType: 'text',
+      name: 'insertBefore()',
+      x: { length: 0, lengthType: 'auto' },
+      y: { length: 0, lengthType: 'auto' },
+      rotate: { length: 0 },
+      width: { length: 0, lengthType: 'flexible' },
+      height: { length: 0, lengthType: 'flexible' },
+      textColor: { color: 'black' },
+      fontSize: { length: 16, lengthType: 'px' },
+      lineHeight: { length: 150, lengthType: 'percent' },
+      fontWeight: { value: 900 },
+      letterSpacing: { length: 20, lengthType: 'percent' },
+      content: 'Inserted before',
+    });
+    workspace.api.insertAfter(
+      'text-layer-300',
+      new TextLayer({
+        name: 'insertAfter()',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { length: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: 'black' },
+        fontSize: { length: 16, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 900 },
+        letterSpacing: { length: 20, lengthType: 'percent' },
+        content: 'Inserted after',
+      }),
+    );
+    workspace.api.remove('shape-layer-outside');
+    workspace.api.move('prepend', 'text-layer-hi', 'shape-layer-inside');
+    workspace.api.move('insertAfter', 'text-layer-hello', 'text-layer-inside');
+
+    console.log('Records: ', workspace.api.getAll());
+  });
 
   return (
-    <div>
-      <h1 className={styles.heading}>{author}</h1>
-      <input type="text" placeholder="Blah Blah" />
-      <Button>Boop</Button>
-    </div>
+    <>
+      <h1 className={mixins.blind}>Pigyuma</h1>
+      <NoSSR>
+        <Workspace ref={workspaceRef} initialData={dummyData} />
+        <Button
+          style={{
+            position: 'fixed',
+            top: 16,
+            right: 16,
+            border: 0,
+            borderRadius: 8,
+            padding: 12,
+            boxShadow: '0 2px 4px hsl(0 0% 0% / 50%)',
+            fontSize: 14,
+          }}
+          onClick={onButtonClick}
+        >
+          ui-design-tool API Call Test
+        </Button>
+      </NoSSR>
+    </>
   );
 };
 Home.displayName = 'Home';

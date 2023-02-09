@@ -1,1 +1,1 @@
-export { calc as default } from '@vanilla-extract/css-utils';
+export { calc } from '@vanilla-extract/css-utils';

@@ -1,5 +1,5 @@
+import foundations from '@/styles/foundations';
 import { globalStyle } from '@vanilla-extract/css';
-import foundations from '@pigyuma/ui/styles/foundations';
 
 globalStyle('*, ::before, ::after', {
   boxSizing: 'border-box',

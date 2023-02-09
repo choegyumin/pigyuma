@@ -1,8 +1,0 @@
-{
-  "extends": "@pigyuma/tsconfig/react-library.json",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
-}

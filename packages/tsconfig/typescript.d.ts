@@ -10,6 +10,8 @@ type EmptyObject = PlainObject<{}>;
 
 type Property<T extends {}, P extends PropertyKey, D = undefined> = P extends keyof T ? T[P] : D;
 
+type ValueOf<T> = T[keyof T];
+
 type DeepPartial<T extends {}> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
@@ -18,10 +20,44 @@ type DeepRequired<T extends {}> = {
   [P in keyof T]-?: DeepRequired<T[P]>;
 };
 
+type NonNullableRequired<T> = {
+  [P in keyof T]-?: NonNullable<T[P]>;
+};
+
+type DeepNonNullableRequired<T extends {}> = {
+  [P in keyof T]-?: NonNullableRequired<T[P]>;
+};
+
 type DeepReadonly<T> = {
   readonly [P in keyof T]: DeepReadonly<T[P]>;
+};
+
+type NonReadonly<T> = {
+  -readonly [P in keyof T]: T[P];
+};
+
+type DeepNonReadonly<T> = {
+  -readonly [P in keyof T]: DeepNonReadonly<T[P]>;
+};
+
+type Writable<T> = {
+  -readonly [P in keyof T]: T[P];
+};
+
+type DeepWritable<T> = {
+  -readonly [P in keyof T]: DeepWritable<T[P]>;
 };
 
 type PickExisting<T extends {}, K extends keyof any> = {
   [P in K]: Property<T, P>;
 };
+
+type PickEnum<T, K extends T> = {
+  [P in keyof K]: P extends K ? P : never;
+};
+
+type ArrayElements<T extends readonly any[]> = T extends readonly (infer E)[] ? E : never;
+
+type PromiseResolve<T> = (value: T | PromiseLike<T>) => void;
+
+type PromiseReject = (reason?: any) => void;
