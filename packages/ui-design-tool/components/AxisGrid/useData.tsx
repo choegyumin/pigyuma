@@ -1,19 +1,21 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
+import { useUIDesignToolStatus, useUIDesignToolAPI } from '@/hooks';
+import useSelectedUIRecords from '@/hooks/useSelectedUIRecords';
 
 export type UseDataDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+  api: ReturnType<typeof useUIDesignToolAPI>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useData(deps: UseDataDependencys) {
-  const { context } = deps;
+  const selectedRecords = useSelectedUIRecords();
+  const status = useUIDesignToolStatus();
 
-  const hasSelectedOneOnly = context.selectedRecords.size === 1;
+  const hasSelectedOneOnly = selectedRecords.size === 1;
 
-  const isActive = context.status === UIDesignToolStatus.idle && hasSelectedOneOnly;
+  const isActive = status === UIDesignToolStatus.idle && hasSelectedOneOnly;
 
-  const [selectedRecordKey] = isActive ? context.selectedRecords.keys() : ([] as undefined[]);
+  const selectedRecordKey = isActive ? [...selectedRecords][0]?.key : undefined;
 
   return {
     isActive,

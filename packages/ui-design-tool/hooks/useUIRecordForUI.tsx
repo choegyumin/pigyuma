@@ -1,5 +1,5 @@
 import { UIRecord } from '@/api/UIRecord/model';
-import { useContextForSubscribe } from '@/components/Workspace/Workspace.context';
+import { useUIDesignToolAPI } from '@/components/UIDesignToolProvider/UIDesignToolProvider.context';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useIsomorphicLayoutEffect } from '@pigyuma/react-utils';
@@ -7,8 +7,7 @@ import { cloneDeep } from '@pigyuma/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function useUIRecordForUI(recordKey: UIRecordKey | undefined) {
-  /** @todo `useUIDesignToolAPI` 로 교체 */
-  const { get, subscribe, unsubscribe } = useContextForSubscribe();
+  const { get, subscribeItem, unsubscribeItem } = useUIDesignToolAPI();
 
   const [record, _setRecord] = useState<UIRecord | undefined>(() => (isUIRecordKey(recordKey) ? cloneDeep(get(recordKey)) : undefined));
 
@@ -38,11 +37,11 @@ export default function useUIRecordForUI(recordKey: UIRecordKey | undefined) {
     const callback = (newRecord: UIRecord) => {
       setRecord(cloneDeep(newRecord));
     };
-    subscribe(recordKey, callback);
+    subscribeItem(recordKey, callback);
     return () => {
-      unsubscribe(recordKey, callback);
+      unsubscribeItem(recordKey, callback);
     };
-  }, [recordKey, setRecord, subscribe, unsubscribe]);
+  }, [recordKey, setRecord, subscribeItem, unsubscribeItem]);
 
   return record;
 }

@@ -1,14 +1,14 @@
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
+import { useUIDesignToolAPI } from '@/hooks';
 import { UIRecordQuad } from '@/types/Geometry';
 import { UIRecordType } from '@/types/Identifier';
 import { hasUIRecordParent } from '@/utils/model';
 import { useCallback } from 'react';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './AxisGrid.css';
 
 export type UseRenderUtilsDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+  api: ReturnType<typeof useUIDesignToolAPI>;
 };
 
 const initialStyle = {
@@ -24,7 +24,7 @@ const initialStyle = {
 };
 
 export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
-  const { context } = deps;
+  const { api } = deps;
 
   const getRootStyle = useCallback(
     (record: UIRecord) => {
@@ -32,7 +32,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
         return initialStyle;
       }
 
-      const layerElement = context.query({ key: record.key });
+      const layerElement = api.query({ key: record.key });
       if (layerElement == null) {
         console.error(`element not found with key ${record.key}.`);
         return initialStyle;
@@ -55,7 +55,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
 
       const artboardRecord = hasUIRecordParent(record) ? record.parent : null;
       const artboardElement = layerElement.parentElement;
-      if (artboardRecord == null || artboardElement == null || !context.matches(artboardElement, { type: UIRecordType.artboard })) {
+      if (artboardRecord == null || artboardElement == null || !api.matches(artboardElement, { type: UIRecordType.artboard })) {
         return styleValues;
       }
 
@@ -83,7 +83,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
 
       return styleValues;
     },
-    [context],
+    [api],
   );
 
   return { getRootStyle };

@@ -1,5 +1,5 @@
+import { useUIDesignToolAPI } from '@/hooks';
 import React from 'react';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { SelectionOverlayRenderer } from './SelectionOverlayRenderer';
 import { SelectionOverlayProps } from './types';
 import useData from './useData';
@@ -10,12 +10,12 @@ import useHandlers from './useHandlers';
  * @todo SelectionOverlay와 RangeSelectionOverlay 분리
  */
 export const SelectionOverlay: React.FC<SelectionOverlayProps> = React.memo(() => {
-  const context = useContextForInteraction();
+  const api = useUIDesignToolAPI();
 
-  const data = useData({ context });
+  const data = useData({ api });
   const { hoveredRecordKey } = data;
 
-  const { onDocumentMouseMove, onDocumentMouseDown, onDocumentMouseUp } = useHandlers({ context, data });
+  const { onDocumentMouseMove, onDocumentMouseDown, onDocumentMouseUp } = useHandlers({ api, data });
 
   return (
     <SelectionOverlayRenderer

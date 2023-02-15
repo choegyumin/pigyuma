@@ -1,16 +1,16 @@
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { useBrowserMeta, useDispatcher, useUIDesignToolStatus, useUIDesignToolAPI } from '@/hooks';
 import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { calcCoordByDistance, calcDistancePointFromLine, pick } from '@pigyuma/utils';
-import { WorkspaceStatus } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { HandlePlacement } from './types';
 import { UseDataType } from './useData';
 
 export type UseResizeHandlersDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+  api: ReturnType<typeof useUIDesignToolAPI>;
   data: UseDataType;
 };
 
@@ -112,9 +112,14 @@ const getTransformedRect = (
 
 export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
   const {
-    context,
+    api,
     data: { selectedRecordKey, transformInitialRectRef, transformLastRectRef, resizeHandlePlacementRef },
   } = deps;
+
+  const getBrowserMeta = useBrowserMeta();
+  const status = useUIDesignToolStatus();
+
+  const { setCursor, setStatus } = useDispatcher();
 
   const onResizeHandleMouseDown = useEvent((event: React.MouseEvent<HTMLElement>) => {
     if (!(event.target instanceof HTMLElement) || event.target.dataset.handlePlacement == null) {
@@ -123,17 +128,19 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     const handle = event.target.dataset.handlePlacement as HandlePlacement;
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`element with recordKey of '${recordKey}' not found.`);
     }
 
-    const browserMeta = context.getBrowserMeta();
+    const browserMeta = getBrowserMeta();
+    const mouseMeta = browserMeta.mouse;
+    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
 
     const isGrabbingCorner = (
       [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
@@ -145,22 +152,22 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformInitialRectRef, rect);
     setRef(transformLastRectRef, transformInitialRectRef.current);
     setRef(resizeHandlePlacementRef, handle);
-    context.setCursor(isGrabbingCorner ? getResizeCursor(target, browserMeta.mouse) : event.target.style.getPropertyValue('cursor'));
-    context.setInteraction(WorkspaceStatus.resizing);
+    setCursor(isGrabbingCorner ? getResizeCursor(target, mousePoint) : event.target.style.getPropertyValue('cursor'));
+    setStatus(UIDesignToolStatus.resizing);
   });
 
   const onDocumentMouseUpForResize = useEvent(() => {
-    if (context.status !== 'resizing') {
+    if (status !== 'resizing') {
       return;
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -170,22 +177,22 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformInitialRectRef, undefined);
     setRef(transformLastRectRef, undefined);
     setRef(resizeHandlePlacementRef, undefined);
-    context.setRect(record.key, rect);
-    context.setInteraction(WorkspaceStatus.idle);
+    api.setRect(record.key, rect);
+    setStatus(UIDesignToolStatus.idle);
   });
 
   const onDocumentMouseMoveForResize = useEvent(() => {
-    if (context.status !== 'resizing') {
+    if (status !== 'resizing') {
       return;
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -195,35 +202,38 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
       throw new Error("'resize' event was not properly initialized.");
     }
 
-    const browserMeta = context.getBrowserMeta();
+    const browserMeta = getBrowserMeta();
+    const mouseMeta = browserMeta.mouse;
+    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const keyboardMeta = browserMeta.keyboard;
 
-    const fromCenter = browserMeta.keyboard.alt;
+    const fromCenter = keyboardMeta.altKey;
     const handlePlacement = resizeHandlePlacementRef.current;
     const isGrabbingCorner = (
       [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
     ).includes(handlePlacement || '');
 
-    const newRect = handlePlacement ? getTransformedRect(initialRect, browserMeta.mouse, handlePlacement, fromCenter) : initialRect;
+    const newRect = handlePlacement ? getTransformedRect(initialRect, mousePoint, handlePlacement, fromCenter) : initialRect;
 
     setRef(transformLastRectRef, newRect);
-    context.setRect(record.key, newRect);
+    api.setRect(record.key, newRect);
     if (isGrabbingCorner) {
-      context.setCursor(getResizeCursor(target, browserMeta.mouse));
+      setCursor(getResizeCursor(target, mousePoint));
     }
   });
 
   const onDocuemntKeyDownUpForResize = useEvent(() => {
-    if (context.status !== 'resizing') {
+    if (status !== 'resizing') {
       return;
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -233,15 +243,18 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
       throw new Error("'resize' event was not properly initialized.");
     }
 
-    const browserMeta = context.getBrowserMeta();
+    const browserMeta = getBrowserMeta();
+    const mouseMeta = browserMeta.mouse;
+    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const keyboardMeta = browserMeta.keyboard;
 
-    const fromCenter = browserMeta.keyboard.alt;
+    const fromCenter = keyboardMeta.altKey;
     const handlePlacement = resizeHandlePlacementRef.current;
 
-    const newRect = handlePlacement ? getTransformedRect(initialRect, browserMeta.mouse, handlePlacement, fromCenter) : initialRect;
+    const newRect = handlePlacement ? getTransformedRect(initialRect, mousePoint, handlePlacement, fromCenter) : initialRect;
 
     setRef(transformLastRectRef, newRect);
-    context.setRect(record.key, newRect);
+    api.setRect(record.key, newRect);
   });
 
   return {

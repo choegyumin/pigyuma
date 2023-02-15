@@ -1,27 +1,31 @@
 import { Layer } from '@/api/Layer/model';
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { useDispatcher, useUIDesignToolAPI } from '@/hooks';
+import { isUIRecordKey } from '@/utils/model';
 import { setRef, useEvent } from '@pigyuma/react-utils';
-import { WorkspaceStatus } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { UseDataType } from './useData';
 
 export type UseHandlersDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+  api: ReturnType<typeof useUIDesignToolAPI>;
   data: UseDataType;
 };
 
 export default function useHandlers(deps: UseHandlersDependencys) {
   const {
-    context,
+    api,
     data: { isActive, setHoveredRecordKey, clickedTargetRef },
   } = deps;
+
+  const { setStatus } = useDispatcher();
 
   const onDocumentMouseMove = useEvent(() => {
     if (!isActive) {
       setHoveredRecordKey(undefined);
     }
 
-    const target = context.fromMouse();
-    const record = target != null ? context.get(target) : undefined;
+    const target = api.fromMouse();
+    const recordKey = target != null ? api.dataset(target).key : undefined;
+    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
 
     // Artboard, Layer 모두 선택 가능하지만 Artboard는 스펙 상 API 호출로만 허용
     const isLayer = record instanceof Layer;
@@ -29,8 +33,8 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     setHoveredRecordKey(isLayer ? record.key : undefined);
 
     /** @todo Range selection 기능 구현 */
-    // context.setInteraction(WorkspaceStatus.selecting);
-    // context.select(records.map(({ key }) => key));
+    // setStatus(UIDesignToolStatus.selecting);
+    // api.select(records.map(({ key }) => key));
   });
 
   const onDocumentMouseDown = useEvent((event: MouseEvent) => {
@@ -41,8 +45,8 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     setRef(clickedTargetRef, event.target);
 
     /** @todo Range selection 기능 구현 */
-    // context.setInteraction(WorkspaceStatus.selecting);
-    // context.select([]);
+    // setStatus(UIDesignToolStatus.selecting);
+    // api.select([]);
   });
 
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
@@ -53,8 +57,9 @@ export default function useHandlers(deps: UseHandlersDependencys) {
       return;
     }
 
-    const target = context.fromMouse();
-    const record = target != null ? context.get(target) : undefined;
+    const target = api.fromMouse();
+    const recordKey = target != null ? api.dataset(target).key : undefined;
+    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
 
     // Artboard, Layer 모두 선택 가능하지만 Artboard는 스펙 상 API 호출로만 허용
     const isLayer = record instanceof Layer;
@@ -62,8 +67,8 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     /** @todo Range selection 기능 구현 */
     const records = isLayer && record != null ? [record] : [];
 
-    context.setInteraction(WorkspaceStatus.idle);
-    context.select(records.map(({ key }) => key));
+    setStatus(UIDesignToolStatus.idle);
+    api.select(records.map(({ key }) => key));
   });
 
   return {

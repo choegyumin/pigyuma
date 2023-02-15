@@ -1,8 +1,17 @@
 import { useEvent } from '@pigyuma/react-utils';
 import { Button } from '@pigyuma/ui';
-import { ArtboardData, ShapeLayer, ShapeLayerData, TextLayer, TextLayerData, Workspace, WorkspaceRef } from '@pigyuma/ui-design-tool';
+import {
+  ArtboardData,
+  ShapeLayer,
+  ShapeLayerData,
+  TextLayer,
+  TextLayerData,
+  useUIDesignToolAPI,
+  useUIRecordPairs,
+  Workspace,
+} from '@pigyuma/ui-design-tool';
 import mixins from '@pigyuma/ui/styles/mixins';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import NoSSR from '~/components/NoSSR';
 
 const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
@@ -219,24 +228,19 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
 ];
 
 const Home = () => {
-  const workspaceRef = useRef<WorkspaceRef>(null);
+  const uiDesignToolAPI = useUIDesignToolAPI();
+
+  const records = useUIRecordPairs();
 
   useEffect(() => {
-    /** @todo NoSSR을 위한 hook 구현 */
-    window.requestAnimationFrame(() => {
-      console.log('Records: ', workspaceRef.current?.api.getAll());
-    });
-  }, []);
+    console.log('Records: ', records);
+  }, [records]);
 
   const onButtonClick = useEvent(() => {
-    const workspace = workspaceRef.current;
-    if (workspace == null) {
-      return;
-    }
-    workspace.api.set<ShapeLayer>('shape-layer-inside', { y: { length: 700, lengthType: 'px' } });
-    workspace.api.set<ShapeLayer>('shape-layer-100', { fill: { color: '#faf' } });
-    workspace.api.set<TextLayer>('text-layer-100', { textColor: { color: 'white' }, content: 'Setted' });
-    workspace.api.prepend('shape-layer-200', {
+    uiDesignToolAPI.set<ShapeLayer>('shape-layer-inside', { y: { length: 700, lengthType: 'px' } });
+    uiDesignToolAPI.set<ShapeLayer>('shape-layer-100', { fill: { color: '#faf' } });
+    uiDesignToolAPI.set<TextLayer>('text-layer-100', { textColor: { color: 'white' }, content: 'Setted' });
+    uiDesignToolAPI.prepend('shape-layer-200', {
       type: 'layer',
       layerType: 'text',
       name: 'prepend()',
@@ -252,7 +256,7 @@ const Home = () => {
       letterSpacing: { length: 20, lengthType: 'percent' },
       content: 'Prepended',
     });
-    workspace.api.append(
+    uiDesignToolAPI.append(
       'shape-layer-200',
       new TextLayer({
         name: 'append()',
@@ -269,7 +273,7 @@ const Home = () => {
         content: 'Appended',
       }),
     );
-    workspace.api.insertBefore('text-layer-300', {
+    uiDesignToolAPI.insertBefore('text-layer-300', {
       type: 'layer',
       layerType: 'text',
       name: 'insertBefore()',
@@ -285,7 +289,7 @@ const Home = () => {
       letterSpacing: { length: 20, lengthType: 'percent' },
       content: 'Inserted before',
     });
-    workspace.api.insertAfter(
+    uiDesignToolAPI.insertAfter(
       'text-layer-300',
       new TextLayer({
         name: 'insertAfter()',
@@ -302,18 +306,16 @@ const Home = () => {
         content: 'Inserted after',
       }),
     );
-    workspace.api.remove('shape-layer-outside');
-    workspace.api.move('prepend', 'text-layer-hi', 'shape-layer-inside');
-    workspace.api.move('insertAfter', 'text-layer-hello', 'text-layer-inside');
-
-    console.log('Records: ', workspace.api.getAll());
+    uiDesignToolAPI.remove('shape-layer-outside');
+    uiDesignToolAPI.move('prepend', 'text-layer-hi', 'shape-layer-inside');
+    uiDesignToolAPI.move('insertAfter', 'text-layer-hello', 'text-layer-inside');
   });
 
   return (
     <>
       <h1 className={mixins.blind}>Pigyuma</h1>
       <NoSSR>
-        <Workspace ref={workspaceRef} initialData={dummyData} />
+        <Workspace initialData={dummyData} />
         <Button
           style={{
             position: 'fixed',

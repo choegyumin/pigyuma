@@ -1,13 +1,12 @@
 import { UIRecord } from '@/api/UIRecord/model';
-import { useContextForSubscribe } from '@/components/Workspace/Workspace.context';
+import { useUIDesignToolAPI } from '@/components/UIDesignToolProvider/UIDesignToolProvider.context';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { cloneDeep } from '@pigyuma/utils';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function useUIRecordForInteraction(recordKey: UIRecordKey | undefined) {
-  /** @todo `useUIDesignToolAPI` 로 교체 */
-  const { get, subscribe, unsubscribe } = useContextForSubscribe();
+  const { get, subscribeItem, unsubscribeItem } = useUIDesignToolAPI();
 
   // 렌더링 된 UIRecord 엘리먼트를 읽어야 작동하는 컴포넌트에서 쓰이므로,
   // initial state를 effect에서 업데이트 해 렌더링 시점을 조정함
@@ -38,11 +37,11 @@ export default function useUIRecordForInteraction(recordKey: UIRecordKey | undef
     const callback = (newRecord: UIRecord) => {
       setRecord(newRecord);
     };
-    subscribe(recordKey, callback);
+    subscribeItem(recordKey, callback);
     return () => {
-      unsubscribe(recordKey, callback);
+      unsubscribeItem(recordKey, callback);
     };
-  }, [recordKey, setRecord, subscribe, unsubscribe]);
+  }, [recordKey, setRecord, subscribeItem, unsubscribeItem]);
 
   return record;
 }

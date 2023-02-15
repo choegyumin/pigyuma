@@ -2,16 +2,16 @@ import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
+import { useUIDesignToolStatus, useUIDesignToolAPI } from '@/hooks';
 import { UIRecordRect } from '@/types/Geometry';
 import { isRotatableUIRecord } from '@/utils/model';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { toDegrees360 } from '@pigyuma/utils';
 import { useCallback } from 'react';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './TransformOverlay.css';
 
 export type UseRenderUtilsDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
+  api: ReturnType<typeof useUIDesignToolAPI>;
 };
 
 const initialRootStyle = {
@@ -29,12 +29,14 @@ const initialRootStyle = {
 const initialInfoText = '';
 
 export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
-  const { context } = deps;
+  const { api } = deps;
+
+  const status = useUIDesignToolStatus();
 
   const getMeta = useCallback(() => {
-    const isIdle = context.status === UIDesignToolStatus.idle;
-    const isResizing = context.status === UIDesignToolStatus.resizing;
-    const isRotating = context.status === UIDesignToolStatus.rotating;
+    const isIdle = status === UIDesignToolStatus.idle;
+    const isResizing = status === UIDesignToolStatus.resizing;
+    const isRotating = status === UIDesignToolStatus.rotating;
     const isTransforming = isResizing || isRotating;
 
     const handleVisible = isIdle;
@@ -52,11 +54,11 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
       outlineVisible,
       cursorVisible,
     };
-  }, [context]);
+  }, [status]);
 
   const getOverlayShapeStyle = useCallback(
     (record: UIRecord) => {
-      const element = context.query({ key: record.key });
+      const element = api.query({ key: record.key });
       if (element == null) {
         return {
           [styles.varNames.x]: 0,
@@ -77,26 +79,26 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
         [styles.varNames.rotate]: `${rotate}deg`,
       };
     },
-    [context],
+    [api],
   );
 
   const createSizeInfoText = useCallback(
     (record: UIRecord) => {
-      const element = context.query({ key: record.key });
+      const element = api.query({ key: record.key });
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return rect != null ? `${rect.width} × ${rect.height}` : '';
     },
-    [context],
+    [api],
   );
 
   const createDegreesInfoText = useCallback(
     (record: UIRecord) => {
-      const element = context.query({ key: record.key });
+      const element = api.query({ key: record.key });
       /** @todo 우측 패널도 `Layer.rotate.length` 대신 `UIRecordRect.fromElement(element).rotate` 가 노출되어야 함 (데이터를 nested·combined 값으로 조작하면 잦은 변경이 발생하므로 rotate 값만 예외 케이스로 적절한 설계 필요) */
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return rect != null ? `${toDegrees360(rect.rotate)}°` : '';
     },
-    [context],
+    [api],
   );
 
   const getRootStyle = useCallback(
@@ -134,11 +136,11 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
       if (!isRotatableUIRecord(record)) {
         return cursor.resizeMap(0);
       }
-      const element = context.query({ key: record.key });
+      const element = api.query({ key: record.key });
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return cursor.resizeMap(rect?.rotate || 0);
     },
-    [context],
+    [api],
   );
 
   const getRotateHandleCursorMap = useCallback(
@@ -146,11 +148,11 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
       if (!isRotatableUIRecord(record)) {
         return cursor.rotateMap(0);
       }
-      const element = context.query({ key: record.key });
+      const element = api.query({ key: record.key });
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return cursor.rotateMap(rect?.rotate || 0);
     },
-    [context],
+    [api],
   );
 
   return { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap };
