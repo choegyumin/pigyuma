@@ -1,12 +1,12 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordRect } from '@/types/Geometry';
 import { isRotatableUIRecord } from '@/utils/model';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { toDegrees360 } from '@pigyuma/utils';
 import { useCallback } from 'react';
-import { WorkspaceStatus } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './TransformOverlay.css';
 
@@ -32,9 +32,9 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
   const { context } = deps;
 
   const getMeta = useCallback(() => {
-    const isIdle = context.status === WorkspaceStatus.idle;
-    const isResizing = context.status === WorkspaceStatus.resizing;
-    const isRotating = context.status === WorkspaceStatus.rotating;
+    const isIdle = context.status === UIDesignToolStatus.idle;
+    const isResizing = context.status === UIDesignToolStatus.resizing;
+    const isRotating = context.status === UIDesignToolStatus.rotating;
     const isTransforming = isResizing || isRotating;
 
     const handleVisible = isIdle;

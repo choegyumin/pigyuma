@@ -1,4 +1,4 @@
-import { UIRecordKey, LayerType, UIRecordType } from '@/types/Identifier';
+import { UIRecordKey, LayerType, UIRecordType, UIRecordElementDataset } from '@/types/Identifier';
 import {
   FontSizeValueObject,
   FontWeightValueObject,
@@ -185,5 +185,13 @@ export class TextLayer extends Layer implements TextLayerJSON {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isModel(object: any): object is TextLayer | TextLayerJSON {
     return object instanceof TextLayer || TextLayer.isJSON(object);
+  }
+
+  static isElement(element: Element | null): boolean {
+    return (
+      element instanceof HTMLElement &&
+      element.dataset[UIRecordElementDataset.type] === UIRecordType.layer &&
+      element.dataset[UIRecordElementDataset.layerType] === LayerType.text
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { UIRecordKey, UIRecordType } from '@/types/Identifier';
+import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { uuid } from '@pigyuma/utils';
 
 export interface UIRecordJSON {
@@ -40,5 +40,9 @@ export class UIRecord implements UIRecordJSON {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isModel(object: any): object is UIRecord | UIRecordJSON {
     return object instanceof UIRecord || UIRecord.isJSON(object);
+  }
+
+  static isElement(element: Element | null): boolean {
+    return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] != null;
   }
 }

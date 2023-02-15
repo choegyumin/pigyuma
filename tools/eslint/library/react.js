@@ -22,7 +22,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': [
       'warn',
       {
-        additionalHooks: 'useRecoilCallback',
+        additionalHooks: '(useIsomorphicLayoutEffect|useRecoilCallback)',
       },
     ],
     'react-hooks/rules-of-hooks': 'error',

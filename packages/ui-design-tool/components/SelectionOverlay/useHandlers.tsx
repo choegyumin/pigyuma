@@ -1,6 +1,6 @@
 import { Layer } from '@/api/Layer/model';
 import { setRef, useEvent } from '@pigyuma/react-utils';
-import { WorkspaceInteraction } from '../Workspace/types';
+import { WorkspaceStatus } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { UseDataType } from './useData';
 
@@ -29,7 +29,7 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     setHoveredRecordKey(isLayer ? record.key : undefined);
 
     /** @todo Range selection 기능 구현 */
-    // context.setInteraction(WorkspaceInteraction.selecting);
+    // context.setInteraction(WorkspaceStatus.selecting);
     // context.select(records.map(({ key }) => key));
   });
 
@@ -41,7 +41,7 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     setRef(clickedTargetRef, event.target);
 
     /** @todo Range selection 기능 구현 */
-    // context.setInteraction(WorkspaceInteraction.selecting);
+    // context.setInteraction(WorkspaceStatus.selecting);
     // context.select([]);
   });
 
@@ -62,7 +62,7 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     /** @todo Range selection 기능 구현 */
     const records = isLayer && record != null ? [record] : [];
 
-    context.setInteraction(WorkspaceInteraction.idle);
+    context.setInteraction(WorkspaceStatus.idle);
     context.select(records.map(({ key }) => key));
   });
 

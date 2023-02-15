@@ -1,5 +1,5 @@
 import { UIRecord } from '@/api/UIRecord/model';
-import { useContextForSubscribe } from '@/components/Workspace/Workspace.context';
+import { useUIDesignToolAPI } from '@/components/UIDesignToolProvider/UIDesignToolProvider.context';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef } from '@pigyuma/react-utils';
@@ -7,22 +7,30 @@ import { cloneDeep } from '@pigyuma/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function useUIRecord(recordKey: UIRecordKey | undefined) {
-  const { get, subscribe, unsubscribe } = useContextForSubscribe();
+  const { get, subscribeItem, unsubscribeItem } = useUIDesignToolAPI();
 
-  // 상태 관리를 React에 의존하기 위해 `cloneDeep()` 으로 참조를 끊음
   const [record, _setRecord] = useState<UIRecord | undefined>(() => (isUIRecordKey(recordKey) ? cloneDeep(get(recordKey)) : undefined));
 
   const setRecord = useCallback<typeof _setRecord>(
     (value) => {
-      // 상태 관리를 React에 의존하기 위해 `cloneDeep()` 으로 참조를 끊음
-      _setRecord(cloneDeep(value));
+      /**
+       * 참조 제거 및 늦은 재조정 유발
+       * @see useUIRecordForInteraction {@link @/hooks/useUIRecordForInteraction.tsx}
+       */
+      window.requestAnimationFrame(() => {
+        _setRecord(cloneDeep(value));
+      });
     },
     [_setRecord],
   );
 
   const firstRunRef = useRef<boolean>(true);
+
   useEffect(() => {
-    // initial state와 값이 동일하지만 참조는 항상 끊어지므로, 최초 발생한 effect를 무시해 재조정을 차단함
+    /**
+     * 첫 재조정 차단
+     * @see useUIRecordForUI {@link @/hooks/useUIRecordForUI.tsx}
+     */
     if (firstRunRef.current) {
       return setRef(firstRunRef, false);
     }
@@ -34,13 +42,13 @@ export default function useUIRecord(recordKey: UIRecordKey | undefined) {
       return;
     }
     const callback = (newRecord: UIRecord) => {
-      setRecord(cloneDeep(newRecord));
+      setRecord(newRecord);
     };
-    subscribe(recordKey, callback);
+    subscribeItem(recordKey, callback);
     return () => {
-      unsubscribe(recordKey, callback);
+      unsubscribeItem(recordKey, callback);
     };
-  }, [recordKey, setRecord, subscribe, unsubscribe]);
+  }, [recordKey, setRecord, subscribeItem, unsubscribeItem]);
 
   return record;
 }

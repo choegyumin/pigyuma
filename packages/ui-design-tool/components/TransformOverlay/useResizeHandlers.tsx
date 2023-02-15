@@ -4,7 +4,7 @@ import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { calcCoordByDistance, calcDistancePointFromLine, pick } from '@pigyuma/utils';
-import { WorkspaceInteraction } from '../Workspace/types';
+import { WorkspaceStatus } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { HandlePlacement } from './types';
 import { UseDataType } from './useData';
@@ -146,7 +146,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformLastRectRef, transformInitialRectRef.current);
     setRef(resizeHandlePlacementRef, handle);
     context.setCursor(isGrabbingCorner ? getResizeCursor(target, browserMeta.mouse) : event.target.style.getPropertyValue('cursor'));
-    context.setInteraction(WorkspaceInteraction.resizing);
+    context.setInteraction(WorkspaceStatus.resizing);
   });
 
   const onDocumentMouseUpForResize = useEvent(() => {
@@ -171,7 +171,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformLastRectRef, undefined);
     setRef(resizeHandlePlacementRef, undefined);
     context.setRect(record.key, rect);
-    context.setInteraction(WorkspaceInteraction.idle);
+    context.setInteraction(WorkspaceStatus.idle);
   });
 
   const onDocumentMouseMoveForResize = useEvent(() => {

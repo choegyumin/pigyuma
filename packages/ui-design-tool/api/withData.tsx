@@ -1,5 +1,5 @@
-import { useUIRecord } from '@/hooks';
-import { UIRecordKey } from '@/types/Identifier';
+import { useUIRecordForUI } from '@/hooks';
+import { UIRecordElementDataAttributes, UIRecordKey } from '@/types/Identifier';
 import React from 'react';
 import { UIRecord } from './UIRecord/model';
 
@@ -17,18 +17,17 @@ export default function withData<R, P extends DefaultComponentProps>(
   const DataHOC = React.forwardRef<R, withDataProps>((props, ref) => {
     const { dataKey: recordKey, ...restProps } = props;
 
-    const record = useUIRecord(recordKey);
+    const record = useUIRecordForUI(recordKey);
 
     if (record == null) {
       return null;
     }
 
     const dataValues: AnyObject | undefined = record;
-    /** @see UIRecordIdentifiers */
     const dataProps = {
-      'data-ui-record-key': dataValues?.key,
-      'data-ui-record-type': dataValues?.type,
-      'data-ui-record-layer-type': dataValues?.layerType,
+      [UIRecordElementDataAttributes.key]: dataValues?.key,
+      [UIRecordElementDataAttributes.type]: dataValues?.type,
+      [UIRecordElementDataAttributes.layerType]: dataValues?.layerType,
     };
 
     return <MemoizedComponent {...restProps} {...dataProps} data={record as UIRecord} ref={ref} />;

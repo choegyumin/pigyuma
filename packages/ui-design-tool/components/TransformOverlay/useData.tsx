@@ -1,7 +1,7 @@
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
 import { UIRecordRect } from '@/types/Geometry';
 import { useRef } from 'react';
 import { HandlePlacement } from '../TransformOverlay/types';
-import { WorkspaceStatus } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 
 export type UseDataDependencys = {
@@ -16,9 +16,9 @@ export default function useData(deps: UseDataDependencys) {
   const hasSelectedOneOnly = context.selectedRecords.size === 1;
 
   const isActive =
-    context.status === WorkspaceStatus.idle ||
-    context.status === WorkspaceStatus.resizing ||
-    (context.status === WorkspaceStatus.rotating && hasSelectedOneOnly);
+    context.status === UIDesignToolStatus.idle ||
+    context.status === UIDesignToolStatus.resizing ||
+    (context.status === UIDesignToolStatus.rotating && hasSelectedOneOnly);
 
   /** @todo 여러 레이어를 묶어서 transform 할 수 있게 되면 `selectedRecordKeys` 로 값 변경 (Range Selection, Layer Grouping 기능과 함께 구현) */
   const [selectedRecordKey] = isActive ? context.selectedRecords.keys() : ([] as undefined[]);

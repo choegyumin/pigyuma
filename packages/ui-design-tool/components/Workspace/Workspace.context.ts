@@ -2,14 +2,6 @@ import { pick } from '@pigyuma/utils';
 import constate from 'constate';
 import useContextValue from './useContextValue';
 
-/** @see UIRecordIdentifiers */
-export type UIRecordElementFilterItem = {
-  key?: string;
-  type?: string | string[];
-  layerType?: string | string[];
-};
-export type UIRecordElementFilter = UIRecordElementFilterItem | UIRecordElementFilterItem[];
-
 /**
  * `UIDesignToolAPI` 메서드 모음
  * 메서드 함수는 reference가 항상 동일해야 함

@@ -1,6 +1,6 @@
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
 import { UIRecordKey } from '@/types/Identifier';
 import { useRef, useState } from 'react';
-import { WorkspaceStatus } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 
 export type UseDataDependencys = {
@@ -11,7 +11,7 @@ export type UseDataDependencys = {
 export default function useData(deps: UseDataDependencys) {
   const { context } = deps;
 
-  const isActive = context.status === WorkspaceStatus.idle || context.status === WorkspaceStatus.selecting;
+  const isActive = context.status === UIDesignToolStatus.idle || context.status === UIDesignToolStatus.selecting;
 
   const [hoveredRecordKey, setHoveredRecordKey] = useState<UIRecordKey | undefined>();
   const clickedTargetRef = useRef<EventTarget | null>(null);

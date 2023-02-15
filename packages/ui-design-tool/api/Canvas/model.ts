@@ -1,4 +1,4 @@
-import { CanvasKey, UIRecordKey, UIRecordType } from '@/types/Identifier';
+import { CanvasKey, UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { clone } from '@pigyuma/utils';
 import { Artboard, ArtboardJSON, ArtboardData } from '../Artboard/model';
 import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
@@ -75,5 +75,9 @@ export class Canvas extends UIRecord implements CanvasJSON {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isModel(object: any): object is Canvas | CanvasJSON {
     return object instanceof Canvas || Canvas.isJSON(object);
+  }
+
+  static isElement(element: Element | null): boolean {
+    return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] === UIRecordType.canvas;
   }
 }

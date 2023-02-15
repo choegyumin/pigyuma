@@ -1,4 +1,4 @@
-import { WorkspaceStatus } from '../Workspace/types';
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 
 export type UseDataDependencys = {
@@ -11,7 +11,7 @@ export default function useData(deps: UseDataDependencys) {
 
   const hasSelectedOneOnly = context.selectedRecords.size === 1;
 
-  const isActive = context.status === WorkspaceStatus.idle && hasSelectedOneOnly;
+  const isActive = context.status === UIDesignToolStatus.idle && hasSelectedOneOnly;
 
   const [selectedRecordKey] = isActive ? context.selectedRecords.keys() : ([] as undefined[]);
 

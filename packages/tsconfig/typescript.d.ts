@@ -12,6 +12,8 @@ type Property<T extends {}, P extends PropertyKey, D = undefined> = P extends ke
 
 type ValueOf<T> = T[keyof T];
 
+type DynamicRecord<T, K extends keyof any = PropertyKey> = Partial<Record<K, T>>;
+
 type DeepPartial<T extends {}> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };

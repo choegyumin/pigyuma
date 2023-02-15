@@ -4,7 +4,7 @@ import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { calcDegreesBetweenCoords, pick, toDegrees360 } from '@pigyuma/utils';
-import { WorkspaceInteraction } from '../Workspace/types';
+import { WorkspaceStatus } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { UseDataType } from './useData';
 
@@ -60,7 +60,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
     setRef(transformLastRectRef, transformInitialRectRef.current);
     setRef(rotateHandleCoordDegreesRef, calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseMeta));
     context.setCursor(getRotateCursor(target, mouseMeta));
-    context.setInteraction(WorkspaceInteraction.rotating);
+    context.setInteraction(WorkspaceStatus.rotating);
   });
 
   const onDocumentMouseUpForRotate = useEvent(() => {
@@ -85,7 +85,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
     setRef(transformLastRectRef, undefined);
     setRef(rotateHandleCoordDegreesRef, undefined);
     context.setRect(record.key, rect);
-    context.setInteraction(WorkspaceInteraction.idle);
+    context.setInteraction(WorkspaceStatus.idle);
   });
 
   const onDocumentMouseMoveForRotate = useEvent(() => {

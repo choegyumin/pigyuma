@@ -3,7 +3,7 @@ import { ShapeLayerData } from '@/api/ShapeLayer/model';
 import { TextLayerData } from '@/api/TextLayer/model';
 import { UIDesignToolAPI } from './Workspace.context';
 
-export const WorkspaceInteraction = {
+export const WorkspaceStatus = {
   unknown: 'unknown',
   idle: 'idle',
   /** Range selection */
@@ -14,20 +14,11 @@ export const WorkspaceInteraction = {
   resizingCornerFromCenter: 'resizingCornerFromCenter',
   rotating: 'rotating',
 } as const;
-export type WorkspaceInteraction = keyof typeof WorkspaceInteraction;
-
-export const WorkspaceStatus = {
-  unknown: 'unknown',
-  idle: 'idle',
-  /** Range selection */
-  selecting: 'selecting',
-  resizing: 'resizing',
-  rotating: 'rotating',
-} as const;
 export type WorkspaceStatus = keyof typeof WorkspaceStatus;
 
 export type WorkspaceProps = React.HTMLAttributes<HTMLDivElement> & {
   initialData: Array<ArtboardData | ShapeLayerData | TextLayerData>;
 };
 
+/** @todo `HTMLDivElement | null` 타입으로 변경 */
 export type WorkspaceRef = { api: UIDesignToolAPI; element: HTMLDivElement | null };

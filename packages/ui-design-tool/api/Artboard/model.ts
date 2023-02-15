@@ -1,4 +1,4 @@
-import { UIRecordKey, UIRecordType } from '@/types/Identifier';
+import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { HeightLengthType, WidthLengthType, XLengthType, YLengthType } from '@/types/Unit';
 import { StyleValue } from '@/types/Value';
 import { convertHeightValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
@@ -123,5 +123,9 @@ export class Artboard extends UIRecord implements ArtboardJSON {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isModel(object: any): object is Artboard | ArtboardJSON {
     return object instanceof Artboard || Artboard.isJSON(object);
+  }
+
+  static isElement(element: Element | null): boolean {
+    return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] === UIRecordType.artboard;
   }
 }

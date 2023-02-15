@@ -6,6 +6,7 @@ import { cloneDeep } from '@pigyuma/utils';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function useUIRecordForInteraction(recordKey: UIRecordKey | undefined) {
+  /** @todo `useUIDesignToolAPI` 로 교체 */
   const { get, subscribe, unsubscribe } = useContextForSubscribe();
 
   // 렌더링 된 UIRecord 엘리먼트를 읽어야 작동하는 컴포넌트에서 쓰이므로,
@@ -27,7 +28,7 @@ export default function useUIRecordForInteraction(recordKey: UIRecordKey | undef
   );
 
   useEffect(() => {
-    setRecord(isUIRecordKey(recordKey) ? get(recordKey) : undefined);
+    _setRecord(isUIRecordKey(recordKey) ? get(recordKey) : undefined);
   }, [recordKey, setRecord, get]);
 
   useEffect(() => {

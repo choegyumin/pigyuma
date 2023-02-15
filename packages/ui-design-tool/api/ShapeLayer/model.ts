@@ -1,4 +1,4 @@
-import { UIRecordKey, LayerType, UIRecordType } from '@/types/Identifier';
+import { UIRecordKey, LayerType, UIRecordType, UIRecordElementDataset } from '@/types/Identifier';
 import {
   FillValueObject,
   HeightValueObject,
@@ -198,5 +198,13 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isModel(object: any): object is ShapeLayer | ShapeLayerJSON {
     return object instanceof ShapeLayer || ShapeLayer.isJSON(object);
+  }
+
+  static isElement(element: Element | null): boolean {
+    return (
+      element instanceof HTMLElement &&
+      element.dataset[UIRecordElementDataset.type] === UIRecordType.layer &&
+      element.dataset[UIRecordElementDataset.layerType] === LayerType.shape
+    );
   }
 }
