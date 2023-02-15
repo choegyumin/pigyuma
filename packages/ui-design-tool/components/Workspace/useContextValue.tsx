@@ -1,8 +1,8 @@
+import { Canvas } from '@/api/Canvas/model';
+import { Layer } from '@/api/Layer/model';
+import { UIRecord, UIRecordData } from '@/api/UIRecord/model';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { UIRecordKey, UIRecordType } from '@/types/Identifier';
-import { Canvas } from '@/ui-models/Canvas/model';
-import { Layer } from '@/ui-models/Layer/model';
-import { UIRecord, UIRecordData } from '@/ui-models/UIRecord/model';
 import { flatUIRecords, hasUIRecordParent, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { setRef, useEvent, useEventListener, useStableCallback } from '@pigyuma/react-utils';
 import { cloneDeep, kebabCase } from '@pigyuma/utils';

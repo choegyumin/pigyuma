@@ -1,4 +1,4 @@
-import { Layer } from '@/ui-models/Layer/model';
+import { Layer } from '@/api/Layer/model';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { WorkspaceInteraction } from '../Workspace/types';
 import { useContextForInteraction } from '../Workspace/Workspace.context';

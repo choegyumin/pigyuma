@@ -1,11 +1,11 @@
+import { Artboard, ArtboardArgs, ArtboardData } from '@/api/Artboard/model';
+import { Canvas, CanvasArgs, CanvasData } from '@/api/Canvas/model';
+import { Layer, LayerArgs, LayerData } from '@/api/Layer/model';
+import { ShapeLayer, ShapeLayerArgs, ShapeLayerData, ShapeType } from '@/api/ShapeLayer/model';
+import { TextLayer, TextLayerArgs, TextLayerData } from '@/api/TextLayer/model';
+import { UIRecord, UIRecordArgs, UIRecordData } from '@/api/UIRecord/model';
 import { CanvasKey, LayerType, UIRecordType } from '@/types/Identifier';
 import { NumberUnit, StrokeStylePattern } from '@/types/Unit';
-import { Artboard, ArtboardArgs, ArtboardData } from '@/ui-models/Artboard/model';
-import { Canvas, CanvasArgs, CanvasData } from '@/ui-models/Canvas/model';
-import { Layer, LayerArgs, LayerData } from '@/ui-models/Layer/model';
-import { ShapeLayer, ShapeLayerArgs, ShapeLayerData, ShapeType } from '@/ui-models/ShapeLayer/model';
-import { TextLayer, TextLayerArgs, TextLayerData } from '@/ui-models/TextLayer/model';
-import { UIRecord, UIRecordArgs, UIRecordData } from '@/ui-models/UIRecord/model';
 import { cloneDeep } from '@pigyuma/utils';
 import {
   isUIRecordKey,

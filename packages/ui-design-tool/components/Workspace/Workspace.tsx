@@ -1,6 +1,6 @@
+import { CanvasComponent } from '@/api/Canvas/component';
+import { Canvas } from '@/api/Canvas/model';
 import { CanvasKey } from '@/types/Identifier';
-import { CanvasComponent } from '@/ui-models/Canvas/component';
-import { Canvas } from '@/ui-models/Canvas/model';
 import { cloneDeep } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React, { useImperativeHandle, useRef, useState } from 'react';

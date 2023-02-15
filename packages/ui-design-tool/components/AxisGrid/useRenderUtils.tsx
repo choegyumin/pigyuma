@@ -1,7 +1,7 @@
+import { Layer } from '@/api/Layer/model';
+import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordQuad } from '@/types/Geometry';
 import { UIRecordType } from '@/types/Identifier';
-import { Layer } from '@/ui-models/Layer/model';
-import { UIRecord } from '@/ui-models/UIRecord/model';
 import { hasUIRecordParent } from '@/utils/model';
 import { useCallback } from 'react';
 import { useContextForInteraction } from '../Workspace/Workspace.context';

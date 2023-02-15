@@ -1,7 +1,7 @@
+import { Artboard } from '@/api/Artboard/model';
+import { Layer } from '@/api/Layer/model';
+import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordRect } from '@/types/Geometry';
-import { Artboard } from '@/ui-models/Artboard/model';
-import { Layer } from '@/ui-models/Layer/model';
-import { UIRecord } from '@/ui-models/UIRecord/model';
 import { isRotatableUIRecord } from '@/utils/model';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { toDegrees360 } from '@pigyuma/utils';
