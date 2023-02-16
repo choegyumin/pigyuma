@@ -1,13 +1,9 @@
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
-import { useUIDesignToolAPI } from '@/hooks';
+import { useUIElement } from '@/hooks';
 import { UIRecordRect } from '@/types/Geometry';
 import { useCallback } from 'react';
 import * as styles from './SelectionOverlay.css';
-
-export type UseRenderUtilsDependencys = {
-  api: ReturnType<typeof useUIDesignToolAPI>;
-};
 
 const initialStyle = {
   [styles.varNames.x]: 0,
@@ -18,8 +14,8 @@ const initialStyle = {
   [styles.varNames.visibility]: 'hidden',
 };
 
-export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
-  const { api } = deps;
+export default function useRenderUtils() {
+  const uiElementAPI = useUIElement();
 
   const getRootStyle = useCallback(
     (record: UIRecord) => {
@@ -27,7 +23,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
         return initialStyle;
       }
 
-      const layerElement = api.query({ key: record.key });
+      const layerElement = uiElementAPI.query({ key: record.key });
       if (layerElement == null) {
         console.error(`element not found with key ${record.key}.`);
         return initialStyle;
@@ -44,7 +40,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
         [styles.varNames.rotate]: `${rotate}deg`,
       };
     },
-    [api],
+    [uiElementAPI],
   );
 
   return { getRootStyle };

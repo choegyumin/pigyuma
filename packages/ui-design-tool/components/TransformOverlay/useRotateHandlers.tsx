@@ -1,5 +1,5 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useBrowserMeta, useDispatcher, useUIDesignToolStatus, useUIDesignToolAPI } from '@/hooks';
+import { useBrowserMeta, useDispatcher, useItemReference, useStatus, useUIController, useUIElement } from '@/hooks';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
@@ -9,7 +9,6 @@ import { calcDegreesBetweenCoords, pick, toDegrees360 } from '@pigyuma/utils';
 import { UseDataType } from './useData';
 
 export type UseRotateHandlersDependencys = {
-  api: ReturnType<typeof useUIDesignToolAPI>;
   data: UseDataType;
 };
 
@@ -39,19 +38,23 @@ const getTransformedRect = (rect: UIRecordRect, mousePoint: { x: number; y: numb
 
 export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
   const {
-    api,
     data: { selectedRecordKey, transformInitialRectRef, transformLastRectRef, rotateHandleCoordDegreesRef },
   } = deps;
 
+  const uiControllerAPI = useUIController();
+  const uiElementAPI = useUIElement();
+
+  const getItemReference = useItemReference();
+
   const getBrowserMeta = useBrowserMeta();
-  const status = useUIDesignToolStatus();
+  const status = useStatus();
 
   const { setCursor, setStatus } = useDispatcher();
 
   const onRotateHandleMouseDown = useEvent(() => {
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
-    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (record == null || target == null) {
       return;
     }
@@ -76,12 +79,12 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -91,7 +94,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
     setRef(transformInitialRectRef, undefined);
     setRef(transformLastRectRef, undefined);
     setRef(rotateHandleCoordDegreesRef, undefined);
-    api.setRect(record.key, rect);
+    uiControllerAPI.setRect(record.key, rect);
     setStatus(UIDesignToolStatus.idle);
   });
 
@@ -101,12 +104,12 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -123,7 +126,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
 
     const newRect = getTransformedRect(initialRect, mousePoint, handleCoordDegrees);
     setRef(transformLastRectRef, newRect);
-    api.setRect(record.key, newRect);
+    uiControllerAPI.setRect(record.key, newRect);
     setCursor(getRotateCursor(target, mousePoint));
   });
 

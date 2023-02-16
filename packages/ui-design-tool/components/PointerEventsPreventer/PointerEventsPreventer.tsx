@@ -1,5 +1,5 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useCursor, useUIDesignToolStatus } from '@/hooks';
+import { useCursor, useStatus } from '@/hooks';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as styles from './PointerEventsPreventer.css';
@@ -7,7 +7,7 @@ import { PointerEventsPreventerProps } from './types';
 
 export const PointerEventsPreventer: React.FC<PointerEventsPreventerProps> = React.memo(() => {
   const cursor = useCursor();
-  const status = useUIDesignToolStatus();
+  const status = useStatus();
 
   const shouldVisible = status === UIDesignToolStatus.resizing || status === UIDesignToolStatus.rotating;
 

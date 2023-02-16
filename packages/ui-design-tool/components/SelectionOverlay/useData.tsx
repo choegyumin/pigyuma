@@ -1,15 +1,10 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useUIDesignToolStatus, useUIDesignToolAPI } from '@/hooks';
+import { useStatus } from '@/hooks';
 import { UIRecordKey } from '@/types/Identifier';
 import { useRef, useState } from 'react';
 
-export type UseDataDependencys = {
-  api: ReturnType<typeof useUIDesignToolAPI>;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function useData(deps: UseDataDependencys) {
-  const status = useUIDesignToolStatus();
+export default function useData() {
+  const status = useStatus();
 
   const isActive = status === UIDesignToolStatus.idle || status === UIDesignToolStatus.selecting;
 

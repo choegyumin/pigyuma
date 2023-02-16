@@ -1,15 +1,11 @@
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
-import { useUIDesignToolAPI } from '@/hooks';
+import { useUIElement } from '@/hooks';
 import { UIRecordQuad } from '@/types/Geometry';
 import { UIRecordType } from '@/types/Identifier';
 import { hasUIRecordParent } from '@/utils/model';
 import { useCallback } from 'react';
 import * as styles from './AxisGrid.css';
-
-export type UseRenderUtilsDependencys = {
-  api: ReturnType<typeof useUIDesignToolAPI>;
-};
 
 const initialStyle = {
   [styles.varNames.x]: 0,
@@ -23,8 +19,8 @@ const initialStyle = {
   [styles.varNames.visibility]: 'hidden',
 };
 
-export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
-  const { api } = deps;
+export default function useRenderUtils() {
+  const uiElementAPI = useUIElement();
 
   const getRootStyle = useCallback(
     (record: UIRecord) => {
@@ -32,7 +28,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
         return initialStyle;
       }
 
-      const layerElement = api.query({ key: record.key });
+      const layerElement = uiElementAPI.query({ key: record.key });
       if (layerElement == null) {
         console.error(`element not found with key ${record.key}.`);
         return initialStyle;
@@ -55,7 +51,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
 
       const artboardRecord = hasUIRecordParent(record) ? record.parent : null;
       const artboardElement = layerElement.parentElement;
-      if (artboardRecord == null || artboardElement == null || !api.matches(artboardElement, { type: UIRecordType.artboard })) {
+      if (artboardRecord == null || artboardElement == null || !uiElementAPI.matches(artboardElement, { type: UIRecordType.artboard })) {
         return styleValues;
       }
 
@@ -83,7 +79,7 @@ export default function useRenderUtils(deps: UseRenderUtilsDependencys) {
 
       return styleValues;
     },
-    [api],
+    [uiElementAPI],
   );
 
   return { getRootStyle };
