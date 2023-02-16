@@ -1,4 +1,3 @@
-import { useUIDesignToolAPI } from '@/hooks';
 import React from 'react';
 import { TransformOverlayRenderer } from './TransformOverlayRenderer';
 import { TransformOverlayProps } from './types';
@@ -8,14 +7,12 @@ import useRotateHandlers from './useRotateHandlers';
 
 /** @todo (설계가 일정 수준 이상 확정되면) 테스트 코드 작성 */
 export const TransformOverlay: React.FC<TransformOverlayProps> = React.memo(() => {
-  const api = useUIDesignToolAPI();
-
-  const data = useData({ api });
+  const data = useData();
   const { selectedRecordKey } = data;
 
   const { onResizeHandleMouseDown, onDocumentMouseUpForResize, onDocumentMouseMoveForResize, onDocuemntKeyDownUpForResize } =
-    useResizeHandlers({ api, data });
-  const { onRotateHandleMouseDown, onDocumentMouseUpForRotate, onDocumentMouseMoveForRotate } = useRotateHandlers({ api, data });
+    useResizeHandlers({ data });
+  const { onRotateHandleMouseDown, onDocumentMouseUpForRotate, onDocumentMouseMoveForRotate } = useRotateHandlers({ data });
 
   return (
     <TransformOverlayRenderer

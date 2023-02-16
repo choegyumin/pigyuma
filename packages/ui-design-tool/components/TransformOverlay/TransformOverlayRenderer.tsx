@@ -1,4 +1,4 @@
-import { useUIDesignToolAPI, useUIRecordForInteraction } from '@/hooks';
+import { useUIRecordForInteraction } from '@/hooks';
 import { useEventListener } from '@pigyuma/react-utils';
 import React from 'react';
 import * as styles from './TransformOverlay.css';
@@ -18,9 +18,7 @@ export const TransformOverlayRenderer: React.FC<TransformOverlayRendererProps> =
   } = props;
   const record = useUIRecordForInteraction(recordKey);
 
-  const api = useUIDesignToolAPI();
-
-  const { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap } = useRenderUtils({ api });
+  const { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap } = useRenderUtils();
 
   useEventListener(document, 'keydown', onDocuemntKeyDownUpForResize);
   useEventListener(document, 'keyup', onDocuemntKeyDownUpForResize);

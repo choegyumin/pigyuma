@@ -13,4 +13,4 @@ export * from './api/UIRecord/model';
 export { WorkspaceComponent as Workspace } from './components/Workspace/Workspace';
 export type { WorkspaceProps, WorkspaceRef } from './components/Workspace/types';
 
-export { useSelectedUIRecords, useUIDesignToolAPI, useUIDesignToolStatus, useUIRecord, useUIRecordPairs, useUIRecordTree } from './hooks';
+export { useUIController, useUIData, useUIElement, useUISubscription, useUIRecord } from './hooks';

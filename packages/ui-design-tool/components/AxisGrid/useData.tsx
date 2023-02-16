@@ -1,15 +1,9 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useUIDesignToolStatus, useUIDesignToolAPI } from '@/hooks';
-import useSelectedUIRecords from '@/hooks/useSelectedUIRecords';
+import { useSelected, useStatus } from '@/hooks';
 
-export type UseDataDependencys = {
-  api: ReturnType<typeof useUIDesignToolAPI>;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function useData(deps: UseDataDependencys) {
-  const selectedRecords = useSelectedUIRecords();
-  const status = useUIDesignToolStatus();
+export default function useData() {
+  const selectedRecords = useSelected();
+  const status = useStatus();
 
   const hasSelectedOneOnly = selectedRecords.size === 1;
 

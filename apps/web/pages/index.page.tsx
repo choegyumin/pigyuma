@@ -6,8 +6,8 @@ import {
   ShapeLayerData,
   TextLayer,
   TextLayerData,
-  useUIDesignToolAPI,
-  useUIRecordPairs,
+  useUIController,
+  useUIData,
   Workspace,
 } from '@pigyuma/ui-design-tool';
 import mixins from '@pigyuma/ui/styles/mixins';
@@ -228,19 +228,19 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
 ];
 
 const Home = () => {
-  const uiDesignToolAPI = useUIDesignToolAPI();
+  const uiControllerAPI = useUIController();
 
-  const records = useUIRecordPairs();
+  const { pairs: records } = useUIData();
 
   useEffect(() => {
     console.log('Records: ', records);
   }, [records]);
 
   const onButtonClick = useEvent(() => {
-    uiDesignToolAPI.set<ShapeLayer>('shape-layer-inside', { y: { length: 700, lengthType: 'px' } });
-    uiDesignToolAPI.set<ShapeLayer>('shape-layer-100', { fill: { color: '#faf' } });
-    uiDesignToolAPI.set<TextLayer>('text-layer-100', { textColor: { color: 'white' }, content: 'Setted' });
-    uiDesignToolAPI.prepend('shape-layer-200', {
+    uiControllerAPI.set<ShapeLayer>('shape-layer-inside', { y: { length: 700, lengthType: 'px' } });
+    uiControllerAPI.set<ShapeLayer>('shape-layer-100', { fill: { color: '#faf' } });
+    uiControllerAPI.set<TextLayer>('text-layer-100', { textColor: { color: 'white' }, content: 'Setted' });
+    uiControllerAPI.prepend('shape-layer-200', {
       type: 'layer',
       layerType: 'text',
       name: 'prepend()',
@@ -256,7 +256,7 @@ const Home = () => {
       letterSpacing: { length: 20, lengthType: 'percent' },
       content: 'Prepended',
     });
-    uiDesignToolAPI.append(
+    uiControllerAPI.append(
       'shape-layer-200',
       new TextLayer({
         name: 'append()',
@@ -273,7 +273,7 @@ const Home = () => {
         content: 'Appended',
       }),
     );
-    uiDesignToolAPI.insertBefore('text-layer-300', {
+    uiControllerAPI.insertBefore('text-layer-300', {
       type: 'layer',
       layerType: 'text',
       name: 'insertBefore()',
@@ -289,7 +289,7 @@ const Home = () => {
       letterSpacing: { length: 20, lengthType: 'percent' },
       content: 'Inserted before',
     });
-    uiDesignToolAPI.insertAfter(
+    uiControllerAPI.insertAfter(
       'text-layer-300',
       new TextLayer({
         name: 'insertAfter()',
@@ -306,9 +306,9 @@ const Home = () => {
         content: 'Inserted after',
       }),
     );
-    uiDesignToolAPI.remove('shape-layer-outside');
-    uiDesignToolAPI.move('prepend', 'text-layer-hi', 'shape-layer-inside');
-    uiDesignToolAPI.move('insertAfter', 'text-layer-hello', 'text-layer-inside');
+    uiControllerAPI.remove('shape-layer-outside');
+    uiControllerAPI.move('prepend', 'text-layer-hi', 'shape-layer-inside');
+    uiControllerAPI.move('insertAfter', 'text-layer-hello', 'text-layer-inside');
   });
 
   return (

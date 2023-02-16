@@ -3,6 +3,8 @@ export { default as parseReactStyle } from './parseReactStyle';
 export { default as setRef } from './setRef';
 export { default as styleAreEqual } from './styleAreEqual';
 
+export { default as useCloneState } from './useCloneState';
+export { default as useCloneDeepState } from './useCloneDeepState';
 export { default as useDOMStyle } from './useDOMStyle';
 export { default as useEvent } from './useEvent';
 export { default as useEventListener } from './useEventListener';

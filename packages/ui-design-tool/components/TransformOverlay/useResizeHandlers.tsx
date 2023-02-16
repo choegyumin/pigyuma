@@ -1,5 +1,5 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useBrowserMeta, useDispatcher, useUIDesignToolStatus, useUIDesignToolAPI } from '@/hooks';
+import { useBrowserMeta, useDispatcher, useItemReference, useStatus, useUIController, useUIElement } from '@/hooks';
 import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
@@ -10,7 +10,6 @@ import { HandlePlacement } from './types';
 import { UseDataType } from './useData';
 
 export type UseResizeHandlersDependencys = {
-  api: ReturnType<typeof useUIDesignToolAPI>;
   data: UseDataType;
 };
 
@@ -112,12 +111,16 @@ const getTransformedRect = (
 
 export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
   const {
-    api,
     data: { selectedRecordKey, transformInitialRectRef, transformLastRectRef, resizeHandlePlacementRef },
   } = deps;
 
+  const uiControllerAPI = useUIController();
+  const uiElementAPI = useUIElement();
+
+  const getItemReference = useItemReference();
+
   const getBrowserMeta = useBrowserMeta();
-  const status = useUIDesignToolStatus();
+  const status = useStatus();
 
   const { setCursor, setStatus } = useDispatcher();
 
@@ -128,12 +131,12 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     const handle = event.target.dataset.handlePlacement as HandlePlacement;
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`element with recordKey of '${recordKey}' not found.`);
     }
@@ -162,12 +165,12 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -177,7 +180,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformInitialRectRef, undefined);
     setRef(transformLastRectRef, undefined);
     setRef(resizeHandlePlacementRef, undefined);
-    api.setRect(record.key, rect);
+    uiControllerAPI.setRect(record.key, rect);
     setStatus(UIDesignToolStatus.idle);
   });
 
@@ -187,12 +190,12 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -216,7 +219,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     const newRect = handlePlacement ? getTransformedRect(initialRect, mousePoint, handlePlacement, fromCenter) : initialRect;
 
     setRef(transformLastRectRef, newRect);
-    api.setRect(record.key, newRect);
+    uiControllerAPI.setRect(record.key, newRect);
     if (isGrabbingCorner) {
       setCursor(getResizeCursor(target, mousePoint));
     }
@@ -228,12 +231,12 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? api.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? api.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -254,7 +257,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     const newRect = handlePlacement ? getTransformedRect(initialRect, mousePoint, handlePlacement, fromCenter) : initialRect;
 
     setRef(transformLastRectRef, newRect);
-    api.setRect(record.key, newRect);
+    uiControllerAPI.setRect(record.key, newRect);
   });
 
   return {
