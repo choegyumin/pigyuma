@@ -1,4 +1,4 @@
-import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
+import { useUIRecordForInteraction } from '@/hooks';
 import React from 'react';
 import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './AxisGrid.css';
