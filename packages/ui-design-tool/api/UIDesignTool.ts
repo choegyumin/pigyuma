@@ -58,7 +58,7 @@ export const INITIAL_BROWSER_META = {
 export class UIDesignTool {
   readonly #browserMeta: BrowserMeta;
   readonly #listeners: {
-    readonly item: Map<UIRecordKey, Set<(value: UIRecord) => void>>;
+    readonly item: Map<UIRecordKey, Set<(value: UIRecord | undefined) => void>>;
     readonly tree: Set<(values: UIRecord[]) => void>;
     readonly selection: Set<(values: UIRecord[]) => void>;
   };
@@ -89,14 +89,6 @@ export class UIDesignTool {
     }
   }
 
-  get #keys(): Set<UIRecordKey> {
-    return new Set([...this.#items].map(([key]) => key));
-  }
-
-  get #selectedKeys(): Set<UIRecordKey> {
-    return new Set([...this.#selectedItems].map(({ key }) => key));
-  }
-
   get #canvas(): Canvas {
     return this.#items.get(CanvasKey) as Canvas;
   }
@@ -113,8 +105,16 @@ export class UIDesignTool {
     return this.#items;
   }
 
+  get keys(): Set<UIRecordKey> {
+    return new Set([...this.#items].map(([key]) => key));
+  }
+
   get selected(): Set<UIRecord> {
     return this.#selectedItems;
+  }
+
+  get selectedKeys(): Set<UIRecordKey> {
+    return new Set([...this.#selectedItems].map(({ key }) => key));
   }
 
   mount() {
@@ -154,42 +154,43 @@ export class UIDesignTool {
     };
   }
 
-  subscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T) => void): void {
+  subscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T | undefined) => void): () => void {
     if (!this.#listeners.item.has(targetKey)) {
       this.#listeners.item.set(targetKey, new Set());
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const callbacks = this.#listeners.item.get(targetKey)!;
     callbacks.add(callback);
+
+    const unsubscribe = () => {
+      if (!this.#listeners.item.has(targetKey)) {
+        return;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const callbacks = this.#listeners.item.get(targetKey)!;
+      callbacks.delete(callback);
+      if (callbacks.size === 0) {
+        // delete callbacks
+        this.#listeners.item.delete(targetKey);
+      }
+    };
+    return unsubscribe;
   }
 
-  unsubscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T) => void): void {
-    if (!this.#listeners.item.has(targetKey)) {
-      return;
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const callbacks = this.#listeners.item.get(targetKey)!;
-    callbacks.delete(callback);
-    if (callbacks.size === 0) {
-      // delete callbacks
-      this.#listeners.item.delete(targetKey);
-    }
-  }
-
-  subscribeTree(callback: () => void): void {
+  subscribeTree(callback: (values: UIRecord[]) => void): () => void {
     this.#listeners.tree.add(callback);
+    const unsubscribe = () => {
+      this.#listeners.tree.delete(callback);
+    };
+    return unsubscribe;
   }
 
-  unsubscribeTree(callback: () => void): void {
-    this.#listeners.tree.delete(callback);
-  }
-
-  subscribeSelection(callback: () => void): void {
+  subscribeSelection(callback: (values: UIRecord[]) => void): () => void {
     this.#listeners.selection.add(callback);
-  }
-
-  unsubscribeSelection(callback: () => void): void {
-    this.#listeners.selection.delete(callback);
+    const unsubscribe = () => {
+      this.#listeners.selection.delete(callback);
+    };
+    return unsubscribe;
   }
 
   reset(data: CanvasData['children']): void {
@@ -235,7 +236,7 @@ export class UIDesignTool {
     }
 
     // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    const isEqual = JSON.stringify([...this.#selectedKeys]) === JSON.stringify(newRecordKeys);
+    const isEqual = JSON.stringify([...this.selectedKeys]) === JSON.stringify(newRecordKeys);
     if (isEqual) {
       return;
     }
@@ -343,11 +344,13 @@ export class UIDesignTool {
       }
 
       startValue.children.splice(handleIndex, 1);
+      Object.assign(handleValue, { parent: destValue });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destValue.children[method === 'prepend' ? 'unshift' : 'push'](handleValue as any);
       this.#listeners.item.get(startKey)?.forEach((callback) => callback(startValue));
       this.#listeners.item.get(destKey)?.forEach((callback) => callback(destValue));
-      this.#listeners.tree.forEach((callback) => callback([startValue, destValue]));
+      this.#listeners.item.get(handleKey)?.forEach((callback) => callback(handleValue));
+      this.#listeners.tree.forEach((callback) => callback([startValue, destValue, handleValue]));
     } else if (method === 'insertBefore' || method === 'insertAfter') {
       if (!hasUIRecordParent(destValue)) {
         console.error(`UIRecord '${destKey}' has no parent.`);
@@ -376,11 +379,13 @@ export class UIDesignTool {
       }
 
       startValue.children.splice(handleIndex, 1);
+      Object.assign(handleValue, { parent: destParentValue });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destParentValue.children.splice(targetIndex, 0, handleValue as any);
       this.#listeners.item.get(startKey)?.forEach((callback) => callback(startValue));
       this.#listeners.item.get(destParentKey)?.forEach((callback) => callback(destParentValue));
-      this.#listeners.tree.forEach((callback) => callback([startValue, destParentValue]));
+      this.#listeners.item.get(handleKey)?.forEach((callback) => callback(handleValue));
+      this.#listeners.tree.forEach((callback) => callback([startValue, destParentValue, handleValue]));
     }
   }
 
@@ -401,11 +406,13 @@ export class UIDesignTool {
       return;
     }
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentValue.children.push(targetValue as any);
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
     this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
@@ -427,11 +434,13 @@ export class UIDesignTool {
     }
 
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentValue.children.unshift(targetValue as any);
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
     this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
@@ -469,15 +478,18 @@ export class UIDesignTool {
       console.error(`children of UIRecord '${parentKey}' has no UIRecord '${siblingKey}'.`);
       return;
     }
+
     if (method === 'after') {
       targetIndex += 1;
     }
 
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     parentValue.children.splice(targetIndex, 0, targetValue);
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
     this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
@@ -498,6 +510,7 @@ export class UIDesignTool {
 
     if (!hasUIRecordParent(targetValue)) {
       this.#items.delete(targetKey);
+      this.#listeners.item.get(targetKey)?.forEach((callback) => callback(undefined));
       this.#listeners.tree.forEach((callback) => callback([]));
       return;
     }
@@ -530,6 +543,7 @@ export class UIDesignTool {
     deleteTree(targetValue);
     parentValue.children.splice(targetIndex, 1);
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(undefined));
     this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 

@@ -6,7 +6,7 @@ import { cloneDeep } from '@pigyuma/utils';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function useUIRecordForInteraction(recordKey: UIRecordKey | undefined) {
-  const { subscribeItem, unsubscribeItem } = useUISubscription();
+  const { subscribeItem } = useUISubscription();
   const getRecord = useItemReference();
 
   // 재조정 범위를 줄이기 위해 `useUIData` 반환 값을 사용하지 않고, 직접 구독해서 상태 관리
@@ -36,14 +36,12 @@ export default function useUIRecordForInteraction(recordKey: UIRecordKey | undef
     if (!isUIRecordKey(recordKey)) {
       return;
     }
-    const callback = (newRecord: UIRecord) => {
+    const callback = (newRecord: UIRecord | undefined) => {
       setRecord(newRecord);
     };
-    subscribeItem(recordKey, callback);
-    return () => {
-      unsubscribeItem(recordKey, callback);
-    };
-  }, [recordKey, setRecord, subscribeItem, unsubscribeItem]);
+    const unsubscribe = subscribeItem(recordKey, callback);
+    return unsubscribe;
+  }, [recordKey, setRecord, subscribeItem]);
 
   return record;
 }

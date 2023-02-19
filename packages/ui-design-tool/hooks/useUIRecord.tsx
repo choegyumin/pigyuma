@@ -7,7 +7,7 @@ import { cloneDeep } from '@pigyuma/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function useUIRecord(recordKey: UIRecordKey | undefined) {
-  const { subscribeItem, unsubscribeItem } = useUISubscription();
+  const { subscribeItem } = useUISubscription();
   const getRecord = useItemReference();
 
   /**
@@ -48,14 +48,12 @@ export default function useUIRecord(recordKey: UIRecordKey | undefined) {
     if (!isUIRecordKey(recordKey)) {
       return;
     }
-    const callback = (newRecord: UIRecord) => {
+    const callback = (newRecord: UIRecord | undefined) => {
       setRecord(newRecord);
     };
-    subscribeItem(recordKey, callback);
-    return () => {
-      unsubscribeItem(recordKey, callback);
-    };
-  }, [recordKey, setRecord, subscribeItem, unsubscribeItem]);
+    const unsubscribe = subscribeItem(recordKey, callback);
+    return unsubscribe;
+  }, [recordKey, setRecord, subscribeItem]);
 
   return record;
 }

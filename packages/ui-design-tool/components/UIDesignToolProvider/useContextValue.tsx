@@ -108,11 +108,8 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
   const subscriptionInterface = useMemo(
     () => ({
       subscribeItem: ((...args) => api.subscribeItem(...args)) as typeof api.subscribeItem,
-      unsubscribeItem: ((...args) => api.unsubscribeItem(...args)) as typeof api.unsubscribeItem,
       subscribeTree: ((...args) => api.subscribeTree(...args)) as typeof api.subscribeTree,
-      unsubscribeTree: ((...args) => api.unsubscribeTree(...args)) as typeof api.unsubscribeTree,
       subscribeSelection: ((...args) => api.subscribeSelection(...args)) as typeof api.subscribeSelection,
-      unsubscribeSelection: ((...args) => api.unsubscribeSelection(...args)) as typeof api.unsubscribeSelection,
     }),
     [api],
   );
@@ -143,10 +140,8 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
         setTree(cloneDeep(api.tree));
       });
     };
-    api.subscribeTree(callback);
-    return () => {
-      api.unsubscribeTree(callback);
-    };
+    const unsubscribe = api.subscribeTree(callback);
+    return unsubscribe;
   }, [api, setPairs, setTree]);
 
   useEffect(() => {
@@ -159,10 +154,8 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
         setSelected(api.selected);
       });
     };
-    api.subscribeSelection(callback);
-    return () => {
-      api.unsubscribeSelection(callback);
-    };
+    const unsubscribe = api.subscribeSelection(callback);
+    return unsubscribe;
   }, [api, setSelected]);
 
   return {

@@ -29,6 +29,7 @@ import React from 'react';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
 import { Layer, LayerArgs, LayerJSON } from '../Layer/model';
+import { ShapeLayer } from '../ShapeLayer/model';
 import * as styles from './styles.css';
 
 export interface TextLayerJSON extends LayerJSON {
@@ -104,9 +105,9 @@ export class TextLayer extends Layer implements TextLayerJSON {
   readonly fontWeight: FontWeightValueObject;
   readonly letterSpacing: LetterSpacingValueObject;
   readonly content: string;
-  readonly parent: Artboard | Canvas | Layer | null;
+  readonly parent: Artboard | Canvas | ShapeLayer | null;
 
-  constructor(args: TextLayerArgs, parent: Artboard | Canvas | Layer | null = null) {
+  constructor(args: TextLayerArgs, parent: Artboard | Canvas | ShapeLayer | null = null) {
     const superArgs = clone(args) as LayerArgs;
     superArgs.key = superArgs.key || uuid.v4();
     superArgs.type = UIRecordType.layer;
