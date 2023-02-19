@@ -105,10 +105,10 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
   readonly rotate: RotateValueObject;
   readonly stroke: StrokeValueObject;
   readonly fill: FillValueObject;
-  readonly parent: Artboard | Canvas | Layer | null;
+  readonly parent: Artboard | Canvas | ShapeLayer | null;
   readonly children: Array<ShapeLayer | TextLayer>;
 
-  constructor(args: ShapeLayerArgs, parent: Artboard | Canvas | Layer | null = null) {
+  constructor(args: ShapeLayerArgs, parent: Artboard | Canvas | ShapeLayer | null = null) {
     const superArgs = clone(args) as LayerArgs;
     superArgs.key = superArgs.key || uuid.v4();
     superArgs.type = UIRecordType.layer;

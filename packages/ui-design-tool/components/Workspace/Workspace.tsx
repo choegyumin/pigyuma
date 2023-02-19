@@ -9,7 +9,6 @@ import { InteractionController } from '../InteractionController/InteractionContr
 import { WorkspaceProps, WorkspaceRef } from './types';
 import * as styles from './Workspace.css';
 
-/** @todo (설계가 일정 수준 이상 확정되면) 테스트 코드 작성 */
 export const WorkspaceComponent = React.memo(
   React.forwardRef<WorkspaceRef, WorkspaceProps>((props, ref) => {
     const { reset } = useUIController();

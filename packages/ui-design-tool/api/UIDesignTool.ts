@@ -49,52 +49,82 @@ export const INITIAL_BROWSER_META = {
   keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
 };
 
+export interface UIDesignToolOptions {
+  strict?: boolean;
+}
+
 /**
  * @todo Design token 모델 및 관리 방식 설계
  * @todo History 관리 방식 설계
  * @todo Exception 발생 및 처리 기준 정의
- * @todo 테스트 코드 작성
  */
 export class UIDesignTool {
+  #strict: boolean;
   readonly #browserMeta: BrowserMeta;
   readonly #listeners: {
-    readonly item: Map<UIRecordKey, Set<(value: UIRecord) => void>>;
+    readonly item: Map<UIRecordKey, Set<(value: UIRecord | undefined) => void>>;
     readonly tree: Set<(values: UIRecord[]) => void>;
     readonly selection: Set<(values: UIRecord[]) => void>;
   };
+
   #mounted: boolean;
   #status: UIDesignToolStatus;
+
   readonly #items: Map<UIRecordKey, UIRecord>;
   #selectedItems: Set<UIRecord>;
+
   #hoveredElement: HTMLElement | null;
 
-  constructor() {
-    const canvas = new Canvas({ children: [] });
+  readonly #eventHandlers: {
+    onMouseMove: (event: MouseEvent) => void;
+    onKeyDown: (event: KeyboardEvent) => void;
+    onKeyUp: (event: KeyboardEvent) => void;
+  };
+
+  constructor(options?: UIDesignToolOptions) {
+    const { strict = true } = options ?? {};
+
+    this.#strict = strict;
     this.#browserMeta = INITIAL_BROWSER_META;
     this.#listeners = {
       item: new Map(),
       tree: new Set(),
       selection: new Set(),
     };
+
     this.#mounted = false;
     this.#status = UIDesignToolStatus.idle;
-    this.#items = flatUIRecords([canvas]);
+
+    this.#items = flatUIRecords([new Canvas({ children: [] })]);
     this.#selectedItems = new Set();
+
     this.#hoveredElement = null;
+
+    const onMouseMove = (event: MouseEvent) => {
+      const { clientX, clientY } = event;
+      const target = this.fromPoint(clientX, clientY);
+      this.#browserMeta.mouse.clientX = clientX;
+      this.#browserMeta.mouse.clientY = clientY;
+      this.#hoveredElement = target;
+    };
+    const onKeyDownUp = (event: KeyboardEvent) => {
+      const { altKey, ctrlKey, metaKey, shiftKey } = event;
+      this.#browserMeta.keyboard.altKey = altKey;
+      this.#browserMeta.keyboard.ctrlKey = ctrlKey;
+      this.#browserMeta.keyboard.metaKey = metaKey;
+      this.#browserMeta.keyboard.shiftKey = shiftKey;
+    };
+    this.#eventHandlers = {
+      onMouseMove,
+      onKeyDown: onKeyDownUp,
+      onKeyUp: onKeyDownUp,
+    };
   }
 
   #setStatus(status: UIDesignToolStatus): void {
     if (this.#mounted) {
       this.#status = status;
     }
-  }
-
-  get #keys(): Set<UIRecordKey> {
-    return new Set([...this.#items].map(([key]) => key));
-  }
-
-  get #selectedKeys(): Set<UIRecordKey> {
-    return new Set([...this.#selectedItems].map(({ key }) => key));
   }
 
   get #canvas(): Canvas {
@@ -113,48 +143,63 @@ export class UIDesignTool {
     return this.#items;
   }
 
+  get keys(): Set<UIRecordKey> {
+    return new Set([...this.#items].map(([key]) => key));
+  }
+
   get selected(): Set<UIRecord> {
     return this.#selectedItems;
   }
 
+  get selectedKeys(): Set<UIRecordKey> {
+    return new Set([...this.#selectedItems].map(({ key }) => key));
+  }
+
   mount() {
     if (this.#mounted) {
-      throw new Error('UIDesignTool already mounted.');
+      const message = 'UIDesignTool already mounted.';
+
+      if (this.#strict) {
+        throw new Error(message);
+      } else {
+        console.error(message);
+      }
+    } else {
+      this.#mounted = true;
+
+      document.addEventListener('mousemove', this.#eventHandlers.onMouseMove, { capture: true });
+      document.addEventListener('keydown', this.#eventHandlers.onKeyDown, { capture: true });
+      document.addEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
     }
-    this.#mounted = true;
-
-    const onMouseMove = (event: MouseEvent) => this.#onMouseMove(event);
-    const onKeyDownUp = (event: KeyboardEvent) => this.#onKeyDownUp(event);
-
-    document.addEventListener('mousemove', onMouseMove, { capture: true });
-    document.addEventListener('keydown', onKeyDownUp, { capture: true });
-    document.addEventListener('keyup', onKeyDownUp, { capture: true });
-
-    const unmount = (): void => {
-      document.removeEventListener('mousemove', onMouseMove, { capture: true });
-      document.removeEventListener('keydown', onKeyDownUp, { capture: true });
-      document.removeEventListener('keyup', onKeyDownUp, { capture: true });
-
-      this.#mounted = false;
-      this.#status = UIDesignToolStatus.idle;
-      this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
-      this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
-      this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;
-      this.#browserMeta.keyboard.ctrlKey = INITIAL_BROWSER_META.keyboard.ctrlKey;
-      this.#browserMeta.keyboard.metaKey = INITIAL_BROWSER_META.keyboard.metaKey;
-      this.#browserMeta.keyboard.shiftKey = INITIAL_BROWSER_META.keyboard.shiftKey;
-      this.#hoveredElement = null;
-    };
 
     // 외부에 노출할 필요가 없는 인터페이스는, 내부(Workspace)에서만 사용하도록 `mount` 함수의 반환 값으로 은닉
     return {
-      unmount,
       getBrowserMeta: () => this.#browserMeta,
       setStatus: (status: UIDesignToolStatus) => this.#setStatus(status),
     };
   }
 
-  subscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T) => void): void {
+  unmount() {
+    if (!this.#mounted) {
+      console.warn('UIDesignTool is not mounted.');
+    }
+
+    document.removeEventListener('mousemove', this.#eventHandlers.onMouseMove, { capture: true });
+    document.removeEventListener('keydown', this.#eventHandlers.onKeyDown, { capture: true });
+    document.removeEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
+
+    this.#mounted = false;
+    this.#status = UIDesignToolStatus.idle;
+    this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
+    this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
+    this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;
+    this.#browserMeta.keyboard.ctrlKey = INITIAL_BROWSER_META.keyboard.ctrlKey;
+    this.#browserMeta.keyboard.metaKey = INITIAL_BROWSER_META.keyboard.metaKey;
+    this.#browserMeta.keyboard.shiftKey = INITIAL_BROWSER_META.keyboard.shiftKey;
+    this.#hoveredElement = null;
+  }
+
+  subscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T | undefined) => void): void {
     if (!this.#listeners.item.has(targetKey)) {
       this.#listeners.item.set(targetKey, new Set());
     }
@@ -163,7 +208,7 @@ export class UIDesignTool {
     callbacks.add(callback);
   }
 
-  unsubscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T) => void): void {
+  unsubscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T | undefined) => void): void {
     if (!this.#listeners.item.has(targetKey)) {
       return;
     }
@@ -176,19 +221,19 @@ export class UIDesignTool {
     }
   }
 
-  subscribeTree(callback: () => void): void {
+  subscribeTree(callback: (values: UIRecord[]) => void): void {
     this.#listeners.tree.add(callback);
   }
 
-  unsubscribeTree(callback: () => void): void {
+  unsubscribeTree(callback: (values: UIRecord[]) => void): void {
     this.#listeners.tree.delete(callback);
   }
 
-  subscribeSelection(callback: () => void): void {
+  subscribeSelection(callback: (values: UIRecord[]) => void): void {
     this.#listeners.selection.add(callback);
   }
 
-  unsubscribeSelection(callback: () => void): void {
+  unsubscribeSelection(callback: (values: UIRecord[]) => void): void {
     this.#listeners.selection.delete(callback);
   }
 
@@ -235,7 +280,7 @@ export class UIDesignTool {
     }
 
     // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    const isEqual = JSON.stringify([...this.#selectedKeys]) === JSON.stringify(newRecordKeys);
+    const isEqual = JSON.stringify([...this.selectedKeys]) === JSON.stringify(newRecordKeys);
     if (isEqual) {
       return;
     }
@@ -343,11 +388,13 @@ export class UIDesignTool {
       }
 
       startValue.children.splice(handleIndex, 1);
+      Object.assign(handleValue, { parent: destValue });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destValue.children[method === 'prepend' ? 'unshift' : 'push'](handleValue as any);
       this.#listeners.item.get(startKey)?.forEach((callback) => callback(startValue));
       this.#listeners.item.get(destKey)?.forEach((callback) => callback(destValue));
-      this.#listeners.tree.forEach((callback) => callback([startValue, destValue]));
+      this.#listeners.item.get(handleKey)?.forEach((callback) => callback(handleValue));
+      this.#listeners.tree.forEach((callback) => callback([startValue, destValue, handleValue]));
     } else if (method === 'insertBefore' || method === 'insertAfter') {
       if (!hasUIRecordParent(destValue)) {
         console.error(`UIRecord '${destKey}' has no parent.`);
@@ -376,11 +423,13 @@ export class UIDesignTool {
       }
 
       startValue.children.splice(handleIndex, 1);
+      Object.assign(handleValue, { parent: destParentValue });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destParentValue.children.splice(targetIndex, 0, handleValue as any);
       this.#listeners.item.get(startKey)?.forEach((callback) => callback(startValue));
       this.#listeners.item.get(destParentKey)?.forEach((callback) => callback(destParentValue));
-      this.#listeners.tree.forEach((callback) => callback([startValue, destParentValue]));
+      this.#listeners.item.get(handleKey)?.forEach((callback) => callback(handleValue));
+      this.#listeners.tree.forEach((callback) => callback([startValue, destParentValue, handleValue]));
     }
   }
 
@@ -401,11 +450,13 @@ export class UIDesignTool {
       return;
     }
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentValue.children.push(targetValue as any);
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
     this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
@@ -427,11 +478,13 @@ export class UIDesignTool {
     }
 
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentValue.children.unshift(targetValue as any);
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
     this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
@@ -469,15 +522,18 @@ export class UIDesignTool {
       console.error(`children of UIRecord '${parentKey}' has no UIRecord '${siblingKey}'.`);
       return;
     }
+
     if (method === 'after') {
       targetIndex += 1;
     }
 
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
+    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     parentValue.children.splice(targetIndex, 0, targetValue);
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
     this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
@@ -498,6 +554,7 @@ export class UIDesignTool {
 
     if (!hasUIRecordParent(targetValue)) {
       this.#items.delete(targetKey);
+      this.#listeners.item.get(targetKey)?.forEach((callback) => callback(undefined));
       this.#listeners.tree.forEach((callback) => callback([]));
       return;
     }
@@ -530,6 +587,7 @@ export class UIDesignTool {
     deleteTree(targetValue);
     parentValue.children.splice(targetIndex, 1);
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(undefined));
     this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
@@ -571,21 +629,5 @@ export class UIDesignTool {
 
   fromMouse(): HTMLElement | null {
     return this.#hoveredElement;
-  }
-
-  #onMouseMove(event: MouseEvent) {
-    const { clientX, clientY } = event;
-    const target = this.fromPoint(clientX, clientY);
-    this.#browserMeta.mouse.clientX = clientX;
-    this.#browserMeta.mouse.clientY = clientY;
-    this.#hoveredElement = target;
-  }
-
-  #onKeyDownUp(event: KeyboardEvent) {
-    const { altKey, ctrlKey, metaKey, shiftKey } = event;
-    this.#browserMeta.keyboard.altKey = altKey;
-    this.#browserMeta.keyboard.ctrlKey = ctrlKey;
-    this.#browserMeta.keyboard.metaKey = metaKey;
-    this.#browserMeta.keyboard.shiftKey = shiftKey;
   }
 }

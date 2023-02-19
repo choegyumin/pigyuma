@@ -6,7 +6,7 @@ import { setRef, useCloneDeepState } from '@pigyuma/react-utils';
 import { useEffect, useRef } from 'react';
 
 export default function useUIRecord(recordKey: UIRecordKey | undefined) {
-  const { subscribeItem, unsubscribeItem } = useUISubscription();
+  const { subscribeItem } = useUISubscription();
   const getRecord = useItemReference();
 
   /**
@@ -38,7 +38,7 @@ export default function useUIRecord(recordKey: UIRecordKey | undefined) {
     if (!isUIRecordKey(recordKey)) {
       return;
     }
-    const callback = (newRecord: UIRecord) => {
+    const callback = (newRecord: UIRecord | undefined) => {
       /**
        * 늦은 재조정 유발
        * @see useUIRecordForInteraction {@link @/hooks/useUIRecordForInteraction.tsx}
@@ -47,11 +47,9 @@ export default function useUIRecord(recordKey: UIRecordKey | undefined) {
         setRecord(newRecord);
       });
     };
-    subscribeItem(recordKey, callback);
-    return () => {
-      unsubscribeItem(recordKey, callback);
-    };
-  }, [recordKey, setRecord, subscribeItem, unsubscribeItem]);
+    const unsubscribe = subscribeItem(recordKey, callback);
+    return unsubscribe;
+  }, [recordKey, setRecord, subscribeItem]);
 
   return record;
 }

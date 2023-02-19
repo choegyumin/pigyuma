@@ -56,6 +56,7 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
   /**
    * 참조 제거
    * @see useUIRecordForUI {@link @/hooks/useUIRecordForUI.tsx}
+   * @todo 성능 저하가 발생하면: 최초 한번 cloneDeep 후, 변경된 아이템만 clone하도록 개선
    */
   const [pairs, setPairs] = useCloneDeepState<Map<UIRecordKey, UIRecord>>(() => api.pairs);
   const [tree, setTree] = useCloneDeepState<Canvas>(() => api.tree);
@@ -108,22 +109,22 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
     [api],
   );
 
-  // `useEffect`와 유사한 형태로 제공 (Clean-up)
+  // `useEffect`와 유사한 형태로 Clean-up 함수(unsubscribe) 제공
   const subscriptionInterface = useMemo(
     () => ({
-      subscribeItem: (...[targetKey, callback]: Parameters<typeof api.subscribeItem>): (() => void) => {
-        api.subscribeItem(targetKey, callback);
-        const unsubscribe = () => api.unsubscribeItem(targetKey, callback);
+      subscribeItem: (...args: Parameters<typeof api.subscribeItem>): (() => void) => {
+        api.subscribeItem(...args);
+        const unsubscribe = () => api.unsubscribeItem(...args);
         return unsubscribe;
       },
-      subscribeTree: (...[callback]: Parameters<typeof api.subscribeTree>): (() => void) => {
-        api.subscribeTree(callback);
-        const unsubscribe = () => api.unsubscribeTree(callback);
+      subscribeTree: (...args: Parameters<typeof api.subscribeTree>): (() => void) => {
+        api.subscribeTree(...args);
+        const unsubscribe = () => api.unsubscribeTree(...args);
         return unsubscribe;
       },
-      subscribeSelection: (...[callback]: Parameters<typeof api.subscribeSelection>): (() => void) => {
-        api.subscribeSelection(callback);
-        const unsubscribe = () => api.unsubscribeSelection(callback);
+      subscribeSelection: (...args: Parameters<typeof api.subscribeSelection>): (() => void) => {
+        api.subscribeSelection(...args);
+        const unsubscribe = () => api.unsubscribeSelection(...args);
         return unsubscribe;
       },
     }),
@@ -131,7 +132,7 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
   );
 
   useEffect(() => {
-    const { unmount, getBrowserMeta, setStatus } = api.mount();
+    const { getBrowserMeta, setStatus } = api.mount();
     setRef(privateRef, {
       getBrowserMeta,
       setStatus,
@@ -141,7 +142,7 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
         getBrowserMeta: () => INITIAL_BROWSER_META,
         setStatus: () => undefined,
       });
-      unmount();
+      api.unmount();
     };
   }, [api]);
 
@@ -156,10 +157,8 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
         setTree(api.tree);
       });
     };
-    api.subscribeTree(callback);
-    return () => {
-      api.unsubscribeTree(callback);
-    };
+    const unsubscribe = api.subscribeTree(callback);
+    return unsubscribe;
   }, [api, setPairs, setTree]);
 
   useEffect(() => {
@@ -172,10 +171,8 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
         setSelected(api.selected);
       });
     };
-    api.subscribeSelection(callback);
-    return () => {
-      api.unsubscribeSelection(callback);
-    };
+    const unsubscribe = api.subscribeSelection(callback);
+    return unsubscribe;
   }, [api, setSelected]);
 
   return {

@@ -5,7 +5,7 @@ import useData from './useData';
 import useResizeHandlers from './useResizeHandlers';
 import useRotateHandlers from './useRotateHandlers';
 
-/** @todo (설계가 일정 수준 이상 확정되면) 테스트 코드 작성 */
+/** @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성 */
 export const TransformOverlay: React.FC<TransformOverlayProps> = React.memo(() => {
   const data = useData();
   const { selectedRecordKey } = data;

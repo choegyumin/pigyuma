@@ -5,7 +5,7 @@ import useData from './useData';
 import useHandlers from './useHandlers';
 
 /**
- * @todo (설계가 일정 수준 이상 확정되면) 테스트 코드 작성
+ * @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성
  * @todo SelectionOverlay와 RangeSelectionOverlay 분리
  */
 export const SelectionOverlay: React.FC<SelectionOverlayProps> = React.memo(() => {
