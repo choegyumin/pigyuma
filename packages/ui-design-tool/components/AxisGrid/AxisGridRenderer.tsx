@@ -1,4 +1,5 @@
 import { useUIRecordForInteraction } from '@/hooks';
+import clsx from 'clsx';
 import React from 'react';
 import * as styles from './AxisGrid.css';
 import { AxisGridRendererProps } from './types';
@@ -18,8 +19,8 @@ export const AxisGridRenderer: React.FC<AxisGridRendererProps> = (props) => {
 
   return (
     <div className={styles.root} style={rootStyle}>
-      <div className={styles.axis$.x} />
-      <div className={styles.axis$.y} />
+      <div className={clsx(styles.axis, styles.axis$.x)} />
+      <div className={clsx(styles.axis, styles.axis$.y)} />
     </div>
   );
 };

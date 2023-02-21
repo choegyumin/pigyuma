@@ -20,7 +20,7 @@ export const UIDesignCanvas = React.memo(
 
     return (
       <div {...attrs} ref={ref} className={clsx(styles.root, attrs.className)}>
-        <CanvasComponent dataKey={CanvasKey} />
+        <CanvasComponent dataKey={CanvasKey} aria-hidden={true} />
         <InteractionController />
       </div>
     );
