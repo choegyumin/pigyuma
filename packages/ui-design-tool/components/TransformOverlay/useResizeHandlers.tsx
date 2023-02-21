@@ -5,7 +5,7 @@ import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
-import { calcCoordByDistance, calcDistancePointFromLine, pick } from '@pigyuma/utils';
+import { calcCoordByDistance, calcDistancePointFromLine, isEqual, pick } from '@pigyuma/utils';
 import { HandlePlacement } from './types';
 import { UseDataType } from './useData';
 
@@ -218,8 +218,10 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
 
     const newRect = handlePlacement ? getTransformedRect(initialRect, mousePoint, handlePlacement, fromCenter) : initialRect;
 
-    setRef(transformLastRectRef, newRect);
-    uiControllerAPI.setRect(record.key, newRect);
+    if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
+      setRef(transformLastRectRef, newRect);
+      uiControllerAPI.setRect(record.key, newRect);
+    }
     if (isGrabbingCorner) {
       setCursor(getResizeCursor(target, mousePoint));
     }
