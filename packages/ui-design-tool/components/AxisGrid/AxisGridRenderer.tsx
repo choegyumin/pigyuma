@@ -1,6 +1,5 @@
-import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
+import { useUIRecordForInteraction } from '@/hooks';
 import React from 'react';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './AxisGrid.css';
 import { AxisGridRendererProps } from './types';
 import useRenderUtils from './useRenderUtils';
@@ -9,9 +8,7 @@ export const AxisGridRenderer: React.FC<AxisGridRendererProps> = (props) => {
   const { recordKey } = props;
   const record = useUIRecordForInteraction(recordKey);
 
-  const context = useContextForInteraction();
-
-  const { getRootStyle } = useRenderUtils({ context });
+  const { getRootStyle } = useRenderUtils();
 
   if (record == null) {
     return null;

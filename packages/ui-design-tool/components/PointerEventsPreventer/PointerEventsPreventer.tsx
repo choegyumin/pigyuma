@@ -1,17 +1,18 @@
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { useCursor, useStatus } from '@/hooks';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { WorkspaceStatus } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './PointerEventsPreventer.css';
 import { PointerEventsPreventerProps } from './types';
 
 export const PointerEventsPreventer: React.FC<PointerEventsPreventerProps> = React.memo(() => {
-  const context = useContextForInteraction();
+  const cursor = useCursor();
+  const status = useStatus();
 
-  const shouldVisible = context.status === WorkspaceStatus.resizing || context.status === WorkspaceStatus.rotating;
+  const shouldVisible = status === UIDesignToolStatus.resizing || status === UIDesignToolStatus.rotating;
 
   const style: React.CSSProperties = {
-    [styles.varNames.cursor]: shouldVisible ? context.cursor : 'default',
+    [styles.varNames.cursor]: shouldVisible ? cursor : 'default',
     [styles.varNames.visibility]: shouldVisible ? 'visibility' : 'hidden',
   };
 

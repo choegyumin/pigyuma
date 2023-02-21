@@ -1,19 +1,15 @@
-import { WorkspaceStatus } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { useSelected, useStatus } from '@/hooks';
 
-export type UseDataDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
-};
+export default function useData() {
+  const selectedRecords = useSelected();
+  const status = useStatus();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function useData(deps: UseDataDependencys) {
-  const { context } = deps;
+  const hasSelectedOneOnly = selectedRecords.size === 1;
 
-  const hasSelectedOneOnly = context.selectedRecords.size === 1;
+  const isActive = status === UIDesignToolStatus.idle && hasSelectedOneOnly;
 
-  const isActive = context.status === WorkspaceStatus.idle && hasSelectedOneOnly;
-
-  const [selectedRecordKey] = isActive ? context.selectedRecords.keys() : ([] as undefined[]);
+  const selectedRecordKey = isActive ? [...selectedRecords][0]?.key : undefined;
 
   return {
     isActive,

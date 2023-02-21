@@ -1,7 +1,6 @@
-import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
+import { useUIRecordForInteraction } from '@/hooks';
 import { useEventListener } from '@pigyuma/react-utils';
 import React from 'react';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './SelectionOverlay.css';
 import { SelectionOverlayRendererProps } from './types';
 import useRenderUtils from './useRenderUtils';
@@ -10,9 +9,7 @@ export const SelectionOverlayRenderer: React.FC<SelectionOverlayRendererProps> =
   const { recordKey, onDocumentMouseMove, onDocumentMouseDown, onDocumentMouseUp } = props;
   const record = useUIRecordForInteraction(recordKey);
 
-  const context = useContextForInteraction();
-
-  const { getRootStyle } = useRenderUtils({ context });
+  const { getRootStyle } = useRenderUtils();
 
   useEventListener(document, 'mousemove', onDocumentMouseMove);
   useEventListener(document, 'mousedown', onDocumentMouseDown);

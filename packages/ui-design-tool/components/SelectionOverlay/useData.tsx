@@ -1,17 +1,12 @@
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { useStatus } from '@/hooks';
 import { UIRecordKey } from '@/types/Identifier';
 import { useRef, useState } from 'react';
-import { WorkspaceStatus } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 
-export type UseDataDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
-};
+export default function useData() {
+  const status = useStatus();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function useData(deps: UseDataDependencys) {
-  const { context } = deps;
-
-  const isActive = context.status === WorkspaceStatus.idle || context.status === WorkspaceStatus.selecting;
+  const isActive = status === UIDesignToolStatus.idle || status === UIDesignToolStatus.selecting;
 
   const [hoveredRecordKey, setHoveredRecordKey] = useState<UIRecordKey | undefined>();
   const clickedTargetRef = useRef<EventTarget | null>(null);

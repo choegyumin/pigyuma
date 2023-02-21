@@ -1,4 +1,4 @@
-import { UIRecordKey, LayerType, UIRecordType } from '@/types/Identifier';
+import { UIRecordKey, LayerType, UIRecordType, UIRecordElementDataset } from '@/types/Identifier';
 import {
   FontSizeValueObject,
   FontWeightValueObject,
@@ -29,6 +29,7 @@ import React from 'react';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
 import { Layer, LayerArgs, LayerJSON } from '../Layer/model';
+import { ShapeLayer } from '../ShapeLayer/model';
 import * as styles from './styles.css';
 
 export interface TextLayerJSON extends LayerJSON {
@@ -104,9 +105,9 @@ export class TextLayer extends Layer implements TextLayerJSON {
   readonly fontWeight: FontWeightValueObject;
   readonly letterSpacing: LetterSpacingValueObject;
   readonly content: string;
-  readonly parent: Artboard | Canvas | Layer | null;
+  readonly parent: Artboard | Canvas | ShapeLayer | null;
 
-  constructor(args: TextLayerArgs, parent: Artboard | Canvas | Layer | null = null) {
+  constructor(args: TextLayerArgs, parent: Artboard | Canvas | ShapeLayer | null = null) {
     const superArgs = clone(args) as LayerArgs;
     superArgs.key = superArgs.key || uuid.v4();
     superArgs.type = UIRecordType.layer;
@@ -185,5 +186,13 @@ export class TextLayer extends Layer implements TextLayerJSON {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isModel(object: any): object is TextLayer | TextLayerJSON {
     return object instanceof TextLayer || TextLayer.isJSON(object);
+  }
+
+  static isElement(element: Element | null): boolean {
+    return (
+      element instanceof HTMLElement &&
+      element.dataset[UIRecordElementDataset.type] === UIRecordType.layer &&
+      element.dataset[UIRecordElementDataset.layerType] === LayerType.text
+    );
   }
 }

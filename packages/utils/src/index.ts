@@ -22,6 +22,7 @@ export { default as mapEntries } from './mapEntries';
 export { default as mapKeys } from './mapKeys';
 export { default as mapValues } from './mapValues';
 export { default as merge } from 'lodash-es/merge';
+export { default as nonNullable } from './nonNullable';
 export { default as omit } from 'lodash-es/omit';
 export { default as pascalCase } from './pascalCase';
 export { default as pick } from 'lodash-es/pick';

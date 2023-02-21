@@ -1,7 +1,6 @@
-import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
+import { useUIRecordForInteraction } from '@/hooks';
 import { useEventListener } from '@pigyuma/react-utils';
 import React from 'react';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import * as styles from './TransformOverlay.css';
 import { TransformOverlayRendererProps } from './types';
 import useRenderUtils from './useRenderUtils';
@@ -19,9 +18,7 @@ export const TransformOverlayRenderer: React.FC<TransformOverlayRendererProps> =
   } = props;
   const record = useUIRecordForInteraction(recordKey);
 
-  const context = useContextForInteraction();
-
-  const { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap } = useRenderUtils({ context });
+  const { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap } = useRenderUtils();
 
   useEventListener(document, 'keydown', onDocuemntKeyDownUpForResize);
   useEventListener(document, 'keyup', onDocuemntKeyDownUpForResize);

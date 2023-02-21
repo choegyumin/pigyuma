@@ -1,4 +1,4 @@
-import { UIRecordKey, LayerType, UIRecordType } from '@/types/Identifier';
+import { UIRecordKey, LayerType, UIRecordType, UIRecordElementDataset } from '@/types/Identifier';
 import { HeightValueObject, RotateValueObject, StyleValue, WidthValueObject, XValueObject, YValueObject } from '@/types/Value';
 import { convertHeightValue, convertRotateValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
 import { clone, uuid } from '@pigyuma/utils';
@@ -112,5 +112,9 @@ export class Layer extends UIRecord implements LayerJSON {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isModel(object: any): object is Layer | LayerJSON {
     return object instanceof Layer || Layer.isJSON(object);
+  }
+
+  static isElement(element: Element | null): boolean {
+    return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] === UIRecordType.layer;
   }
 }

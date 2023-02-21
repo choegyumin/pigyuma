@@ -24,3 +24,22 @@ export const UIRecordIdentifiers = {
   layerType: 'layerType',
 } as const;
 export type UIRecordIdentifiers = keyof typeof UIRecordIdentifiers;
+
+export type UIRecordElementFilterItem = {
+  key?: string;
+  type?: string | string[];
+  layerType?: string | string[];
+};
+export type UIRecordElementFilter = UIRecordElementFilterItem | UIRecordElementFilterItem[];
+
+export const UIRecordElementDataAttributes = {
+  key: 'data-ui-record-key',
+  type: 'data-ui-record-type',
+  layerType: 'data-ui-record-layer-type',
+} as const;
+
+export const UIRecordElementDataset = {
+  key: 'uiRecordKey',
+  type: 'uiRecordType',
+  layerType: 'uiRecordLayerType',
+} as const;

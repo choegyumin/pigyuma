@@ -1,9 +1,9 @@
+import { RawShapeLayerComponent } from '@/api/ShapeLayer/component';
+import { ShapeLayer, ShapeType } from '@/api/ShapeLayer/model';
+import { RawTextLayerComponent } from '@/api/TextLayer/component';
+import { TextLayer } from '@/api/TextLayer/model';
 import { UIRecordStyle } from '@/types/Style';
 import { NumberUnit, StrokeStylePattern } from '@/types/Unit';
-import { RawShapeLayerComponent } from '@/ui-models/ShapeLayer/component';
-import { ShapeLayer, ShapeType } from '@/ui-models/ShapeLayer/model';
-import { RawTextLayerComponent } from '@/ui-models/TextLayer/component';
-import { TextLayer } from '@/ui-models/TextLayer/model';
 import { render } from '@testing-library/react';
 import { getComputedUIRecordStyleValue, getComputedUIRecordStyle } from './style';
 

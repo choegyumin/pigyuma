@@ -1,5 +1,5 @@
+import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
-import { UIRecord } from '@/ui-models/UIRecord/model';
 import ReactTypes from '@pigyuma/react-utility-types';
 
 export type SelectionOverlayChangeEvent = {

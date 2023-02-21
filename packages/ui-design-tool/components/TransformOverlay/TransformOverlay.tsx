@@ -1,21 +1,18 @@
 import React from 'react';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { TransformOverlayRenderer } from './TransformOverlayRenderer';
 import { TransformOverlayProps } from './types';
 import useData from './useData';
 import useResizeHandlers from './useResizeHandlers';
 import useRotateHandlers from './useRotateHandlers';
 
-/** @todo (설계가 일정 수준 이상 확정되면) 테스트 코드 작성 */
+/** @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성 */
 export const TransformOverlay: React.FC<TransformOverlayProps> = React.memo(() => {
-  const context = useContextForInteraction();
-
-  const data = useData({ context });
+  const data = useData();
   const { selectedRecordKey } = data;
 
   const { onResizeHandleMouseDown, onDocumentMouseUpForResize, onDocumentMouseMoveForResize, onDocuemntKeyDownUpForResize } =
-    useResizeHandlers({ context, data });
-  const { onRotateHandleMouseDown, onDocumentMouseUpForRotate, onDocumentMouseMoveForRotate } = useRotateHandlers({ context, data });
+    useResizeHandlers({ data });
+  const { onRotateHandleMouseDown, onDocumentMouseUpForRotate, onDocumentMouseMoveForRotate } = useRotateHandlers({ data });
 
   return (
     <TransformOverlayRenderer

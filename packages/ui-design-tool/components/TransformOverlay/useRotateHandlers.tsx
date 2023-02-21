@@ -1,15 +1,14 @@
+import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { useBrowserMeta, useDispatcher, useItemReference, useStatus, useUIController, useUIElement } from '@/hooks';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
 import { calcDegreesBetweenCoords, pick, toDegrees360 } from '@pigyuma/utils';
-import { WorkspaceInteraction } from '../Workspace/types';
-import { useContextForInteraction } from '../Workspace/Workspace.context';
 import { UseDataType } from './useData';
 
 export type UseRotateHandlersDependencys = {
-  context: ReturnType<typeof useContextForInteraction>;
   data: UseDataType;
 };
 
@@ -39,42 +38,53 @@ const getTransformedRect = (rect: UIRecordRect, mousePoint: { x: number; y: numb
 
 export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
   const {
-    context,
     data: { selectedRecordKey, transformInitialRectRef, transformLastRectRef, rotateHandleCoordDegreesRef },
   } = deps;
 
+  const uiControllerAPI = useUIController();
+  const uiElementAPI = useUIElement();
+
+  const getItemReference = useItemReference();
+
+  const getBrowserMeta = useBrowserMeta();
+  const status = useStatus();
+
+  const { setCursor, setStatus } = useDispatcher();
+
   const onRotateHandleMouseDown = useEvent(() => {
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (record == null || target == null) {
       return;
     }
 
-    const mouseMeta = context.getBrowserMeta().mouse;
+    const browserMeta = getBrowserMeta();
+    const mouseMeta = browserMeta.mouse;
+    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
 
     const rotate = parseFloat(getComputedUIRecordStyleValue(target, 'rotate')) || 0;
     const rect = UIRecordRect.fromRect({ ...UIRecordRect.fromElement(target).toJSON(), rotate });
 
     setRef(transformInitialRectRef, rect);
     setRef(transformLastRectRef, transformInitialRectRef.current);
-    setRef(rotateHandleCoordDegreesRef, calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseMeta));
-    context.setCursor(getRotateCursor(target, mouseMeta));
-    context.setInteraction(WorkspaceInteraction.rotating);
+    setRef(rotateHandleCoordDegreesRef, calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mousePoint));
+    setCursor(getRotateCursor(target, mousePoint));
+    setStatus(UIDesignToolStatus.rotating);
   });
 
   const onDocumentMouseUpForRotate = useEvent(() => {
-    if (context.status !== 'rotating') {
+    if (status !== 'rotating') {
       return;
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -84,22 +94,22 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
     setRef(transformInitialRectRef, undefined);
     setRef(transformLastRectRef, undefined);
     setRef(rotateHandleCoordDegreesRef, undefined);
-    context.setRect(record.key, rect);
-    context.setInteraction(WorkspaceInteraction.idle);
+    uiControllerAPI.setRect(record.key, rect);
+    setStatus(UIDesignToolStatus.idle);
   });
 
   const onDocumentMouseMoveForRotate = useEvent(() => {
-    if (context.status !== 'rotating') {
+    if (status !== 'rotating') {
       return;
     }
 
     const recordKey = selectedRecordKey;
-    const record = isUIRecordKey(recordKey) ? context.get(recordKey) : undefined;
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? context.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -109,13 +119,15 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
       throw new Error("'rotate' event was not properly initialized.");
     }
 
-    const mouseMeta = context.getBrowserMeta().mouse;
+    const browserMeta = getBrowserMeta();
+    const mouseMeta = browserMeta.mouse;
+    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
     const handleCoordDegrees = rotateHandleCoordDegreesRef.current ?? 0;
 
-    const newRect = getTransformedRect(initialRect, mouseMeta, handleCoordDegrees);
+    const newRect = getTransformedRect(initialRect, mousePoint, handleCoordDegrees);
     setRef(transformLastRectRef, newRect);
-    context.setRect(record.key, newRect);
-    context.setCursor(getRotateCursor(target, mouseMeta));
+    uiControllerAPI.setRect(record.key, newRect);
+    setCursor(getRotateCursor(target, mousePoint));
   });
 
   return {
