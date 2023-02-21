@@ -32,7 +32,7 @@ export type UIRecordElementFilterItem = {
 };
 export type UIRecordElementFilter = UIRecordElementFilterItem | UIRecordElementFilterItem[];
 
-export const UIRecordElementDataAttributes = {
+export const UIRecordElementDataAttributeName = {
   key: 'data-ui-record-key',
   type: 'data-ui-record-type',
   layerType: 'data-ui-record-layer-type',
@@ -43,3 +43,5 @@ export const UIRecordElementDataset = {
   type: 'uiRecordType',
   layerType: 'uiRecordLayerType',
 } as const;
+
+export const UIDesignToolIDAttributeName = 'data-ui-design-tool-id';

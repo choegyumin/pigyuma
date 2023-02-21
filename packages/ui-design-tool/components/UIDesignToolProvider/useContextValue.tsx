@@ -5,17 +5,22 @@ import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+const INITIAL_INSTANCE_ID = 'UNKNOWN';
+
 export default function useContextValue(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;
 
   const privateRef = useRef<{
+    id: string;
     getBrowserMeta: () => BrowserMeta;
     setStatus: React.Dispatch<UIDesignToolStatus>;
   }>({
+    id: INITIAL_INSTANCE_ID,
     getBrowserMeta: () => INITIAL_BROWSER_META,
     setStatus: () => undefined,
   });
 
+  const instanceId = privateRef.current.id;
   const getBrowserMeta = useCallback(() => privateRef.current.getBrowserMeta(), []);
 
   /**
@@ -134,13 +139,15 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
   );
 
   useEffect(() => {
-    const { getBrowserMeta, setStatus } = api.mount();
+    const { id, getBrowserMeta, setStatus } = api.mount();
     setRef(privateRef, {
+      id,
       getBrowserMeta,
       setStatus,
     });
     return () => {
       setRef(privateRef, {
+        id,
         getBrowserMeta: () => INITIAL_BROWSER_META,
         setStatus: () => undefined,
       });
@@ -178,6 +185,7 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
   }, [api, setSelection]);
 
   return {
+    instanceId,
     getBrowserMeta,
     status,
     cursor,

@@ -1,6 +1,6 @@
 import { CanvasComponent } from '@/api/Canvas/component';
-import { useUIController } from '@/hooks';
-import { CanvasKey } from '@/types/Identifier';
+import { useInstanceID, useUIController } from '@/hooks';
+import { CanvasKey, UIDesignToolIDAttributeName } from '@/types/Identifier';
 import { useMount } from '@pigyuma/react-utils';
 import { cloneDeep } from '@pigyuma/utils';
 import clsx from 'clsx';
@@ -11,6 +11,7 @@ import * as styles from './UIDesignCanvas.css';
 
 export const UIDesignCanvas = React.memo(
   React.forwardRef<UIDesignCanvasRef, UIDesignCanvasProps>((props, ref) => {
+    const id = useInstanceID();
     const { reset } = useUIController();
     const { initialData, ...attrs } = props;
 
@@ -19,7 +20,7 @@ export const UIDesignCanvas = React.memo(
     });
 
     return (
-      <div {...attrs} ref={ref} className={clsx(styles.root, attrs.className)}>
+      <div {...attrs} ref={ref} className={clsx(styles.root, attrs.className)} {...{ [UIDesignToolIDAttributeName]: id }}>
         <CanvasComponent dataKey={CanvasKey} aria-hidden={true} />
         <InteractionController />
       </div>

@@ -61,15 +61,19 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
 
     const browserMeta = getBrowserMeta();
     const mouseMeta = browserMeta.mouse;
-    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
 
     const rotate = parseFloat(getComputedUIRecordStyleValue(target, 'rotate')) || 0;
     const rect = UIRecordRect.fromRect({ ...UIRecordRect.fromElement(target).toJSON(), rotate });
 
     setRef(transformInitialRectRef, rect);
     setRef(transformLastRectRef, transformInitialRectRef.current);
-    setRef(rotateHandleCoordDegreesRef, calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mousePoint));
-    setCursor(getRotateCursor(target, mousePoint));
+    setRef(
+      rotateHandleCoordDegreesRef,
+      calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseOffsetPoint),
+    );
+    setCursor(getRotateCursor(target, mouseClientPoint));
     setStatus(UIDesignToolStatus.rotating);
   });
 
@@ -121,16 +125,17 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
 
     const browserMeta = getBrowserMeta();
     const mouseMeta = browserMeta.mouse;
-    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
     const handleCoordDegrees = rotateHandleCoordDegreesRef.current ?? 0;
 
-    const newRect = getTransformedRect(initialRect, mousePoint, handleCoordDegrees);
+    const newRect = getTransformedRect(initialRect, mouseOffsetPoint, handleCoordDegrees);
 
     if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
       setRef(transformLastRectRef, newRect);
       uiControllerAPI.setRect(record.key, newRect);
     }
-    setCursor(getRotateCursor(target, mousePoint));
+    setCursor(getRotateCursor(target, mouseClientPoint));
   });
 
   return {

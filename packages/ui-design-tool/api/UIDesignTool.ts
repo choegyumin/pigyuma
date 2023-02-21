@@ -1,6 +1,7 @@
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import {
   CanvasKey,
+  UIDesignToolIDAttributeName,
   UIRecordElementDataset,
   UIRecordElementFilter,
   UIRecordElementFilterItem,
@@ -9,7 +10,7 @@ import {
 } from '@/types/Identifier';
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
-import { cloneDeep, exclude, mapValues } from '@pigyuma/utils';
+import { cloneDeep, exclude, mapValues, uuid } from '@pigyuma/utils';
 import { Canvas, CanvasData } from './Canvas/model';
 import { Layer } from './Layer/model';
 import { UIRecord, UIRecordData } from './UIRecord/model';
@@ -17,6 +18,8 @@ import { UIRecord, UIRecordData } from './UIRecord/model';
 interface MouseMeta {
   clientX: number;
   clientY: number;
+  offsetX: number;
+  offsetY: number;
 }
 
 interface KeyboardMeta {
@@ -49,7 +52,7 @@ export interface UIDesignToolOptions {
 const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: CanvasKey };
 
 export const INITIAL_BROWSER_META: BrowserMeta = {
-  mouse: { clientX: 0, clientY: 0 },
+  mouse: { clientX: 0, clientY: 0, offsetX: 0, offsetY: 0 },
   keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
 };
 
@@ -60,6 +63,8 @@ export const INITIAL_BROWSER_META: BrowserMeta = {
  */
 export class UIDesignTool {
   #strict: boolean;
+  #id: string;
+
   readonly #browserMeta: BrowserMeta;
   readonly #listeners: {
     readonly item: Map<UIRecordKey, Set<(value: UIRecord | undefined) => void>>;
@@ -85,6 +90,8 @@ export class UIDesignTool {
     const { strict = true } = options ?? {};
 
     this.#strict = strict;
+    this.#id = uuid.v4();
+
     this.#browserMeta = INITIAL_BROWSER_META;
     this.#listeners = {
       item: new Map(),
@@ -103,8 +110,11 @@ export class UIDesignTool {
     const onMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
+      const rootBounds = document.querySelector(`[${UIDesignToolIDAttributeName}="${this.#id}"]`)?.getBoundingClientRect() ?? new DOMRect();
       this.#browserMeta.mouse.clientX = clientX;
       this.#browserMeta.mouse.clientY = clientY;
+      this.#browserMeta.mouse.offsetX = clientX - rootBounds.x;
+      this.#browserMeta.mouse.offsetY = clientY - rootBounds.y;
       this.#hoveredElement = target;
     };
     const onKeyDownUp = (event: KeyboardEvent) => {
@@ -166,6 +176,7 @@ export class UIDesignTool {
 
     // 외부에 노출할 필요가 없는 인터페이스는, 내부(UIDesignCanvas)에서만 사용하도록 `mount` 함수의 반환 값으로 은닉
     return {
+      id: this.#id,
       getBrowserMeta: () => this.#browserMeta,
       setStatus: (status: UIDesignToolStatus) => this.#setStatus(status),
     };

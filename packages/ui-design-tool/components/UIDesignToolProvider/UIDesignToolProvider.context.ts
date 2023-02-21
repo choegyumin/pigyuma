@@ -9,6 +9,7 @@ const constateResult = constate(
   (value) => value.subscriptionInterface,
 
   (value) => value.dispatcher,
+  (value) => value.instanceId,
   (value) => value.getBrowserMeta,
   (value) => value.status,
   (value) => value.cursor,
@@ -33,6 +34,7 @@ export const [
 
   // 패키지 내부 사용
   useDispatcher,
+  useInstanceID,
   useBrowserMeta,
   useStatus,
   useCursor,

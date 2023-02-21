@@ -177,6 +177,8 @@ describe('UIDesignTool', () => {
         mouse: {
           clientX: 0,
           clientY: 0,
+          offsetX: 0,
+          offsetY: 0,
         },
       });
     });

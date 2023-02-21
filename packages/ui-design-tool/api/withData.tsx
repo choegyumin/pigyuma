@@ -1,5 +1,5 @@
 import { useUIRecordForUI } from '@/hooks';
-import { UIRecordElementDataAttributes, UIRecordKey } from '@/types/Identifier';
+import { UIRecordElementDataAttributeName, UIRecordKey } from '@/types/Identifier';
 import React from 'react';
 import { UIRecord } from './UIRecord/model';
 
@@ -25,9 +25,9 @@ export default function withData<R, P extends DefaultComponentProps>(
 
     const dataValues: AnyObject | undefined = record;
     const dataProps = {
-      [UIRecordElementDataAttributes.key]: dataValues?.key,
-      [UIRecordElementDataAttributes.type]: dataValues?.type,
-      [UIRecordElementDataAttributes.layerType]: dataValues?.layerType,
+      [UIRecordElementDataAttributeName.key]: dataValues?.key,
+      [UIRecordElementDataAttributeName.type]: dataValues?.type,
+      [UIRecordElementDataAttributeName.layerType]: dataValues?.layerType,
     };
 
     return <MemoizedComponent {...restProps} {...dataProps} data={record as UIRecord} ref={ref} />;
