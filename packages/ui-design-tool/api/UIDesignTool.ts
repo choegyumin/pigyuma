@@ -7,9 +7,9 @@ import {
   UIRecordKey,
   UIRecordType,
 } from '@/types/Identifier';
-import { flatUIRecords, hasUIRecordParent, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
+import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
-import { cloneDeep, mapValues } from '@pigyuma/utils';
+import { cloneDeep, exclude, mapValues } from '@pigyuma/utils';
 import { Canvas, CanvasData } from './Canvas/model';
 import { Layer } from './Layer/model';
 import { UIRecord, UIRecordData } from './UIRecord/model';
@@ -42,16 +42,16 @@ export const UIDesignToolStatus = {
 } as const;
 export type UIDesignToolStatus = keyof typeof UIDesignToolStatus;
 
-const CANVAS_ELEMENT_FILTER = { key: CanvasKey };
-
-export const INITIAL_BROWSER_META = {
-  mouse: { clientX: 0, clientY: 0 },
-  keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
-};
-
 export interface UIDesignToolOptions {
   strict?: boolean;
 }
+
+const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: CanvasKey };
+
+export const INITIAL_BROWSER_META: BrowserMeta = {
+  mouse: { clientX: 0, clientY: 0 },
+  keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
+};
 
 /**
  * @todo Design token 모델 및 관리 방식 설계
@@ -242,6 +242,7 @@ export class UIDesignTool {
     const canvas = this.#canvas;
 
     this.#items.clear();
+    this.#selectedItems = new Set();
 
     while (canvas.children.length > 0) {
       canvas.children.pop();
@@ -252,11 +253,16 @@ export class UIDesignTool {
     });
 
     const newItems = flatUIRecords([canvas]);
+
     newItems.forEach((it) => {
       this.#items.set(it.key, it);
     });
 
     this.#listeners.tree.forEach((callback) => callback([canvas]));
+    newItems.forEach((it) => {
+      this.#listeners.item.get(it.key)?.forEach((callback) => callback(it));
+    });
+    this.#listeners.selection.forEach((callback) => callback([]));
   }
 
   select(keys: UIRecordKey[]): void {
@@ -280,8 +286,7 @@ export class UIDesignTool {
     }
 
     // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    const isEqual = JSON.stringify([...this.selectedKeys]) === JSON.stringify(newRecordKeys);
-    if (isEqual) {
+    if (JSON.stringify([...this.selectedKeys]) === JSON.stringify(newRecordKeys)) {
       return;
     }
 
@@ -301,8 +306,9 @@ export class UIDesignTool {
     }
 
     Object.assign(targetValue, value);
-    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
+
     this.#listeners.tree.forEach((callback) => callback([targetValue]));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
   }
 
   setRect(targetKey: UIRecordKey, rect: UIRecordRect | UIRecordRectInit): void {
@@ -335,8 +341,9 @@ export class UIDesignTool {
     newValue.rotate.length = rect.rotate;
 
     Object.assign(targetValue, newValue);
-    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
+
     this.#listeners.tree.forEach((callback) => callback([targetValue]));
+    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
   }
 
   // 타입은 동일하지만, IDE에서 인자명을 보여주기 위해 Overloading 함
@@ -391,10 +398,11 @@ export class UIDesignTool {
       Object.assign(handleValue, { parent: destValue });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destValue.children[method === 'prepend' ? 'unshift' : 'push'](handleValue as any);
+
+      this.#listeners.tree.forEach((callback) => callback([startValue, destValue, handleValue]));
       this.#listeners.item.get(startKey)?.forEach((callback) => callback(startValue));
       this.#listeners.item.get(destKey)?.forEach((callback) => callback(destValue));
       this.#listeners.item.get(handleKey)?.forEach((callback) => callback(handleValue));
-      this.#listeners.tree.forEach((callback) => callback([startValue, destValue, handleValue]));
     } else if (method === 'insertBefore' || method === 'insertAfter') {
       if (!hasUIRecordParent(destValue)) {
         console.error(`UIRecord '${destKey}' has no parent.`);
@@ -426,10 +434,11 @@ export class UIDesignTool {
       Object.assign(handleValue, { parent: destParentValue });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destParentValue.children.splice(targetIndex, 0, handleValue as any);
+
+      this.#listeners.tree.forEach((callback) => callback([startValue, destParentValue, handleValue]));
       this.#listeners.item.get(startKey)?.forEach((callback) => callback(startValue));
       this.#listeners.item.get(destParentKey)?.forEach((callback) => callback(destParentValue));
       this.#listeners.item.get(handleKey)?.forEach((callback) => callback(handleValue));
-      this.#listeners.tree.forEach((callback) => callback([startValue, destParentValue, handleValue]));
     }
   }
 
@@ -455,9 +464,10 @@ export class UIDesignTool {
     this.#items.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentValue.children.push(targetValue as any);
+
+    this.#listeners.tree.forEach((callback) => callback([parentValue]));
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
     this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
-    this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
   prepend<T extends UIRecord | UIRecordData>(parentKey: UIRecordKey, value: T): void {
@@ -483,9 +493,10 @@ export class UIDesignTool {
     this.#items.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentValue.children.unshift(targetValue as any);
+
+    this.#listeners.tree.forEach((callback) => callback([parentValue]));
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
     this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
-    this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
   #insert<T extends UIRecord | UIRecordData>(method: 'before' | 'after', siblingKey: UIRecordKey, value: T): void {
@@ -532,9 +543,10 @@ export class UIDesignTool {
 
     this.#items.set(targetValue.key, targetValue);
     parentValue.children.splice(targetIndex, 0, targetValue);
+
+    this.#listeners.tree.forEach((callback) => callback([parentValue]));
     this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
     this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
-    this.#listeners.tree.forEach((callback) => callback([parentValue]));
   }
 
   insertBefore<T extends UIRecord | UIRecordData>(nextSiblingKey: UIRecordKey, value: T): void {
@@ -552,43 +564,60 @@ export class UIDesignTool {
       return;
     }
 
-    if (!hasUIRecordParent(targetValue)) {
-      this.#items.delete(targetKey);
-      this.#listeners.item.get(targetKey)?.forEach((callback) => callback(undefined));
-      this.#listeners.tree.forEach((callback) => callback([]));
-      return;
-    }
-
-    const parentKey = targetValue.parent.key;
+    const canHaveParent = hasUIRecordParent(targetValue);
+    const parentKey = canHaveParent ? targetValue.parent.key : undefined;
     const parentValue = this.#items.get(parentKey ?? '');
-    if (parentValue == null) {
-      console.error(`Parent ${parentKey} of UIRecord '${targetKey}' not found.`);
-      return;
+    const hasParent = isUIRecordKey(parentKey) && parentValue != null;
+
+    if (canHaveParent) {
+      (() => {
+        if (!hasParent) {
+          console.error(`Parent ${parentKey} of UIRecord '${targetKey}' not found.`);
+          return;
+        }
+
+        if (!isUIRecordWithChildren(parentValue)) {
+          console.error(`children of UIRecord '${parentKey}' is not array.`);
+          return;
+        }
+
+        const targetIndex = parentValue.children.findIndex((it) => it.key === targetKey);
+        if (targetIndex < 0) {
+          console.error(`children of UIRecord '${parentKey}' has no UIRecord '${targetKey}'.`);
+          return;
+        }
+
+        parentValue.children.splice(targetIndex, 1);
+      })();
     }
 
-    if (!isUIRecordWithChildren(parentValue)) {
-      console.error(`children of UIRecord '${parentKey}' is not array.`);
-      return;
-    }
-
-    const targetIndex = parentValue.children.findIndex((it) => it.key === targetKey);
-    if (targetIndex < 0) {
-      console.error(`children of UIRecord '${parentKey}' has no UIRecord '${targetKey}'.`);
-      return;
-    }
-
-    const deleteTree = (record: UIRecord) => {
+    const deleteTree = (record: UIRecord, stack: UIRecord[] = []): UIRecord[] => {
+      stack.push(record);
       this.#items.delete(record.key);
       if (isUIRecordWithChildren(record)) {
-        record.children.forEach((it) => deleteTree(it));
+        record.children.forEach((it) => deleteTree(it, stack));
       }
+      return stack;
     };
 
-    deleteTree(targetValue);
-    parentValue.children.splice(targetIndex, 1);
-    this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    const deletedItems = deleteTree(targetValue);
+    const newSelectedItems = exclude([...this.#selectedItems], deletedItems);
+    // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
+    const isSelectionChanged = JSON.stringify([...this.selectedKeys]) === JSON.stringify(newSelectedItems.map((it) => it.key));
+    if (isSelectionChanged) {
+      this.#selectedItems = new Set(newSelectedItems);
+    }
+
+    if (hasParent) {
+      this.#listeners.tree.forEach((callback) => callback([parentValue]));
+      this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
+    } else {
+      this.#listeners.tree.forEach((callback) => callback([]));
+    }
     this.#listeners.item.get(targetKey)?.forEach((callback) => callback(undefined));
-    this.#listeners.tree.forEach((callback) => callback([parentValue]));
+    if (isSelectionChanged) {
+      this.#listeners.selection.forEach((callback) => callback(newSelectedItems));
+    }
   }
 
   dataset(element: HTMLElement): { key: string | undefined; type: string | undefined; layerType: string | undefined } {
