@@ -11,7 +11,7 @@ export * from './api/ShapeLayer/model';
 export * from './api/TextLayer/model';
 export * from './api/UIRecord/model';
 
-export { WorkspaceComponent as Workspace } from './components/Workspace/Workspace';
-export type { WorkspaceProps, WorkspaceRef } from './components/Workspace/types';
+export { UIDesignCanvas as UIDesignCanvas } from './components/UIDesignCanvas/UIDesignCanvas';
+export type { UIDesignCanvasProps, UIDesignCanvasRef } from './components/UIDesignCanvas/types';
 
 export { useUIController, useUIData, useUIElement, useUISubscription, useUIRecord } from './hooks';

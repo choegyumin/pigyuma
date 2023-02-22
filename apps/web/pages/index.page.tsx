@@ -6,9 +6,9 @@ import {
   ShapeLayerData,
   TextLayer,
   TextLayerData,
+  UIDesignCanvas,
   useUIController,
   useUIData,
-  Workspace,
 } from '@pigyuma/ui-design-tool';
 import mixins from '@pigyuma/ui/styles/mixins';
 import React, { useEffect } from 'react';
@@ -315,7 +315,7 @@ const Home = () => {
     <>
       <h1 className={mixins.blind}>Pigyuma</h1>
       <NoSSR>
-        <Workspace initialData={dummyData} />
+        <UIDesignCanvas initialData={dummyData} />
         <Button
           style={{
             position: 'fixed',

@@ -164,7 +164,7 @@ export class UIDesignTool {
       document.addEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
     }
 
-    // 외부에 노출할 필요가 없는 인터페이스는, 내부(Workspace)에서만 사용하도록 `mount` 함수의 반환 값으로 은닉
+    // 외부에 노출할 필요가 없는 인터페이스는, 내부(UIDesignCanvas)에서만 사용하도록 `mount` 함수의 반환 값으로 은닉
     return {
       getBrowserMeta: () => this.#browserMeta,
       setStatus: (status: UIDesignToolStatus) => this.#setStatus(status),

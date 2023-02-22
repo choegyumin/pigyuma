@@ -6,11 +6,11 @@ import { cloneDeep } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React from 'react';
 import { InteractionController } from '../InteractionController/InteractionController';
-import { WorkspaceProps, WorkspaceRef } from './types';
-import * as styles from './Workspace.css';
+import { UIDesignCanvasProps, UIDesignCanvasRef } from './types';
+import * as styles from './UIDesignCanvas.css';
 
-export const WorkspaceComponent = React.memo(
-  React.forwardRef<WorkspaceRef, WorkspaceProps>((props, ref) => {
+export const UIDesignCanvas = React.memo(
+  React.forwardRef<UIDesignCanvasRef, UIDesignCanvasProps>((props, ref) => {
     const { reset } = useUIController();
     const { initialData, ...attrs } = props;
 
@@ -26,4 +26,4 @@ export const WorkspaceComponent = React.memo(
     );
   }),
 );
-WorkspaceComponent.displayName = 'Workspace';
+UIDesignCanvas.displayName = 'UIDesignCanvas';
