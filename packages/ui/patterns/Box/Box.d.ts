@@ -1,6 +1,6 @@
-import { ComponentByBox } from './types';
+import { DynamicComponentByBox } from './types';
 
-interface BoxComponent extends ComponentByBox {}
+interface BoxComponent extends DynamicComponentByBox {}
 
 declare const Box: BoxComponent;
 

@@ -1,6 +1,4 @@
-import { ForwardingPropsByBox } from '@/patterns/Box';
+import { ComponentPropsByBox, ComponentRefByBox } from '@/patterns/Box';
 
-type BaseForwardingProps = ForwardingPropsByBox<'button'>;
-
-export type ButtonProps = BaseForwardingProps['props'];
-export type ButtonRef = BaseForwardingProps['ref'];
+export type ButtonProps = ComponentPropsByBox<'button'>;
+export type ButtonRef = ComponentRefByBox<'button'>;
