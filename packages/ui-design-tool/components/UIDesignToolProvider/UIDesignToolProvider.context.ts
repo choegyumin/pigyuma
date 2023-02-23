@@ -17,8 +17,8 @@ const constateResult = constate(
   (value) => value.getTreeReference,
   (value) => value.pairs,
   (value) => value.getPairsReference,
-  (value) => value.selected,
-  (value) => value.getSelectedReference,
+  (value) => value.selection,
+  (value) => value.getSelectionReference,
 );
 
 export const [
@@ -41,8 +41,8 @@ export const [
   useTreeReference,
   usePairs,
   usePairsReference,
-  useSelected,
-  useSelectedReference,
+  useSelection,
+  useSelectionReference,
 ] = constateResult;
 
 const [UIDesignToolContextProvider] = constateResult;

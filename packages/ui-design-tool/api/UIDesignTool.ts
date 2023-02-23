@@ -143,16 +143,8 @@ export class UIDesignTool {
     return this.#items;
   }
 
-  get keys(): Set<UIRecordKey> {
-    return new Set([...this.#items].map(([key]) => key));
-  }
-
-  get selected(): Set<UIRecord> {
+  get selection(): Set<UIRecord> {
     return this.#selectedItems;
-  }
-
-  get selectedKeys(): Set<UIRecordKey> {
-    return new Set([...this.#selectedItems].map(({ key }) => key));
   }
 
   mount() {
@@ -265,13 +257,13 @@ export class UIDesignTool {
     this.#listeners.selection.forEach((callback) => callback([]));
   }
 
-  select(keys: UIRecordKey[]): void {
+  select(targetKeys: UIRecordKey[]): void {
     const missingRecordKeys: UIRecordKey[] = [];
 
     const newRecordKeys: UIRecordKey[] = [];
     const newRecordValues: UIRecord[] = [];
 
-    keys.forEach((key) => {
+    targetKeys.forEach((key) => {
       const record = this.#items.get(key);
       if (record == null) {
         missingRecordKeys.push(key);
@@ -286,7 +278,7 @@ export class UIDesignTool {
     }
 
     // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    if (JSON.stringify([...this.selectedKeys]) === JSON.stringify(newRecordKeys)) {
+    if (JSON.stringify([...this.#selectedItems].map(({ key }) => key)) === JSON.stringify(newRecordKeys)) {
       return;
     }
 
@@ -296,6 +288,14 @@ export class UIDesignTool {
 
   get<T extends UIRecord>(targetKey: UIRecordKey): T | undefined {
     return this.#items.get(targetKey) as T | undefined;
+  }
+
+  has(targetKey: UIRecordKey): boolean {
+    return this.#items.has(targetKey);
+  }
+
+  isSelected(targetKey: UIRecordKey): boolean {
+    return [...this.#selectedItems].find(({ key }) => key === targetKey) != null;
   }
 
   set<T extends UIRecordData>(targetKey: UIRecordKey, value: Omit<Partial<T>, 'key'>): void {
@@ -603,7 +603,8 @@ export class UIDesignTool {
     const deletedItems = deleteTree(targetValue);
     const newSelectedItems = exclude([...this.#selectedItems], deletedItems);
     // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    const isSelectionChanged = JSON.stringify([...this.selectedKeys]) === JSON.stringify(newSelectedItems.map((it) => it.key));
+    const isSelectionChanged =
+      JSON.stringify([...this.#selectedItems].map(({ key }) => key)) === JSON.stringify(newSelectedItems.map(({ key }) => key));
     if (isSelectionChanged) {
       this.#selectedItems = new Set(newSelectedItems);
     }

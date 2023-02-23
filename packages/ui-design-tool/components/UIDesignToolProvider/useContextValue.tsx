@@ -60,13 +60,13 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
    */
   const [pairs, setPairs] = useCloneDeepState<Map<UIRecordKey, UIRecord>>(() => api.pairs);
   const [tree, setTree] = useCloneDeepState<Canvas>(() => api.tree);
-  const [selected, setSelected] = useCloneDeepState<Set<UIRecord>>(() => api.selected);
+  const [selection, setSelection] = useCloneDeepState<Set<UIRecord>>(() => api.selection);
 
   // 필요 시 react 컴포넌트 내에서 상태가 아닌 인스턴스 값에 직접 접근
   const getItemReference = useStableCallback(((...args) => api.get(...args)) as typeof api.get);
   const getTreeReference = useStableCallback(() => api.tree);
   const getPairsReference = useStableCallback(() => api.pairs);
-  const getSelectedReference = useStableCallback(() => api.selected);
+  const getSelectionReference = useStableCallback(() => api.selection);
 
   const controllerInterface = useMemo(
     () => ({
@@ -88,12 +88,14 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
     () => ({
       status,
       get: ((targetKey) => pairs.get(targetKey)) as typeof api.get,
+      has: ((targetKey) => pairs.has(targetKey)) as typeof api.has,
       pairs,
       tree,
-      // `selected`를 읽는 컴포넌트도 전체 데이터가 변경되었을 때 재조정 대상에 포함
-      selected,
+      // `selection`를 읽는 컴포넌트도 전체 데이터가 변경되었을 때 재조정 대상에 포함
+      selection,
+      isSelected: ((targetKey) => [...selection].find(({ key }) => key === targetKey) != null) as typeof api.isSelected,
     }),
-    [api, status, pairs, tree, selected],
+    [api, status, pairs, tree, selection],
   );
 
   const elementInterface = useMemo(
@@ -168,12 +170,12 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
        * @see useUIRecordForInteraction {@link @/hooks/useUIRecordForInteraction.tsx}
        */
       window.requestAnimationFrame(() => {
-        setSelected(api.selected);
+        setSelection(api.selection);
       });
     };
     const unsubscribe = api.subscribeSelection(callback);
     return unsubscribe;
-  }, [api, setSelected]);
+  }, [api, setSelection]);
 
   return {
     getBrowserMeta,
@@ -186,8 +188,8 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
     getTreeReference,
     pairs,
     getPairsReference,
-    selected,
-    getSelectedReference,
+    selection,
+    getSelectionReference,
 
     controllerInterface,
     dataInterface,
