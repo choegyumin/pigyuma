@@ -60,9 +60,9 @@ globalStyle(':root', {
 Use a better box model (opinionated).
 */
 
-// globalStyle('*, ::before, ::after', {
-//   boxSizing: 'border-box',
-// });
+globalStyle('*, ::before, ::after', {
+  boxSizing: 'border-box',
+});
 
 /**
 1. Correct the line height in all browsers.

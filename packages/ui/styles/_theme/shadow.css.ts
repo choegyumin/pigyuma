@@ -1,7 +1,7 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
-import { ShadowThemeTokens } from './types';
+import { ShadowThemeTokens, ShadowThemeTokenNames } from './types';
 
-export const shadowBoxNames: { shadow: Pick<ShadowThemeTokens, 'box'> } = {
+export const shadowBoxNames: { shadow: Pick<ShadowThemeTokenNames, 'box'> } = {
   shadow: {
     box: {
       level0: 'box-shadow-level0',

@@ -1,7 +1,7 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
-import { TypographyThemeTokens } from './types';
+import { TypographyThemeTokens, TypographyThemeTokenNames } from './types';
 
-export const typographyFontFamilyNames: { typography: Pick<TypographyThemeTokens, 'fontFamily'> } = {
+export const typographyFontFamilyNames: { typography: Pick<TypographyThemeTokenNames, 'fontFamily'> } = {
   typography: {
     fontFamily: {
       monospace: 'font-monospace',
@@ -27,7 +27,7 @@ const {
   typography: { fontFamily },
 } = typographyFontFamilyContract;
 
-export const typographyBaseNames: { typography: Pick<TypographyThemeTokens, 'base'> } = {
+export const typographyBaseNames: { typography: Pick<TypographyThemeTokenNames, 'base'> } = {
   typography: {
     base: {
       fontFamily: 'base-font-family',
@@ -47,7 +47,7 @@ const {
   typography: { base },
 } = typographyBaseContract;
 
-export const typographyStylesNames: { typography: Pick<TypographyThemeTokens, 'styles'> } = {
+export const typographyStylesNames: { typography: Pick<TypographyThemeTokenNames, 'styles'> } = {
   typography: {
     styles: {
       body: {
