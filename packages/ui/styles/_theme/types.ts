@@ -50,6 +50,20 @@ export type SystemThemeTokens = {
 };
 export type SystemThemeTokenNames = TokenNames<SystemThemeTokens>;
 
+export type TransitionThemeTokens = {
+  duration: {
+    fast: Token;
+    normal: Token;
+    slow: Token;
+  };
+  easing: {
+    easeInOut: Token;
+    easeIn: Token;
+    easeOut: Token;
+  };
+};
+export type TransitionThemeTokenNames = TokenNames<TransitionThemeTokens>;
+
 export type TypographyThemeTokens = {
   fontFamily: {
     monospace: Token;
@@ -69,6 +83,14 @@ export type TypographyThemeTokens = {
       fontVariant: Token;
       fontWeight: Token;
     };
+    body2: {
+      letterSpacing: Token;
+      lineHeight: Token;
+      fontFamily: Token;
+      fontSize: Token;
+      fontVariant: Token;
+      fontWeight: Token;
+    };
   };
 };
 export type TypographyThemeTokenNames = TokenNames<TypographyThemeTokens>;
@@ -78,6 +100,7 @@ export type GlobalThemeTokens = {
   shadow: ShadowThemeTokens;
   spacing: SpacingThemeTokens;
   system: SystemThemeTokens;
+  transition: TransitionThemeTokens;
   typography: TypographyThemeTokens;
 };
 export type GlobalThemeTokenNames = TokenNames<GlobalThemeTokens>;

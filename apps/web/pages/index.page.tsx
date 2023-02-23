@@ -1,8 +1,8 @@
 import { useEvent } from '@pigyuma/react-utils';
 import { Button } from '@pigyuma/ui';
-import { ArtboardData, ShapeLayer, ShapeLayerData, TextLayer, TextLayerData, useUIController, useUIData } from '@pigyuma/ui-design-tool';
+import { ArtboardData, ShapeLayer, ShapeLayerData, TextLayer, TextLayerData, useUIController } from '@pigyuma/ui-design-tool';
 import mixins from '@pigyuma/ui/styles/mixins';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Workspace from '~/components/Workspace';
 
 const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
@@ -220,12 +220,6 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
 
 const Home = () => {
   const uiControllerAPI = useUIController();
-
-  const { pairs: records } = useUIData();
-
-  useEffect(() => {
-    console.log('Records: ', records);
-  }, [records]);
 
   const onButtonClick = useEvent(() => {
     uiControllerAPI.set<ShapeLayer>('shape-layer-inside', { y: { length: 700, lengthType: 'px' } });
