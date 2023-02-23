@@ -13,6 +13,7 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'import'],
   settings: {
+    'import/external-module-folders': ['.yarn'],
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
     },

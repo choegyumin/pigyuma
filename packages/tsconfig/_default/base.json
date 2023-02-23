@@ -19,5 +19,5 @@
     "suppressImplicitAnyIndexErrors": true
   },
   "files": ["../typescript.d.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".yarn"]
 }
