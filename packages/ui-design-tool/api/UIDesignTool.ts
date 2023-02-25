@@ -1,6 +1,7 @@
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import {
   CanvasKey,
+  UIDesignToolIDAttributeName,
   UIRecordElementDataset,
   UIRecordElementFilter,
   UIRecordElementFilterItem,
@@ -9,7 +10,7 @@ import {
 } from '@/types/Identifier';
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
-import { cloneDeep, exclude, mapValues } from '@pigyuma/utils';
+import { cloneDeep, exclude, mapValues, uuid } from '@pigyuma/utils';
 import { Canvas, CanvasData } from './Canvas/model';
 import { Layer } from './Layer/model';
 import { UIRecord, UIRecordData } from './UIRecord/model';
@@ -17,6 +18,8 @@ import { UIRecord, UIRecordData } from './UIRecord/model';
 interface MouseMeta {
   clientX: number;
   clientY: number;
+  offsetX: number;
+  offsetY: number;
 }
 
 interface KeyboardMeta {
@@ -49,7 +52,7 @@ export interface UIDesignToolOptions {
 const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: CanvasKey };
 
 export const INITIAL_BROWSER_META: BrowserMeta = {
-  mouse: { clientX: 0, clientY: 0 },
+  mouse: { clientX: 0, clientY: 0, offsetX: 0, offsetY: 0 },
   keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
 };
 
@@ -60,6 +63,8 @@ export const INITIAL_BROWSER_META: BrowserMeta = {
  */
 export class UIDesignTool {
   #strict: boolean;
+  #id: string;
+
   readonly #browserMeta: BrowserMeta;
   readonly #listeners: {
     readonly item: Map<UIRecordKey, Set<(value: UIRecord | undefined) => void>>;
@@ -85,6 +90,8 @@ export class UIDesignTool {
     const { strict = true } = options ?? {};
 
     this.#strict = strict;
+    this.#id = uuid.v4();
+
     this.#browserMeta = INITIAL_BROWSER_META;
     this.#listeners = {
       item: new Map(),
@@ -103,8 +110,11 @@ export class UIDesignTool {
     const onMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
+      const rootBounds = document.querySelector(`[${UIDesignToolIDAttributeName}="${this.#id}"]`)?.getBoundingClientRect() ?? new DOMRect();
       this.#browserMeta.mouse.clientX = clientX;
       this.#browserMeta.mouse.clientY = clientY;
+      this.#browserMeta.mouse.offsetX = clientX - rootBounds.x;
+      this.#browserMeta.mouse.offsetY = clientY - rootBounds.y;
       this.#hoveredElement = target;
     };
     const onKeyDownUp = (event: KeyboardEvent) => {
@@ -143,16 +153,8 @@ export class UIDesignTool {
     return this.#items;
   }
 
-  get keys(): Set<UIRecordKey> {
-    return new Set([...this.#items].map(([key]) => key));
-  }
-
-  get selected(): Set<UIRecord> {
+  get selection(): Set<UIRecord> {
     return this.#selectedItems;
-  }
-
-  get selectedKeys(): Set<UIRecordKey> {
-    return new Set([...this.#selectedItems].map(({ key }) => key));
   }
 
   mount() {
@@ -172,8 +174,9 @@ export class UIDesignTool {
       document.addEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
     }
 
-    // 외부에 노출할 필요가 없는 인터페이스는, 내부(Workspace)에서만 사용하도록 `mount` 함수의 반환 값으로 은닉
+    // 외부에 노출할 필요가 없는 인터페이스는, 내부(UIDesignCanvas)에서만 사용하도록 `mount` 함수의 반환 값으로 은닉
     return {
+      id: this.#id,
       getBrowserMeta: () => this.#browserMeta,
       setStatus: (status: UIDesignToolStatus) => this.#setStatus(status),
     };
@@ -265,13 +268,13 @@ export class UIDesignTool {
     this.#listeners.selection.forEach((callback) => callback([]));
   }
 
-  select(keys: UIRecordKey[]): void {
+  select(targetKeys: UIRecordKey[]): void {
     const missingRecordKeys: UIRecordKey[] = [];
 
     const newRecordKeys: UIRecordKey[] = [];
     const newRecordValues: UIRecord[] = [];
 
-    keys.forEach((key) => {
+    targetKeys.forEach((key) => {
       const record = this.#items.get(key);
       if (record == null) {
         missingRecordKeys.push(key);
@@ -286,7 +289,7 @@ export class UIDesignTool {
     }
 
     // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    if (JSON.stringify([...this.selectedKeys]) === JSON.stringify(newRecordKeys)) {
+    if (JSON.stringify([...this.#selectedItems].map(({ key }) => key)) === JSON.stringify(newRecordKeys)) {
       return;
     }
 
@@ -296,6 +299,14 @@ export class UIDesignTool {
 
   get<T extends UIRecord>(targetKey: UIRecordKey): T | undefined {
     return this.#items.get(targetKey) as T | undefined;
+  }
+
+  has(targetKey: UIRecordKey): boolean {
+    return this.#items.has(targetKey);
+  }
+
+  isSelected(targetKey: UIRecordKey): boolean {
+    return [...this.#selectedItems].find(({ key }) => key === targetKey) != null;
   }
 
   set<T extends UIRecordData>(targetKey: UIRecordKey, value: Omit<Partial<T>, 'key'>): void {
@@ -603,7 +614,8 @@ export class UIDesignTool {
     const deletedItems = deleteTree(targetValue);
     const newSelectedItems = exclude([...this.#selectedItems], deletedItems);
     // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    const isSelectionChanged = JSON.stringify([...this.selectedKeys]) === JSON.stringify(newSelectedItems.map((it) => it.key));
+    const isSelectionChanged =
+      JSON.stringify([...this.#selectedItems].map(({ key }) => key)) === JSON.stringify(newSelectedItems.map(({ key }) => key));
     if (isSelectionChanged) {
       this.#selectedItems = new Set(newSelectedItems);
     }

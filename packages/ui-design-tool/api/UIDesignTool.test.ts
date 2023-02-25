@@ -177,6 +177,8 @@ describe('UIDesignTool', () => {
         mouse: {
           clientX: 0,
           clientY: 0,
+          offsetX: 0,
+          offsetY: 0,
         },
       });
     });
@@ -207,9 +209,9 @@ describe('UIDesignTool', () => {
     test('should select UI records', () => {
       uiDesignTool.select([dummyArtboard.key]);
 
-      expect(uiDesignTool.selectedKeys.has(dummyArtboard.key)).toBeTruthy();
-      expect(uiDesignTool.selectedKeys.has(dummyShapeLayer.key)).toBeFalsy();
-      expect(uiDesignTool.selectedKeys.has(dummyTextLayer.key)).toBeFalsy();
+      expect(uiDesignTool.isSelected(dummyArtboard.key)).toBeTruthy();
+      expect(uiDesignTool.isSelected(dummyShapeLayer.key)).toBeFalsy();
+      expect(uiDesignTool.isSelected(dummyTextLayer.key)).toBeFalsy();
     });
   });
 

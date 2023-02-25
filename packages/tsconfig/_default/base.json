@@ -18,6 +18,5 @@
     "strict": true,
     "suppressImplicitAnyIndexErrors": true
   },
-  "files": ["../typescript.d.ts"],
   "exclude": ["node_modules", ".yarn"]
 }

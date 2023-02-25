@@ -59,7 +59,7 @@ const getTransformedRect = (
       newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 0, flip ? distance : -distance);
     }
     const diff = distance * (fromCenter ? 2 : 1);
-    return rect.width + diff < 0;
+    return rect.width + diff <= 0;
   };
   const bottom = () => {
     const distance = -calcDistancePointFromLine([newQuadInit.p4, newQuadInit.p3], mousePoint, { abs: false });
@@ -70,7 +70,7 @@ const getTransformedRect = (
       newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 270, -distance);
     }
     const diff = distance * (fromCenter ? 2 : 1);
-    return rect.height + diff < 0;
+    return rect.height + diff <= 0;
   };
 
   switch (handlePlacement) {
@@ -143,7 +143,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
 
     const browserMeta = getBrowserMeta();
     const mouseMeta = browserMeta.mouse;
-    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
 
     const isGrabbingCorner = (
       [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
@@ -155,7 +155,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformInitialRectRef, rect);
     setRef(transformLastRectRef, transformInitialRectRef.current);
     setRef(resizeHandlePlacementRef, handle);
-    setCursor(isGrabbingCorner ? getResizeCursor(target, mousePoint) : event.target.style.getPropertyValue('cursor'));
+    setCursor(isGrabbingCorner ? getResizeCursor(target, mouseClientPoint) : event.target.style.getPropertyValue('cursor'));
     setStatus(UIDesignToolStatus.resizing);
   });
 
@@ -207,7 +207,8 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
 
     const browserMeta = getBrowserMeta();
     const mouseMeta = browserMeta.mouse;
-    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
     const keyboardMeta = browserMeta.keyboard;
 
     const fromCenter = keyboardMeta.altKey;
@@ -216,14 +217,14 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
       [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
     ).includes(handlePlacement || '');
 
-    const newRect = handlePlacement ? getTransformedRect(initialRect, mousePoint, handlePlacement, fromCenter) : initialRect;
+    const newRect = handlePlacement ? getTransformedRect(initialRect, mouseOffsetPoint, handlePlacement, fromCenter) : initialRect;
 
     if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
       setRef(transformLastRectRef, newRect);
       uiControllerAPI.setRect(record.key, newRect);
     }
     if (isGrabbingCorner) {
-      setCursor(getResizeCursor(target, mousePoint));
+      setCursor(getResizeCursor(target, mouseClientPoint));
     }
   });
 
@@ -250,13 +251,13 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
 
     const browserMeta = getBrowserMeta();
     const mouseMeta = browserMeta.mouse;
-    const mousePoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
     const keyboardMeta = browserMeta.keyboard;
 
     const fromCenter = keyboardMeta.altKey;
     const handlePlacement = resizeHandlePlacementRef.current;
 
-    const newRect = handlePlacement ? getTransformedRect(initialRect, mousePoint, handlePlacement, fromCenter) : initialRect;
+    const newRect = handlePlacement ? getTransformedRect(initialRect, mouseOffsetPoint, handlePlacement, fromCenter) : initialRect;
 
     setRef(transformLastRectRef, newRect);
     uiControllerAPI.setRect(record.key, newRect);

@@ -1,9 +1,9 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
 import colorThemeVars from './color.css';
-import { SystemThemeTokens } from './types';
+import { SystemThemeTokens, SystemThemeTokenNames } from './types';
 import typographyThemeVars from './typography.css';
 
-export const systemBaseNames: { system: Pick<SystemThemeTokens, 'base'> } = {
+export const systemBaseNames: { system: Pick<SystemThemeTokenNames, 'base'> } = {
   system: {
     base: {
       color: 'default-text-color',
@@ -20,12 +20,12 @@ export const systemBaseTokens: { system: Pick<SystemThemeTokens, 'base'> } = {
   system: {
     base: {
       color: colorThemeVars.text.primary,
-      letterSpacing: typographyThemeVars.styles.body.fontFamily,
-      lineHeight: typographyThemeVars.styles.body.fontFamily,
+      letterSpacing: typographyThemeVars.styles.body.letterSpacing,
+      lineHeight: typographyThemeVars.styles.body.lineHeight,
       fontFamily: typographyThemeVars.styles.body.fontFamily,
-      fontSize: typographyThemeVars.styles.body.fontFamily,
-      fontVariant: typographyThemeVars.styles.body.fontFamily,
-      fontWeight: typographyThemeVars.styles.body.fontFamily,
+      fontSize: typographyThemeVars.styles.body.fontSize,
+      fontVariant: typographyThemeVars.styles.body.fontVariant,
+      fontWeight: typographyThemeVars.styles.body.fontWeight,
     },
   },
 };
@@ -35,7 +35,7 @@ const {
 } = systemBaseContract;
 createGlobalTheme(':root', systemBaseContract, systemBaseTokens);
 
-export const systemInteractionNames: { system: Pick<SystemThemeTokens, 'interaction'> } = {
+export const systemInteractionNames: { system: Pick<SystemThemeTokenNames, 'interaction'> } = {
   system: {
     interaction: {
       focusRingColor: 'focus-ring-color',

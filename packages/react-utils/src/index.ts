@@ -9,6 +9,7 @@ export { default as useDOMStyle } from './useDOMStyle';
 export { default as useEvent } from './useEvent';
 export { default as useEventListener } from './useEventListener';
 export { default as useForceUpdate } from './useForceUpdate';
+export { default as useForkedRef } from './useForkedRef';
 export { default as useImmutableCallback } from './useImmutableCallback';
 export { default as useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 export { default as useLayoutMount } from './useLayoutMount';

@@ -1,6 +1,7 @@
 import { Layer } from '@/api/Layer/model';
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
 import { useItemReference, useDispatcher, useUIController, useUIElement } from '@/hooks';
+import { UIDesignToolIDAttributeName } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { UseDataType } from './useData';
@@ -53,6 +54,10 @@ export default function useHandlers(deps: UseHandlersDependencys) {
   });
 
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
+    if (!(event.target instanceof Element && event.target.closest(`[${UIDesignToolIDAttributeName}]`))) {
+      return;
+    }
+
     const lastClickedTarget = clickedTargetRef.current;
     setRef(clickedTargetRef, null);
 

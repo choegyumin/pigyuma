@@ -11,6 +11,7 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@iconscout/react-unicons": "^1.1.6",
     "@pigyuma/react-utility-types": "*",
     "@pigyuma/react-utils": "*",
     "@pigyuma/utils": "*",

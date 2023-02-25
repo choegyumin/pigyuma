@@ -78,42 +78,30 @@ export const resizeHandle = style({
 });
 
 export const resizeHandle$ = styleVariants({
-  top: [
-    resizeHandle,
-    {
-      bottom: getter.handleCoordinate,
-      left: '0',
-      right: '0',
-      height: getter.handleSize,
-    },
-  ],
-  right: [
-    resizeHandle,
-    {
-      left: getter.handleCoordinate,
-      top: '0',
-      bottom: '0',
-      width: getter.handleSize,
-    },
-  ],
-  bottom: [
-    resizeHandle,
-    {
-      top: getter.handleCoordinate,
-      left: '0',
-      right: '0',
-      height: getter.handleSize,
-    },
-  ],
-  left: [
-    resizeHandle,
-    {
-      right: getter.handleCoordinate,
-      top: '0',
-      bottom: '0',
-      width: getter.handleSize,
-    },
-  ],
+  top: {
+    bottom: getter.handleCoordinate,
+    left: '0',
+    right: '0',
+    height: getter.handleSize,
+  },
+  right: {
+    left: getter.handleCoordinate,
+    top: '0',
+    bottom: '0',
+    width: getter.handleSize,
+  },
+  bottom: {
+    top: getter.handleCoordinate,
+    left: '0',
+    right: '0',
+    height: getter.handleSize,
+  },
+  left: {
+    right: getter.handleCoordinate,
+    top: '0',
+    bottom: '0',
+    width: getter.handleSize,
+  },
 });
 
 export const resizeCornerHandle = style({
@@ -137,34 +125,22 @@ export const resizeCornerHandle = style({
 });
 
 export const resizeCornerHandle$ = styleVariants({
-  topLeft: [
-    resizeCornerHandle,
-    {
-      bottom: getter.handleCoordinate,
-      right: getter.handleCoordinate,
-    },
-  ],
-  topRight: [
-    resizeCornerHandle,
-    {
-      bottom: getter.handleCoordinate,
-      left: getter.handleCoordinate,
-    },
-  ],
-  bottomRight: [
-    resizeCornerHandle,
-    {
-      top: getter.handleCoordinate,
-      left: getter.handleCoordinate,
-    },
-  ],
-  bottomLeft: [
-    resizeCornerHandle,
-    {
-      top: getter.handleCoordinate,
-      right: getter.handleCoordinate,
-    },
-  ],
+  topLeft: {
+    bottom: getter.handleCoordinate,
+    right: getter.handleCoordinate,
+  },
+  topRight: {
+    bottom: getter.handleCoordinate,
+    left: getter.handleCoordinate,
+  },
+  bottomRight: {
+    top: getter.handleCoordinate,
+    left: getter.handleCoordinate,
+  },
+  bottomLeft: {
+    top: getter.handleCoordinate,
+    right: getter.handleCoordinate,
+  },
 });
 
 export const rotateHandle = style({
@@ -177,34 +153,22 @@ export const rotateHandle = style({
 });
 
 export const rotateHandle$ = styleVariants({
-  topLeft: [
-    rotateHandle,
-    {
-      bottom: getter.handleCoordinate,
-      right: getter.handleCoordinate,
-    },
-  ],
-  topRight: [
-    rotateHandle,
-    {
-      bottom: getter.handleCoordinate,
-      left: getter.handleCoordinate,
-    },
-  ],
-  bottomRight: [
-    rotateHandle,
-    {
-      top: getter.handleCoordinate,
-      left: getter.handleCoordinate,
-    },
-  ],
-  bottomLeft: [
-    rotateHandle,
-    {
-      top: getter.handleCoordinate,
-      right: getter.handleCoordinate,
-    },
-  ],
+  topLeft: {
+    bottom: getter.handleCoordinate,
+    right: getter.handleCoordinate,
+  },
+  topRight: {
+    bottom: getter.handleCoordinate,
+    left: getter.handleCoordinate,
+  },
+  bottomRight: {
+    top: getter.handleCoordinate,
+    left: getter.handleCoordinate,
+  },
+  bottomLeft: {
+    top: getter.handleCoordinate,
+    right: getter.handleCoordinate,
+  },
 });
 
 export const info = style({

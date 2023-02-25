@@ -1,11 +1,11 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useStatus, useSelected } from '@/hooks';
+import { useStatus, useSelection } from '@/hooks';
 import { UIRecordRect } from '@/types/Geometry';
 import { useRef } from 'react';
 import { HandlePlacement } from '../TransformOverlay/types';
 
 export default function useData() {
-  const selectedRecords = useSelected();
+  const selectedRecords = useSelection();
   const status = useStatus();
 
   /** @todo 여러 레이어를 묶어서 transform 할 수 있게 되면 `hasSelected` 로 값 변경 (Range Selection, Layer Grouping 기능과 함께 구현) */

@@ -1,7 +1,7 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
-import { TypographyThemeTokens } from './types';
+import { TypographyThemeTokens, TypographyThemeTokenNames } from './types';
 
-export const typographyFontFamilyNames: { typography: Pick<TypographyThemeTokens, 'fontFamily'> } = {
+export const typographyFontFamilyNames: { typography: Pick<TypographyThemeTokenNames, 'fontFamily'> } = {
   typography: {
     fontFamily: {
       monospace: 'font-monospace',
@@ -27,7 +27,7 @@ const {
   typography: { fontFamily },
 } = typographyFontFamilyContract;
 
-export const typographyBaseNames: { typography: Pick<TypographyThemeTokens, 'base'> } = {
+export const typographyBaseNames: { typography: Pick<TypographyThemeTokenNames, 'base'> } = {
   typography: {
     base: {
       fontFamily: 'base-font-family',
@@ -47,7 +47,7 @@ const {
   typography: { base },
 } = typographyBaseContract;
 
-export const typographyStylesNames: { typography: Pick<TypographyThemeTokens, 'styles'> } = {
+export const typographyStylesNames: { typography: Pick<TypographyThemeTokenNames, 'styles'> } = {
   typography: {
     styles: {
       body: {
@@ -57,6 +57,14 @@ export const typographyStylesNames: { typography: Pick<TypographyThemeTokens, 's
         fontSize: 'body-font-size',
         fontVariant: 'body-font-variant',
         fontWeight: 'body-font-weight',
+      },
+      body2: {
+        letterSpacing: 'body2-letter-spacing',
+        lineHeight: 'body2-line-height',
+        fontFamily: 'body2-font-family',
+        fontSize: 'body2-font-size',
+        fontVariant: 'body2-font-variant',
+        fontWeight: 'body2-font-weight',
       },
     },
   },
@@ -69,6 +77,14 @@ export const typographyStylesTokens: { typography: Pick<TypographyThemeTokens, '
         lineHeight: '1.5',
         fontFamily: base.fontFamily,
         fontSize: '14px',
+        fontVariant: 'normal',
+        fontWeight: '400',
+      },
+      body2: {
+        letterSpacing: '0',
+        lineHeight: '1.5',
+        fontFamily: base.fontFamily,
+        fontSize: '12px',
         fontVariant: 'normal',
         fontWeight: '400',
       },

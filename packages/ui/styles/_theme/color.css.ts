@@ -1,7 +1,7 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
-import { ColorThemeTokens } from './types';
+import { ColorThemeTokens, ColorThemeTokenNames } from './types';
 
-export const colorAccentNames: { color: Pick<ColorThemeTokens, 'accent'> } = {
+export const colorAccentNames: { color: Pick<ColorThemeTokenNames, 'accent'> } = {
   color: {
     accent: {
       primary: 'color-primary',
@@ -21,7 +21,7 @@ const {
   color: { accent },
 } = colorAccentContract;
 
-export const colorNeutralNames: { color: Pick<ColorThemeTokens, 'neutral'> } = {
+export const colorNeutralNames: { color: Pick<ColorThemeTokenNames, 'neutral'> } = {
   color: {
     neutral: {
       black: 'color-black',
@@ -43,7 +43,7 @@ const {
   color: { neutral },
 } = colorNeutralContract;
 
-export const colorTextNames: { color: Pick<ColorThemeTokens, 'text'> } = {
+export const colorTextNames: { color: Pick<ColorThemeTokenNames, 'text'> } = {
   color: {
     text: {
       primary: 'color-text-primary',

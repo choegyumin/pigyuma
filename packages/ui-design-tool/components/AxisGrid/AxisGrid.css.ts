@@ -51,24 +51,18 @@ export const axis = style({
 });
 
 export const axis$ = styleVariants({
-  x: [
-    axis,
-    {
-      top: '0',
-      right: vars.axisXRight,
-      left: vars.axisXLeft,
-      width: vars.axisXLength,
-      borderTopWidth: getter.axisBorderWidth,
-    },
-  ],
-  y: [
-    axis,
-    {
-      left: '0',
-      top: vars.axisYTop,
-      bottom: vars.axisYBottom,
-      height: vars.axisYLength,
-      borderLeftWidth: getter.axisBorderWidth,
-    },
-  ],
+  x: {
+    top: '0',
+    right: vars.axisXRight,
+    left: vars.axisXLeft,
+    width: vars.axisXLength,
+    borderTopWidth: getter.axisBorderWidth,
+  },
+  y: {
+    left: '0',
+    top: vars.axisYTop,
+    bottom: vars.axisYBottom,
+    height: vars.axisYLength,
+    borderLeftWidth: getter.axisBorderWidth,
+  },
 });

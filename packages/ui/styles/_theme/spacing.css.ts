@@ -1,7 +1,7 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
-import { SpacingThemeTokens } from './types';
+import { SpacingThemeTokens, SpacingThemeTokenNames } from './types';
 
-export const spacingScaleNames: { spacing: Pick<SpacingThemeTokens, 'scale'> } = {
+export const spacingScaleNames: { spacing: Pick<SpacingThemeTokenNames, 'scale'> } = {
   spacing: {
     scale: 'spacing',
   },

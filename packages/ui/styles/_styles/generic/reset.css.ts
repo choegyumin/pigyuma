@@ -1,8 +1,13 @@
 import foundations from '@/styles/foundations';
 import { globalStyle } from '@vanilla-extract/css';
 
-globalStyle('*, ::before, ::after', {
-  boxSizing: 'border-box',
+const BUTTON_INPUT_TYPE_SELECTOR = '[type="button" i], [type="image" i], [type="reset" i], [type="submit" i]';
+const IMAEG_BUTTON_INPUT_TYPE_SELECTOR = '[type="button" i], [type="image" i], [type="reset" i], [type="submit" i]';
+const HIDDEN_INPUT_TYPE_SELECTOR = '[type="hidden" i]';
+
+globalStyle(`:where(button, input:where(${BUTTON_INPUT_TYPE_SELECTOR}))`, {
+  all: 'unset',
+  textAlign: 'center',
 });
 
 globalStyle(':where(:focus, :focus-visible, :focus-within)', {
@@ -11,8 +16,8 @@ globalStyle(':where(:focus, :focus-visible, :focus-within)', {
 
 globalStyle(
   `
-  :where(:is(input:not([type="button" i], [type="hidden" i], [type="image" i], [type="reset" i], [type="submit" i]), select):focus),
-  :where(:not(input:not([type="button" i], [type="image" i], [type="reset" i], [type="submit" i]), select):focus-visible)
+  :where(:is(input:not(${BUTTON_INPUT_TYPE_SELECTOR}, ${IMAEG_BUTTON_INPUT_TYPE_SELECTOR}, ${HIDDEN_INPUT_TYPE_SELECTOR}), select):focus),
+  :where(:not(input:not(${BUTTON_INPUT_TYPE_SELECTOR}, ${IMAEG_BUTTON_INPUT_TYPE_SELECTOR}), select):focus-visible)
   `,
   {
     outlineStyle: 'auto',
@@ -57,12 +62,12 @@ globalStyle('a, label, summary, button, input, select, textarea', {
   '-webkit-app-region': 'no-drag',
 });
 
-globalStyle('a, summary, button, input:where([type="button" i], [type="image" i], [type="reset" i], [type="submit" i]), select', {
+globalStyle(`a, summary, button, input:where(${BUTTON_INPUT_TYPE_SELECTOR}, ${IMAEG_BUTTON_INPUT_TYPE_SELECTOR}), select`, {
   cursor: 'pointer',
 });
 
 globalStyle(
-  'input:where(:not([type="button" i], [type="hidden" i], [type="image" i], [type="reset" i], [type="submit" i])), select, textarea',
+  `input:where(:not(${BUTTON_INPUT_TYPE_SELECTOR}, ${IMAEG_BUTTON_INPUT_TYPE_SELECTOR}, ${HIDDEN_INPUT_TYPE_SELECTOR})), select, textarea`,
   {
     borderRadius: '0',
     userSelect: 'auto',
@@ -72,10 +77,6 @@ globalStyle(
 globalStyle('a', {
   color: 'inherit',
   textDecoration: 'none',
-});
-
-globalStyle('button, input:where([type="button" i], [type="image" i], [type="reset" i], [type="submit" i])', {
-  borderRadius: '0',
 });
 
 globalStyle('textarea', {

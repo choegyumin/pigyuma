@@ -17,6 +17,6 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "include": ["src", "next-env.d.ts"],
-  "exclude": ["node_modules"]
+  "files": ["../typescript.d.ts", "../react-unicons.d.ts"],
+  "include": ["src", "next-env.d.ts"]
 }

@@ -1,7 +1,7 @@
 import Box from '@/patterns/Box';
 import clsx from 'clsx';
 import React from 'react';
-import styles from './Button.css';
+import * as styles from './Button.css';
 import { ButtonProps, ButtonRef } from './types';
 
 const Button = React.forwardRef<ButtonRef, ButtonProps>((props, ref) => {

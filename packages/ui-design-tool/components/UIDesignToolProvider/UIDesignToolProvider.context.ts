@@ -9,6 +9,7 @@ const constateResult = constate(
   (value) => value.subscriptionInterface,
 
   (value) => value.dispatcher,
+  (value) => value.instanceId,
   (value) => value.getBrowserMeta,
   (value) => value.status,
   (value) => value.cursor,
@@ -17,8 +18,8 @@ const constateResult = constate(
   (value) => value.getTreeReference,
   (value) => value.pairs,
   (value) => value.getPairsReference,
-  (value) => value.selected,
-  (value) => value.getSelectedReference,
+  (value) => value.selection,
+  (value) => value.getSelectionReference,
 );
 
 export const [
@@ -33,6 +34,7 @@ export const [
 
   // 패키지 내부 사용
   useDispatcher,
+  useInstanceID,
   useBrowserMeta,
   useStatus,
   useCursor,
@@ -41,8 +43,8 @@ export const [
   useTreeReference,
   usePairs,
   usePairsReference,
-  useSelected,
-  useSelectedReference,
+  useSelection,
+  useSelectionReference,
 ] = constateResult;
 
 const [UIDesignToolContextProvider] = constateResult;

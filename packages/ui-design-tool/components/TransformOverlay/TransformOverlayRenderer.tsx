@@ -1,5 +1,6 @@
 import { useUIRecordForInteraction } from '@/hooks';
 import { useEventListener } from '@pigyuma/react-utils';
+import clsx from 'clsx';
 import React from 'react';
 import * as styles from './TransformOverlay.css';
 import { TransformOverlayRendererProps } from './types';
@@ -42,70 +43,70 @@ export const TransformOverlayRenderer: React.FC<TransformOverlayRendererProps> =
       <div className={styles.wrapper}>
         <div className={styles.outline} />
         <div
-          className={styles.rotateHandle$.topLeft}
+          className={clsx(styles.rotateHandle, styles.rotateHandle$.topLeft)}
           style={{ cursor: rotateHandleCursorMap.topLeft }}
           onMouseDown={onRotateHandleMouseDown}
         />
         <div
-          className={styles.rotateHandle$.topRight}
+          className={clsx(styles.rotateHandle, styles.rotateHandle$.topRight)}
           style={{ cursor: rotateHandleCursorMap.topRight }}
           onMouseDown={onRotateHandleMouseDown}
         />
         <div
-          className={styles.rotateHandle$.bottomRight}
+          className={clsx(styles.rotateHandle, styles.rotateHandle$.bottomRight)}
           style={{ cursor: rotateHandleCursorMap.bottomRight }}
           onMouseDown={onRotateHandleMouseDown}
         />
         <div
-          className={styles.rotateHandle$.bottomLeft}
+          className={clsx(styles.rotateHandle, styles.rotateHandle$.bottomLeft)}
           style={{ cursor: rotateHandleCursorMap.bottomLeft }}
           onMouseDown={onRotateHandleMouseDown}
         />
         <div
           data-handle-placement="top"
-          className={styles.resizeHandle$.top}
+          className={clsx(styles.resizeHandle, styles.resizeHandle$.top)}
           style={{ cursor: resizeHandleCursorMap.top }}
           onMouseDown={onResizeHandleMouseDown}
         />
         <div
           data-handle-placement="right"
-          className={styles.resizeHandle$.right}
+          className={clsx(styles.resizeHandle, styles.resizeHandle$.right)}
           style={{ cursor: resizeHandleCursorMap.right }}
           onMouseDown={onResizeHandleMouseDown}
         />
         <div
           data-handle-placement="bottom"
-          className={styles.resizeHandle$.bottom}
+          className={clsx(styles.resizeHandle, styles.resizeHandle$.bottom)}
           style={{ cursor: resizeHandleCursorMap.bottom }}
           onMouseDown={onResizeHandleMouseDown}
         />
         <div
           data-handle-placement="left"
-          className={styles.resizeHandle$.left}
+          className={clsx(styles.resizeHandle, styles.resizeHandle$.left)}
           style={{ cursor: resizeHandleCursorMap.left }}
           onMouseDown={onResizeHandleMouseDown}
         />
         <div
           data-handle-placement="topLeft"
-          className={styles.resizeCornerHandle$.topLeft}
+          className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.topLeft)}
           style={{ cursor: resizeHandleCursorMap.topLeft }}
           onMouseDown={onResizeHandleMouseDown}
         />
         <div
           data-handle-placement="topRight"
-          className={styles.resizeCornerHandle$.topRight}
+          className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.topRight)}
           style={{ cursor: resizeHandleCursorMap.topRight }}
           onMouseDown={onResizeHandleMouseDown}
         />
         <div
           data-handle-placement="bottomRight"
-          className={styles.resizeCornerHandle$.bottomRight}
+          className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.bottomRight)}
           style={{ cursor: resizeHandleCursorMap.bottomRight }}
           onMouseDown={onResizeHandleMouseDown}
         />
         <div
           data-handle-placement="bottomLeft"
-          className={styles.resizeCornerHandle$.bottomLeft}
+          className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.bottomLeft)}
           style={{ cursor: resizeHandleCursorMap.bottomLeft }}
           onMouseDown={onResizeHandleMouseDown}
         />
