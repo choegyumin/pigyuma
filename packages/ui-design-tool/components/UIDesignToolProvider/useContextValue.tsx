@@ -60,7 +60,7 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
 
   /**
    * 참조 제거
-   * @see useUIRecordForUI {@link @/hooks/useUIRecordForUI.tsx}
+   * @see useUIRecord {@link @/hooks/useUIRecord.tsx}
    * @todo 성능 저하가 발생하면: 최초 한번 cloneDeep 후, 변경된 아이템만 clone하도록 개선
    */
   const [pairs, setPairs] = useCloneDeepState<Map<UIRecordKey, UIRecord>>(() => api.pairs);
@@ -157,14 +157,8 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
 
   useEffect(() => {
     const callback = () => {
-      /**
-       * 늦은 재조정 유발
-       * @see useUIRecordForInteraction {@link @/hooks/useUIRecordForInteraction.tsx}
-       */
-      window.requestAnimationFrame(() => {
-        setPairs(api.pairs);
-        setTree(api.tree);
-      });
+      setPairs(api.pairs);
+      setTree(api.tree);
     };
     const unsubscribe = api.subscribeTree(callback);
     return unsubscribe;
@@ -172,13 +166,7 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
 
   useEffect(() => {
     const callback = () => {
-      /**
-       * 늦은 재조정 유발
-       * @see useUIRecordForInteraction {@link @/hooks/useUIRecordForInteraction.tsx}
-       */
-      window.requestAnimationFrame(() => {
-        setSelection(api.selection);
-      });
+      setSelection(api.selection);
     };
     const unsubscribe = api.subscribeSelection(callback);
     return unsubscribe;

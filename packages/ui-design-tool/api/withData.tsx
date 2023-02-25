@@ -1,4 +1,4 @@
-import { useUIRecordForUI } from '@/hooks';
+import { useUIRecord } from '@/hooks';
 import { UIRecordElementDataAttributeName, UIRecordKey } from '@/types/Identifier';
 import React from 'react';
 import { UIRecord } from './UIRecord/model';
@@ -17,7 +17,7 @@ export default function withData<R, P extends DefaultComponentProps>(
   const DataHOC = React.forwardRef<R, withDataProps>((props, ref) => {
     const { dataKey: recordKey, ...restProps } = props;
 
-    const record = useUIRecordForUI(recordKey);
+    const record = useUIRecord(recordKey);
 
     if (record == null) {
       return null;

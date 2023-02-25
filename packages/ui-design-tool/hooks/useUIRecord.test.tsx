@@ -40,7 +40,7 @@ describe('useUIRecord', () => {
     expect(result.current).not.toBe(record);
   });
 
-  test('should update UIRecord data', async () => {
+  test('should update UIRecord data', () => {
     const newRecordChanges: Partial<UIRecord> = { type: UIRecordType.artboard };
 
     const { result: uiControllerResult } = renderHook(() => useUIController(), { wrapper });
@@ -48,9 +48,8 @@ describe('useUIRecord', () => {
 
     const uiController = uiControllerResult.current;
 
-    await act(async () => {
+    act(() => {
       uiController.set(recordKey, newRecordChanges);
-      await new Promise((resolve) => window.requestAnimationFrame(resolve));
     });
 
     const uiRecord = uiRecordResult.current;
