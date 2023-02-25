@@ -354,6 +354,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.2.1"\
       ],\
       [\
+        "@iconscout/react-unicons",\
+        "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:1.1.6"\
+      ],\
+      [\
         "@istanbuljs/schema",\
         "npm:0.1.3"\
       ],\
@@ -4247,6 +4251,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@iconscout/react-unicons", [\
+        ["npm:1.1.6", {\
+          "packageLocation": "./.yarn/cache/@iconscout-react-unicons-npm-1.1.6-d0e7c96bff-a9710b748d.zip/node_modules/@iconscout/react-unicons/",\
+          "packageDependencies": [\
+            ["@iconscout/react-unicons", "npm:1.1.6"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:1.1.6", {\
+          "packageLocation": "./.yarn/__virtual__/@iconscout-react-unicons-virtual-2c093d50aa/0/cache/@iconscout-react-unicons-npm-1.1.6-d0e7c96bff-a9710b748d.zip/node_modules/@iconscout/react-unicons/",\
+          "packageDependencies": [\
+            ["@iconscout/react-unicons", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:1.1.6"],\
+            ["@types/react", "npm:18.0.26"],\
+            ["eslint-import-resolver-node", "npm:0.3.7"],\
+            ["prop-types", "npm:15.8.1"],\
+            ["react", "npm:18.2.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@istanbuljs/schema", [\
         ["npm:0.1.3", {\
           "packageLocation": "./.yarn/cache/@istanbuljs-schema-npm-0.1.3-466bd3eaaa-5282759d96.zip/node_modules/@istanbuljs/schema/",\
@@ -4666,6 +4694,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/ui/",\
           "packageDependencies": [\
             ["@pigyuma/ui", "workspace:packages/ui"],\
+            ["@iconscout/react-unicons", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#npm:1.1.6"],\
             ["@pigyuma/react-utility-types", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utility-types"],\
             ["@pigyuma/react-utils", "virtual:bd3c8a146c70fd94d3c01526095dbf8b93c97fde000e033c8b53be00ac39ee01ac25f2536297273a0c28fcf8793ade3fbc2fca3e712b82fa1ded800f7c27db3a#workspace:packages/react-utils"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
