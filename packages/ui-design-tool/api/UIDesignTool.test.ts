@@ -92,6 +92,7 @@ describe('UIDesignTool', () => {
     uiDesignTool.reset([dummyArtboard, dummyShapeLayer, dummyTextLayer]);
   });
 
+  /** @todo 레이어 순서 및 그룹 변경 기능 구현 시: listener 실행을 유발하는 누락된 메서드 추가 */
   describe('subscribeItem', () => {
     test('should bind listener and call when record item changes', () => {
       const listener = vi.fn<[UIRecord | undefined], void>();
@@ -105,9 +106,14 @@ describe('UIDesignTool', () => {
       uiDesignTool.unsubscribeItem(dummyTextLayer.key, listener);
       uiDesignTool.set<TextLayerData>(dummyTextLayer.key, { content: '3' });
       expect(listener).toHaveBeenCalledTimes(2);
+
+      uiDesignTool.subscribeItem(dummyTextLayer.key, listener);
+      uiDesignTool.remove(dummyTextLayer.key);
+      expect(listener).toHaveBeenCalledTimes(3);
     });
   });
 
+  /** @todo 레이어 순서 및 그룹 변경 기능 구현 시: listener 실행을 유발하는 누락된 메서드 추가 */
   describe('subscribeTree', () => {
     test('should bind listener and call when record tree changes', () => {
       const listener = vi.fn<[UIRecord[]], void>();
@@ -121,11 +127,12 @@ describe('UIDesignTool', () => {
       expect(listener).toHaveBeenCalledTimes(5);
 
       uiDesignTool.unsubscribeTree(listener);
-      uiDesignTool.set<TextLayerData>(dummyTextLayer.key, { content: '3' });
+      uiDesignTool.setRect(dummyShapeLayer.key, new UIRecordRect(100, 100, 100, 100, 0));
       expect(listener).toHaveBeenCalledTimes(5);
     });
   });
 
+  /** @todo 레이어 순서 및 그룹 변경 기능 구현 시: listener 실행을 유발하는 누락된 메서드 추가 */
   describe('subscribeSelection', () => {
     test('should bind listener and call when selection changes', () => {
       const listener = vi.fn<[UIRecord[]], void>();

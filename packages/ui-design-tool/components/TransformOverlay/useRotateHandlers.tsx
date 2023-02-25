@@ -5,7 +5,7 @@ import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { cursor } from '@pigyuma/ui/styles/extensions';
-import { calcDegreesBetweenCoords, pick, toDegrees360 } from '@pigyuma/utils';
+import { calcDegreesBetweenCoords, isEqual, pick, toDegrees360 } from '@pigyuma/utils';
 import { UseDataType } from './useData';
 
 export type UseRotateHandlersDependencys = {
@@ -125,8 +125,11 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
     const handleCoordDegrees = rotateHandleCoordDegreesRef.current ?? 0;
 
     const newRect = getTransformedRect(initialRect, mousePoint, handleCoordDegrees);
-    setRef(transformLastRectRef, newRect);
-    uiControllerAPI.setRect(record.key, newRect);
+
+    if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
+      setRef(transformLastRectRef, newRect);
+      uiControllerAPI.setRect(record.key, newRect);
+    }
     setCursor(getRotateCursor(target, mousePoint));
   });
 
