@@ -3,6 +3,9 @@ import getNumberPrecision from './getNumberPrecision';
 import toFixedFraction from './toFixedFraction';
 import toSafeFloat from './toSafeFloat';
 
+const REPEATING_DIGITS = 3;
+const CUTOFF_DIGITS = 2;
+
 /**
  * 부동 소수점 오차가 발생했을 때 계산된 값의 precision은
  * 최대 정수 자릿수인 15부터 최대 소수 자릿수인 17 사이에 해당됨.
@@ -25,8 +28,7 @@ export const MAX_CORRECT_PRECISION = 15;
  * '999...' // 오차로 인한 순환 소수 (최소 3자리)
  * '54' // 오차 값 (2자리)
  */
-const CUTOFF_DIGITS = 2;
-export const MIN_FLOAT_ERROR_DIGITS_PRECISION = 3 + CUTOFF_DIGITS;
+export const MIN_FLOAT_ERROR_DIGITS_PRECISION = REPEATING_DIGITS + CUTOFF_DIGITS;
 
 /**
  * 소수 값의 오차를 보정함.
