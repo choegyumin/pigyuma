@@ -48,7 +48,9 @@ export interface UIDesignToolOptions {
   strict?: boolean;
 }
 
-const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: Canvas.key };
+export const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: Canvas.key };
+
+export const INITIAL_INSTANCE_ID = 'UNKNOWN';
 
 export const INITIAL_BROWSER_META: BrowserMeta = {
   mouse: { clientX: 0, clientY: 0, offsetX: 0, offsetY: 0 },
