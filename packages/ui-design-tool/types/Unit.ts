@@ -1,31 +1,30 @@
 import { mapValues } from '@pigyuma/utils';
 
-export const NumberUnit = {
-  deg: 'deg',
-  em: 'em',
-  numeric: '',
-  percent: '%',
-  px: 'px',
-} as const;
-export type NumberUnit = keyof typeof NumberUnit;
+export enum NumberUnit {
+  deg = 'deg',
+  em = 'em',
+  numeric = '',
+  percent = '%',
+  px = 'px',
+}
+export type NumberUnitKey = keyof typeof NumberUnit;
 export type NumberUnitValue = ValueOf<typeof NumberUnit>;
 
-export const NumberKeyword = {
-  auto: 'auto',
-  fitContent: 'fit-content',
-  inPlace: '0', // `0px`
-  stretch: '-webkit-fill-available', // `stretch`
-} as const;
-export type NumberKeyword = keyof typeof NumberKeyword;
+export enum NumberKeyword {
+  auto = 'auto',
+  fitContent = 'fit-content',
+  inPlace = '0', // `0px`
+  stretch = '-webkit-fill-available', // `stretch`
+}
+export type NumberKeywordKey = keyof typeof NumberKeyword;
 export type NumberKeywordValue = ValueOf<typeof NumberKeyword>;
 
 export const FontSizeLengthTypeValue = {
   percent: NumberUnit.em,
   px: NumberUnit.px,
 };
-export type FontSizeLengthTypeValue = keyof typeof FontSizeLengthTypeValue;
-export const FontSizeLengthType = mapValues(FontSizeLengthTypeValue, (value, key) => key) as { [P in FontSizeLengthTypeValue]: P };
-export type FontSizeLengthType = keyof typeof FontSizeLengthType;
+export type FontSizeLengthTypeKey = keyof typeof FontSizeLengthTypeValue;
+export const FontSizeLengthType = mapValues(FontSizeLengthTypeValue, (value, key) => key) as { [P in FontSizeLengthTypeKey]: P };
 
 export const HeightLengthTypeValue = {
   filled: NumberKeyword.stretch,
@@ -33,35 +32,31 @@ export const HeightLengthTypeValue = {
   percent: NumberUnit.percent,
   px: NumberUnit.px,
 };
-export type HeightLengthTypeValue = keyof typeof HeightLengthTypeValue;
-export const HeightLengthType = mapValues(HeightLengthTypeValue, (value, key) => key) as { [P in HeightLengthTypeValue]: P };
-export type HeightLengthType = keyof typeof HeightLengthType;
+export type HeightLengthTypeKey = keyof typeof HeightLengthTypeValue;
+export const HeightLengthType = mapValues(HeightLengthTypeValue, (value, key) => key) as { [P in HeightLengthTypeKey]: P };
 
 export const RotateLengthTypeValue = {
   deg: NumberUnit.deg,
 };
-export type RotateLengthTypeValue = keyof typeof RotateLengthTypeValue;
-export const RotateLengthType = mapValues(RotateLengthTypeValue, (value, key) => key) as { [P in RotateLengthTypeValue]: P };
-export type RotateLengthType = keyof typeof RotateLengthType;
+export type RotateLengthTypeKey = keyof typeof RotateLengthTypeValue;
+export const RotateLengthType = mapValues(RotateLengthTypeValue, (value, key) => key) as { [P in RotateLengthTypeKey]: P };
 
 export const LetterSpacingLengthTypeValue = {
   percent: NumberUnit.em,
   px: NumberUnit.px,
 };
-export type LetterSpacingLengthTypeValue = keyof typeof LetterSpacingLengthTypeValue;
+export type LetterSpacingLengthTypeKey = keyof typeof LetterSpacingLengthTypeValue;
 export const LetterSpacingLengthType = mapValues(LetterSpacingLengthTypeValue, (value, key) => key) as {
-  [P in LetterSpacingLengthTypeValue]: P;
+  [P in LetterSpacingLengthTypeKey]: P;
 };
-export type LetterSpacingLengthType = keyof typeof LetterSpacingLengthType;
 
 /** @todo Unitless line-height 추가 검토 (typography token이 잘 설계된 서비스는 디자인에서 이를 사용하지 않고, html 기본값 선언에서만 쓰일 듯) */
 export const LineHeightLengthTypeValue = {
   percent: NumberUnit.percent,
   px: NumberUnit.px,
 };
-export type LineHeightLengthTypeValue = keyof typeof LineHeightLengthTypeValue;
-export const LineHeightLengthType = mapValues(LineHeightLengthTypeValue, (value, key) => key) as { [P in LineHeightLengthTypeValue]: P };
-export type LineHeightLengthType = keyof typeof LineHeightLengthType;
+export type LineHeightLengthTypeKey = keyof typeof LineHeightLengthTypeValue;
+export const LineHeightLengthType = mapValues(LineHeightLengthTypeValue, (value, key) => key) as { [P in LineHeightLengthTypeKey]: P };
 
 export const WidthLengthTypeValue = {
   filled: NumberKeyword.stretch,
@@ -69,27 +64,24 @@ export const WidthLengthTypeValue = {
   percent: NumberUnit.percent,
   px: NumberUnit.px,
 };
-export type WidthLengthTypeValue = keyof typeof WidthLengthTypeValue;
-export const WidthLengthType = mapValues(WidthLengthTypeValue, (value, key) => key) as { [P in WidthLengthTypeValue]: P };
-export type WidthLengthType = keyof typeof WidthLengthType;
+export type WidthLengthTypeKey = keyof typeof WidthLengthTypeValue;
+export const WidthLengthType = mapValues(WidthLengthTypeValue, (value, key) => key) as { [P in WidthLengthTypeKey]: P };
 
 export const XLengthTypeValue = {
   auto: NumberKeyword.inPlace,
   percent: NumberUnit.percent,
   px: NumberUnit.px,
 };
-export type XLengthTypeValue = keyof typeof XLengthTypeValue;
-export const XLengthType = mapValues(XLengthTypeValue, (value, key) => key) as { [P in XLengthTypeValue]: P };
-export type XLengthType = keyof typeof XLengthType;
+export type XLengthTypeKey = keyof typeof XLengthTypeValue;
+export const XLengthType = mapValues(XLengthTypeValue, (value, key) => key) as { [P in XLengthTypeKey]: P };
 
 export const YLengthTypeValue = {
   auto: NumberKeyword.inPlace,
   percent: NumberUnit.percent,
   px: NumberUnit.px,
 };
-export type YLengthTypeValue = keyof typeof YLengthTypeValue;
-export const YLengthType = mapValues(YLengthTypeValue, (value, key) => key) as { [P in YLengthTypeValue]: P };
-export type YLengthType = keyof typeof YLengthType;
+export type YLengthTypeKey = keyof typeof YLengthTypeValue;
+export const YLengthType = mapValues(YLengthTypeValue, (value, key) => key) as { [P in YLengthTypeKey]: P };
 
 export const StrokeStylePatternValue = {
   solid: 'solid',
@@ -97,6 +89,5 @@ export const StrokeStylePatternValue = {
   dotted: 'dotted',
   double: 'double',
 };
-export type StrokeStylePatternValue = keyof typeof StrokeStylePatternValue;
-export const StrokeStylePattern = mapValues(StrokeStylePatternValue, (value, key) => key) as { [P in StrokeStylePatternValue]: P };
-export type StrokeStylePattern = keyof typeof StrokeStylePatternValue;
+export type StrokeStylePatternKey = keyof typeof StrokeStylePatternValue;
+export const StrokeStylePattern = mapValues(StrokeStylePatternValue, (value, key) => key) as { [P in StrokeStylePatternKey]: P };
