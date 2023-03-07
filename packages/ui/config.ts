@@ -7,11 +7,11 @@ import {
   colorNeutralTokens,
   colorTextContract,
   colorTextTokens,
-} from './_theme/color.css';
-import { shadowBoxContract, shadowBoxTokens } from './_theme/shadow.css';
-import { spacingScaleContract, spacingScaleTokens } from './_theme/spacing.css';
-import { systemBaseContract, systemBaseTokens, systemInteractionContract, systemInteractionTokens } from './_theme/system.css';
-import { GlobalThemeTokens } from './_theme/types';
+} from './css/_theme/color.css';
+import { shadowBoxContract, shadowBoxTokens } from './css/_theme/shadow.css';
+import { spacingScaleContract, spacingScaleTokens } from './css/_theme/spacing.css';
+import { systemBaseContract, systemBaseTokens, systemInteractionContract, systemInteractionTokens } from './css/_theme/system.css';
+import { GlobalThemeTokens } from './css/_theme/types';
 import {
   typographyBaseContract,
   typographyBaseTokens,
@@ -19,7 +19,7 @@ import {
   typographyFontFamilyTokens,
   typographyStylesContract,
   typographyStylesTokens,
-} from './_theme/typography.css';
+} from './css/_theme/typography.css';
 
 export const customizeTheme = (tokens: DeepPartial<GlobalThemeTokens>) => {
   const tokensModules = [

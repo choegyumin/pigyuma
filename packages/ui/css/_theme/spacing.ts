@@ -1,4 +1,4 @@
-import { calc } from '@/styles/extensions';
+import { calc } from '@/extensions';
 import spacingTokens from './spacing.css';
 
 export default function spacing(level: number) {

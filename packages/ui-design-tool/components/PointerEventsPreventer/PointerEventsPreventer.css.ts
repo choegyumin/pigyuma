@@ -1,4 +1,4 @@
-import { getVarNames } from '@pigyuma/ui/styles/extensions';
+import { getVarNames } from '@pigyuma/ui/extensions';
 import { createVar, style } from '@vanilla-extract/css';
 
 export const vars = {

@@ -1,5 +1,5 @@
-import foundations from '@/styles/foundations';
 import { globalStyle } from '@vanilla-extract/css';
+import foundations from '@/foundations';
 
 const BUTTON_INPUT_TYPE_SELECTOR = '[type="button" i], [type="image" i], [type="reset" i], [type="submit" i]';
 const IMAEG_BUTTON_INPUT_TYPE_SELECTOR = '[type="button" i], [type="image" i], [type="reset" i], [type="submit" i]';

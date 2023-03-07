@@ -11,10 +11,11 @@
 
 ##### Styles
 
-1. Globals
+1. Globals(`css`)
    1. Generic
    1. Vendor
-1. Components & Patterns(ITCSS Objects)
+1. Patterns(ITCSS Objects)
+1. Components
 1. Pages
 
 ---

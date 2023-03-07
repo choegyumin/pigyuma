@@ -1,6 +1,6 @@
-import { Box } from '@pigyuma/ui';
 import { useUIData } from '@pigyuma/ui-design-tool';
-import mixins from '@pigyuma/ui/styles/mixins';
+import mixins from '@pigyuma/ui/mixins';
+import { Box } from '@pigyuma/ui/patterns';
 import clsx from 'clsx';
 import React from 'react';
 import LayerList from './LayerList';

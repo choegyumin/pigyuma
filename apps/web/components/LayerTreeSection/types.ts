@@ -1,5 +1,5 @@
-import { ComponentPropsByBox, ComponentRefByBox } from '@pigyuma/ui';
 import { Artboard, ShapeLayer, TextLayer } from '@pigyuma/ui-design-tool';
+import { ComponentPropsByBox, ComponentRefByBox } from '@pigyuma/ui/patterns';
 
 export type LayerTreeSectionProps = ComponentPropsByBox<'div'>;
 export type LayerTreeSectionRef = ComponentRefByBox<'div'>;

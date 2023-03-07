@@ -13,40 +13,45 @@ module.exports = {
         pathGroups: [
           /**
            * CSS Selector Declaration Order
-           * @see {@link ./styles/README.md}
+           * @see {@link ./css/README.md}
            */
           {
-            pattern: '~/ui/styles/config',
+            pattern: '@/config',
             group: 'internal',
             position: 'after',
           },
           {
-            pattern: '~/ui/styles/extensions',
+            pattern: '@/extensions',
             group: 'internal',
             position: 'after',
           },
           {
-            pattern: '~/ui/styles/foundations',
+            pattern: '@/foundations',
             group: 'internal',
             position: 'after',
           },
           {
-            pattern: '~/ui/styles/mixins',
+            pattern: '@/mixins',
             group: 'internal',
             position: 'after',
           },
           {
-            pattern: '~/ui/styles/globals',
+            pattern: '@/css',
             group: 'internal',
             position: 'after',
           },
           {
-            pattern: '~/ui/styles/patterns',
+            pattern: '@/primitives',
             group: 'internal',
             position: 'after',
           },
           {
-            pattern: '~/ui/styles/components',
+            pattern: '@/patterns',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: '@/components',
             group: 'internal',
             position: 'after',
           },

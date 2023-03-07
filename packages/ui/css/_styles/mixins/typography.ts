@@ -1,4 +1,4 @@
-import foundations from '@/styles/foundations';
+import foundations from '@/foundations';
 
 export const textBodyFn = () => foundations.typography.styles.body;
 

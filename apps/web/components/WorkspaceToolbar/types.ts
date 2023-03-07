@@ -1,4 +1,4 @@
-import { ComponentPropsByBox } from '@pigyuma/ui';
+import { ComponentPropsByBox } from '@pigyuma/ui/patterns';
 import Toolbar from '../Toolbar';
 
 export type WorkspaceToolbarProps = ComponentPropsByBox<typeof Toolbar>;

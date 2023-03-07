@@ -4,7 +4,7 @@ import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
-import { cursor } from '@pigyuma/ui/styles/extensions';
+import { cursor } from '@pigyuma/ui/extensions';
 import { calcDegreesBetweenCoords, isEqual, pick, toDegrees360 } from '@pigyuma/utils';
 import { UseDataType } from './useData';
 

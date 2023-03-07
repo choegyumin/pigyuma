@@ -4,7 +4,7 @@ import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { setRef, useEvent } from '@pigyuma/react-utils';
-import { cursor } from '@pigyuma/ui/styles/extensions';
+import { cursor } from '@pigyuma/ui/extensions';
 import { calcCoordByDistance, calcDistancePointFromLine, isEqual, pick } from '@pigyuma/utils';
 import { HandlePlacement } from './types';
 import { UseDataType } from './useData';
