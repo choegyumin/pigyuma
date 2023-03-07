@@ -4,7 +4,7 @@ import { Layer, LayerArgs, LayerData } from '@/api/Layer/model';
 import { ShapeLayer, ShapeLayerArgs, ShapeLayerData, ShapeType } from '@/api/ShapeLayer/model';
 import { TextLayer, TextLayerArgs, TextLayerData } from '@/api/TextLayer/model';
 import { UIRecord, UIRecordArgs, UIRecordData } from '@/api/UIRecord/model';
-import { CanvasKey, LayerType, UIRecordType } from '@/types/Identifier';
+import { LayerType, UIRecordType } from '@/types/Identifier';
 import { NumberUnit, StrokeStylePattern } from '@/types/Unit';
 import { cloneDeep } from '@pigyuma/utils';
 import {
@@ -216,7 +216,7 @@ describe('flatUIRecords', () => {
     const e = canvas.children[1].children[0].children[1];
     const f = canvas.children[1].children[0].children[1].children[0];
     expect(flatUIRecords(tree).size).toEqual(7);
-    expect(flatUIRecords(tree).get(CanvasKey)).toBe(canvas);
+    expect(flatUIRecords(tree).get(Canvas.key)).toBe(canvas);
     expect(flatUIRecords(tree).get('a')).toBe(a);
     expect(flatUIRecords(tree).get('b')).toBe(b);
     expect(flatUIRecords(tree).get('c')).toBe(c);

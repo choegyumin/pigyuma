@@ -7,9 +7,6 @@ export const UIRecordType = {
 } as const;
 export type UIRecordType = keyof typeof UIRecordType;
 
-export const CanvasKey = '#canvas' as const;
-export type CanvasKey = typeof CanvasKey;
-
 export const LayerType = {
   /** @see ShapeType */
   shape: 'shape',
