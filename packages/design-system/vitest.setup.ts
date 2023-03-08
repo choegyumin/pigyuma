@@ -5,9 +5,3 @@
  * learn more: @see {@link https://github.com/testing-library/jest-dom}
  */
 import '@testing-library/jest-dom';
-
-/**
- * Geometry Interfaces Module Level 1
- * @see {@link https://www.w3.org/TR/geometry-1/}
- */
-import 'geometry-polyfill';

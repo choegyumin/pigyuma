@@ -11,12 +11,12 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@pigyuma/css-utils": "*",
     "@pigyuma/design-system": "*",
     "@pigyuma/react-utility-types": "*",
     "@pigyuma/react-utils": "*",
     "@pigyuma/utils": "*",
     "@vanilla-extract/css": "^1.9.2",
-    "@vanilla-extract/private": "^1.0.3",
     "clsx": "^1.2.1",
     "constate": "^3.3.2",
     "react": "^18.2.0",

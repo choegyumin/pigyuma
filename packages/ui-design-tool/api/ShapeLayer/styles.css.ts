@@ -1,6 +1,7 @@
 import { UIRecordStyleVarNames, UIRecordStyleVars } from '@/types/Style';
+import { createVar } from '@pigyuma/css-utils';
 import { mapEntries, pick } from '@pigyuma/utils';
-import { createVar, globalStyle, style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
 const pickedVars = ['x', 'y', 'width', 'height', 'rotate', 'strokeColor', 'strokePattern', 'strokeWidth', 'background'] as const;
 

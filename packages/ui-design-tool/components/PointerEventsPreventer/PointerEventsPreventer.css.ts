@@ -1,5 +1,5 @@
-import { getVarNames } from '@pigyuma/design-system/extensions';
-import { createVar, style } from '@vanilla-extract/css';
+import { createVar, getVarNames } from '@pigyuma/css-utils';
+import { style } from '@vanilla-extract/css';
 
 export const vars = {
   cursor: createVar(),

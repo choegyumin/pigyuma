@@ -1,14 +1,14 @@
-import reactPlugin from '@vitejs/plugin-react';
+const { vanillaExtractPlugin } = require('@vanilla-extract/vite-plugin');
 const { defineConfig } = require('vitest/config');
 const { createWorkspacesAlias } = require('../../tools/vitest/snippets');
 
 module.exports = defineConfig({
-  plugins: [reactPlugin()],
+  plugins: [vanillaExtractPlugin()],
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'node',
     setupFiles: ['./vitest.setup.ts'],
-    alias: [...createWorkspacesAlias('packages/react-utils')],
+    alias: [...createWorkspacesAlias('packages/css-utils')],
     coverage: { provider: 'c8', reporter: ['text', 'html', 'lcovonly'] },
   },
 });

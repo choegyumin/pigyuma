@@ -1,4 +1,4 @@
-import { calc } from '@/extensions';
+import { calc } from '@pigyuma/css-utils';
 import spacingTokens from './spacing.css';
 
 export default function spacing(level: number) {

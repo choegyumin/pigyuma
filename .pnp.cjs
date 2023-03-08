@@ -20,6 +20,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/web"\
       },\
       {\
+        "name": "@pigyuma/css-utils",\
+        "reference": "workspace:packages/css-utils"\
+      },\
+      {\
         "name": "@pigyuma/design-system",\
         "reference": "workspace:packages/design-system"\
       },\
@@ -47,6 +51,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
+      ["@pigyuma/css-utils", ["workspace:packages/css-utils"]],\
       ["@pigyuma/design-system", ["workspace:packages/design-system"]],\
       ["@pigyuma/react-utility-types", ["virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utility-types", "workspace:packages/react-utility-types"]],\
       ["@pigyuma/react-utils", ["virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utils", "workspace:packages/react-utils"]],\
@@ -474,6 +479,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.0.1"\
       ],\
       [\
+        "@pigyuma/css-utils",\
+        "workspace:packages/css-utils"\
+      ],\
+      [\
         "@pigyuma/design-system",\
         "workspace:packages/design-system"\
       ],\
@@ -743,7 +752,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@vanilla-extract/vite-plugin",\
-        "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.7.1"\
+        "virtual:29268c701f14bfa20c8645fcfb47fda9b7ee497cc2e91ac1ffaec9efcf9ee7f7677fff6fb7b56ccd195770cbc6d6c9bacac724753efc700f2f5ba342e8622099#npm:3.7.1"\
       ],\
       [\
         "@vanilla-extract/webpack-plugin",\
@@ -2475,7 +2484,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "postcss-load-config",\
-        "virtual:9d0e84742b0ff1782be531365841baf9ecfd35dab55a518f5e447395e13882d043e6311bf99d471decaf90ed7919f2277a16b086a95f530201f737f0934c0bd0#npm:3.1.4"\
+        "virtual:00a3763910a0e92b19666b8fb487b12c1b348aae69fd1d11102c95c9e8d621037203898f5e94916612e0158a05b9bc2eee87ef78ff97d63ec506d2a68f8559ae#npm:3.1.4"\
       ],\
       [\
         "prelude-ls",\
@@ -4576,12 +4585,37 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@pigyuma/css-utils", [\
+        ["workspace:packages/css-utils", {\
+          "packageLocation": "./packages/css-utils/",\
+          "packageDependencies": [\
+            ["@pigyuma/css-utils", "workspace:packages/css-utils"],\
+            ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
+            ["@pigyuma/utils", "workspace:packages/utils"],\
+            ["@types/color", "npm:3.0.3"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["@vanilla-extract/css", "npm:1.9.2"],\
+            ["@vanilla-extract/css-utils", "npm:0.1.3"],\
+            ["@vanilla-extract/private", "npm:1.0.3"],\
+            ["@vanilla-extract/vite-plugin", "virtual:29268c701f14bfa20c8645fcfb47fda9b7ee497cc2e91ac1ffaec9efcf9ee7f7677fff6fb7b56ccd195770cbc6d6c9bacac724753efc700f2f5ba342e8622099#npm:3.7.1"],\
+            ["@vitest/coverage-c8", "npm:0.28.4"],\
+            ["@vitest/ui", "npm:0.28.4"],\
+            ["color", "npm:4.2.3"],\
+            ["csstype", "npm:3.1.1"],\
+            ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"],\
+            ["vite", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:4.0.4"],\
+            ["vitest", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:0.27.3"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@pigyuma/design-system", [\
         ["workspace:packages/design-system", {\
           "packageLocation": "./packages/design-system/",\
           "packageDependencies": [\
             ["@pigyuma/design-system", "workspace:packages/design-system"],\
             ["@iconscout/react-unicons", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:1.1.6"],\
+            ["@pigyuma/css-utils", "workspace:packages/css-utils"],\
             ["@pigyuma/react-utility-types", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utility-types"],\
             ["@pigyuma/react-utils", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utils"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
@@ -4597,16 +4631,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:18.0.10"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@vanilla-extract/css", "npm:1.9.2"],\
-            ["@vanilla-extract/css-utils", "npm:0.1.3"],\
-            ["@vanilla-extract/private", "npm:1.0.3"],\
-            ["@vanilla-extract/vite-plugin", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.7.1"],\
+            ["@vanilla-extract/vite-plugin", "virtual:29268c701f14bfa20c8645fcfb47fda9b7ee497cc2e91ac1ffaec9efcf9ee7f7677fff6fb7b56ccd195770cbc6d6c9bacac724753efc700f2f5ba342e8622099#npm:3.7.1"],\
             ["@vitejs/plugin-react", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.0.1"],\
             ["@vitest/coverage-c8", "npm:0.28.4"],\
             ["@vitest/ui", "npm:0.28.4"],\
             ["clsx", "npm:1.2.1"],\
             ["color", "npm:4.2.3"],\
             ["csstype", "npm:3.1.1"],\
-            ["geometry-polyfill", "npm:1.0.7"],\
             ["jsdom", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:20.0.3"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:18.2.0"],\
@@ -4735,6 +4766,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/ui-design-tool/",\
           "packageDependencies": [\
             ["@pigyuma/ui-design-tool", "workspace:packages/ui-design-tool"],\
+            ["@pigyuma/css-utils", "workspace:packages/css-utils"],\
             ["@pigyuma/design-system", "workspace:packages/design-system"],\
             ["@pigyuma/react-utility-types", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utility-types"],\
             ["@pigyuma/react-utils", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utils"],\
@@ -4750,8 +4782,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:18.0.10"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@vanilla-extract/css", "npm:1.9.2"],\
-            ["@vanilla-extract/private", "npm:1.0.3"],\
-            ["@vanilla-extract/vite-plugin", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.7.1"],\
+            ["@vanilla-extract/vite-plugin", "virtual:29268c701f14bfa20c8645fcfb47fda9b7ee497cc2e91ac1ffaec9efcf9ee7f7677fff6fb7b56ccd195770cbc6d6c9bacac724753efc700f2f5ba342e8622099#npm:3.7.1"],\
             ["@vitejs/plugin-react", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.0.1"],\
             ["@vitest/coverage-c8", "npm:0.28.4"],\
             ["@vitest/ui", "npm:0.28.4"],\
@@ -5755,15 +5786,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.7.1", {\
-          "packageLocation": "./.yarn/__virtual__/@vanilla-extract-vite-plugin-virtual-9d0e84742b/0/cache/@vanilla-extract-vite-plugin-npm-3.7.1-830afedf78-47b969466d.zip/node_modules/@vanilla-extract/vite-plugin/",\
+        ["virtual:29268c701f14bfa20c8645fcfb47fda9b7ee497cc2e91ac1ffaec9efcf9ee7f7677fff6fb7b56ccd195770cbc6d6c9bacac724753efc700f2f5ba342e8622099#npm:3.7.1", {\
+          "packageLocation": "./.yarn/__virtual__/@vanilla-extract-vite-plugin-virtual-00a3763910/0/cache/@vanilla-extract-vite-plugin-npm-3.7.1-830afedf78-47b969466d.zip/node_modules/@vanilla-extract/vite-plugin/",\
           "packageDependencies": [\
-            ["@vanilla-extract/vite-plugin", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.7.1"],\
+            ["@vanilla-extract/vite-plugin", "virtual:29268c701f14bfa20c8645fcfb47fda9b7ee497cc2e91ac1ffaec9efcf9ee7f7677fff6fb7b56ccd195770cbc6d6c9bacac724753efc700f2f5ba342e8622099#npm:3.7.1"],\
             ["@types/vite", null],\
             ["@vanilla-extract/integration", "npm:6.0.2"],\
             ["outdent", "npm:0.8.0"],\
             ["postcss", "npm:8.4.21"],\
-            ["postcss-load-config", "virtual:9d0e84742b0ff1782be531365841baf9ecfd35dab55a518f5e447395e13882d043e6311bf99d471decaf90ed7919f2277a16b086a95f530201f737f0934c0bd0#npm:3.1.4"],\
+            ["postcss-load-config", "virtual:00a3763910a0e92b19666b8fb487b12c1b348aae69fd1d11102c95c9e8d621037203898f5e94916612e0158a05b9bc2eee87ef78ff97d63ec506d2a68f8559ae#npm:3.1.4"],\
             ["vite", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:4.0.4"]\
           ],\
           "packagePeers": [\
@@ -11421,10 +11452,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:9d0e84742b0ff1782be531365841baf9ecfd35dab55a518f5e447395e13882d043e6311bf99d471decaf90ed7919f2277a16b086a95f530201f737f0934c0bd0#npm:3.1.4", {\
-          "packageLocation": "./.yarn/__virtual__/postcss-load-config-virtual-d0b2141667/0/cache/postcss-load-config-npm-3.1.4-1cb8a7e276-1c589504c2.zip/node_modules/postcss-load-config/",\
+        ["virtual:00a3763910a0e92b19666b8fb487b12c1b348aae69fd1d11102c95c9e8d621037203898f5e94916612e0158a05b9bc2eee87ef78ff97d63ec506d2a68f8559ae#npm:3.1.4", {\
+          "packageLocation": "./.yarn/__virtual__/postcss-load-config-virtual-69e9473b75/0/cache/postcss-load-config-npm-3.1.4-1cb8a7e276-1c589504c2.zip/node_modules/postcss-load-config/",\
           "packageDependencies": [\
-            ["postcss-load-config", "virtual:9d0e84742b0ff1782be531365841baf9ecfd35dab55a518f5e447395e13882d043e6311bf99d471decaf90ed7919f2277a16b086a95f530201f737f0934c0bd0#npm:3.1.4"],\
+            ["postcss-load-config", "virtual:00a3763910a0e92b19666b8fb487b12c1b348aae69fd1d11102c95c9e8d621037203898f5e94916612e0158a05b9bc2eee87ef78ff97d63ec506d2a68f8559ae#npm:3.1.4"],\
             ["@types/postcss", null],\
             ["@types/ts-node", null],\
             ["lilconfig", "npm:2.0.6"],\
@@ -13568,6 +13599,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["web", "workspace:apps/web"],\
             ["@babel/core", "npm:7.20.2"],\
+            ["@pigyuma/css-utils", "workspace:packages/css-utils"],\
             ["@pigyuma/design-system", "workspace:packages/design-system"],\
             ["@pigyuma/react-utility-types", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utility-types"],\
             ["@pigyuma/react-utils", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utils"],\
@@ -13585,8 +13617,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@vanilla-extract/css", "npm:1.9.2"],\
             ["@vanilla-extract/next-plugin", "virtual:e293270790bda2411a3626e57e15862403457209cbe755a222c752c37c8f53870ac5708914fca9c46ad11f81505a4af613c8b5e4bba765909191bb5f14d3b656#npm:2.1.1"],\
-            ["@vanilla-extract/private", "npm:1.0.3"],\
-            ["@vanilla-extract/vite-plugin", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.7.1"],\
+            ["@vanilla-extract/vite-plugin", "virtual:29268c701f14bfa20c8645fcfb47fda9b7ee497cc2e91ac1ffaec9efcf9ee7f7677fff6fb7b56ccd195770cbc6d6c9bacac724753efc700f2f5ba342e8622099#npm:3.7.1"],\
             ["@vitejs/plugin-react", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.0.1"],\
             ["@vitest/coverage-c8", "npm:0.28.4"],\
             ["@vitest/ui", "npm:0.28.4"],\

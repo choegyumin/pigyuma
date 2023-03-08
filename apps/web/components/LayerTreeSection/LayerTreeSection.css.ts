@@ -1,4 +1,4 @@
-import { createVar, getVarNames } from '@pigyuma/design-system/extensions';
+import { createVar, getVarNames } from '@pigyuma/css-utils';
 import foundations from '@pigyuma/design-system/foundations';
 import mixins from '@pigyuma/design-system/mixins';
 import { style, styleVariants } from '@vanilla-extract/css';
