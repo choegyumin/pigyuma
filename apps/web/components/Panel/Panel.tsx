@@ -1,4 +1,4 @@
-import { Box } from '@pigyuma/ui';
+import { Box } from '@pigyuma/design-system/patterns';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './Panel.css';

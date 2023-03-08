@@ -1,11 +1,9 @@
 import { Canvas } from '@/api/Canvas/model';
-import { BrowserMeta, INITIAL_BROWSER_META, UIDesignTool, UIDesignToolStatus } from '@/api/UIDesignTool';
+import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool, UIDesignToolStatus } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
-const INITIAL_INSTANCE_ID = 'UNKNOWN';
 
 export default function useContextValue(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;

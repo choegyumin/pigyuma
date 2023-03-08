@@ -1,4 +1,4 @@
-import { CanvasKey, UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
+import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { clone } from '@pigyuma/utils';
 import { Artboard, ArtboardJSON, ArtboardData } from '../Artboard/model';
 import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
@@ -24,13 +24,14 @@ export interface CanvasArgs {
 }
 
 export class Canvas extends UIRecord implements CanvasJSON {
+  static key = '#canvas' as const;
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'canvas'>;
   readonly children: Array<Artboard | ShapeLayer | TextLayer>;
 
   constructor(args: CanvasArgs) {
     const superArgs = clone(args) as UIRecordArgs;
-    superArgs.key = CanvasKey;
+    superArgs.key = Canvas.key;
     superArgs.type = UIRecordType.canvas;
 
     super(superArgs);

@@ -1,4 +1,4 @@
-import { UIRecordType, CanvasKey } from '@/types/Identifier';
+import { UIRecordType } from '@/types/Identifier';
 import { Canvas, CanvasJSON } from './model';
 
 describe('Canvas', () => {
@@ -6,13 +6,13 @@ describe('Canvas', () => {
   const canvasArgs = { children: [] };
   const canvasJSON: CanvasJSON = {
     ...canvasArgs,
-    key: CanvasKey,
+    key: Canvas.key,
     type: canvasType,
   };
   const canvas = new Canvas({ ...canvasArgs });
 
   test('should create instance', () => {
-    expect(canvas.key).toBe(CanvasKey);
+    expect(canvas.key).toBe(Canvas.key);
     expect(canvas.type).toBe(canvasType);
   });
 

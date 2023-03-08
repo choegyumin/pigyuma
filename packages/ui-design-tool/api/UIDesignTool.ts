@@ -1,6 +1,5 @@
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import {
-  CanvasKey,
   UIDesignToolIDAttributeName,
   UIRecordElementDataset,
   UIRecordElementFilter,
@@ -49,7 +48,9 @@ export interface UIDesignToolOptions {
   strict?: boolean;
 }
 
-const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: CanvasKey };
+export const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: Canvas.key };
+
+export const INITIAL_INSTANCE_ID = 'UNKNOWN';
 
 export const INITIAL_BROWSER_META: BrowserMeta = {
   mouse: { clientX: 0, clientY: 0, offsetX: 0, offsetY: 0 },
@@ -138,7 +139,7 @@ export class UIDesignTool {
   }
 
   get #canvas(): Canvas {
-    return this.#items.get(CanvasKey) as Canvas;
+    return this.#items.get(Canvas.key) as Canvas;
   }
 
   get status(): UIDesignToolStatus {

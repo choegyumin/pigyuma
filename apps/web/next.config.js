@@ -8,7 +8,7 @@ const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
   experimental: {
-    transpilePackages: ['@pigyuma/ui'],
+    transpilePackages: ['@pigyuma/design-system'],
   },
   webpack(config, options) {
     const { dev, isServer } = options;

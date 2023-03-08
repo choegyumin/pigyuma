@@ -1,5 +1,5 @@
+import { Icon } from '@pigyuma/design-system/components';
 import { useEvent, useForkedRef } from '@pigyuma/react-utils';
-import { Icon } from '@pigyuma/ui';
 import { Artboard, TextLayer, useUIController, useUIData, useUISubscription } from '@pigyuma/ui-design-tool';
 import { hasUIRecordChildren } from '@pigyuma/ui-design-tool/utils/model';
 import clsx from 'clsx';

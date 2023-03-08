@@ -5,7 +5,7 @@ import { UIRecord } from '@/api/UIRecord/model';
 import { useStatus, useUIElement } from '@/hooks';
 import { UIRecordRect } from '@/types/Geometry';
 import { isRotatableUIRecord } from '@/utils/model';
-import { cursor } from '@pigyuma/ui/styles/extensions';
+import { cursor } from '@pigyuma/design-system/extensions';
 import { toDegrees360 } from '@pigyuma/utils';
 import { useCallback } from 'react';
 import * as styles from './TransformOverlay.css';

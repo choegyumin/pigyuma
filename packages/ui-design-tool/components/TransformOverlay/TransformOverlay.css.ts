@@ -1,6 +1,6 @@
-import { getVarNames } from '@pigyuma/ui/styles/extensions';
-import foundations from '@pigyuma/ui/styles/foundations';
-import { createVar, style, styleVariants } from '@vanilla-extract/css';
+import { createVar, getVarNames } from '@pigyuma/css-utils';
+import foundations from '@pigyuma/design-system/foundations';
+import { style, styleVariants } from '@vanilla-extract/css';
 
 export const vars = {
   x: createVar(),

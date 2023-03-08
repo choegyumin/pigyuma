@@ -14,10 +14,11 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 #### Packages
 
+- `@pigyuma/css-utils`: shared CSS-related utility functions.
+- `@pigyuma/design-system`: CSS framework with React component library for design system.
 - `@pigyuma/react-utility-types`: utility types for react.
-- `@pigyuma/react-utils`: shared react utilities and custom hooks.
+- `@pigyuma/react-utils`: shared react utility functions and custom hooks.
 - `@pigyuma/tsconfig`: `tsconfig.json`s used throughout the monorepo.
-- `@pigyuma/ui`: CSS framework with React component library used by apps.
 - `@pigyuma/utils`: utility functions like `lodash`.
 
 #### Tools

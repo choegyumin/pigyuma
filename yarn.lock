@@ -1146,6 +1146,65 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pigyuma/css-utils@*, @pigyuma/css-utils@workspace:packages/css-utils":
+  version: 0.0.0-use.local
+  resolution: "@pigyuma/css-utils@workspace:packages/css-utils"
+  dependencies:
+    "@pigyuma/tsconfig": "*"
+    "@pigyuma/utils": "*"
+    "@types/color": ^3
+    "@types/node": ^18
+    "@vanilla-extract/css": ^1.9.2
+    "@vanilla-extract/css-utils": ^0.1.3
+    "@vanilla-extract/private": ^1.0.3
+    "@vanilla-extract/vite-plugin": ^3.7.0
+    "@vitest/coverage-c8": ^0.28.4
+    "@vitest/ui": ^0.28.4
+    color: ^4.2.3
+    csstype: ^3.1.1
+    typescript: ^4.7.4
+    vite: ^4.0.4
+    vitest: ^0.27.1
+  languageName: unknown
+  linkType: soft
+
+"@pigyuma/design-system@*, @pigyuma/design-system@workspace:packages/design-system":
+  version: 0.0.0-use.local
+  resolution: "@pigyuma/design-system@workspace:packages/design-system"
+  dependencies:
+    "@iconscout/react-unicons": ^1.1.6
+    "@pigyuma/css-utils": "*"
+    "@pigyuma/react-utility-types": "*"
+    "@pigyuma/react-utils": "*"
+    "@pigyuma/tsconfig": "*"
+    "@pigyuma/utils": "*"
+    "@testing-library/dom": ^8.20.0
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": ^13.4.0
+    "@testing-library/user-event": ^14.4.3
+    "@types/color": ^3
+    "@types/jsdom": ^20
+    "@types/node": ^18
+    "@types/react": ^18
+    "@types/react-dom": ^18
+    "@types/testing-library__jest-dom": ^5
+    "@vanilla-extract/css": ^1.9.2
+    "@vanilla-extract/vite-plugin": ^3.7.0
+    "@vitejs/plugin-react": ^3.0.1
+    "@vitest/coverage-c8": ^0.28.4
+    "@vitest/ui": ^0.28.4
+    clsx: ^1.2.1
+    color: ^4.2.3
+    csstype: ^3.1.1
+    jsdom: ^20.0.3
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    typescript: ^4.7.4
+    vite: ^4.0.4
+    vitest: ^0.27.1
+  languageName: unknown
+  linkType: soft
+
 "@pigyuma/react-utility-types@*, @pigyuma/react-utility-types@workspace:packages/react-utility-types":
   version: 0.0.0-use.local
   resolution: "@pigyuma/react-utility-types@workspace:packages/react-utility-types"
@@ -1206,10 +1265,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pigyuma/ui-design-tool@workspace:packages/ui-design-tool"
   dependencies:
+    "@pigyuma/css-utils": "*"
+    "@pigyuma/design-system": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/react-utils": "*"
     "@pigyuma/tsconfig": "*"
-    "@pigyuma/ui": "*"
     "@pigyuma/utils": "*"
     "@testing-library/dom": ^8.20.0
     "@testing-library/jest-dom": ^5.16.5
@@ -1221,52 +1281,12 @@ __metadata:
     "@types/react-dom": ^18
     "@types/testing-library__jest-dom": ^5
     "@vanilla-extract/css": ^1.9.2
-    "@vanilla-extract/private": ^1.0.3
     "@vanilla-extract/vite-plugin": ^3.7.0
     "@vitejs/plugin-react": ^3.0.1
     "@vitest/coverage-c8": ^0.28.4
     "@vitest/ui": ^0.28.4
     clsx: ^1.2.1
     constate: ^3.3.2
-    csstype: ^3.1.1
-    geometry-polyfill: ^1.0.7
-    jsdom: ^20.0.3
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    typescript: ^4.7.4
-    vite: ^4.0.4
-    vitest: ^0.27.1
-  languageName: unknown
-  linkType: soft
-
-"@pigyuma/ui@*, @pigyuma/ui@workspace:packages/ui":
-  version: 0.0.0-use.local
-  resolution: "@pigyuma/ui@workspace:packages/ui"
-  dependencies:
-    "@iconscout/react-unicons": ^1.1.6
-    "@pigyuma/react-utility-types": "*"
-    "@pigyuma/react-utils": "*"
-    "@pigyuma/tsconfig": "*"
-    "@pigyuma/utils": "*"
-    "@testing-library/dom": ^8.20.0
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": ^13.4.0
-    "@testing-library/user-event": ^14.4.3
-    "@types/color": ^3
-    "@types/jsdom": ^20
-    "@types/node": ^18
-    "@types/react": ^18
-    "@types/react-dom": ^18
-    "@types/testing-library__jest-dom": ^5
-    "@vanilla-extract/css": ^1.9.2
-    "@vanilla-extract/css-utils": ^0.1.3
-    "@vanilla-extract/private": ^1.0.3
-    "@vanilla-extract/vite-plugin": ^3.7.0
-    "@vitejs/plugin-react": ^3.0.1
-    "@vitest/coverage-c8": ^0.28.4
-    "@vitest/ui": ^0.28.4
-    clsx: ^1.2.1
-    color: ^4.2.3
     csstype: ^3.1.1
     geometry-polyfill: ^1.0.7
     jsdom: ^20.0.3
@@ -8764,10 +8784,11 @@ turbo@latest:
   resolution: "web@workspace:apps/web"
   dependencies:
     "@babel/core": ^7.0.0
+    "@pigyuma/css-utils": "*"
+    "@pigyuma/design-system": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/react-utils": "*"
     "@pigyuma/tsconfig": "*"
-    "@pigyuma/ui": "*"
     "@pigyuma/ui-design-tool": "*"
     "@pigyuma/utils": "*"
     "@testing-library/dom": ^8.20.0
@@ -8781,7 +8802,6 @@ turbo@latest:
     "@types/testing-library__jest-dom": ^5
     "@vanilla-extract/css": ^1.9.2
     "@vanilla-extract/next-plugin": ^2.1.1
-    "@vanilla-extract/private": ^1.0.3
     "@vanilla-extract/vite-plugin": ^3.7.0
     "@vitejs/plugin-react": ^3.0.1
     "@vitest/coverage-c8": ^0.28.4

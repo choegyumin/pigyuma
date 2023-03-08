@@ -10,7 +10,7 @@ const rootDir = (...paths) => path.resolve(__dirname, ...paths);
 const appRootRegExp = new RegExp('^~/');
 const packageRootRegExp = new RegExp('^@/');
 
-const packageNames = ['react-utility-types', 'react-utils', 'ui', 'ui-design-tool', 'utils'];
+const packageNames = ['css-utils', 'design-system', 'react-utility-types', 'react-utils', 'ui-design-tool', 'utils'];
 
 const findResolvedFilePath = (baseDir, targetPath) => {
   // 확장자가 없거나, path 바로 뒤에 붙어 있는 경로만 추출

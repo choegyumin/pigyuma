@@ -3,8 +3,8 @@ import { useBrowserMeta, useDispatcher, useItemReference, useStatus, useUIContro
 import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
+import { cursor } from '@pigyuma/design-system/extensions';
 import { setRef, useEvent } from '@pigyuma/react-utils';
-import { cursor } from '@pigyuma/ui/styles/extensions';
 import { calcCoordByDistance, calcDistancePointFromLine, isEqual, pick } from '@pigyuma/utils';
 import { HandlePlacement } from './types';
 import { UseDataType } from './useData';
