@@ -11,7 +11,7 @@ module.exports = defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
-    alias: [...createWorkspacesAlias('packages/ui')],
+    alias: [...createWorkspacesAlias('packages/design-system')],
     exclude: [...configDefaults.exclude, ...exclude],
     coverage: { provider: 'c8', reporter: ['text', 'html', 'lcovonly'], exclude: [...configDefaults.coverage.exclude, ...exclude] },
   },

@@ -1,4 +1,4 @@
-import { DynamicComponentByBox, DynamicComponentPropsByBox } from '@pigyuma/ui/patterns';
+import { DynamicComponentByBox, DynamicComponentPropsByBox } from '@pigyuma/design-system/patterns';
 import React from 'react';
 
 type CustomProps = React.HTMLAttributes<HTMLElement> & {

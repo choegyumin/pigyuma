@@ -1,5 +1,5 @@
+import { Box } from '@pigyuma/design-system/patterns';
 import { UIDesignCanvas } from '@pigyuma/ui-design-tool';
-import { Box } from '@pigyuma/ui/patterns';
 import clsx from 'clsx';
 import React from 'react';
 import ControlPanel from '~/components/ControlPanel';

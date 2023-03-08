@@ -1,4 +1,4 @@
-import { createGlobalVar } from '@pigyuma/ui/extensions';
+import { createGlobalVar } from '@pigyuma/design-system/extensions';
 
 const v = <T extends string>(name: T, value: string) => createGlobalVar(':root', name, value);
 

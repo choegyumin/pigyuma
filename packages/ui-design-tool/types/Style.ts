@@ -1,4 +1,4 @@
-import { createVarFunction, createVarName, CSSGlobalVarName, CSSGlobalVarFunction } from '@pigyuma/ui/extensions';
+import { createVarFunction, createVarName, CSSGlobalVarName, CSSGlobalVarFunction } from '@pigyuma/design-system/extensions';
 import { mapValues } from '@pigyuma/utils';
 
 export const UIRecordStyle = {

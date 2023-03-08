@@ -1,7 +1,7 @@
+import { Button } from '@pigyuma/design-system/components';
+import mixins from '@pigyuma/design-system/mixins';
 import { useEvent } from '@pigyuma/react-utils';
 import { ArtboardData, ShapeLayer, ShapeLayerData, TextLayer, TextLayerData, useUIController } from '@pigyuma/ui-design-tool';
-import { Button } from '@pigyuma/ui/components';
-import mixins from '@pigyuma/ui/mixins';
 import React from 'react';
 import Workspace from '~/components/Workspace';
 

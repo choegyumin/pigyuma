@@ -7,7 +7,7 @@
       "@/*": [
         "../../packages/react-utility-types/*",
         "../../packages/react-utils/*",
-        "../../packages/ui/*",
+        "../../packages/design-system/*",
         "../../packages/ui-design-tool/*",
         "../../packages/utils/*"
       ]

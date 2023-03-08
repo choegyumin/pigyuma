@@ -1,7 +1,7 @@
+import { Icon } from '@pigyuma/design-system/components';
 import { useEvent, useForkedRef } from '@pigyuma/react-utils';
 import { Artboard, TextLayer, useUIController, useUIData, useUISubscription } from '@pigyuma/ui-design-tool';
 import { hasUIRecordChildren } from '@pigyuma/ui-design-tool/utils/model';
-import { Icon } from '@pigyuma/ui/components';
 import clsx from 'clsx';
 import React, { useEffect, useId, useState } from 'react';
 import LayerList from './LayerList';

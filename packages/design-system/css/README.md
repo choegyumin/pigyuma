@@ -1,4 +1,4 @@
-# packages/ui Style Sheets
+# packages/design-system Style Sheets
 
 ## CSS Layer Declaration Order
 
