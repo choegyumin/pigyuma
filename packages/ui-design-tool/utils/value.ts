@@ -81,9 +81,6 @@ export const convertStrokePatternValue = ({ pattern }: StrokeValueObject): Style
   return `${pattern}`;
 };
 export const convertStrokeWidthValue = ({ width }: StrokeValueObject): StyleValue => {
-  if (typeof width === 'number') {
-    return convertNumberValue(width, NumberUnit.px);
-  }
   const top = convertNumberValue(width.top, NumberUnit.px);
   const right = convertNumberValue(width.right, NumberUnit.px);
   const bottom = convertNumberValue(width.bottom, NumberUnit.px);

@@ -123,22 +123,31 @@ describe('convertTextColorValue', () => {
 
 describe('convertStrokeColorValue', () => {
   test('should return style value from StrokeColorValueObject', () => {
-    expect(convertStrokeColorValue({ color: 'black', pattern: StrokeStylePattern.solid, width: 1 })).toBe('black');
+    expect(
+      convertStrokeColorValue({ color: 'black', pattern: StrokeStylePattern.solid, width: { top: 1, right: 2, bottom: 3, left: 4 } }),
+    ).toBe('black');
   });
 });
 
 describe('convertStrokePatternValue', () => {
   test('should return style value from StrokePatternValueObject', () => {
-    expect(convertStrokePatternValue({ color: 'black', pattern: StrokeStylePattern.solid, width: 1 })).toBe('solid');
-    expect(convertStrokePatternValue({ color: 'black', pattern: StrokeStylePattern.dashed, width: 1 })).toBe('dashed');
-    expect(convertStrokePatternValue({ color: 'black', pattern: StrokeStylePattern.dotted, width: 1 })).toBe('dotted');
-    expect(convertStrokePatternValue({ color: 'black', pattern: StrokeStylePattern.double, width: 1 })).toBe('double');
+    expect(
+      convertStrokePatternValue({ color: 'black', pattern: StrokeStylePattern.solid, width: { top: 1, right: 2, bottom: 3, left: 4 } }),
+    ).toBe('solid');
+    expect(
+      convertStrokePatternValue({ color: 'black', pattern: StrokeStylePattern.dashed, width: { top: 1, right: 2, bottom: 3, left: 4 } }),
+    ).toBe('dashed');
+    expect(
+      convertStrokePatternValue({ color: 'black', pattern: StrokeStylePattern.dotted, width: { top: 1, right: 2, bottom: 3, left: 4 } }),
+    ).toBe('dotted');
+    expect(
+      convertStrokePatternValue({ color: 'black', pattern: StrokeStylePattern.double, width: { top: 1, right: 2, bottom: 3, left: 4 } }),
+    ).toBe('double');
   });
 });
 
 describe('convertStrokeWidthValue', () => {
   test('should return style value from StrokeWidthValueObject', () => {
-    expect(convertStrokeWidthValue({ color: 'black', pattern: StrokeStylePattern.solid, width: 1 })).toBe('1px');
     expect(
       convertStrokeWidthValue({ color: 'black', pattern: StrokeStylePattern.solid, width: { top: 1, right: 2, bottom: 3, left: 4 } }),
     ).toBe('1px 2px 3px 4px');

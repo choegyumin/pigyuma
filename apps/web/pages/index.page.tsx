@@ -61,7 +61,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         rotate: { degrees: 0 },
         width: { length: 100, lengthType: 'px' },
         height: { length: 100, lengthType: 'px' },
-        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
         fill: { color: '#faa' },
         children: [
           {
@@ -94,7 +94,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         rotate: { degrees: 0 },
         width: { length: 200, lengthType: 'px' },
         height: { length: 200, lengthType: 'px' },
-        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
         fill: { color: '#afa' },
         children: [
           {
@@ -127,7 +127,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         rotate: { degrees: 0 },
         width: { length: 300, lengthType: 'px' },
         height: { length: 300, lengthType: 'px' },
-        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        stroke: { color: '#333', pattern: 'solid', width: { top: 10, right: 10, bottom: 10, left: 10 } },
         fill: { color: '#aaf' },
         children: [
           {
@@ -160,7 +160,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         rotate: { degrees: 0 },
         width: { length: 350, lengthType: 'px' },
         height: { length: 350, lengthType: 'px' },
-        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
         fill: { color: '#ffa' },
         children: [
           {
@@ -195,7 +195,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
     rotate: { degrees: 0 },
     width: { length: 350, lengthType: 'px' },
     height: { length: 350, lengthType: 'px' },
-    stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+    stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
     fill: { color: '#faf' },
     children: [
       {

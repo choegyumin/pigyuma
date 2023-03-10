@@ -18,7 +18,7 @@ describe('ShapeLayer', () => {
     width: { length: 300, lengthType: NumberUnit.px },
     height: { length: 400, lengthType: NumberUnit.px },
     rotate: { degrees: 45 },
-    stroke: { color: 'blue', pattern: StrokeStylePattern.solid, width: 2 },
+    stroke: { color: 'blue', pattern: StrokeStylePattern.solid, width: { top: 1, right: 2, bottom: 3, left: 4 } },
     fill: { color: 'gray' },
     children: [],
   };
@@ -48,7 +48,7 @@ describe('ShapeLayer', () => {
       [styles.varNames.rotate]: '45deg',
       [styles.varNames.strokeColor]: 'blue',
       [styles.varNames.strokePattern]: 'solid',
-      [styles.varNames.strokeWidth]: '2px',
+      [styles.varNames.strokeWidth]: '1px 2px 3px 4px',
       [styles.varNames.background]: 'gray',
     });
     expect(shapeLayer.style).toEqual(ShapeLayer.getStyle(shapeLayerJSON));
