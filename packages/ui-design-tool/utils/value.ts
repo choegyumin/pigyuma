@@ -27,6 +27,8 @@ import {
   YValueObject,
 } from '@/types/Value';
 
+export const fixNumberValue = (number: number) => Number(number.toFixed(2));
+
 export const convertNumberValue = (
   length: number,
   unitOrKeyword: NumberUnitValue | NumberKeywordValue = NumberUnit.numeric,

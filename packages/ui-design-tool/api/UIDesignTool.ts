@@ -9,12 +9,12 @@ import {
 } from '@/types/Identifier';
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
-import { cloneDeep, exclude, mapValues, uuid } from '@pigyuma/utils';
-import { Artboard } from './Artboard/model';
+import { fixNumberValue } from '@/utils/value';
+import { exclude, mapValues, merge, toDegrees360, uuid } from '@pigyuma/utils';
+import { Artboard, ArtboardData } from './Artboard/model';
 import { Canvas, CanvasData } from './Canvas/model';
-import { Layer } from './Layer/model';
-import { ShapeLayer } from './ShapeLayer/model';
-import { TextLayer } from './TextLayer/model';
+import { ShapeLayer, ShapeLayerData } from './ShapeLayer/model';
+import { TextLayer, TextLayerData } from './TextLayer/model';
 import { UIRecord, UIRecordData } from './UIRecord/model';
 
 interface MouseMeta {
@@ -35,6 +35,8 @@ export interface BrowserMeta {
   readonly mouse: MouseMeta;
   readonly keyboard: KeyboardMeta;
 }
+
+export type UIRecordChanges<T extends UIRecordData> = Omit<DeepPartial<T>, 'key' | 'parent' | 'children'>;
 
 /** @todo XState 도입 검토 (상태를 context에서 관리하고 constate로 분리하지 않아도 InteractionController 내에서 눈에 띄는 성능 저하는 없을 것으로 판단됨) */
 export const UIDesignToolStatus = {
@@ -255,7 +257,7 @@ export class UIDesignTool {
       canvas.children.pop();
     }
     newChildren.forEach((it) => {
-      Object.assign(it, { parent: canvas });
+      merge(it, { parent: canvas });
       canvas.children.push(it);
     });
 
@@ -324,14 +326,67 @@ export class UIDesignTool {
     return [...this.#selectedItems].find(({ key }) => key === targetKey) != null;
   }
 
-  set<T extends UIRecordData>(targetKey: UIRecordKey, value: Omit<Partial<T>, 'key'>): void {
+  set<T extends UIRecordData>(targetKey: UIRecordKey, value: UIRecordChanges<T> | ((prev: T) => UIRecordChanges<T>)): void {
     const targetValue = this.#items.get(targetKey);
     if (targetValue == null) {
       console.error(`UIRecord '${targetKey}' not found.`);
       return;
     }
 
-    Object.assign(targetValue, value);
+    const newTargetValue = typeof value === 'function' ? value(targetValue as unknown as T) : value;
+    if (targetValue instanceof Artboard) {
+      const v = newTargetValue as UIRecordChanges<ArtboardData>;
+      if (v.x) {
+        v.x = fixNumberValue(v.x);
+      }
+      if (v.y) {
+        v.y = fixNumberValue(v.y);
+      }
+      if (v.width) {
+        v.width = fixNumberValue(Math.max(v.width, 0));
+      }
+      if (v.height) {
+        v.height = fixNumberValue(Math.max(v.height, 0));
+      }
+    } else if (targetValue instanceof ShapeLayer) {
+      const { x, y, width, height, rotate, stroke } = newTargetValue as UIRecordChanges<ShapeLayerData>;
+      const strokeWidth = stroke?.width;
+      if (x?.length != null) {
+        x.length = fixNumberValue(x.length);
+      }
+      if (y?.length != null) {
+        y.length = fixNumberValue(y.length);
+      }
+      if (width?.length != null) {
+        width.length = fixNumberValue(Math.max(width.length, 0));
+      }
+      if (height?.length != null) {
+        height.length = fixNumberValue(Math.max(height.length, 0));
+      }
+      if (rotate?.degrees != null) {
+        rotate.degrees = fixNumberValue(toDegrees360(rotate.degrees));
+      }
+      if (strokeWidth?.top != null) {
+        strokeWidth.top = fixNumberValue(Math.max(strokeWidth.top, 0));
+      }
+      if (strokeWidth?.right != null) {
+        strokeWidth.right = fixNumberValue(Math.max(strokeWidth.right, 0));
+      }
+      if (strokeWidth?.bottom != null) {
+        strokeWidth.bottom = fixNumberValue(Math.max(strokeWidth.bottom, 0));
+      }
+      if (strokeWidth?.left != null) {
+        strokeWidth.left = fixNumberValue(Math.max(strokeWidth.left, 0));
+      }
+    }
+    if (targetValue instanceof TextLayer) {
+      const { rotate } = newTargetValue as UIRecordChanges<TextLayerData>;
+      if (rotate?.degrees != null) {
+        rotate.degrees = fixNumberValue(toDegrees360(rotate.degrees));
+      }
+    }
+
+    merge(targetValue, newTargetValue);
 
     this.#listeners.tree.forEach((callback) => callback([targetValue]));
     this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
@@ -344,8 +399,12 @@ export class UIDesignTool {
       return;
     }
 
-    if (!(targetValue instanceof Layer)) {
-      console.error(`UIRecord '${targetKey}' is not a layer. setRect() only supports layer. (e.g. ShapeLayer, TextLayer)`);
+    const isArtboard = targetValue instanceof Artboard;
+    const isShapeLayer = targetValue instanceof ShapeLayer;
+    const isTextLayer = targetValue instanceof TextLayer;
+
+    if (!isArtboard && !isShapeLayer && !isTextLayer) {
+      console.error(`UIRecord '${targetKey}' is not a layer. setRect() only supports Artboard and Layer.`);
       return;
     }
 
@@ -358,18 +417,33 @@ export class UIDesignTool {
     const parentElement = this.query({ key: parentValue.key });
     const parentRect = parentElement != null ? UIRecordRect.fromElement(parentElement) : new UIRecordRect(0, 0, 0, 0, 0);
 
-    /** @todo px 외 lengthType(unit) 지원 (변환 시 소수점 셋째 자리에서 반올림) */
-    const newValue = cloneDeep(targetValue);
-    newValue.x.length = rect.x - parentRect.x;
-    newValue.y.length = rect.y - parentRect.y;
-    newValue.width.length = rect.width;
-    newValue.height.length = rect.height;
-    newValue.rotate.degrees = rect.rotate;
+    const x = rect.x - parentRect.x;
+    const y = rect.y - parentRect.y;
+    const width = rect.width;
+    const height = rect.height;
+    const rotate = rect.rotate;
 
-    Object.assign(targetValue, newValue);
+    /** @todo px 외 lengthType(unit) 지원 */
+    const newTargetValue: UIRecordChanges<UIRecordData> = {};
+    if (isArtboard) {
+      const v = newTargetValue as UIRecordChanges<ArtboardData>;
+      v.x = x;
+      v.y = y;
+      v.width = width;
+      v.height = height;
+    } else if (isShapeLayer) {
+      const v = newTargetValue as UIRecordChanges<ShapeLayerData>;
+      v.x = { length: x };
+      v.y = { length: y };
+      v.width = { length: width };
+      v.height = { length: height };
+      v.rotate = { degrees: rotate };
+    } else if (isTextLayer) {
+      const v = newTargetValue as UIRecordChanges<TextLayerData>;
+      v.rotate = { degrees: rotate };
+    }
 
-    this.#listeners.tree.forEach((callback) => callback([targetValue]));
-    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
+    this.set(targetKey, newTargetValue);
   }
 
   // 타입은 동일하지만, IDE에서 인자명을 보여주기 위해 Overloading 함
@@ -421,7 +495,7 @@ export class UIDesignTool {
       }
 
       startValue.children.splice(handleIndex, 1);
-      Object.assign(handleValue, { parent: destValue });
+      merge(handleValue, { parent: destValue });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destValue.children[method === 'prepend' ? 'unshift' : 'push'](handleValue as any);
 
@@ -457,7 +531,7 @@ export class UIDesignTool {
       }
 
       startValue.children.splice(handleIndex, 1);
-      Object.assign(handleValue, { parent: destParentValue });
+      merge(handleValue, { parent: destParentValue });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destParentValue.children.splice(targetIndex, 0, handleValue as any);
 
