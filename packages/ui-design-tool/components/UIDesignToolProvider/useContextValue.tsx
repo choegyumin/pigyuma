@@ -94,7 +94,6 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
       has: ((targetKey) => pairs.has(targetKey)) as typeof api.has,
       pairs,
       tree,
-      // `selection`를 읽는 컴포넌트도 전체 데이터가 변경되었을 때 재조정 대상에 포함
       selection,
       isSelected: ((targetKey) => [...selection].find(({ key }) => key === targetKey) != null) as typeof api.isSelected,
     }),
@@ -157,10 +156,12 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
     const callback = () => {
       setPairs(api.pairs);
       setTree(api.tree);
+      // `selection`를 읽는 컴포넌트도 전체 데이터가 변경되었을 때 재조정 대상에 포함
+      setSelection(api.selection);
     };
     const unsubscribe = api.subscribeTree(callback);
     return unsubscribe;
-  }, [api, setPairs, setTree]);
+  }, [api, setPairs, setTree, setSelection]);
 
   useEffect(() => {
     const callback = () => {
