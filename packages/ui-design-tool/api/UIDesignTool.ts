@@ -10,8 +10,11 @@ import {
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
 import { cloneDeep, exclude, mapValues, uuid } from '@pigyuma/utils';
+import { Artboard } from './Artboard/model';
 import { Canvas, CanvasData } from './Canvas/model';
 import { Layer } from './Layer/model';
+import { ShapeLayer } from './ShapeLayer/model';
+import { TextLayer } from './TextLayer/model';
 import { UIRecord, UIRecordData } from './UIRecord/model';
 
 interface MouseMeta {
@@ -77,7 +80,7 @@ export class UIDesignTool {
   #status: UIDesignToolStatus;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
-  #selectedItems: Set<UIRecord>;
+  #selectedItems: Set<Artboard | ShapeLayer | TextLayer>;
 
   #hoveredElement: HTMLElement | null;
 
@@ -154,7 +157,7 @@ export class UIDesignTool {
     return this.#items;
   }
 
-  get selection(): Set<UIRecord> {
+  get selection(): Set<Artboard | ShapeLayer | TextLayer> {
     return this.#selectedItems;
   }
 
@@ -271,14 +274,19 @@ export class UIDesignTool {
 
   select(targetKeys: UIRecordKey[]): void {
     const missingRecordKeys: UIRecordKey[] = [];
+    const invalidRecordKeys: UIRecordKey[] = [];
 
     const newRecordKeys: UIRecordKey[] = [];
-    const newRecordValues: UIRecord[] = [];
+    const newRecordValues: Array<Artboard | ShapeLayer | TextLayer> = [];
 
     targetKeys.forEach((key) => {
       const record = this.#items.get(key);
       if (record == null) {
         missingRecordKeys.push(key);
+        return;
+      }
+      if (!Artboard.isModel(record) && !ShapeLayer.isModel(record) && !TextLayer.isModel(record)) {
+        invalidRecordKeys.push(key);
         return;
       }
       newRecordKeys.push(record.key);
@@ -287,6 +295,12 @@ export class UIDesignTool {
 
     if (missingRecordKeys.length > 0) {
       console.error(`UIRecord '${missingRecordKeys.join("', '")}' not found.`);
+    }
+
+    if (invalidRecordKeys.length > 0) {
+      console.error(
+        `UIRecord '${invalidRecordKeys.join("', '")}' is not selectable. Only Artboard, ShapeLayer, and TextLayer can be selected.`,
+      );
     }
 
     // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교

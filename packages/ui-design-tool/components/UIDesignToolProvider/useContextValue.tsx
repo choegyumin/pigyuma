@@ -1,4 +1,7 @@
+import { Artboard } from '@/api/Artboard/model';
 import { Canvas } from '@/api/Canvas/model';
+import { ShapeLayer } from '@/api/ShapeLayer/model';
+import { TextLayer } from '@/api/TextLayer/model';
 import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool, UIDesignToolStatus } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
@@ -63,7 +66,7 @@ export default function useContextValue(initialValues: { api: UIDesignTool }) {
    */
   const [pairs, setPairs] = useCloneDeepState<Map<UIRecordKey, UIRecord>>(() => api.pairs);
   const [tree, setTree] = useCloneDeepState<Canvas>(() => api.tree);
-  const [selection, setSelection] = useCloneDeepState<Set<UIRecord>>(() => api.selection);
+  const [selection, setSelection] = useCloneDeepState<Set<Artboard | ShapeLayer | TextLayer>>(() => api.selection);
 
   // 필요 시 react 컴포넌트 내에서 상태가 아닌 인스턴스 값에 직접 접근
   const getItemReference = useStableCallback(((...args) => api.get(...args)) as typeof api.get);
