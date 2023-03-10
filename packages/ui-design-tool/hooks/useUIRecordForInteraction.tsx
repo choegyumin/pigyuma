@@ -6,17 +6,17 @@ import { useCloneDeepState } from '@pigyuma/react-utils';
 import { startTransition, useEffect } from 'react';
 
 /** @todo 렌더링이 늦을 경우: startTransition을 RAF로 변경 (3ba4789) */
-export default function useUIRecordForInteraction(recordKey: UIRecordKey | undefined) {
+export default function useUIRecordForInteraction<T extends UIRecord>(recordKey: UIRecordKey | undefined): T | undefined {
   const { subscribeItem } = useUISubscription();
   const getRecord = useItemReference();
 
   // 이미 렌더링 된 UIRecord 엘리먼트에 접근해야 하므로,
   // initial state를 effect에서 설정해 렌더링 시점을 조정함
-  const [record, setRecord] = useCloneDeepState<UIRecord | undefined>(undefined);
+  const [record, setRecord] = useCloneDeepState<T | undefined>(undefined);
 
   useEffect(() => {
     startTransition(() => {
-      setRecord(isUIRecordKey(recordKey) ? getRecord(recordKey) : undefined);
+      setRecord(isUIRecordKey(recordKey) ? (getRecord(recordKey) as T) : undefined);
     });
   }, [recordKey, setRecord, getRecord]);
 
@@ -29,7 +29,7 @@ export default function useUIRecordForInteraction(recordKey: UIRecordKey | undef
       // (callback 실행 시점은 다른 상태 변경과 동일하지만, queue는 따로 관리되는 것으로 추측됨)
       // (startTransition의 용도와 해결하려는 문제가 서로 상충해 오히려 렌더링이 늦어질 수 있음)
       startTransition(() => {
-        setRecord(newRecord);
+        setRecord(newRecord as T);
       });
     };
     const unsubscribe = subscribeItem(recordKey, callback);
