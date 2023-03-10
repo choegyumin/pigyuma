@@ -364,7 +364,7 @@ export class UIDesignTool {
     newValue.y.length = rect.y - parentRect.y;
     newValue.width.length = rect.width;
     newValue.height.length = rect.height;
-    newValue.rotate.length = rect.rotate;
+    newValue.rotate.degrees = rect.rotate;
 
     Object.assign(targetValue, newValue);
 

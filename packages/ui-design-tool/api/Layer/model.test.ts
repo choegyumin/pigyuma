@@ -16,7 +16,7 @@ describe('Layer', () => {
     y: { length: 200, lengthType: NumberUnit.px },
     width: { length: 300, lengthType: NumberUnit.px },
     height: { length: 400, lengthType: NumberUnit.px },
-    rotate: { length: 45 },
+    rotate: { degrees: 45 },
   };
   const layerJSON: LayerJSON = {
     ...layerArgs,

@@ -17,7 +17,7 @@ describe('ShapeLayer', () => {
     y: { length: 200, lengthType: NumberUnit.px },
     width: { length: 300, lengthType: NumberUnit.px },
     height: { length: 400, lengthType: NumberUnit.px },
-    rotate: { length: 45 },
+    rotate: { degrees: 45 },
     stroke: { color: 'blue', pattern: StrokeStylePattern.solid, width: 2 },
     fill: { color: 'gray' },
     children: [],

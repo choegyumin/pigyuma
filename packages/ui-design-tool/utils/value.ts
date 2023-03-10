@@ -7,7 +7,6 @@ import {
   NumberKeywordValue,
   NumberUnit,
   NumberUnitValue,
-  RotateLengthTypeValue,
   WidthLengthTypeValue,
   XLengthTypeValue,
   YLengthTypeValue,
@@ -54,8 +53,8 @@ export const convertWidthValue = ({ length, lengthType }: WidthValueObject): Sty
 export const convertHeightValue = ({ length, lengthType }: HeightValueObject): StyleValue => {
   return convertNumberValue(length, HeightLengthTypeValue[lengthType]);
 };
-export const convertRotateValue = ({ length }: RotateValueObject): StyleValue => {
-  return convertNumberValue(length, RotateLengthTypeValue.deg);
+export const convertRotateValue = ({ degrees }: RotateValueObject): StyleValue => {
+  return convertNumberValue(degrees, NumberUnit.deg);
 };
 export const convertFillValue = ({ color }: FillValueObject): StyleValue => {
   return color;

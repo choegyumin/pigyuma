@@ -78,7 +78,7 @@ describe('convertHeightValue', () => {
 
 describe('convertRotateValue', () => {
   test('should return style value from RotateValueObject', () => {
-    expect(convertRotateValue({ length: 1 })).toBe('1deg');
+    expect(convertRotateValue({ degrees: 1 })).toBe('1deg');
   });
 });
 
