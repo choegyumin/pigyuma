@@ -14,6 +14,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
     y: 100,
     width: 1024,
     height: 768,
+    fill: '#fff',
     children: [
       {
         key: 'text-layer-hi',

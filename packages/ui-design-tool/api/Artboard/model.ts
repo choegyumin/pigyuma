@@ -1,7 +1,7 @@
 import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { HeightLengthType, WidthLengthType, XLengthType, YLengthType } from '@/types/Unit';
 import { StyleValue } from '@/types/Value';
-import { convertHeightValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
+import { convertFillValue, convertHeightValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
 import { clone, uuid } from '@pigyuma/utils';
 import { Canvas } from '../Canvas/model';
 import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
@@ -17,6 +17,7 @@ export interface ArtboardJSON extends UIRecordJSON {
   y: number;
   width: number;
   height: number;
+  fill: string;
   children: Array<ShapeLayerJSON | TextLayerJSON>;
 }
 
@@ -28,6 +29,7 @@ export interface ArtboardData {
   y: ArtboardJSON['y'];
   width: ArtboardJSON['width'];
   height: ArtboardJSON['height'];
+  fill: ArtboardJSON['fill'];
   children: Array<ShapeLayerData | TextLayerData>;
 }
 
@@ -41,6 +43,7 @@ export interface ArtboardArgs {
   y: ArtboardData['y'];
   width: ArtboardData['width'];
   height: ArtboardData['height'];
+  fill: ArtboardData['fill'];
   children: Array<ShapeLayerData | TextLayerData>;
 }
 
@@ -52,6 +55,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
   readonly y: number;
   readonly width: number;
   readonly height: number;
+  readonly fill: string;
   readonly parent: Canvas | null;
   readonly children: Array<ShapeLayer | TextLayer>;
 
@@ -69,6 +73,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
     this.y = args.y;
     this.width = args.width;
     this.height = args.height;
+    this.fill = args.fill;
     this.parent = parent;
     this.children =
       (args.children
@@ -99,6 +104,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
       [styles.varNames.y]: convertYValue({ length: object.y, lengthType: YLengthType.px }),
       [styles.varNames.width]: convertWidthValue({ length: object.width, lengthType: WidthLengthType.px }),
       [styles.varNames.height]: convertHeightValue({ length: object.height, lengthType: HeightLengthType.px }),
+      [styles.varNames.background]: convertFillValue({ color: object.fill }),
     };
   }
 
@@ -111,6 +117,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
       y: this.y,
       width: this.width,
       height: this.height,
+      fill: this.fill,
       children: this.children.map((it) => it.toJSON()),
     };
   }
