@@ -1,6 +1,6 @@
-import { ComponentPropsByBox, ComponentRefByBox } from '@pigyuma/design-system/primitives';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives';
 import { UIDesignCanvasProps } from '@pigyuma/ui-design-tool';
 
-export type WorkspaceProps = ComponentPropsByBox<'div'> & UIDesignCanvasProps;
+export type WorkspaceProps = ComponentPropsWithoutRefByBox<'div'> & UIDesignCanvasProps;
 
-export type WorkspaceRef = ComponentRefByBox<'div'>;
+export type WorkspaceRef = ComponentElementRefByBox<'div'>;

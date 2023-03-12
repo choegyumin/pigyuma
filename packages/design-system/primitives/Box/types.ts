@@ -35,7 +35,9 @@ type BoxRef<
   P extends ReactTypes.UnknownProps,
   T extends React.ElementType<P> = React.ElementType<P>,
   R extends PickExisting<BoxPropsWithRef<P, T>, 'ref'>['ref'] = PickExisting<BoxPropsWithRef<P, T>, 'ref'>['ref'],
-> = R extends (instance: infer I) => void ? I : R extends React.MutableRefObject<infer O> | React.RefObject<infer O> ? O : never;
+> = NonNullable<
+  R extends (instance: infer I) => void ? I : R extends React.MutableRefObject<infer O> | React.RefObject<infer O> ? O : never
+>;
 
 type BoxForwardingProps<P extends ReactTypes.UnknownProps, T extends React.ElementType<P> = React.ElementType<P>> = {
   props: BoxPropsWithoutAs<P, T>;
@@ -45,24 +47,30 @@ type BoxForwardingProps<P extends ReactTypes.UnknownProps, T extends React.Eleme
 type ComponentForwardingPropsByBox<T extends React.ElementType> = BoxForwardingProps<ReactTypes.UnknownProps, T>;
 
 /**
- * 컴포넌트(`as`)를 지정해 새로운 컴포넌트를 작성할 때 컴포넌트의 Props 타입을 구하기 위해 사용
+ * 컴포넌트(`as`)를 지정해 새로운 컴포넌트를 작성할 때 컴포넌트의 `ref`를 제외한 Props 타입을 구하기 위해 사용
  * @example
- * export type MyButtonProps = ComponentPropsByBox<'button'> & { myProp: boolean; }
+ * export type MyButtonProps = ComponentPropsWithoutRefByBox<'button'> & { myProp: boolean; }
  * export const MyButton: React.FC<MyButtonProps> = ({ myProp, ...restProps }) => {
  *   return <Box {...restProps} as="button" />
  * };
  */
-export type ComponentPropsByBox<T extends React.ElementType> = ComponentForwardingPropsByBox<T>['props'];
+export type ComponentPropsWithoutRefByBox<T extends React.ElementType> = ComponentForwardingPropsByBox<T>['props'];
 
 /**
  * 컴포넌트(`as`)를 지정해 새로운 컴포넌트를 작성할 때 컴포넌트의 Ref 타입을 구하기 위해 사용
  * @example
- * export type MyButtonRef = ComponentRefByBox<'button'>
+ * export type MyButtonRef = ComponentElementRefByBox<'button'>
  * export const MyButton = React.forwardRef<MyButtonRef, {}>((props, ref) => {
  *   return <Box {...props} ref={ref} as="button" />
  * });
  */
-export type ComponentRefByBox<T extends React.ElementType> = ComponentForwardingPropsByBox<T>['ref'];
+export type ComponentElementRefByBox<T extends React.ElementType> = ComponentForwardingPropsByBox<T>['ref'];
+
+export type ComponentRefByBox<T extends React.ElementType> = React.RefObject<ComponentElementRefByBox<T>>;
+
+export type ComponentPropsWithRefByBox<T extends React.ElementType> = ComponentPropsWithoutRefByBox<T> & { ref?: ComponentRefByBox<T> };
+
+export type ComponentPropsByBox<T extends React.ElementType> = ComponentPropsWithRefByBox<T>;
 
 /**
  * 새로운 다이나믹 컴포넌트를 작성할 때 컴포넌트의 Props 타입을 구하기 위해 사용

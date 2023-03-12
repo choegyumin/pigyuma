@@ -1,20 +1,20 @@
-import { ComponentPropsByBox, ComponentRefByBox } from '@pigyuma/design-system/primitives';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives';
 import { Artboard, ShapeLayer, TextLayer } from '@pigyuma/ui-design-tool';
 
-export type LayerTreeSectionProps = ComponentPropsByBox<'div'>;
-export type LayerTreeSectionRef = ComponentRefByBox<'div'>;
+export type LayerTreeSectionProps = ComponentPropsWithoutRefByBox<'div'>;
+export type LayerTreeSectionRef = ComponentElementRefByBox<'div'>;
 
-export type LayerListProps = ComponentPropsByBox<'ul'> & {
+export type LayerListProps = ComponentPropsWithoutRefByBox<'ul'> & {
   records: Array<Artboard | ShapeLayer | TextLayer>;
   depth?: number;
   hidden?: boolean;
   onOpen?: () => void;
 };
-export type LayerListRef = ComponentRefByBox<'ul'>;
+export type LayerListRef = ComponentElementRefByBox<'ul'>;
 
-export type LayerListItemProps = ComponentPropsByBox<'li'> & {
+export type LayerListItemProps = ComponentPropsWithoutRefByBox<'li'> & {
   record: Artboard | ShapeLayer | TextLayer;
   depth?: number;
   onGroupOpen?: () => void;
 };
-export type LayerListItemRef = ComponentRefByBox<'li'>;
+export type LayerListItemRef = ComponentElementRefByBox<'li'>;
