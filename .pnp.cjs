@@ -1124,7 +1124,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "constate",\
-        "virtual:3107689f06abe0c80ca400d4b6dd04a2254f9e1caad2f98193ff4959262869e8f1c8f1911159373b1c4e5b4fd2b5b1095ab85f136494972d3c211a29aba53a8d#npm:3.3.2"\
+        "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.3.2"\
       ],\
       [\
         "conventional-changelog-angular",\
@@ -4637,6 +4637,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitest/ui", "npm:0.28.4"],\
             ["clsx", "npm:1.2.1"],\
             ["color", "npm:4.2.3"],\
+            ["constate", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.3.2"],\
             ["csstype", "npm:3.1.1"],\
             ["jsdom", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:20.0.3"],\
             ["react", "npm:18.2.0"],\
@@ -4787,7 +4788,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitest/coverage-c8", "npm:0.28.4"],\
             ["@vitest/ui", "npm:0.28.4"],\
             ["clsx", "npm:1.2.1"],\
-            ["constate", "virtual:3107689f06abe0c80ca400d4b6dd04a2254f9e1caad2f98193ff4959262869e8f1c8f1911159373b1c4e5b4fd2b5b1095ab85f136494972d3c211a29aba53a8d#npm:3.3.2"],\
+            ["constate", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.3.2"],\
             ["csstype", "npm:3.1.1"],\
             ["geometry-polyfill", "npm:1.0.7"],\
             ["jsdom", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:20.0.3"],\
@@ -6973,10 +6974,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:3107689f06abe0c80ca400d4b6dd04a2254f9e1caad2f98193ff4959262869e8f1c8f1911159373b1c4e5b4fd2b5b1095ab85f136494972d3c211a29aba53a8d#npm:3.3.2", {\
-          "packageLocation": "./.yarn/__virtual__/constate-virtual-8bec9cfda8/0/cache/constate-npm-3.3.2-3bf53a7556-1bc1c49aac.zip/node_modules/constate/",\
+        ["virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.3.2", {\
+          "packageLocation": "./.yarn/__virtual__/constate-virtual-5a5bccbf54/0/cache/constate-npm-3.3.2-3bf53a7556-1bc1c49aac.zip/node_modules/constate/",\
           "packageDependencies": [\
-            ["constate", "virtual:3107689f06abe0c80ca400d4b6dd04a2254f9e1caad2f98193ff4959262869e8f1c8f1911159373b1c4e5b4fd2b5b1095ab85f136494972d3c211a29aba53a8d#npm:3.3.2"],\
+            ["constate", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.3.2"],\
             ["@types/react", "npm:18.0.26"],\
             ["eslint-import-resolver-node", "npm:0.3.7"],\
             ["react", "npm:18.2.0"]\
@@ -13622,6 +13623,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitest/coverage-c8", "npm:0.28.4"],\
             ["@vitest/ui", "npm:0.28.4"],\
             ["clsx", "npm:1.2.1"],\
+            ["constate", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.3.2"],\
             ["fork-ts-checker-webpack-plugin", "virtual:e293270790bda2411a3626e57e15862403457209cbe755a222c752c37c8f53870ac5708914fca9c46ad11f81505a4af613c8b5e4bba765909191bb5f14d3b656#npm:7.2.13"],\
             ["geometry-polyfill", "npm:1.0.7"],\
             ["jsdom", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:20.0.3"],\
