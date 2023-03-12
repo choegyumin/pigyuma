@@ -8,7 +8,7 @@ import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-export default function useContextValue(initialValues: { api: UIDesignTool }) {
+export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;
 
   const privateRef = useRef<{
