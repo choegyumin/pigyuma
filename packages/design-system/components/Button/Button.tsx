@@ -1,4 +1,4 @@
-import Box from '@/patterns/Box';
+import Box from '@/primitives/Box';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './Button.css';
