@@ -1,4 +1,4 @@
-import { useUIRecordForInteraction } from '@/hooks';
+import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import { useEventListener } from '@pigyuma/react-utils';
 import clsx from 'clsx';
 import React from 'react';

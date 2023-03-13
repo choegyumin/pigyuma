@@ -1,4 +1,4 @@
-import { useUIRecord } from '@/hooks';
+import useUIRecord from '@/hooks/useUIRecord';
 import { UIRecordElementDataAttributeName, UIRecordKey } from '@/types/Identifier';
 import React from 'react';
 import { UIRecord } from './UIRecord/model';

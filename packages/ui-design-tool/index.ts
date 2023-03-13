@@ -14,4 +14,8 @@ export * from './api/UIRecord/model';
 export { UIDesignCanvas as UIDesignCanvas } from './components/UIDesignCanvas/UIDesignCanvas';
 export type { UIDesignCanvasProps, UIDesignCanvasRef } from './components/UIDesignCanvas/types';
 
-export { useUIController, useUIData, useUIElement, useUISubscription, useUIRecord } from './hooks';
+export { default as useUIController } from './hooks/useUIController';
+export { default as useUIData } from './hooks/useUIData';
+export { default as useUIElement } from './hooks/useUIElement';
+export { default as useUISubscription } from './hooks/useUISubscription';
+export { default as useUIRecord } from './hooks/useUIRecord';

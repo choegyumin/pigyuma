@@ -1,4 +1,4 @@
-import { useUIRecordForInteraction } from '@/hooks';
+import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './AxisGrid.css';

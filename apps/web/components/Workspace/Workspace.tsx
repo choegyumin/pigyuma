@@ -1,4 +1,4 @@
-import { Box } from '@pigyuma/design-system/primitives';
+import Box from '@pigyuma/design-system/primitives/Box';
 import { UIDesignCanvas } from '@pigyuma/ui-design-tool';
 import clsx from 'clsx';
 import React from 'react';

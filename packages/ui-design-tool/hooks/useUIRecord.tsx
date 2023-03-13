@@ -1,5 +1,6 @@
 import { UIRecord } from '@/api/UIRecord/model';
-import { useItemReference, useUISubscription } from '@/components/UIDesignToolProvider/UIDesignToolProvider.context';
+import useItemReference from '@/hooks/useItemReference';
+import useUISubscription from '@/hooks/useUISubscription';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useCloneDeepState, useIsomorphicLayoutEffect } from '@pigyuma/react-utils';

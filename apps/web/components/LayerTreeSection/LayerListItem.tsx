@@ -1,4 +1,4 @@
-import { Icon } from '@pigyuma/design-system/components';
+import Icon from '@pigyuma/design-system/components/Icon';
 import { useEvent, useForkedRef } from '@pigyuma/react-utils';
 import { Artboard, TextLayer, useUIController, useUIData, useUISubscription } from '@pigyuma/ui-design-tool';
 import { hasUIRecordChildren } from '@pigyuma/ui-design-tool/utils/model';

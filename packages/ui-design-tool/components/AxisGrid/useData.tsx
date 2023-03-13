@@ -1,5 +1,6 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useSelection, useStatus } from '@/hooks';
+import useSelection from '@/hooks/useSelection';
+import useStatus from '@/hooks/useStatus';
 
 export default function useData() {
   const selectedRecords = useSelection();

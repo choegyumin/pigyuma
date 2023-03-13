@@ -1,5 +1,6 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useStatus, useSelection } from '@/hooks';
+import useSelection from '@/hooks/useSelection';
+import useStatus from '@/hooks/useStatus';
 import { UIRecordRect } from '@/types/Geometry';
 import { useRef } from 'react';
 import { HandlePlacement } from '../TransformOverlay/types';

@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives/Box';
 import { Artboard, ShapeLayer, TextLayer } from '@pigyuma/ui-design-tool';
 
 export type LayerTreeSectionProps = ComponentPropsWithoutRefByBox<'div'>;

@@ -1,6 +1,7 @@
 import { CanvasComponent } from '@/api/Canvas/component';
 import { Canvas } from '@/api/Canvas/model';
-import { useInstanceID, useUIController } from '@/hooks';
+import useInstanceID from '@/hooks/useInstanceID';
+import useUIController from '@/hooks/useUIController';
 import { UIDesignToolIDAttributeName } from '@/types/Identifier';
 import { useMount } from '@pigyuma/react-utils';
 import { cloneDeep } from '@pigyuma/utils';
