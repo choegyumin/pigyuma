@@ -1,11 +1,12 @@
 import Icon from '@pigyuma/design-system/components/Icon';
+import Box from '@pigyuma/design-system/primitives/Box';
 import { useEvent, useForkedRef } from '@pigyuma/react-utils';
 import { Artboard, TextLayer, useUIController, useUIData, useUISubscription } from '@pigyuma/ui-design-tool';
 import { hasUIRecordChildren } from '@pigyuma/ui-design-tool/utils/model';
 import clsx from 'clsx';
 import React, { useEffect, useId, useState } from 'react';
 import LayerList from './LayerList';
-import * as styles from './LayerTreeSection.css';
+import * as styles from './LayerList.css';
 import { LayerListItemProps, LayerListItemRef } from './types';
 
 const TypeIconComponentDict = {
@@ -75,7 +76,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
   const TypeIcon = TypeIconComponentDict[TypeIconComponentName];
 
   return (
-    <li {...restProps} ref={forkedRef} role="none" className={clsx(styles.row, { [styles.row$.selected]: selected })}>
+    <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row$.selected]: selected })}>
       <div className={styles.item} role={role} onClick={onItemClick}>
         <div className={styles.name}>
           <TypeIcon className={styles.icon} />
@@ -102,7 +103,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
           aria-label={`${record.name}`}
         />
       )}
-    </li>
+    </Box>
   );
 });
 LayerListItem.displayName = 'LayerListItem';

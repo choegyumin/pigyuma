@@ -91,6 +91,14 @@ export type TypographyThemeTokens = {
       fontVariant: Token;
       fontWeight: Token;
     };
+    caption: {
+      letterSpacing: Token;
+      lineHeight: Token;
+      fontFamily: Token;
+      fontSize: Token;
+      fontVariant: Token;
+      fontWeight: Token;
+    };
   };
 };
 export type TypographyThemeTokenNames = TokenNames<TypographyThemeTokens>;
