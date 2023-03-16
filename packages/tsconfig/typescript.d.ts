@@ -60,6 +60,18 @@ type PickEnum<T, K extends T> = {
 
 type ArrayElements<T extends readonly any[]> = T extends readonly (infer E)[] ? E : never;
 
+type SetValues<T extends Set> = T extends Set<infer E> ? E : never;
+
+type WeakSetValues<T extends WeakSet> = T extends WeakSet<infer E> ? E : never;
+
+type MapKeys<T extends Map> = T extends Map<infer E, V> ? E : never;
+
+type MapValues<T extends Map> = T extends Map<K, infer E> ? E : never;
+
+type WeakMapKeys<T extends WeakMap> = T extends WeakMap<infer E, V> ? E : never;
+
+type WeakMapValues<T extends WeakMap> = T extends WeakMap<K, infer E> ? E : never;
+
 type PromiseResolve<T> = (value: T | PromiseLike<T>) => void;
 
 type PromiseReject = (reason?: any) => void;

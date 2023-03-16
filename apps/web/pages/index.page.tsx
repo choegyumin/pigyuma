@@ -1,4 +1,4 @@
-import { Button } from '@pigyuma/design-system/components';
+import Button from '@pigyuma/design-system/components/Button';
 import mixins from '@pigyuma/design-system/mixins';
 import { useEvent } from '@pigyuma/react-utils';
 import { ArtboardData, ShapeLayer, ShapeLayerData, TextLayer, TextLayerData, useUIController } from '@pigyuma/ui-design-tool';
@@ -14,6 +14,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
     y: 100,
     width: 1024,
     height: 768,
+    fill: '#fff',
     children: [
       {
         key: 'text-layer-hi',
@@ -22,7 +23,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         name: 'Text Layer HI',
         x: { length: 0, lengthType: 'auto' },
         y: { length: 0, lengthType: 'auto' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 0, lengthType: 'flexible' },
         height: { length: 0, lengthType: 'flexible' },
         textColor: { color: 'black' },
@@ -39,7 +40,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         name: 'Text Layer Hello',
         x: { length: 0, lengthType: 'auto' },
         y: { length: 0, lengthType: 'auto' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 0, lengthType: 'flexible' },
         height: { length: 0, lengthType: 'flexible' },
         textColor: { color: 'black' },
@@ -57,10 +58,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         shapeType: 'container',
         x: { length: 100, lengthType: 'px' },
         y: { length: 100, lengthType: 'px' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 100, lengthType: 'px' },
         height: { length: 100, lengthType: 'px' },
-        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
         fill: { color: '#faa' },
         children: [
           {
@@ -70,7 +71,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
             name: 'Text Layer 100',
             x: { length: 0, lengthType: 'auto' },
             y: { length: 0, lengthType: 'auto' },
-            rotate: { length: 0 },
+            rotate: { degrees: 0 },
             width: { length: 0, lengthType: 'flexible' },
             height: { length: 0, lengthType: 'flexible' },
             textColor: { color: 'black' },
@@ -90,10 +91,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         shapeType: 'container',
         x: { length: 300, lengthType: 'px' },
         y: { length: 100, lengthType: 'px' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 200, lengthType: 'px' },
         height: { length: 200, lengthType: 'px' },
-        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
         fill: { color: '#afa' },
         children: [
           {
@@ -103,7 +104,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
             name: 'Text Layer 200',
             x: { length: 0, lengthType: 'auto' },
             y: { length: 0, lengthType: 'auto' },
-            rotate: { length: 0 },
+            rotate: { degrees: 0 },
             width: { length: 0, lengthType: 'flexible' },
             height: { length: 0, lengthType: 'flexible' },
             textColor: { color: 'black' },
@@ -123,10 +124,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         shapeType: 'container',
         x: { length: 600, lengthType: 'px' },
         y: { length: 100, lengthType: 'px' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 300, lengthType: 'px' },
         height: { length: 300, lengthType: 'px' },
-        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        stroke: { color: '#333', pattern: 'solid', width: { top: 10, right: 10, bottom: 10, left: 10 } },
         fill: { color: '#aaf' },
         children: [
           {
@@ -136,7 +137,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
             name: 'Text Layer 300',
             x: { length: 0, lengthType: 'auto' },
             y: { length: 0, lengthType: 'auto' },
-            rotate: { length: 0 },
+            rotate: { degrees: 0 },
             width: { length: 0, lengthType: 'flexible' },
             height: { length: 0, lengthType: 'flexible' },
             textColor: { color: 'black' },
@@ -156,10 +157,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         shapeType: 'container',
         x: { length: 100, lengthType: 'px' },
         y: { length: 550, lengthType: 'px' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 350, lengthType: 'px' },
         height: { length: 350, lengthType: 'px' },
-        stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+        stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
         fill: { color: '#ffa' },
         children: [
           {
@@ -169,7 +170,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
             name: 'Text Layer Inside',
             x: { length: 0, lengthType: 'auto' },
             y: { length: 0, lengthType: 'auto' },
-            rotate: { length: 0 },
+            rotate: { degrees: 0 },
             width: { length: 0, lengthType: 'flexible' },
             height: { length: 0, lengthType: 'flexible' },
             textColor: { color: 'black' },
@@ -191,10 +192,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
     shapeType: 'container',
     x: { length: 650, lengthType: 'px' },
     y: { length: 650, lengthType: 'px' },
-    rotate: { length: 0 },
+    rotate: { degrees: 0 },
     width: { length: 350, lengthType: 'px' },
     height: { length: 350, lengthType: 'px' },
-    stroke: { color: 'transparent', pattern: 'solid', width: 0 },
+    stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
     fill: { color: '#faf' },
     children: [
       {
@@ -204,7 +205,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         name: 'Text Layer Outside',
         x: { length: 0, lengthType: 'auto' },
         y: { length: 0, lengthType: 'auto' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 0, lengthType: 'flexible' },
         height: { length: 0, lengthType: 'flexible' },
         textColor: { color: 'black' },
@@ -231,7 +232,7 @@ const Home = () => {
       name: 'prepend()',
       x: { length: 0, lengthType: 'auto' },
       y: { length: 0, lengthType: 'auto' },
-      rotate: { length: 0 },
+      rotate: { degrees: 0 },
       width: { length: 0, lengthType: 'flexible' },
       height: { length: 0, lengthType: 'flexible' },
       textColor: { color: 'black' },
@@ -247,7 +248,7 @@ const Home = () => {
         name: 'append()',
         x: { length: 0, lengthType: 'auto' },
         y: { length: 0, lengthType: 'auto' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 0, lengthType: 'flexible' },
         height: { length: 0, lengthType: 'flexible' },
         textColor: { color: 'black' },
@@ -264,7 +265,7 @@ const Home = () => {
       name: 'insertBefore()',
       x: { length: 0, lengthType: 'auto' },
       y: { length: 0, lengthType: 'auto' },
-      rotate: { length: 0 },
+      rotate: { degrees: 0 },
       width: { length: 0, lengthType: 'flexible' },
       height: { length: 0, lengthType: 'flexible' },
       textColor: { color: 'black' },
@@ -280,7 +281,7 @@ const Home = () => {
         name: 'insertAfter()',
         x: { length: 0, lengthType: 'auto' },
         y: { length: 0, lengthType: 'auto' },
-        rotate: { length: 0 },
+        rotate: { degrees: 0 },
         width: { length: 0, lengthType: 'flexible' },
         height: { length: 0, lengthType: 'flexible' },
         textColor: { color: 'black' },

@@ -1,17 +1,18 @@
 import { UIRecord } from '@/api/UIRecord/model';
-import { useItemReference, useUISubscription } from '@/components/UIDesignToolProvider/UIDesignToolProvider.context';
+import useItemReference from '@/hooks/useItemReference';
+import useUISubscription from '@/hooks/useUISubscription';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useCloneDeepState, useIsomorphicLayoutEffect } from '@pigyuma/react-utils';
 import { useEffect, useRef } from 'react';
 
-export default function useUIRecord(recordKey: UIRecordKey | undefined) {
+export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey | undefined): T | undefined {
   const { subscribeItem } = useUISubscription();
   const getRecord = useItemReference();
 
   // 재조정 범위를 줄이기 위해 `useUIData` 반환 값을 사용하지 않고, 직접 구독해서 상태 관리
   // React와 상태 관리 주기를 맞추기 위해 참조를 끊음
-  const [record, setRecord] = useCloneDeepState<UIRecord | undefined>(() => (isUIRecordKey(recordKey) ? getRecord(recordKey) : undefined));
+  const [record, setRecord] = useCloneDeepState<T | undefined>(() => (isUIRecordKey(recordKey) ? getRecord(recordKey) : undefined));
 
   const firstRunRef = useRef<boolean>(true);
 
@@ -21,7 +22,7 @@ export default function useUIRecord(recordKey: UIRecordKey | undefined) {
     if (firstRunRef.current) {
       return setRef(firstRunRef, false);
     }
-    setRecord(isUIRecordKey(recordKey) ? getRecord(recordKey) : undefined);
+    setRecord(isUIRecordKey(recordKey) ? (getRecord(recordKey) as T) : undefined);
   }, [recordKey, setRecord, getRecord]);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function useUIRecord(recordKey: UIRecordKey | undefined) {
       return;
     }
     const callback = (newRecord: UIRecord | undefined) => {
-      setRecord(newRecord);
+      setRecord(newRecord as T);
     };
     const unsubscribe = subscribeItem(recordKey, callback);
     return unsubscribe;

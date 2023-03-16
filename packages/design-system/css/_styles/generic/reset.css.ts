@@ -54,6 +54,7 @@ globalStyle('body, #root, #__next', {
 globalStyle('fieldset', {
   margin: '0',
   padding: '0',
+  border: '0',
   minInlineSize: 'unset',
 });
 

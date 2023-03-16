@@ -158,7 +158,7 @@ export class UIRecordRect {
   }
 
   static fromElement(other: HTMLElement): UIRecordRect {
-    const layout = { width: other.clientWidth, height: other.clientHeight };
+    const layout = { width: other.offsetWidth, height: other.offsetHeight };
     const bounds = other.getBoundingClientRect();
     const rootBounds = other.closest(`[${UIDesignToolIDAttributeName}]`)?.getBoundingClientRect() ?? new DOMRect();
 

@@ -1,4 +1,4 @@
-import { ComponentPropsByBox, ComponentRefByBox } from '@/patterns/Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@/primitives/Box';
 
-export type ButtonProps = ComponentPropsByBox<'button'>;
-export type ButtonRef = ComponentRefByBox<'button'>;
+export type ButtonProps = ComponentPropsWithoutRefByBox<'button'>;
+export type ButtonRef = ComponentElementRefByBox<'button'>;

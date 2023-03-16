@@ -1,5 +1,10 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useBrowserMeta, useDispatcher, useItemReference, useStatus, useUIController, useUIElement } from '@/hooks';
+import useBrowserMeta from '@/hooks/useBrowserMeta';
+import useDispatcher from '@/hooks/useDispatcher';
+import useItemReference from '@/hooks/useItemReference';
+import useStatus from '@/hooks/useStatus';
+import useUIController from '@/hooks/useUIController';
+import useUIElement from '@/hooks/useUIElement';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';

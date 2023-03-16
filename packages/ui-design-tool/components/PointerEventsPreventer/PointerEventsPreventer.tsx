@@ -1,5 +1,6 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useCursor, useStatus } from '@/hooks';
+import useCursor from '@/hooks/useCursor';
+import useStatus from '@/hooks/useStatus';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as styles from './PointerEventsPreventer.css';

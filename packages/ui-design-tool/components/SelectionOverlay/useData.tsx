@@ -1,5 +1,5 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useStatus } from '@/hooks';
+import useStatus from '@/hooks/useStatus';
 import { UIRecordKey } from '@/types/Identifier';
 import { useRef, useState } from 'react';
 

@@ -1,4 +1,4 @@
-import { Box } from '@pigyuma/design-system/patterns';
+import Box from '@pigyuma/design-system/primitives/Box';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './Toolbar.css';

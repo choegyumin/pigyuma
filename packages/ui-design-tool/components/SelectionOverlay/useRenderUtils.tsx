@@ -1,6 +1,6 @@
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
-import { useUIElement } from '@/hooks';
+import useUIElement from '@/hooks/useUIElement';
 import { UIRecordRect } from '@/types/Geometry';
 import { useCallback } from 'react';
 import * as styles from './SelectionOverlay.css';

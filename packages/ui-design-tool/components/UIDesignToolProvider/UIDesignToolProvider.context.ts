@@ -1,8 +1,8 @@
 import constate from 'constate';
-import useContextValue from './useContextValue';
+import useContextValues from './useContextValues';
 
-const constateResult = constate(
-  useContextValue,
+const [UIDesignToolContextProvider, ...hooks] = constate(
+  useContextValues,
   (value) => value.controllerInterface,
   (value) => value.dataInterface,
   (value) => value.elementInterface,
@@ -23,7 +23,6 @@ const constateResult = constate(
 );
 
 export const [
-  ,
   // 패키지 외부 제공 (재조정 범위에 따라 내부에서도 사용)
   // - 은닉한 프로퍼티는 노출해서는 안됨
   // - 재조정 범위는 줄이되 패키지 사용자를 고려해 너무 많은 hook이 생기지 않도록 함
@@ -45,7 +44,6 @@ export const [
   usePairsReference,
   useSelection,
   useSelectionReference,
-] = constateResult;
+] = hooks;
 
-const [UIDesignToolContextProvider] = constateResult;
 export default UIDesignToolContextProvider;

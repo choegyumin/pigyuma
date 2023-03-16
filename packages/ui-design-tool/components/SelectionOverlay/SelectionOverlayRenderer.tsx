@@ -1,4 +1,4 @@
-import { useUIRecordForInteraction } from '@/hooks';
+import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import { useEventListener } from '@pigyuma/react-utils';
 import React from 'react';
 import * as styles from './SelectionOverlay.css';

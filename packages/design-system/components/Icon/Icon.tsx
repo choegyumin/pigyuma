@@ -9,7 +9,7 @@ import * as styles from './Icon.css';
 function withData(UilIcon: UilIcon) {
   const Icon = React.forwardRef<IconRef, IconProps>((props, ref) => {
     const componentId = useId();
-    const { className, size, ...restProps } = props;
+    const { size, ...rootProps } = props;
 
     useIsomorphicLayoutEffect(() => {
       if (ref) {
@@ -19,7 +19,7 @@ function withData(UilIcon: UilIcon) {
 
     return (
       <UilIcon
-        {...restProps}
+        {...rootProps}
         data-icon-component-id={componentId}
         className={clsx(styles.root, props.className)}
         style={{ ...props.style, fontSize: size ?? props.style?.fontSize }}

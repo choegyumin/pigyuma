@@ -37,13 +37,6 @@ export type HeightLengthTypeValue = keyof typeof HeightLengthTypeValue;
 export const HeightLengthType = mapValues(HeightLengthTypeValue, (value, key) => key) as { [P in HeightLengthTypeValue]: P };
 export type HeightLengthType = keyof typeof HeightLengthType;
 
-export const RotateLengthTypeValue = {
-  deg: NumberUnit.deg,
-};
-export type RotateLengthTypeValue = keyof typeof RotateLengthTypeValue;
-export const RotateLengthType = mapValues(RotateLengthTypeValue, (value, key) => key) as { [P in RotateLengthTypeValue]: P };
-export type RotateLengthType = keyof typeof RotateLengthType;
-
 export const LetterSpacingLengthTypeValue = {
   percent: NumberUnit.em,
   px: NumberUnit.px,

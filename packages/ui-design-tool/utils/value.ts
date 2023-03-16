@@ -7,7 +7,6 @@ import {
   NumberKeywordValue,
   NumberUnit,
   NumberUnitValue,
-  RotateLengthTypeValue,
   WidthLengthTypeValue,
   XLengthTypeValue,
   YLengthTypeValue,
@@ -27,6 +26,8 @@ import {
   XValueObject,
   YValueObject,
 } from '@/types/Value';
+
+export const fixNumberValue = (number: number) => Number(number.toFixed(2));
 
 export const convertNumberValue = (
   length: number,
@@ -54,8 +55,8 @@ export const convertWidthValue = ({ length, lengthType }: WidthValueObject): Sty
 export const convertHeightValue = ({ length, lengthType }: HeightValueObject): StyleValue => {
   return convertNumberValue(length, HeightLengthTypeValue[lengthType]);
 };
-export const convertRotateValue = ({ length }: RotateValueObject): StyleValue => {
-  return convertNumberValue(length, RotateLengthTypeValue.deg);
+export const convertRotateValue = ({ degrees }: RotateValueObject): StyleValue => {
+  return convertNumberValue(degrees, NumberUnit.deg);
 };
 export const convertFillValue = ({ color }: FillValueObject): StyleValue => {
   return color;
@@ -82,9 +83,6 @@ export const convertStrokePatternValue = ({ pattern }: StrokeValueObject): Style
   return `${pattern}`;
 };
 export const convertStrokeWidthValue = ({ width }: StrokeValueObject): StyleValue => {
-  if (typeof width === 'number') {
-    return convertNumberValue(width, NumberUnit.px);
-  }
   const top = convertNumberValue(width.top, NumberUnit.px);
   const right = convertNumberValue(width.right, NumberUnit.px);
   const bottom = convertNumberValue(width.bottom, NumberUnit.px);

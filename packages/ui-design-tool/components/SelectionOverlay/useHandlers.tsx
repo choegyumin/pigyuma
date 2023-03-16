@@ -1,6 +1,9 @@
 import { Layer } from '@/api/Layer/model';
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import { useItemReference, useDispatcher, useUIController, useUIElement } from '@/hooks';
+import useDispatcher from '@/hooks/useDispatcher';
+import useItemReference from '@/hooks/useItemReference';
+import useUIController from '@/hooks/useUIController';
+import useUIElement from '@/hooks/useUIElement';
 import { UIDesignToolIDAttributeName } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useEvent } from '@pigyuma/react-utils';

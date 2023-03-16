@@ -14,8 +14,8 @@ const dummyShapeLayer = new ShapeLayer({
   y: { length: 200, lengthType: NumberUnit.px },
   width: { length: 300, lengthType: NumberUnit.px },
   height: { length: 400, lengthType: NumberUnit.px },
-  rotate: { length: 45 },
-  stroke: { color: 'blue', pattern: StrokeStylePattern.solid, width: 2 },
+  rotate: { degrees: 45 },
+  stroke: { color: 'blue', pattern: StrokeStylePattern.solid, width: { top: 1, right: 2, bottom: 3, left: 4 } },
   fill: { color: 'gray' },
   children: [],
 });
@@ -26,7 +26,7 @@ const dummyTextLayer = new TextLayer({
   y: { length: 200, lengthType: NumberUnit.px },
   width: { length: 300, lengthType: NumberUnit.px },
   height: { length: 400, lengthType: NumberUnit.px },
-  rotate: { length: 45 },
+  rotate: { degrees: 45 },
   textColor: { color: 'black' },
   fontSize: { length: 14, lengthType: NumberUnit.px },
   lineHeight: { length: 21, lengthType: NumberUnit.px },
@@ -48,7 +48,7 @@ describe('getComputedUIRecordStyleValue', () => {
     expect(getComputedUIRecordStyleValue(shapeLayer, UIRecordStyle.rotate)).toBe('45deg');
     expect(getComputedUIRecordStyleValue(shapeLayer, UIRecordStyle.strokeColor)).toBe('blue');
     expect(getComputedUIRecordStyleValue(shapeLayer, UIRecordStyle.strokePattern)).toBe('solid');
-    expect(getComputedUIRecordStyleValue(shapeLayer, UIRecordStyle.strokeWidth)).toBe('2px');
+    expect(getComputedUIRecordStyleValue(shapeLayer, UIRecordStyle.strokeWidth)).toBe('1px 2px 3px 4px');
     expect(getComputedUIRecordStyleValue(shapeLayer, UIRecordStyle.background)).toBe('gray');
     expect(getComputedUIRecordStyleValue(textLayer, UIRecordStyle.x)).toBe('100px');
     expect(getComputedUIRecordStyleValue(textLayer, UIRecordStyle.y)).toBe('200px');
@@ -77,7 +77,7 @@ describe('getComputedUIRecordStyle', () => {
       [UIRecordStyle.rotate]: '45deg',
       [UIRecordStyle.strokeColor]: 'blue',
       [UIRecordStyle.strokePattern]: 'solid',
-      [UIRecordStyle.strokeWidth]: '2px',
+      [UIRecordStyle.strokeWidth]: '1px 2px 3px 4px',
       [UIRecordStyle.background]: 'gray',
       [UIRecordStyle.textColor]: '',
       [UIRecordStyle.fontSize]: '',

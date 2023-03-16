@@ -1,9 +1,9 @@
 import mixins from '@pigyuma/design-system/mixins';
-import { Box } from '@pigyuma/design-system/patterns';
+import Box from '@pigyuma/design-system/primitives/Box';
 import { useUIData } from '@pigyuma/ui-design-tool';
 import clsx from 'clsx';
 import React from 'react';
-import LayerList from './LayerList';
+import LayerList from '../LayerList';
 import * as styles from './LayerTreeSection.css';
 import { LayerTreeSectionProps, LayerTreeSectionRef } from './types';
 
