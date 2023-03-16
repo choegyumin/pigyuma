@@ -1,6 +1,7 @@
 import ColorPicker from '@pigyuma/design-system/components/ColorPicker';
 import NumberField from '@pigyuma/design-system/components/NumberField';
 import Select from '@pigyuma/design-system/components/Select';
+import { SelectValue } from '@pigyuma/design-system/primitives/Select';
 import { useEvent } from '@pigyuma/react-utils';
 import { Artboard, ShapeLayer, TextLayer, useUIController, useUIRecord } from '@pigyuma/ui-design-tool';
 import { StrokeStylePattern } from '@pigyuma/ui-design-tool/types/Unit';
@@ -35,13 +36,15 @@ const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRef, LayerStrokeSe
     uiController.set<ShapeLayer>(uiRecord.key, { stroke: { color } });
   });
 
-  const onStrokePatternChange = useEvent((event: React.ChangeEvent<HTMLSelectElement>, selected: string | number | undefined) => {
-    if (!canEdit || selected == null) {
-      return;
-    }
-    const pattern = selected as StrokeStylePattern;
-    uiController.set<ShapeLayer>(uiRecord.key, { stroke: { pattern } });
-  });
+  const onStrokePatternChange = useEvent(
+    (event: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null, selected: SelectValue | null) => {
+      if (!canEdit || selected == null) {
+        return;
+      }
+      const pattern = selected as StrokeStylePattern;
+      uiController.set<ShapeLayer>(uiRecord.key, { stroke: { pattern } });
+    },
+  );
 
   const onStrokeTopWidthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
     if (!canEdit) {

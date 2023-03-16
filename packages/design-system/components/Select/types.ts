@@ -1,12 +1,12 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@/primitives/Box';
 import {
   SelectItemProps as PrimitiveSelectItemProps,
   SelectItemRef as PrimitiveSelectItemRef,
   SelectProps as PrimitiveSelectProps,
+  SelectRef as PrimitiveSelectRef,
 } from '@/primitives/Select';
 
-export type SelectProps = Omit<ComponentPropsWithoutRefByBox<'span'>, keyof PrimitiveSelectProps> & PrimitiveSelectProps;
-export type SelectRef = ComponentElementRefByBox<'span'>;
+export type SelectProps = Omit<PrimitiveSelectProps, 'slots'>;
+export type SelectRef = PrimitiveSelectRef;
 
 export type SelectItemProps = PrimitiveSelectItemProps;
 export type SelectItemRef = PrimitiveSelectItemRef;
