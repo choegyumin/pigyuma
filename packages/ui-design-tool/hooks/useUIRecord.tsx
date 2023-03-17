@@ -3,38 +3,45 @@ import useItemReference from '@/hooks/useItemReference';
 import useUISubscription from '@/hooks/useUISubscription';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
-import { setRef, useCloneDeepState, useIsomorphicLayoutEffect } from '@pigyuma/react-utils';
+import { setRef, useForceUpdate, useIsomorphicLayoutEffect } from '@pigyuma/react-utils';
 import { useEffect, useRef } from 'react';
 
 export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey | undefined): T | undefined {
-  const { subscribeItem } = useUISubscription();
+  const forceUpdate = useForceUpdate();
+  const firstRunRef = useRef<boolean>(true);
+
+  const { subscribeTree } = useUISubscription();
+
+  // 재조정 범위를 줄이기 위해 `useUIData` 반환 값을 사용하는 대신 직접 값에 접근
   const getRecord = useItemReference();
 
-  // 재조정 범위를 줄이기 위해 `useUIData` 반환 값을 사용하지 않고, 직접 구독해서 상태 관리
-  // React와 상태 관리 주기를 맞추기 위해 참조를 끊음
-  const [record, setRecord] = useCloneDeepState<T | undefined>(() => (isUIRecordKey(recordKey) ? getRecord(recordKey) : undefined));
-
-  const firstRunRef = useRef<boolean>(true);
+  const record = isUIRecordKey(recordKey) ? getRecord<T>(recordKey) : undefined;
 
   // 가능하면 browser painting 이전에 상태 변경이 이뤄지도록 함
   useIsomorphicLayoutEffect(() => {
     // initial state와 값이 동일하지만 참조는 항상 끊어지므로, 최초 발생한 effect를 무시해 재조정을 차단함
-    if (firstRunRef.current) {
-      return setRef(firstRunRef, false);
+    if (!firstRunRef.current) {
+      forceUpdate();
     }
-    setRecord(isUIRecordKey(recordKey) ? (getRecord(recordKey) as T) : undefined);
-  }, [recordKey, setRecord, getRecord]);
+  }, [recordKey, forceUpdate]);
+
+  useEffect(() => {
+    setRef(firstRunRef, false);
+  }, [recordKey, getRecord]);
 
   useEffect(() => {
     if (!isUIRecordKey(recordKey)) {
       return;
     }
-    const callback = (newRecord: UIRecord | undefined) => {
-      setRecord(newRecord as T);
+    const callback = (_: unknown, changed: UIRecord[]) => {
+      const isChanged = changed.find((it) => it.key === recordKey) != null;
+      if (isChanged) {
+        forceUpdate();
+      }
     };
-    const unsubscribe = subscribeItem(recordKey, callback);
+    const unsubscribe = subscribeTree(callback);
     return unsubscribe;
-  }, [recordKey, setRecord, subscribeItem]);
+  }, [recordKey, subscribeTree, forceUpdate]);
 
   return record;
 }

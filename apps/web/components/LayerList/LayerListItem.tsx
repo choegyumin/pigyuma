@@ -59,8 +59,8 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
   }, [hasChildren]);
 
   useEffect(() => {
-    const unsubscribe = uiSubscription.subscribeSelection((selected) => {
-      if (selected.find((it) => it.key === record.key) != null) {
+    const unsubscribe = uiSubscription.subscribeSelection((newSelected) => {
+      if (newSelected.find((key) => key === record.key) != null) {
         onGroupOpenProp?.();
         // 상위 Group들이 열리기를 기다림
         window.requestAnimationFrame(() => {

@@ -22,6 +22,7 @@ function createDummyArtboard(key?: UIRecordKey): ArtboardData {
     y: 100,
     width: 100,
     height: 100,
+    fill: '#fff',
     children: [],
   };
 }
@@ -40,7 +41,7 @@ function createDummyShapeLayer(key?: UIRecordKey): ShapeLayerData {
     rotate: { degrees: 0 },
     width: { length: 100, lengthType: 'px' },
     height: { length: 100, lengthType: 'px' },
-    stroke: { color: 'black', pattern: 'solid', width: 1 },
+    stroke: { color: 'black', pattern: 'solid', width: { top: 1, right: 1, bottom: 1, left: 1 } },
     fill: { color: 'white' },
     children: [],
   };
@@ -93,27 +94,6 @@ describe('UIDesignTool', () => {
   });
 
   /** @todo 레이어 순서 및 그룹 변경 기능 구현 시: listener 실행을 유발하는 누락된 메서드 추가 */
-  describe('subscribeItem', () => {
-    test('should bind listener and call when record item changes', () => {
-      const listener = vi.fn<[UIRecord | undefined], void>();
-      uiDesignTool.subscribeItem(dummyTextLayer.key, listener);
-
-      uiDesignTool.set<TextLayerData>(dummyTextLayer.key, { content: '1' });
-      uiDesignTool.set<TextLayerData>(dummyTextLayer.key, { content: '2' });
-      uiDesignTool.setRect(dummyShapeLayer.key, new UIRecordRect(200, 300, 400, 500, 0));
-      expect(listener).toHaveBeenCalledTimes(2);
-
-      uiDesignTool.unsubscribeItem(dummyTextLayer.key, listener);
-      uiDesignTool.set<TextLayerData>(dummyTextLayer.key, { content: '3' });
-      expect(listener).toHaveBeenCalledTimes(2);
-
-      uiDesignTool.subscribeItem(dummyTextLayer.key, listener);
-      uiDesignTool.remove(dummyTextLayer.key);
-      expect(listener).toHaveBeenCalledTimes(3);
-    });
-  });
-
-  /** @todo 레이어 순서 및 그룹 변경 기능 구현 시: listener 실행을 유발하는 누락된 메서드 추가 */
   describe('subscribeTree', () => {
     test('should bind listener and call when record tree changes', () => {
       const listener = vi.fn<[UIRecord[]], void>();
@@ -135,7 +115,7 @@ describe('UIDesignTool', () => {
   /** @todo 레이어 순서 및 그룹 변경 기능 구현 시: listener 실행을 유발하는 누락된 메서드 추가 */
   describe('subscribeSelection', () => {
     test('should bind listener and call when selection changes', () => {
-      const listener = vi.fn<[UIRecord[]], void>();
+      const listener = vi.fn<[UIRecordKey[]], void>();
       uiDesignTool.subscribeSelection(listener);
 
       uiDesignTool.select([dummyArtboard.key]);
