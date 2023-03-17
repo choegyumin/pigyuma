@@ -672,8 +672,8 @@ export class UIDesignTool {
     }
   }
 
-  dataset(element: HTMLElement): { key: string | undefined; type: string | undefined; layerType: string | undefined } {
-    return mapValues(UIRecordElementDataset, (datasetKey) => element.dataset[datasetKey]);
+  dataset(element: Element | null): { key: string | undefined; type: string | undefined; layerType: string | undefined } {
+    return mapValues(UIRecordElementDataset, (datasetKey) => (element as Partial<HTMLElement | SVGElement> | null)?.dataset?.[datasetKey]);
   }
 
   matches(element: Element | null, filter: UIRecordElementFilter): boolean {

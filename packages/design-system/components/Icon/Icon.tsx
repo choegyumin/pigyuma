@@ -13,14 +13,14 @@ function withData(UilIcon: UilIcon) {
 
     useIsomorphicLayoutEffect(() => {
       if (ref) {
-        setRef(ref, document.querySelector<SVGElement>(`[data-icon-component-id="${componentId}"]`));
+        setRef(ref, document.querySelector<SVGElement>(`[data-component-id="${componentId}"]`));
       }
     });
 
     return (
       <UilIcon
         {...rootProps}
-        data-icon-component-id={componentId}
+        data-component-id={componentId}
         className={clsx(styles.root, props.className)}
         style={{ ...props.style, fontSize: size ?? props.style?.fontSize }}
       />

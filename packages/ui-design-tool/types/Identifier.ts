@@ -45,4 +45,14 @@ export const UIRecordElementDataset = {
   selected: 'uiRecordSelected',
 } as const;
 
+export const UIInteractionElementDataAttributeName = {
+  handleType: 'data-ui-interaction-handle-type',
+  handlePlacement: 'data-ui-interaction-handle-placement',
+} as const;
+
+export const UIInteractionElementDataset = {
+  handleType: 'uiInteractionHandleType',
+  handlePlacement: 'uiInteractionHandlePlacement',
+} as const;
+
 export const UIDesignToolIDAttributeName = 'data-ui-design-tool-id';

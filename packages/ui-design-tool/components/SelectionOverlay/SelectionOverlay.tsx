@@ -12,6 +12,7 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = React.memo(() =
   const data = useData();
   const { hoveredRecordKey } = data;
 
+  /** @todo InteractionController에서 중앙 관리 하도록 이벤트 핸들러 이관 (핸들 엘리먼트에 적절한 식별자 제공) */
   const { onDocumentMouseMove, onDocumentMouseDown, onDocumentMouseUp } = useHandlers({ data });
 
   return (

@@ -21,10 +21,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const instanceId = privateRef.current.id;
   const getBrowserMeta = useCallback(() => privateRef.current.getBrowserMeta(), []);
 
-  /**
-   * @todo 상태를 세분화해야 하는지 검토
-   * @todo XState 도입 검토 (상태를 context에서 관리하고 constate로 분리하지 않아도 InteractionController 내에서 눈에 띄는 성능 저하는 없을 것으로 판단됨)
-   */
+  /** @todo InteractionController의 상태를 이곳으로 이관 */
   const [status, setStatus] = useState<UIDesignToolStatus>(UIDesignToolStatus.idle);
   privateRef.current.setStatus(status);
   // const [interaction, setInteraction] = useState<UIDesignToolInteractionStatus>(UIDesignToolInteractionStatus.idle);

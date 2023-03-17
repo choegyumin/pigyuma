@@ -10,8 +10,11 @@ export const TransformOverlay: React.FC<TransformOverlayProps> = React.memo(() =
   const data = useData();
   const { selectedRecordKey } = data;
 
+  /** @todo InteractionController에서 중앙 관리 하도록 이벤트 핸들러 이관 (핸들 엘리먼트에 적절한 식별자 제공) */
   const { onResizeHandleMouseDown, onDocumentMouseUpForResize, onDocumentMouseMoveForResize, onDocuemntKeyDownUpForResize } =
     useResizeHandlers({ data });
+
+  /** @todo InteractionController에서 중앙 관리 하도록 이벤트 핸들러 이관 (핸들 엘리먼트에 적절한 식별자 제공) */
   const { onRotateHandleMouseDown, onDocumentMouseUpForRotate, onDocumentMouseMoveForRotate } = useRotateHandlers({ data });
 
   return (
