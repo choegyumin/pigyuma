@@ -1,7 +1,5 @@
 import { Canvas } from '@/api/Canvas/model';
 import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool, UIDesignToolStatus } from '@/api/UIDesignTool';
-import { UIRecord } from '@/api/UIRecord/model';
-import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -61,9 +59,9 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
    * @see useUIRecord {@link @/hooks/useUIRecord.tsx}
    * @todo 성능 저하가 발생하면: 최초 한번 cloneDeep 후, 변경된 아이템만 clone하도록 개선
    */
-  const [pairs, setPairs] = useCloneDeepState<Map<UIRecordKey, UIRecord>>(() => api.pairs);
-  const [tree, setTree] = useCloneDeepState<Canvas>(() => api.tree);
-  const [selected, setSelected] = useCloneDeepState<Set<UIRecordKey>>(() => api.selected);
+  const [pairs, setPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
+  const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
+  const [selected, setSelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
 
   // 필요 시 react 컴포넌트 내에서 상태가 아닌 인스턴스 값에 직접 접근
   const getItemReference = useStableCallback(((...args) => api.get(...args)) as typeof api.get);
@@ -155,13 +153,10 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   useEffect(() => {
     const callback = () => {
       setPairs(api.pairs);
-      setTree(api.tree);
-      // `selected`를 읽는 컴포넌트도 전체 데이터가 변경되었을 때 재조정 대상에 포함
-      setSelected(api.selected);
     };
     const unsubscribe = api.subscribeTree(callback);
     return unsubscribe;
-  }, [api, setPairs, setTree, setSelected]);
+  }, [api, setPairs]);
 
   useEffect(() => {
     const callback = () => {

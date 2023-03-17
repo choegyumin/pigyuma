@@ -2,7 +2,7 @@ import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Ident
 import { HeightLengthType, WidthLengthType, XLengthType, YLengthType } from '@/types/Unit';
 import { StyleValue } from '@/types/Value';
 import { convertFillValue, convertHeightValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
-import { clone, uuid } from '@pigyuma/utils';
+import { clone, nonNullable, uuid } from '@pigyuma/utils';
 import { Canvas } from '../Canvas/model';
 import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
 import { TextLayer, TextLayerData, TextLayerJSON } from '../TextLayer/model';
@@ -76,7 +76,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
     this.fill = args.fill;
     this.parent = parent;
     this.children =
-      (args.children
+      args.children
         ?.map((it) => {
           if (it instanceof ShapeLayer || it instanceof TextLayer) {
             // Replace parent
@@ -91,7 +91,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
           }
           return null;
         })
-        .filter(Boolean) as typeof this.children) ?? [];
+        .filter(nonNullable) ?? [];
   }
 
   get style(): ArtboardStyle {
