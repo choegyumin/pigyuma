@@ -1,3 +1,4 @@
+import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
 import useUIElement from '@/hooks/useUIElement';
@@ -50,8 +51,9 @@ export default function useRenderUtils() {
       styleValues[styles.varNames.axisYLength] = 0;
 
       const artboardRecord = hasUIRecordParent(record) ? record.parent : null;
-      const artboardElement = layerElement.parentElement;
-      if (artboardRecord == null || artboardElement == null || !uiElementAPI.matches(artboardElement, { type: UIRecordType.artboard })) {
+      const artboardElement = artboardRecord != null ? uiElementAPI.query({ type: UIRecordType.artboard, key: artboardRecord.key }) : null;
+
+      if (!(artboardRecord instanceof Artboard) || artboardElement == null) {
         return styleValues;
       }
 

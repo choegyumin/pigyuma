@@ -19,6 +19,7 @@ export const UIRecordIdentifiers = {
   key: 'key',
   type: 'type',
   layerType: 'layerType',
+  selected: 'selected',
 } as const;
 export type UIRecordIdentifiers = keyof typeof UIRecordIdentifiers;
 
@@ -26,6 +27,7 @@ export type UIRecordElementFilterItem = {
   key?: string;
   type?: string | string[];
   layerType?: string | string[];
+  selected?: boolean;
 };
 export type UIRecordElementFilter = UIRecordElementFilterItem | UIRecordElementFilterItem[];
 
@@ -33,12 +35,14 @@ export const UIRecordElementDataAttributeName = {
   key: 'data-ui-record-key',
   type: 'data-ui-record-type',
   layerType: 'data-ui-record-layer-type',
+  selected: 'data-ui-record-selected',
 } as const;
 
 export const UIRecordElementDataset = {
   key: 'uiRecordKey',
   type: 'uiRecordType',
   layerType: 'uiRecordLayerType',
+  selected: 'uiRecordSelected',
 } as const;
 
 export const UIDesignToolIDAttributeName = 'data-ui-design-tool-id';

@@ -1,3 +1,4 @@
+import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
 import useDispatcher from '@/hooks/useDispatcher';
@@ -72,11 +73,10 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     const recordKey = target != null ? uiElementAPI.dataset(target).key : undefined;
     const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
 
-    // Artboard, Layer 모두 선택 가능하지만 Artboard는 스펙 상 API 호출로만 허용
-    const isLayer = record instanceof Layer;
+    const isSelectable = record instanceof Artboard || record instanceof Layer;
 
     /** @todo Range selection 기능 구현 */
-    const records = isLayer && record != null ? [record] : [];
+    const records = isSelectable && record != null ? [record] : [];
 
     setStatus(UIDesignToolStatus.idle);
     uiControllerAPI.select(records.map(({ key }) => key));
