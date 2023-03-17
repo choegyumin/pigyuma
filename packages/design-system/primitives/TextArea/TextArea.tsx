@@ -4,17 +4,19 @@ import Box from '../Box';
 import { TextAreaProps, TextAreaRef } from './types';
 
 const TextArea = React.forwardRef<TextAreaRef, TextAreaProps>((props, ref) => {
+  const { autoSelect, ...restProps } = props;
+
   const onChange = useEvent((event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    props.onChange?.(event, event.currentTarget.value);
+    restProps.onChange?.(event, event.currentTarget.value);
   });
 
   const onChangeCapture = useEvent((event: React.FormEvent<HTMLTextAreaElement>) => {
-    props.onChangeCapture?.(event, event.currentTarget.value);
+    restProps.onChangeCapture?.(event, event.currentTarget.value);
   });
 
   const onFocusCapture = useEvent((event: React.FocusEvent<HTMLTextAreaElement>) => {
-    props.onFocusCapture?.(event);
-    if (props.autoSelect) {
+    restProps.onFocusCapture?.(event);
+    if (autoSelect) {
       const { currentTarget } = event;
       window.requestAnimationFrame(() => {
         currentTarget.select();
@@ -22,7 +24,9 @@ const TextArea = React.forwardRef<TextAreaRef, TextAreaProps>((props, ref) => {
     }
   });
 
-  return <Box {...props} ref={ref} as="textarea" onChange={onChange} onChangeCapture={onChangeCapture} onFocusCapture={onFocusCapture} />;
+  return (
+    <Box {...restProps} ref={ref} as="textarea" onChange={onChange} onChangeCapture={onChangeCapture} onFocusCapture={onFocusCapture} />
+  );
 });
 TextArea.displayName = 'TextArea';
 
