@@ -73,16 +73,15 @@ export class UIDesignTool {
 
   readonly #browserMeta: BrowserMeta;
   readonly #listeners: {
-    readonly item: Map<UIRecordKey, Set<(value: UIRecord | undefined) => void>>;
-    readonly tree: Set<(values: UIRecord[]) => void>;
-    readonly selection: Set<(values: UIRecord[]) => void>;
+    readonly tree: Set<(tree: UIRecord[], changed: UIRecord[], removed: UIRecordKey[]) => void>;
+    readonly selection: Set<(selected: UIRecordKey[]) => void>;
   };
 
   #mounted: boolean;
   #status: UIDesignToolStatus;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
-  #selectedItems: Set<Artboard | ShapeLayer | TextLayer>;
+  #selectedKeys: Set<UIRecordKey>;
 
   #hoveredElement: HTMLElement | null;
 
@@ -100,7 +99,6 @@ export class UIDesignTool {
 
     this.#browserMeta = INITIAL_BROWSER_META;
     this.#listeners = {
-      item: new Map(),
       tree: new Set(),
       selection: new Set(),
     };
@@ -109,7 +107,7 @@ export class UIDesignTool {
     this.#status = UIDesignToolStatus.idle;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
-    this.#selectedItems = new Set();
+    this.#selectedKeys = new Set();
 
     this.#hoveredElement = null;
 
@@ -159,8 +157,8 @@ export class UIDesignTool {
     return this.#items;
   }
 
-  get selection(): Set<Artboard | ShapeLayer | TextLayer> {
-    return this.#selectedItems;
+  get selected(): Set<UIRecordKey> {
+    return this.#selectedKeys;
   }
 
   mount() {
@@ -208,41 +206,19 @@ export class UIDesignTool {
     this.#hoveredElement = null;
   }
 
-  subscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T | undefined) => void): void {
-    if (!this.#listeners.item.has(targetKey)) {
-      this.#listeners.item.set(targetKey, new Set());
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const callbacks = this.#listeners.item.get(targetKey)!;
-    callbacks.add(callback);
-  }
-
-  unsubscribeItem(targetKey: UIRecordKey, callback: <T extends UIRecord>(value: T | undefined) => void): void {
-    if (!this.#listeners.item.has(targetKey)) {
-      return;
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const callbacks = this.#listeners.item.get(targetKey)!;
-    callbacks.delete(callback);
-    if (callbacks.size === 0) {
-      // delete callbacks
-      this.#listeners.item.delete(targetKey);
-    }
-  }
-
-  subscribeTree(callback: (values: UIRecord[]) => void): void {
+  subscribeTree(callback: (all: UIRecord[], changed: UIRecord[], removed: UIRecordKey[]) => void): void {
     this.#listeners.tree.add(callback);
   }
 
-  unsubscribeTree(callback: (values: UIRecord[]) => void): void {
+  unsubscribeTree(callback: (all: UIRecord[], changed: UIRecord[], removed: UIRecordKey[]) => void): void {
     this.#listeners.tree.delete(callback);
   }
 
-  subscribeSelection(callback: (values: UIRecord[]) => void): void {
+  subscribeSelection(callback: (selected: UIRecordKey[]) => void): void {
     this.#listeners.selection.add(callback);
   }
 
-  unsubscribeSelection(callback: (values: UIRecord[]) => void): void {
+  unsubscribeSelection(callback: (selected: UIRecordKey[]) => void): void {
     this.#listeners.selection.delete(callback);
   }
 
@@ -250,8 +226,10 @@ export class UIDesignTool {
     const newChildren = data.map((it) => toUIRecordInstance<ArrayElements<Canvas['children']>>(it));
     const canvas = this.#canvas;
 
+    const deletedKeys = [...this.#items.keys()];
+
     this.#items.clear();
-    this.#selectedItems = new Set();
+    this.#selectedKeys = new Set();
 
     while (canvas.children.length > 0) {
       canvas.children.pop();
@@ -267,10 +245,7 @@ export class UIDesignTool {
       this.#items.set(it.key, it);
     });
 
-    this.#listeners.tree.forEach((callback) => callback([canvas]));
-    newItems.forEach((it) => {
-      this.#listeners.item.get(it.key)?.forEach((callback) => callback(it));
-    });
+    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [...newItems.values()], deletedKeys));
     this.#listeners.selection.forEach((callback) => callback([]));
   }
 
@@ -278,8 +253,7 @@ export class UIDesignTool {
     const missingRecordKeys: UIRecordKey[] = [];
     const invalidRecordKeys: UIRecordKey[] = [];
 
-    const newRecordKeys: UIRecordKey[] = [];
-    const newRecordValues: Array<Artboard | ShapeLayer | TextLayer> = [];
+    const newSelectedKeys: UIRecordKey[] = [];
 
     targetKeys.forEach((key) => {
       const record = this.#items.get(key);
@@ -291,8 +265,7 @@ export class UIDesignTool {
         invalidRecordKeys.push(key);
         return;
       }
-      newRecordKeys.push(record.key);
-      newRecordValues.push(record);
+      newSelectedKeys.push(record.key);
     });
 
     if (missingRecordKeys.length > 0) {
@@ -305,13 +278,13 @@ export class UIDesignTool {
       );
     }
 
-    // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    if (JSON.stringify([...this.#selectedItems].map(({ key }) => key)) === JSON.stringify(newRecordKeys)) {
-      return;
-    }
+    // 순서도 동일한지 확인해야 하므로 stringify 결과를 비교
+    const isSelectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
 
-    this.#selectedItems = new Set(newRecordValues);
-    this.#listeners.selection.forEach((callback) => callback(newRecordValues));
+    if (isSelectionChanged) {
+      this.#selectedKeys = new Set(newSelectedKeys);
+      this.#listeners.selection.forEach((callback) => callback(newSelectedKeys));
+    }
   }
 
   get<T extends UIRecord>(targetKey: UIRecordKey): T | undefined {
@@ -323,7 +296,7 @@ export class UIDesignTool {
   }
 
   isSelected(targetKey: UIRecordKey): boolean {
-    return [...this.#selectedItems].find(({ key }) => key === targetKey) != null;
+    return this.#selectedKeys.has(targetKey);
   }
 
   set<T extends UIRecordData>(targetKey: UIRecordKey, value: UIRecordChanges<T> | ((prev: T) => UIRecordChanges<T>)): void {
@@ -388,8 +361,7 @@ export class UIDesignTool {
 
     merge(targetValue, newTargetValue);
 
-    this.#listeners.tree.forEach((callback) => callback([targetValue]));
-    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
+    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [targetValue], []));
   }
 
   setRect(targetKey: UIRecordKey, rect: UIRecordRect | UIRecordRectInit): void {
@@ -499,10 +471,7 @@ export class UIDesignTool {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destValue.children[method === 'prepend' ? 'unshift' : 'push'](handleValue as any);
 
-      this.#listeners.tree.forEach((callback) => callback([startValue, destValue, handleValue]));
-      this.#listeners.item.get(startKey)?.forEach((callback) => callback(startValue));
-      this.#listeners.item.get(destKey)?.forEach((callback) => callback(destValue));
-      this.#listeners.item.get(handleKey)?.forEach((callback) => callback(handleValue));
+      this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [startValue, destValue, handleValue], []));
     } else if (method === 'insertBefore' || method === 'insertAfter') {
       if (!hasUIRecordParent(destValue)) {
         console.error(`UIRecord '${destKey}' has no parent.`);
@@ -535,10 +504,7 @@ export class UIDesignTool {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       destParentValue.children.splice(targetIndex, 0, handleValue as any);
 
-      this.#listeners.tree.forEach((callback) => callback([startValue, destParentValue, handleValue]));
-      this.#listeners.item.get(startKey)?.forEach((callback) => callback(startValue));
-      this.#listeners.item.get(destParentKey)?.forEach((callback) => callback(destParentValue));
-      this.#listeners.item.get(handleKey)?.forEach((callback) => callback(handleValue));
+      this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [startValue, destParentValue, handleValue], []));
     }
   }
 
@@ -559,15 +525,12 @@ export class UIDesignTool {
       return;
     }
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
-    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentValue.children.push(targetValue as any);
 
-    this.#listeners.tree.forEach((callback) => callback([parentValue]));
-    this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
-    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
+    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [parentValue, targetValue], []));
   }
 
   prepend<T extends UIRecord | UIRecordData>(parentKey: UIRecordKey, value: T): void {
@@ -588,15 +551,12 @@ export class UIDesignTool {
     }
 
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
-    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentValue.children.unshift(targetValue as any);
 
-    this.#listeners.tree.forEach((callback) => callback([parentValue]));
-    this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
-    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
+    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [parentValue, targetValue], []));
   }
 
   #insert<T extends UIRecord | UIRecordData>(method: 'before' | 'after', siblingKey: UIRecordKey, value: T): void {
@@ -639,14 +599,11 @@ export class UIDesignTool {
     }
 
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
-    const targetKey = targetValue.key;
 
     this.#items.set(targetValue.key, targetValue);
     parentValue.children.splice(targetIndex, 0, targetValue);
 
-    this.#listeners.tree.forEach((callback) => callback([parentValue]));
-    this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
-    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(targetValue));
+    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [parentValue, targetValue], []));
   }
 
   insertBefore<T extends UIRecord | UIRecordData>(nextSiblingKey: UIRecordKey, value: T): void {
@@ -700,24 +657,18 @@ export class UIDesignTool {
       return stack;
     };
 
-    const deletedItems = deleteTree(targetValue);
-    const newSelectedItems = exclude([...this.#selectedItems], deletedItems);
-    // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    const isSelectionChanged =
-      JSON.stringify([...this.#selectedItems].map(({ key }) => key)) === JSON.stringify(newSelectedItems.map(({ key }) => key));
+    const deletedKeys = deleteTree(targetValue).map((it) => it.key);
+    const newSelectedKeys = exclude([...this.#selectedKeys], deletedKeys);
+    // 순서도 동일한지 확인해야 하므로 stringify 결과를 비교
+    const isSelectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
+
     if (isSelectionChanged) {
-      this.#selectedItems = new Set(newSelectedItems);
+      this.#selectedKeys = new Set(newSelectedKeys);
     }
 
-    if (hasParent) {
-      this.#listeners.tree.forEach((callback) => callback([parentValue]));
-      this.#listeners.item.get(parentKey)?.forEach((callback) => callback(parentValue));
-    } else {
-      this.#listeners.tree.forEach((callback) => callback([]));
-    }
-    this.#listeners.item.get(targetKey)?.forEach((callback) => callback(undefined));
+    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], hasParent ? [parentValue] : [], deletedKeys));
     if (isSelectionChanged) {
-      this.#listeners.selection.forEach((callback) => callback(newSelectedItems));
+      this.#listeners.selection.forEach((callback) => callback(newSelectedKeys));
     }
   }
 

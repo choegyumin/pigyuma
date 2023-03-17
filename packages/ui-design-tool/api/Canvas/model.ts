@@ -1,5 +1,5 @@
 import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
-import { clone } from '@pigyuma/utils';
+import { clone, nonNullable } from '@pigyuma/utils';
 import { Artboard, ArtboardJSON, ArtboardData } from '../Artboard/model';
 import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
 import { TextLayer, TextLayerData, TextLayerJSON } from '../TextLayer/model';
@@ -39,7 +39,7 @@ export class Canvas extends UIRecord implements CanvasJSON {
     this.type = superArgs.type;
 
     this.children =
-      (args.children
+      args.children
         ?.map((it) => {
           if (it instanceof Artboard || it instanceof ShapeLayer || it instanceof TextLayer) {
             // Replace parent
@@ -57,7 +57,7 @@ export class Canvas extends UIRecord implements CanvasJSON {
           }
           return null;
         })
-        .filter(Boolean) as typeof this.children) ?? [];
+        .filter(nonNullable) ?? [];
   }
 
   toJSON(): CanvasJSON {

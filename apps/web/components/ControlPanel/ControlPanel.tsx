@@ -10,8 +10,8 @@ import * as styles from './ControlPanel.css';
 import { ControlPanelProps, ControlPanelRef } from './types';
 
 const ControlPanel = React.forwardRef<ControlPanelRef, ControlPanelProps>((props, ref) => {
-  const { selection } = useUIData();
-  const selectedRecord = [...selection][0] as SetValues<typeof selection> | undefined;
+  const uiData = useUIData();
+  const selectedRecord = uiData.get([...uiData.selected][0]);
 
   const hasUIRecord = selectedRecord != null;
 

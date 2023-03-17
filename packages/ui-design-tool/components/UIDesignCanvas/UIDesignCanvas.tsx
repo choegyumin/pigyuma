@@ -14,11 +14,11 @@ import * as styles from './UIDesignCanvas.css';
 export const UIDesignCanvas = React.memo(
   React.forwardRef<UIDesignCanvasRef, UIDesignCanvasProps>((props, ref) => {
     const id = useInstanceID();
-    const { reset } = useUIController();
+    const uiController = useUIController();
     const { initialData, ...attrs } = props;
 
     useMount(() => {
-      reset(cloneDeep(initialData));
+      uiController.reset(cloneDeep(initialData));
     });
 
     return (

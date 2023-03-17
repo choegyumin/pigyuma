@@ -4,17 +4,19 @@ import Box from '../Box';
 import { TextInputProps, TextInputRef } from './types';
 
 const TextInput = React.forwardRef<TextInputRef, TextInputProps>((props, ref) => {
+  const { autoSelect, ...restProps } = props;
+
   const onChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
-    props.onChange?.(event, event.currentTarget.value);
+    restProps.onChange?.(event, event.currentTarget.value);
   });
 
   const onChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
-    props.onChangeCapture?.(event, event.currentTarget.value);
+    restProps.onChangeCapture?.(event, event.currentTarget.value);
   });
 
   const onFocusCapture = useEvent((event: React.FocusEvent<HTMLInputElement>) => {
-    props.onFocusCapture?.(event);
-    if (props.autoSelect) {
+    restProps.onFocusCapture?.(event);
+    if (autoSelect) {
       const { currentTarget } = event;
       window.requestAnimationFrame(() => {
         currentTarget.select();
@@ -24,10 +26,10 @@ const TextInput = React.forwardRef<TextInputRef, TextInputProps>((props, ref) =>
 
   return (
     <Box
-      {...props}
+      {...restProps}
       ref={ref}
       as="input"
-      type={props.type ?? 'text'}
+      type={restProps.type ?? 'text'}
       onChange={onChange}
       onChangeCapture={onChangeCapture}
       onFocusCapture={onFocusCapture}

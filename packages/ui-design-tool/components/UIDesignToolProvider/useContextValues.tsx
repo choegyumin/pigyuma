@@ -1,7 +1,4 @@
-import { Artboard } from '@/api/Artboard/model';
 import { Canvas } from '@/api/Canvas/model';
-import { ShapeLayer } from '@/api/ShapeLayer/model';
-import { TextLayer } from '@/api/TextLayer/model';
 import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool, UIDesignToolStatus } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
@@ -60,19 +57,12 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   );
 
   /**
-   * 참조 제거
-   * @see useUIRecord {@link @/hooks/useUIRecord.tsx}
+   * 상태의 Life cycle을 React에 의존하기 위해 참조 제거
    * @todo 성능 저하가 발생하면: 최초 한번 cloneDeep 후, 변경된 아이템만 clone하도록 개선
    */
-  const [pairs, setPairs] = useCloneDeepState<Map<UIRecordKey, UIRecord>>(() => api.pairs);
-  const [tree, setTree] = useCloneDeepState<Canvas>(() => api.tree);
-  const [selection, setSelection] = useCloneDeepState<Set<Artboard | ShapeLayer | TextLayer>>(() => api.selection);
-
-  // 필요 시 react 컴포넌트 내에서 상태가 아닌 인스턴스 값에 직접 접근
-  const getItemReference = useStableCallback(((...args) => api.get(...args)) as typeof api.get);
-  const getTreeReference = useStableCallback(() => api.tree);
-  const getPairsReference = useStableCallback(() => api.pairs);
-  const getSelectionReference = useStableCallback(() => api.selection);
+  const [pairs, setPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
+  const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
+  const [selected, setSelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
 
   const controllerInterface = useMemo(
     () => ({
@@ -97,10 +87,10 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       has: ((targetKey) => pairs.has(targetKey)) as typeof api.has,
       pairs,
       tree,
-      selection,
-      isSelected: ((targetKey) => [...selection].find(({ key }) => key === targetKey) != null) as typeof api.isSelected,
+      selected,
+      isSelected: ((targetKey) => selected.has(targetKey)) as typeof api.isSelected,
     }),
-    [api, status, pairs, tree, selection],
+    [api, status, pairs, tree, selected],
   );
 
   const elementInterface = useMemo(
@@ -116,14 +106,9 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     [api],
   );
 
-  // `useEffect`와 유사한 형태로 Clean-up 함수(unsubscribe) 제공
+  // unsubscribe 함수를 `useEffect`의 Clean-up 함수 형태로 제공
   const subscriptionInterface = useMemo(
     () => ({
-      subscribeItem: (...args: Parameters<typeof api.subscribeItem>): (() => void) => {
-        api.subscribeItem(...args);
-        const unsubscribe = () => api.unsubscribeItem(...args);
-        return unsubscribe;
-      },
       subscribeTree: (...args: Parameters<typeof api.subscribeTree>): (() => void) => {
         api.subscribeTree(...args);
         const unsubscribe = () => api.unsubscribeTree(...args);
@@ -137,6 +122,12 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     }),
     [api],
   );
+
+  // 필요 시 React의 Life cycle을 무시하고 값에 직접 접근
+  const getItemReference = useStableCallback(((...args) => dataInterface.get(...args)) as typeof api.get);
+  const getTreeReference = useStableCallback(() => dataInterface.tree);
+  const getPairsReference = useStableCallback(() => dataInterface.pairs);
+  const getSelectedReference = useStableCallback(() => dataInterface.selected);
 
   useEffect(() => {
     const { id, getBrowserMeta, setStatus } = api.mount();
@@ -156,23 +147,20 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   }, [api]);
 
   useEffect(() => {
-    const callback = () => {
-      setPairs(api.pairs);
-      setTree(api.tree);
-      // `selection`를 읽는 컴포넌트도 전체 데이터가 변경되었을 때 재조정 대상에 포함
-      setSelection(api.selection);
+    const callback = (all: UIRecord[]) => {
+      setPairs(new Map(all.map((it) => [it.key, it])));
     };
-    const unsubscribe = api.subscribeTree(callback);
+    const unsubscribe = subscriptionInterface.subscribeTree(callback);
     return unsubscribe;
-  }, [api, setPairs, setTree, setSelection]);
+  }, [api, subscriptionInterface, setPairs]);
 
   useEffect(() => {
-    const callback = () => {
-      setSelection(api.selection);
+    const callback = (newSelected: UIRecordKey[]) => {
+      setSelected(new Set(newSelected));
     };
-    const unsubscribe = api.subscribeSelection(callback);
+    const unsubscribe = subscriptionInterface.subscribeSelection(callback);
     return unsubscribe;
-  }, [api, setSelection]);
+  }, [api, subscriptionInterface, setSelected]);
 
   return {
     instanceId,
@@ -186,8 +174,8 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     getTreeReference,
     pairs,
     getPairsReference,
-    selection,
-    getSelectionReference,
+    selected,
+    getSelectedReference,
 
     controllerInterface,
     dataInterface,

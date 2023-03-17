@@ -20,7 +20,7 @@ import {
   convertXValue,
   convertYValue,
 } from '@/utils/value';
-import { clone, uuid } from '@pigyuma/utils';
+import { clone, nonNullable, uuid } from '@pigyuma/utils';
 import React from 'react';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
@@ -130,7 +130,7 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
     this.fill = args.fill;
     this.parent = parent;
     this.children =
-      (args.children
+      args.children
         ?.map((it) => {
           if (it instanceof ShapeLayer || it instanceof TextLayer) {
             // Replace parent
@@ -145,7 +145,7 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
           }
           return null;
         })
-        .filter(Boolean) as typeof this.children) ?? [];
+        .filter(nonNullable) ?? [];
   }
 
   get style(): ShapeLayerStyle {

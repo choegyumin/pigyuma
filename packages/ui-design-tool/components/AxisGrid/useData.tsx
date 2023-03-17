@@ -1,16 +1,16 @@
 import { UIDesignToolStatus } from '@/api/UIDesignTool';
-import useSelection from '@/hooks/useSelection';
+import useSelected from '@/hooks/useSelected';
 import useStatus from '@/hooks/useStatus';
 
 export default function useData() {
-  const selectedRecords = useSelection();
+  const selectedKeys = useSelected();
   const status = useStatus();
 
-  const hasSelectedOneOnly = selectedRecords.size === 1;
+  const hasSelectedOneOnly = selectedKeys.size === 1;
 
   const isActive = status === UIDesignToolStatus.idle && hasSelectedOneOnly;
 
-  const selectedRecordKey = isActive ? [...selectedRecords][0]?.key : undefined;
+  const selectedRecordKey = isActive ? [...selectedKeys][0] : undefined;
 
   return {
     isActive,
