@@ -19,7 +19,8 @@ const findResolvedFilePath = (baseDir, targetPath) => {
   // (O) 'file.ts'
   // (X) 'file.test.ts'
   const anyExtensionGlobPattern = '?(.?!(*.*))';
-  const globPattern = rootDir(baseDir, `${targetPath}${anyExtensionGlobPattern}`);
+  /** @see {@link https://github.com/mrmlnc/fast-glob#how-to-write-patterns-on-windows} */
+  const globPattern = rootDir(baseDir, `${targetPath}${anyExtensionGlobPattern}`).replaceAll('\\', '/');
   const [found] = glob.sync(globPattern);
   return found;
 };

@@ -956,7 +956,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "brace-expansion",\
-        "npm:1.1.11"\
+        "npm:2.0.1"\
       ],\
       [\
         "braces",\
@@ -1620,7 +1620,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "glob",\
-        "npm:8.1.0"\
+        "npm:9.3.0"\
       ],\
       [\
         "glob-parent",\
@@ -2447,6 +2447,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.7"\
       ],\
       [\
+        "path-scurry",\
+        "npm:1.6.1"\
+      ],\
+      [\
         "path-type",\
         "npm:4.0.0"\
       ],\
@@ -3189,7 +3193,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-jsx-a11y", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:6.5.1"],\
             ["eslint-plugin-react", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:7.31.7"],\
             ["eslint-plugin-react-hooks", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:4.5.0"],\
-            ["glob", "npm:8.1.0"],\
+            ["glob", "npm:9.3.0"],\
             ["husky", "npm:8.0.2"],\
             ["inquirer", "npm:8.2.5"],\
             ["jsdom", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:20.0.3"],\
@@ -8797,15 +8801,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:8.1.0", {\
-          "packageLocation": "./.yarn/cache/glob-npm-8.1.0-65f64af8b1-92fbea3221.zip/node_modules/glob/",\
+        ["npm:9.3.0", {\
+          "packageLocation": "./.yarn/cache/glob-npm-9.3.0-9b843e0063-9beb4f1cdc.zip/node_modules/glob/",\
           "packageDependencies": [\
-            ["glob", "npm:8.1.0"],\
+            ["glob", "npm:9.3.0"],\
             ["fs.realpath", "npm:1.0.0"],\
-            ["inflight", "npm:1.0.6"],\
-            ["inherits", "npm:2.0.4"],\
-            ["minimatch", "npm:5.1.0"],\
-            ["once", "npm:1.4.0"]\
+            ["minimatch", "npm:7.4.2"],\
+            ["minipass", "npm:4.2.5"],\
+            ["path-scurry", "npm:1.6.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10357,6 +10360,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lru-cache", "npm:7.14.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:7.18.3", {\
+          "packageLocation": "./.yarn/cache/lru-cache-npm-7.18.3-e68be5b11c-e550d77238.zip/node_modules/lru-cache/",\
+          "packageDependencies": [\
+            ["lru-cache", "npm:7.18.3"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["lz-string", [\
@@ -10576,6 +10586,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["brace-expansion", "npm:2.0.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:7.4.2", {\
+          "packageLocation": "./.yarn/cache/minimatch-npm-7.4.2-da654284bf-9e341b04e6.zip/node_modules/minimatch/",\
+          "packageDependencies": [\
+            ["minimatch", "npm:7.4.2"],\
+            ["brace-expansion", "npm:2.0.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["minimist", [\
@@ -10612,6 +10630,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["minipass", "npm:3.3.5"],\
             ["yallist", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:4.2.5", {\
+          "packageLocation": "./.yarn/cache/minipass-npm-4.2.5-25860eb433-4f9c19af23.zip/node_modules/minipass/",\
+          "packageDependencies": [\
+            ["minipass", "npm:4.2.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11306,6 +11331,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["path-scurry", [\
+        ["npm:1.6.1", {\
+          "packageLocation": "./.yarn/cache/path-scurry-npm-1.6.1-b7f913ddad-7ba57e823c.zip/node_modules/path-scurry/",\
+          "packageDependencies": [\
+            ["path-scurry", "npm:1.6.1"],\
+            ["lru-cache", "npm:7.18.3"],\
+            ["minipass", "npm:4.2.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["path-type", [\
         ["npm:4.0.0", {\
           "packageLocation": "./.yarn/cache/path-type-npm-4.0.0-10d47fc86a-5b1e2daa24.zip/node_modules/path-type/",\
@@ -11389,7 +11425,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-jsx-a11y", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:6.5.1"],\
             ["eslint-plugin-react", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:7.31.7"],\
             ["eslint-plugin-react-hooks", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:4.5.0"],\
-            ["glob", "npm:8.1.0"],\
+            ["glob", "npm:9.3.0"],\
             ["husky", "npm:8.0.2"],\
             ["inquirer", "npm:8.2.5"],\
             ["jsdom", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:20.0.3"],\
