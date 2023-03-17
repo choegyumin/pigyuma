@@ -10,7 +10,7 @@ import {
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
 import { fixNumberValue } from '@/utils/value';
-import { exclude, mapValues, merge, toDegrees360, uuid } from '@pigyuma/utils';
+import { exclude, mapValues, merge, nonNullable, toDegrees360, uuid } from '@pigyuma/utils';
 import { Artboard, ArtboardData } from './Artboard/model';
 import { Canvas, CanvasData } from './Canvas/model';
 import { ShapeLayer, ShapeLayerData } from './ShapeLayer/model';
@@ -82,7 +82,7 @@ export class UIDesignTool {
   #status: UIDesignToolStatus;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
-  #selectedItems: Set<Artboard | ShapeLayer | TextLayer>;
+  #selectedKeys: Set<UIRecordKey>;
 
   #hoveredElement: HTMLElement | null;
 
@@ -109,7 +109,7 @@ export class UIDesignTool {
     this.#status = UIDesignToolStatus.idle;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
-    this.#selectedItems = new Set();
+    this.#selectedKeys = new Set();
 
     this.#hoveredElement = null;
 
@@ -159,8 +159,8 @@ export class UIDesignTool {
     return this.#items;
   }
 
-  get selection(): Set<Artboard | ShapeLayer | TextLayer> {
-    return this.#selectedItems;
+  get selected(): Set<UIRecordKey> {
+    return this.#selectedKeys;
   }
 
   mount() {
@@ -251,7 +251,7 @@ export class UIDesignTool {
     const canvas = this.#canvas;
 
     this.#items.clear();
-    this.#selectedItems = new Set();
+    this.#selectedKeys = new Set();
 
     while (canvas.children.length > 0) {
       canvas.children.pop();
@@ -278,8 +278,8 @@ export class UIDesignTool {
     const missingRecordKeys: UIRecordKey[] = [];
     const invalidRecordKeys: UIRecordKey[] = [];
 
-    const newRecordKeys: UIRecordKey[] = [];
-    const newRecordValues: Array<Artboard | ShapeLayer | TextLayer> = [];
+    const newSelectedKeys: UIRecordKey[] = [];
+    const newSelectedValues: Array<Artboard | ShapeLayer | TextLayer> = [];
 
     targetKeys.forEach((key) => {
       const record = this.#items.get(key);
@@ -291,8 +291,8 @@ export class UIDesignTool {
         invalidRecordKeys.push(key);
         return;
       }
-      newRecordKeys.push(record.key);
-      newRecordValues.push(record);
+      newSelectedKeys.push(record.key);
+      newSelectedValues.push(record);
     });
 
     if (missingRecordKeys.length > 0) {
@@ -305,13 +305,13 @@ export class UIDesignTool {
       );
     }
 
-    // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    if (JSON.stringify([...this.#selectedItems].map(({ key }) => key)) === JSON.stringify(newRecordKeys)) {
-      return;
-    }
+    // 순서도 동일한지 확인해야 하므로 stringify 결과를 비교
+    const isSelectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
 
-    this.#selectedItems = new Set(newRecordValues);
-    this.#listeners.selection.forEach((callback) => callback(newRecordValues));
+    if (isSelectionChanged) {
+      this.#selectedKeys = new Set(newSelectedKeys);
+      this.#listeners.selection.forEach((callback) => callback(newSelectedValues));
+    }
   }
 
   get<T extends UIRecord>(targetKey: UIRecordKey): T | undefined {
@@ -323,7 +323,7 @@ export class UIDesignTool {
   }
 
   isSelected(targetKey: UIRecordKey): boolean {
-    return [...this.#selectedItems].find(({ key }) => key === targetKey) != null;
+    return this.#selectedKeys.has(targetKey);
   }
 
   set<T extends UIRecordData>(targetKey: UIRecordKey, value: UIRecordChanges<T> | ((prev: T) => UIRecordChanges<T>)): void {
@@ -700,13 +700,13 @@ export class UIDesignTool {
       return stack;
     };
 
-    const deletedItems = deleteTree(targetValue);
-    const newSelectedItems = exclude([...this.#selectedItems], deletedItems);
-    // 순서도 동일한지 확인해야 하므로 간단하게 stringify 결과를 비교
-    const isSelectionChanged =
-      JSON.stringify([...this.#selectedItems].map(({ key }) => key)) === JSON.stringify(newSelectedItems.map(({ key }) => key));
+    const deletedKeys = deleteTree(targetValue).map((it) => it.key);
+    const newSelectedKeys = exclude([...this.#selectedKeys], deletedKeys);
+    // 순서도 동일한지 확인해야 하므로 stringify 결과를 비교
+    const isSelectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
+
     if (isSelectionChanged) {
-      this.#selectedItems = new Set(newSelectedItems);
+      this.#selectedKeys = new Set(newSelectedKeys);
     }
 
     if (hasParent) {
@@ -717,7 +717,7 @@ export class UIDesignTool {
     }
     this.#listeners.item.get(targetKey)?.forEach((callback) => callback(undefined));
     if (isSelectionChanged) {
-      this.#listeners.selection.forEach((callback) => callback(newSelectedItems));
+      this.#listeners.selection.forEach((callback) => callback(newSelectedKeys.map((key) => this.#items.get(key)).filter(nonNullable)));
     }
   }
 
