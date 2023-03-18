@@ -26,22 +26,22 @@ export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey |
   }, [recordKey, forceUpdate]);
 
   useEffect(() => {
-    setRef(firstRunRef, false);
-  }, [recordKey, getRecord]);
-
-  useEffect(() => {
     if (!isUIRecordKey(recordKey)) {
       return;
     }
-    const callback = (_: unknown, changed: UIRecord[]) => {
-      const isChanged = changed.find((it) => it.key === recordKey) != null;
-      if (isChanged) {
+    const callback = (_: unknown, changed: UIRecord[], removed: UIRecordKey[]) => {
+      const shouldUpdate = (changed.find((it) => it.key === recordKey) || removed.find((key) => key === recordKey)) != null;
+      if (shouldUpdate) {
         forceUpdate();
       }
     };
     const unsubscribe = subscribeTree(callback);
     return unsubscribe;
   }, [recordKey, subscribeTree, forceUpdate]);
+
+  useEffect(() => {
+    setRef(firstRunRef, false);
+  }, []);
 
   return record;
 }
