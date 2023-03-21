@@ -4,7 +4,7 @@ import { UIDesignToolStatus } from '@/api/UIDesignTool';
 import useDispatcher from '@/hooks/useDispatcher';
 import useItemReference from '@/hooks/useItemReference';
 import useUIController from '@/hooks/useUIController';
-import useUIElement from '@/hooks/useUIElement';
+import useUISelector from '@/hooks/useUISelector';
 import { UIDesignToolIDAttributeName } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useEvent } from '@pigyuma/react-utils';
@@ -20,7 +20,7 @@ export default function useHandlers(deps: UseHandlersDependencys) {
   } = deps;
 
   const uiControllerAPI = useUIController();
-  const uiElementAPI = useUIElement();
+  const uiSelectorAPI = useUISelector();
 
   const getItemReference = useItemReference();
 
@@ -31,8 +31,8 @@ export default function useHandlers(deps: UseHandlersDependencys) {
       setHoveredRecordKey(undefined);
     }
 
-    const target = uiElementAPI.fromMouse();
-    const recordKey = target != null ? uiElementAPI.dataset(target).key : undefined;
+    const target = uiSelectorAPI.fromMouse();
+    const recordKey = target != null ? uiSelectorAPI.dataset(target).key : undefined;
     const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
 
     // Artboard, Layer 모두 선택 가능하지만 Artboard는 스펙 상 API 호출로만 허용
@@ -69,8 +69,8 @@ export default function useHandlers(deps: UseHandlersDependencys) {
       return;
     }
 
-    const target = uiElementAPI.fromMouse();
-    const recordKey = target != null ? uiElementAPI.dataset(target).key : undefined;
+    const target = uiSelectorAPI.fromMouse();
+    const recordKey = target != null ? uiSelectorAPI.dataset(target).key : undefined;
     const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
 
     const isSelectable = record instanceof Artboard || record instanceof Layer;

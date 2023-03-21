@@ -1,6 +1,6 @@
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
-import useUIElement from '@/hooks/useUIElement';
+import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
 import { useCallback } from 'react';
 import * as styles from './SelectionOverlay.css';
@@ -15,7 +15,7 @@ const initialStyle = {
 };
 
 export default function useRenderUtils() {
-  const uiElementAPI = useUIElement();
+  const uiSelectorAPI = useUISelector();
 
   const getRootStyle = useCallback(
     (record: UIRecord) => {
@@ -23,7 +23,7 @@ export default function useRenderUtils() {
         return initialStyle;
       }
 
-      const layerElement = uiElementAPI.query({ key: record.key });
+      const layerElement = uiSelectorAPI.query({ key: record.key });
       if (layerElement == null) {
         console.error(`element not found with key ${record.key}.`);
         return initialStyle;
@@ -40,7 +40,7 @@ export default function useRenderUtils() {
         [styles.varNames.rotate]: `${rotate}deg`,
       };
     },
-    [uiElementAPI],
+    [uiSelectorAPI],
   );
 
   return { getRootStyle };

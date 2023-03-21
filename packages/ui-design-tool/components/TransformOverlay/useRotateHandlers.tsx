@@ -4,7 +4,7 @@ import useDispatcher from '@/hooks/useDispatcher';
 import useItemReference from '@/hooks/useItemReference';
 import useStatus from '@/hooks/useStatus';
 import useUIController from '@/hooks/useUIController';
-import useUIElement from '@/hooks/useUIElement';
+import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { isUIRecordKey } from '@/utils/model';
 import { getComputedUIRecordStyleValue } from '@/utils/style';
@@ -47,7 +47,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
   } = deps;
 
   const uiControllerAPI = useUIController();
-  const uiElementAPI = useUIElement();
+  const uiSelectorAPI = useUISelector();
 
   const getItemReference = useItemReference();
 
@@ -59,7 +59,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
   const onRotateHandleMouseDown = useEvent(() => {
     const recordKey = selectedRecordKey;
     const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
     if (record == null || target == null) {
       return;
     }
@@ -93,7 +93,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }
@@ -118,7 +118,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
       return console.error(`UIRecord '${recordKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? uiElementAPI.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
     if (target == null) {
       return console.error(`Element with recordKey of '${recordKey}' not found.`);
     }

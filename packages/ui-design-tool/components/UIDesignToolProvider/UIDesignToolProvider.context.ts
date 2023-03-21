@@ -5,7 +5,7 @@ const [UIDesignToolContextProvider, ...hooks] = constate(
   useContextValues,
   (value) => value.controllerInterface,
   (value) => value.dataInterface,
-  (value) => value.elementInterface,
+  (value) => value.selectorInterface,
   (value) => value.subscriptionInterface,
 
   (value) => value.dispatcher,
@@ -28,7 +28,7 @@ export const [
   // - 재조정 범위는 줄이되 패키지 사용자를 고려해 너무 많은 hook이 생기지 않도록 함
   useUIController,
   useUIData,
-  useUIElement,
+  useUISelector,
   useUISubscription,
 
   // 패키지 내부 사용

@@ -93,7 +93,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     [api, status, pairs, tree, selected],
   );
 
-  const elementInterface = useMemo(
+  const selectorInterface = useMemo(
     () => ({
       dataset: ((...args) => api.dataset(...args)) as typeof api.dataset,
       matches: ((...args) => api.matches(...args)) as typeof api.matches,
@@ -179,7 +179,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
     controllerInterface,
     dataInterface,
-    elementInterface,
+    selectorInterface,
     subscriptionInterface,
   };
 }
