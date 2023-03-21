@@ -66,7 +66,7 @@ module.exports = {
             emoji: '🗑',
           },
           [CommitTypeEnum.wip]: {
-            description: 'Work-In-Progress',
+            description: 'Work-In-Progress (Builds may fail or some features may not work on this commit)',
             title: 'WIP',
             emoji: '👷',
           },

@@ -1,11 +1,17 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
+import { StatusType, TransformMethod } from '@/api/UIDesignTool';
+import useDispatcher from '@/hooks/useDispatcher';
+import useHovered from '@/hooks/useHovered';
 import useItemReference from '@/hooks/useItemReference';
+import useSelected from '@/hooks/useSelected';
+import useStatus from '@/hooks/useStatus';
+import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
-import { UIInteractionElementDataAttributeName, UIInteractionElementDataset, UIRecordKey } from '@/types/Identifier';
+import { UIInteractionElementDataAttributeName, UIInteractionElementDataset } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { useEvent, useEventListener } from '@pigyuma/react-utils';
-import React, { useReducer, useState } from 'react';
+import React from 'react';
 import { AxisGrid } from '../AxisGrid/AxisGrid';
 import { PointerEventsPreventer } from '../PointerEventsPreventer/PointerEventsPreventer';
 import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay';
@@ -13,65 +19,17 @@ import { TransformOverlay } from '../TransformOverlay/TransformOverlay';
 import * as styles from './InteractionController.css';
 import { InteractionControllerProps } from './types';
 
-const Status = {
-  idle: 'idle',
-  selection: 'selection',
-  transform: 'transform',
-} as const;
-type Status = keyof typeof Status;
-
-const TransformMethod = {
-  move: 'move',
-  resize: 'resize',
-  rotate: 'rotate',
-} as const;
-type TransformMethod = keyof typeof TransformMethod;
-
-type MetaState = {
-  status: Status;
-  transformMethod: TransformMethod | 'none';
-};
-
-const metaInitialState: MetaState = { status: Status.idle, transformMethod: 'none' };
-
-const META_ACTION_TYPE = {
-  IDLE: 'IDLE',
-  SELECTION: 'SELECTION',
-  TRANSFORM: 'TRANSFORM',
-} as const;
-
-type MetaAction =
-  | { type: typeof META_ACTION_TYPE.IDLE }
-  | { type: typeof META_ACTION_TYPE.SELECTION }
-  | { type: typeof META_ACTION_TYPE.TRANSFORM; method: TransformMethod };
-
-const metaReducer = (state: MetaState, action: MetaAction): MetaState => {
-  switch (action.type) {
-    case META_ACTION_TYPE.IDLE:
-      return { status: Status.idle, transformMethod: 'none' };
-    case META_ACTION_TYPE.SELECTION:
-      return { status: Status.selection, transformMethod: 'none' };
-    case META_ACTION_TYPE.TRANSFORM:
-      return { status: Status.transform, transformMethod: action.method };
-    default:
-      return state;
-  }
-};
-
 /** @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성 */
 export const InteractionController: React.FC<InteractionControllerProps> = React.memo(() => {
+  const uiControllerAPI = useUIController();
   const uiSelectorAPI = useUISelector();
 
+  const status = useStatus();
+  const hovered = useHovered();
+  const selected = useSelected();
   const getItemReference = useItemReference();
 
-  /**
-   * @todo 이 컴포넌트로 UIRecord를 조작하는 이벤트 핸들러 이관 후 UIDesignTool로 상태 이관
-   * @see 플로우차트 (XState를 사용하진 않음) {@link https://stately.ai/viz/9dbc258b-c910-46da-a1fc-f94c8cbfa932}
-   */
-  const [meta, setMeta] = useReducer(metaReducer, metaInitialState);
-
-  const [hovered, setHovered] = useState<UIRecordKey>();
-  const [selected, setSelected] = useState<Set<UIRecordKey>>(new Set());
+  const { setStatus, setHovered } = useDispatcher();
 
   const onDocumentMouseDown = useEvent((event: MouseEvent) => {
     if (!(event.target instanceof Element)) {
@@ -88,31 +46,31 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     const shouldSelection = !shouldTransform;
 
     if (shouldSelection) {
-      setMeta({ type: META_ACTION_TYPE.SELECTION });
-      setSelected(new Set());
+      setStatus({ statusType: StatusType.selection });
+      uiControllerAPI.select([]);
       return;
     }
 
     if (shouldTransform) {
-      const handleType = (handle?.dataset[UIInteractionElementDataset.handleType] as TransformMethod | undefined) ?? 'move';
-      setMeta({ type: META_ACTION_TYPE.TRANSFORM, method: handleType });
-      if (selected.size === 0 && isUIRecordKey(hovered)) {
-        setSelected(new Set([hovered]));
-      }
+      const handleType =
+        (handle?.dataset[UIInteractionElementDataset.handleType] as Exclude<TransformMethod, 'none'> | undefined) ?? TransformMethod.move;
+      setStatus({ statusType: StatusType.transform, transformMethod: handleType });
+      /** @todo 다중 선택 기능 구현 후 조건 추가  */
+      uiControllerAPI.select(isUIRecordKey(hovered) ? [hovered] : []);
       return;
     }
 
-    setSelected(new Set());
+    uiControllerAPI.select([]);
   });
 
   const onDocumentMouseUp = useEvent(() => {
-    setMeta({ type: META_ACTION_TYPE.IDLE });
+    setStatus({ statusType: StatusType.idle });
   });
 
   const onDocumentMouseMove = useEvent(() => {
-    console.log({ ...meta, hovered, selected: [...selected] });
+    console.log({ ...status, hovered, selected: [...selected] });
 
-    if (meta.status === Status.idle) {
+    if (status.statusType === StatusType.idle) {
       const target = uiSelectorAPI.fromMouse();
       const recordKey = target != null ? uiSelectorAPI.dataset(target).key : undefined;
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
@@ -123,9 +81,9 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       return;
     }
 
-    // if (meta.status === Status.selection) {}
+    // if (status.statusType === StatusType.selection) {}
 
-    // if (meta.status === Status.transform) {}
+    // if (status.statusType === StatusType.transform) {}
   });
 
   useEventListener(document, 'mousedown', onDocumentMouseDown);

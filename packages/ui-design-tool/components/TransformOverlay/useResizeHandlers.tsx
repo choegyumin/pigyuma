@@ -165,7 +165,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
   });
 
   const onDocumentMouseUpForResize = useEvent(() => {
-    if (status !== 'resizing') {
+    if (status !== UIDesignToolStatus.resizing) {
       return;
     }
 

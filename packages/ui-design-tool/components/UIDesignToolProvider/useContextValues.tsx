@@ -1,9 +1,39 @@
 import { Canvas } from '@/api/Canvas/model';
-import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool, UIDesignToolStatus } from '@/api/UIDesignTool';
+import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, StatusType, TransformMethod, UIDesignTool } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+
+type StatusState = {
+  statusType: StatusType;
+  transformMethod: TransformMethod;
+};
+
+type StatusAction =
+  | { statusType: typeof StatusType.idle }
+  | { statusType: typeof StatusType.selection }
+  | { statusType: typeof StatusType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
+
+const statusInitialState: StatusState = { statusType: StatusType.idle, transformMethod: TransformMethod.none };
+
+/**
+ * @see UIDesignToolStatus
+ * @see StatusType
+ * @see TransformMethod
+ */
+const statusReducer = (state: StatusState, action: StatusAction): StatusState => {
+  switch (action.statusType) {
+    case StatusType.idle:
+      return { statusType: action.statusType, transformMethod: TransformMethod.none };
+    case StatusType.selection:
+      return { statusType: action.statusType, transformMethod: TransformMethod.none };
+    case StatusType.transform:
+      return { statusType: action.statusType, transformMethod: action.transformMethod };
+    default:
+      return state;
+  }
+};
 
 export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;
@@ -11,7 +41,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const privateRef = useRef<{
     id: string;
     getBrowserMeta: () => BrowserMeta;
-    setStatus: React.Dispatch<UIDesignToolStatus>;
+    setStatus: React.Dispatch<StatusState>;
   }>({
     id: INITIAL_INSTANCE_ID,
     getBrowserMeta: () => INITIAL_BROWSER_META,
@@ -21,36 +51,18 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const instanceId = privateRef.current.id;
   const getBrowserMeta = useCallback(() => privateRef.current.getBrowserMeta(), []);
 
-  /** @todo InteractionController의 상태를 이곳으로 이관 */
-  const [status, setStatus] = useState<UIDesignToolStatus>(UIDesignToolStatus.idle);
-  privateRef.current.setStatus(status);
-  // const [interaction, setInteraction] = useState<UIDesignToolInteractionStatus>(UIDesignToolInteractionStatus.idle);
-  // const status = useMemo<UIDesignToolStatus>(() => {
-  //   switch (interaction) {
-  //     case UIDesignToolInteractionStatus.resizing:
-  //     case UIDesignToolInteractionStatus.resizingFromCenter:
-  //     case UIDesignToolInteractionStatus.resizingCorner:
-  //     case UIDesignToolInteractionStatus.resizingCornerFromCenter:
-  //       return UIDesignToolStatus.resizing;
-  //     case UIDesignToolInteractionStatus.rotating:
-  //       return UIDesignToolStatus.rotating;
-  //     case UIDesignToolInteractionStatus.selecting:
-  //       return UIDesignToolStatus.selecting;
-  //     case UIDesignToolInteractionStatus.idle:
-  //       return UIDesignToolStatus.idle;
-  //     default:
-  //       return UIDesignToolStatus.unknown;
-  //   }
-  // }, [interaction]);
-
   const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
+  const [hovered, setHovered] = useState<UIRecordKey>();
+  const [status, setStatus] = useReducer(statusReducer, statusInitialState);
+  privateRef.current.setStatus(status);
 
   const dispatcher = useMemo(
     () => ({
       setCursor,
+      setHovered,
       setStatus,
     }),
-    [setCursor, setStatus],
+    [setCursor, setHovered, setStatus],
   );
 
   /**
@@ -162,8 +174,10 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   return {
     instanceId,
     getBrowserMeta,
-    status,
+
     cursor,
+    hovered,
+    status,
     dispatcher,
 
     getItemReference,

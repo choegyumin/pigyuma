@@ -168,8 +168,8 @@ describe('UIDesignTool', () => {
 
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.idle);
 
-      setStatus(UIDesignToolStatus.selecting);
-      expect(uiDesignTool.status).toBe(UIDesignToolStatus.selecting);
+      setStatus(UIDesignToolStatus.select);
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.select);
     });
   });
 

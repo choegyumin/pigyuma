@@ -38,14 +38,30 @@ export interface BrowserMeta {
 
 export type UIRecordChanges<T extends UIRecordData> = Omit<DeepPartial<T>, 'key' | 'parent' | 'children'>;
 
-/** @todo XState 도입 검토 (상태를 context에서 관리하고 constate로 분리하지 않아도 InteractionController 내에서 눈에 띄는 성능 저하는 없을 것으로 판단됨) */
+export const StatusType = {
+  idle: 'idle',
+  selection: 'selection',
+  transform: 'transform',
+} as const;
+export type StatusType = keyof typeof StatusType;
+
+export const TransformMethod = {
+  none: 'none',
+  move: 'move',
+  resize: 'resize',
+  rotate: 'rotate',
+} as const;
+export type TransformMethod = keyof typeof TransformMethod;
+
+/** @see 플로우차트 (XState를 사용하진 않음) {@link https://stately.ai/viz/9dbc258b-c910-46da-a1fc-f94c8cbfa932} */
 export const UIDesignToolStatus = {
   unknown: 'unknown',
   idle: 'idle',
   /** Range selection */
-  selecting: 'selecting',
-  resizing: 'resizing',
-  rotating: 'rotating',
+  select: 'select',
+  move: 'move',
+  resize: 'resize',
+  rotate: 'rotate',
 } as const;
 export type UIDesignToolStatus = keyof typeof UIDesignToolStatus;
 
@@ -78,7 +94,8 @@ export class UIDesignTool {
   };
 
   #mounted: boolean;
-  #status: UIDesignToolStatus;
+  #statusType: StatusType;
+  #transformMethod: TransformMethod;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
   #selectedKeys: Set<UIRecordKey>;
@@ -104,7 +121,8 @@ export class UIDesignTool {
     };
 
     this.#mounted = false;
-    this.#status = UIDesignToolStatus.idle;
+    this.#statusType = StatusType.idle;
+    this.#transformMethod = TransformMethod.none;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
     this.#selectedKeys = new Set();
@@ -135,9 +153,10 @@ export class UIDesignTool {
     };
   }
 
-  #setStatus(status: UIDesignToolStatus): void {
+  #setStatus(status: { statusType: StatusType; transformMethod: TransformMethod }): void {
     if (this.#mounted) {
-      this.#status = status;
+      this.#statusType = status.statusType;
+      this.#transformMethod = status.transformMethod;
     }
   }
 
@@ -146,7 +165,24 @@ export class UIDesignTool {
   }
 
   get status(): UIDesignToolStatus {
-    return this.#status;
+    if (this.#statusType === StatusType.idle) {
+      return UIDesignToolStatus.idle;
+    }
+    if (this.#statusType === StatusType.selection) {
+      return UIDesignToolStatus.select;
+    }
+    if (this.#statusType === StatusType.transform) {
+      if (this.#transformMethod === TransformMethod.move) {
+        return UIDesignToolStatus.move;
+      }
+      if (this.#transformMethod === TransformMethod.resize) {
+        return UIDesignToolStatus.resize;
+      }
+      if (this.#transformMethod === TransformMethod.rotate) {
+        return UIDesignToolStatus.rotate;
+      }
+    }
+    return UIDesignToolStatus.unknown;
   }
 
   get tree(): Canvas {
@@ -182,7 +218,7 @@ export class UIDesignTool {
     return {
       id: this.#id,
       getBrowserMeta: () => this.#browserMeta,
-      setStatus: (status: UIDesignToolStatus) => this.#setStatus(status),
+      setStatus: (status: { statusType: StatusType; transformMethod: TransformMethod }) => this.#setStatus(status),
     };
   }
 
@@ -196,7 +232,8 @@ export class UIDesignTool {
     document.removeEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
 
     this.#mounted = false;
-    this.#status = UIDesignToolStatus.idle;
+    this.#statusType = StatusType.idle;
+    this.#transformMethod = TransformMethod.none;
     this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
     this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
     this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;

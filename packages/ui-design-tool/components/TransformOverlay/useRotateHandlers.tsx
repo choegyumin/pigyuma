@@ -108,7 +108,7 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
   });
 
   const onDocumentMouseMoveForRotate = useEvent(() => {
-    if (status !== 'rotating') {
+    if (status !== UIDesignToolStatus.rotating) {
       return;
     }
 
