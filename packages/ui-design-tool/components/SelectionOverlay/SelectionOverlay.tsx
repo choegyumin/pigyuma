@@ -3,12 +3,12 @@ import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import { UIInteractionElementDataAttributeName } from '@/types/Identifier';
 import clsx from 'clsx';
 import React from 'react';
-import * as styles from './TransformOverlay.css';
+import * as styles from './SelectionOverlay.css';
 import { HandlePlacement } from './types';
 import useRenderUtils from './useRenderUtils';
 
 /** @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성 */
-export const TransformOverlay: React.FC = React.memo(() => {
+export const SelectionOverlay: React.FC = React.memo(() => {
   const selected = useSelected();
 
   const record = useUIRecordForInteraction([...selected][0]);
@@ -131,4 +131,4 @@ export const TransformOverlay: React.FC = React.memo(() => {
     </div>
   );
 });
-TransformOverlay.displayName = 'TransformOverlay';
+SelectionOverlay.displayName = 'SelectionOverlay';

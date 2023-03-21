@@ -20,7 +20,7 @@ import React from 'react';
 import { AxisGrid } from '../AxisGrid/AxisGrid';
 import { HoveringOverlay } from '../HoveringOverlay/HoveringOverlay';
 import { PointerEventsPreventer } from '../PointerEventsPreventer/PointerEventsPreventer';
-import { TransformOverlay } from '../TransformOverlay/TransformOverlay';
+import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay';
 import * as styles from './InteractionController.css';
 import { InteractionControllerProps } from './types';
 import useResizeFunctions from './useResizeFunctions';
@@ -157,7 +157,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     <div className={styles.root}>
       <AxisGrid />
       <HoveringOverlay />
-      <TransformOverlay />
+      <SelectionOverlay />
       <PointerEventsPreventer />
     </div>
   );

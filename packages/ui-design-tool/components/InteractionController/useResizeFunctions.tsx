@@ -10,7 +10,7 @@ import { cursor } from '@pigyuma/design-system/extensions';
 import { setRef } from '@pigyuma/react-utils';
 import { calcCoordByDistance, calcDistancePointFromLine, isEqual, pick } from '@pigyuma/utils';
 import { useCallback, useRef } from 'react';
-import { HandlePlacement } from '../TransformOverlay/types';
+import { HandlePlacement } from '../SelectionOverlay/types';
 import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.context';
 
 const getTransformedRect = (

@@ -9,7 +9,7 @@ import { isRotatableUIRecord } from '@/utils/model';
 import { cursor } from '@pigyuma/design-system/extensions';
 import { toDegrees360 } from '@pigyuma/utils';
 import { useCallback } from 'react';
-import * as styles from './TransformOverlay.css';
+import * as styles from './SelectionOverlay.css';
 
 const initialRootStyle = {
   [styles.varNames.x]: 0,
