@@ -24,6 +24,7 @@ import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay';
 import { StatusAction } from '../UIDesignToolProvider/useContextValues';
 import * as styles from './InteractionController.css';
 import { InteractionControllerProps } from './types';
+import useMoveFunctions from './useMoveFunctions';
 import useResizeFunctions from './useResizeFunctions';
 import useRotateFunctions from './useRotateFunctions';
 
@@ -40,6 +41,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
 
   const { setHovered, setStatus } = useDispatcher();
 
+  const { startMove, move, endMove } = useMoveFunctions(selectedRecordKey);
   const { startResize, resize, endResize } = useResizeFunctions(selectedRecordKey);
   const { startRotate, rotate, endRotate } = useRotateFunctions(selectedRecordKey);
 
@@ -86,7 +88,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       // endSelection(event);
     } else if (status.interactionType === InteractionType.transform) {
       if (status.transformMethod === TransformMethod.move) {
-        // endMove(event);
+        endMove(event);
       } else if (status.transformMethod === TransformMethod.resize) {
         endResize(event);
       } else if (status.transformMethod === TransformMethod.rotate) {
@@ -105,7 +107,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         // startSelection(event);
       } else if (statusAction.interactionType === InteractionType.transform) {
         if (statusAction.transformMethod === TransformMethod.move) {
-          // startMove(event);
+          startMove(event);
         } else if (statusAction.transformMethod === TransformMethod.resize) {
           startResize(event);
         } else if (statusAction.transformMethod === TransformMethod.rotate) {
@@ -127,7 +129,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       // selection(event);
     } else if (status.interactionType === InteractionType.transform) {
       if (status.transformMethod === TransformMethod.move) {
-        // move(event);
+        move(event);
       } else if (status.transformMethod === TransformMethod.resize) {
         resize(event);
       } else if (status.transformMethod === TransformMethod.rotate) {

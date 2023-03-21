@@ -5,41 +5,27 @@ import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
-import { cursor } from '@pigyuma/design-system/extensions';
 import { setRef } from '@pigyuma/react-utils';
-import { calcDegreesBetweenCoords, isEqual, pick, toDegrees360 } from '@pigyuma/utils';
+import { isEqual, pick } from '@pigyuma/utils';
 import { useCallback, useRef } from 'react';
 import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.context';
 
-const getTransformedRect = (rect: UIRecordRect, mousePoint: { x: number; y: number }, handleCoordDegrees: number) => {
+const getTransformedRect = (rect: UIRecordRect, mousePoint: { x: number; y: number }, handleCoord: { x: number; y: number }) => {
   const newRectInit: UIRecordRectInit = pick(rect, ['x', 'y', 'width', 'height', 'rotate']);
 
-  let rotate = calcDegreesBetweenCoords(
-    {
-      x: rect.x + rect.width / 2,
-      y: rect.y + rect.height / 2,
-    },
-    mousePoint,
-  );
-  rotate -= handleCoordDegrees;
-  rotate += rect.rotate;
-  rotate = Math.round(rotate);
-
-  newRectInit.rotate = toDegrees360(rotate);
+  newRectInit.x = newRectInit.x + (mousePoint.x - handleCoord.x);
+  newRectInit.y = newRectInit.y + (mousePoint.y - handleCoord.y);
 
   return UIRecordRect.fromRect(newRectInit);
 };
 
-const getRotateCursor = (element: Element, mousePoint: { x: number; y: number }) => {
-  const rect = element.getBoundingClientRect();
-  return cursor.rotatePoint({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mousePoint);
-};
+const MOVE_CURSOR = 'grab';
 
-export default function useRotateFunctions(recordKey: UIRecordKey | undefined) {
+export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
   const transformInitialRectRef = useRef<UIRecordRect>();
   const transformLastRectRef = useRef<UIRecordRect>();
 
-  const rotateHandleCoordDegreesRef = useRef<number>();
+  const moveHandleCoordRef = useRef<{ x: number; y: number }>();
 
   const uiControllerAPI = useUIController();
   const uiSelectorAPI = useUISelector();
@@ -49,7 +35,7 @@ export default function useRotateFunctions(recordKey: UIRecordKey | undefined) {
 
   const { setCursor } = useDispatcher();
 
-  const startRotate = useCallback(
+  const startMove = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (event: MouseEvent) => {
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
@@ -61,22 +47,18 @@ export default function useRotateFunctions(recordKey: UIRecordKey | undefined) {
       const browserMeta = getBrowserMeta();
       const mouseMeta = browserMeta.mouse;
       const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
-      const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
 
       const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
       setRef(transformInitialRectRef, rect);
       setRef(transformLastRectRef, transformInitialRectRef.current);
-      setRef(
-        rotateHandleCoordDegreesRef,
-        calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseOffsetPoint),
-      );
-      setCursor(getRotateCursor(target, mouseClientPoint));
+      setRef(moveHandleCoordRef, mouseOffsetPoint);
+      setCursor(MOVE_CURSOR);
     },
     [recordKey, uiSelectorAPI, getBrowserMeta, getItemReference, setCursor],
   );
 
-  const endRotate = useCallback(
+  const endMove = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (event: MouseEvent) => {
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
@@ -93,13 +75,13 @@ export default function useRotateFunctions(recordKey: UIRecordKey | undefined) {
 
       setRef(transformInitialRectRef, undefined);
       setRef(transformLastRectRef, undefined);
-      setRef(rotateHandleCoordDegreesRef, undefined);
+      setRef(moveHandleCoordRef, undefined);
       uiControllerAPI.setRect(record.key, rect);
     },
     [recordKey, uiControllerAPI, uiSelectorAPI, getItemReference],
   );
 
-  const rotate = useCallback(
+  const move = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (event: MouseEvent) => {
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
@@ -120,19 +102,18 @@ export default function useRotateFunctions(recordKey: UIRecordKey | undefined) {
       const browserMeta = getBrowserMeta();
       const mouseMeta = browserMeta.mouse;
       const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
-      const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
-      const handleCoordDegrees = rotateHandleCoordDegreesRef.current;
+      const handleCoord = moveHandleCoordRef.current;
 
-      const newRect = handleCoordDegrees != null ? getTransformedRect(initialRect, mouseOffsetPoint, handleCoordDegrees) : initialRect;
+      const newRect = handleCoord != null ? getTransformedRect(initialRect, mouseOffsetPoint, handleCoord) : initialRect;
 
       if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
         setRef(transformLastRectRef, newRect);
         uiControllerAPI.setRect(record.key, newRect);
       }
-      setCursor(getRotateCursor(target, mouseClientPoint));
+      setCursor(MOVE_CURSOR);
     },
     [recordKey, uiControllerAPI, uiSelectorAPI, getBrowserMeta, getItemReference, setCursor],
   );
 
-  return { startRotate, endRotate, rotate };
+  return { startMove, endMove, move };
 }

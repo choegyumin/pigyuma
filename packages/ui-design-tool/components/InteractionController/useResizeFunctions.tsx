@@ -5,7 +5,6 @@ import useUISelector from '@/hooks/useUISelector';
 import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { UIInteractionElementDataset, UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
-import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { cursor } from '@pigyuma/design-system/extensions';
 import { setRef } from '@pigyuma/react-utils';
 import { calcCoordByDistance, calcDistancePointFromLine, isEqual, pick } from '@pigyuma/utils';
@@ -149,8 +148,7 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
         [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
       ).includes(handle || '');
 
-      const rotate = parseFloat(getComputedUIRecordStyleValue(target, 'rotate')) || 0;
-      const rect = UIRecordRect.fromRect({ ...UIRecordRect.fromElement(target).toJSON(), rotate });
+      const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
       setRef(transformInitialRectRef, rect);
       setRef(transformLastRectRef, transformInitialRectRef.current);
@@ -213,7 +211,8 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
         [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
       ).includes(handlePlacement || '');
 
-      const newRect = handlePlacement ? getTransformedRect(initialRect, mouseOffsetPoint, handlePlacement, fromCenter) : initialRect;
+      const newRect =
+        handlePlacement != null ? getTransformedRect(initialRect, mouseOffsetPoint, handlePlacement, fromCenter) : initialRect;
 
       if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
         setRef(transformLastRectRef, newRect);
