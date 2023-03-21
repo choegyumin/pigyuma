@@ -3,7 +3,7 @@ import { UIRecord } from '@/api/UIRecord/model';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
 import { useCallback } from 'react';
-import * as styles from './SelectionOverlay.css';
+import * as styles from './HoveringOverlay.css';
 
 const initialStyle = {
   [styles.varNames.x]: 0,

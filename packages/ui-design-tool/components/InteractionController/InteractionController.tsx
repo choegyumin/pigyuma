@@ -17,8 +17,8 @@ import { isUIRecordKey } from '@/utils/model';
 import { useEvent, useEventListener } from '@pigyuma/react-utils';
 import React from 'react';
 import { AxisGrid } from '../AxisGrid/AxisGrid';
+import { HoveringOverlay } from '../HoveringOverlay/HoveringOverlay';
 import { PointerEventsPreventer } from '../PointerEventsPreventer/PointerEventsPreventer';
-import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay';
 import { TransformOverlay } from '../TransformOverlay/TransformOverlay';
 import * as styles from './InteractionController.css';
 import { InteractionControllerProps } from './types';
@@ -98,7 +98,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   return (
     <div className={styles.root}>
       <AxisGrid />
-      <SelectionOverlay />
+      <HoveringOverlay />
       <TransformOverlay />
       <PointerEventsPreventer />
     </div>

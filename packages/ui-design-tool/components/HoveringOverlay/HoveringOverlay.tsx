@@ -3,14 +3,14 @@ import useHovered from '@/hooks/useHovered';
 import useStatus from '@/hooks/useStatus';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import React from 'react';
-import * as styles from './SelectionOverlay.css';
+import * as styles from './HoveringOverlay.css';
 import useRenderUtils from './useRenderUtils';
 
 /**
  * @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성
- * @todo SelectionOverlay와 RangeSelectionOverlay 분리
+ * @todo HoveringOverlay와 RangeHoveringOverlay 분리
  */
-export const SelectionOverlay: React.FC = React.memo(() => {
+export const HoveringOverlay: React.FC = React.memo(() => {
   const status = useStatus();
   const hovered = useHovered();
 
@@ -32,4 +32,4 @@ export const SelectionOverlay: React.FC = React.memo(() => {
     </div>
   );
 });
-SelectionOverlay.displayName = 'SelectionOverlay';
+HoveringOverlay.displayName = 'HoveringOverlay';
