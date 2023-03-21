@@ -15,12 +15,13 @@ import {
   UIRecordKey,
 } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
-import { useEvent, useEventListener } from '@pigyuma/react-utils';
-import React from 'react';
+import { setRef, useEvent, useEventListener } from '@pigyuma/react-utils';
+import React, { useRef } from 'react';
 import { AxisGrid } from '../AxisGrid/AxisGrid';
 import { HoveringOverlay } from '../HoveringOverlay/HoveringOverlay';
 import { PointerEventsController } from '../PointerEventsController/PointerEventsController';
 import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay';
+import { StatusAction } from '../UIDesignToolProvider/useContextValues';
 import * as styles from './InteractionController.css';
 import { InteractionControllerProps } from './types';
 import useResizeFunctions from './useResizeFunctions';
@@ -42,6 +43,8 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const { startResize, resize, endResize } = useResizeFunctions(selectedRecordKey);
   const { startRotate, rotate, endRotate } = useRotateFunctions(selectedRecordKey);
 
+  const nextStatusActionQueue = useRef<StatusAction[]>([]);
+
   const onDocumentMouseDown = useEvent((event: MouseEvent) => {
     if (!(event.target instanceof Element && event.target.closest(`[${UIDesignToolElementDataAttributeName.id}]`))) {
       return;
@@ -53,68 +56,64 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     const isSelectionGrabbing = isUIRecordKey(hoveredRecordKey);
     const isHandleGrabbing = handle != null;
 
-    const shouldTransform = isSelectionGrabbing || isHandleGrabbing;
-    const shouldSelection = !shouldTransform;
+    const statusType = isSelectionGrabbing || isHandleGrabbing ? StatusType.transform : StatusType.selection;
 
-    if (shouldSelection) {
-      setStatus({ statusType: StatusType.selection });
+    if (statusType === StatusType.selection) {
+      nextStatusActionQueue.current.push({ statusType: StatusType.selection });
+
       uiControllerAPI.select([]);
-
-      // return startSelection(event);
-      return;
-    }
-
-    if (shouldTransform) {
+    } else if (statusType === StatusType.transform) {
       const transformMethod =
         (handle?.dataset[UIInteractionElementDataset.handleType] as Exclude<TransformMethod, 'none'> | undefined) ?? TransformMethod.move;
-      setStatus({ statusType: StatusType.transform, transformMethod });
+
+      nextStatusActionQueue.current.push({ statusType: StatusType.transform, transformMethod });
+
       if (!isHandleGrabbing) {
         /** @todo 다중 선택 기능 구현 후 조건 추가  */
         uiControllerAPI.select(isUIRecordKey(hoveredRecordKey) ? [hoveredRecordKey] : []);
       }
-
-      // if (transformMethod === TransformMethod.move) {
-      //   return startMove(event);
-      // }
-
-      if (transformMethod === TransformMethod.resize) {
-        return startResize(event);
-      }
-
-      if (transformMethod === TransformMethod.rotate) {
-        return startRotate(event);
-      }
-
-      return;
+    } else {
+      uiControllerAPI.select([]);
     }
-
-    uiControllerAPI.select([]);
   });
 
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
+    // Flush
+    setRef(nextStatusActionQueue, []);
     setStatus({ statusType: StatusType.idle });
 
-    // if (status.statusType === StatusType.selection) {
-    //   return endSelection(event);
-    // }
-
-    if (status.statusType === StatusType.transform) {
-      // if (status.transformMethod === TransformMethod.move) {
-      //   return endMove(event);
-      // }
-
-      if (status.transformMethod === TransformMethod.resize) {
-        return endResize(event);
-      }
-
-      if (status.transformMethod === TransformMethod.rotate) {
-        return endRotate(event);
+    if (status.statusType === StatusType.selection) {
+      // endSelection(event);
+    } else if (status.statusType === StatusType.transform) {
+      if (status.transformMethod === TransformMethod.move) {
+        // endMove(event);
+      } else if (status.transformMethod === TransformMethod.resize) {
+        endResize(event);
+      } else if (status.transformMethod === TransformMethod.rotate) {
+        endRotate(event);
       }
     }
   });
 
   const onDocumentMouseMove = useEvent((event: MouseEvent) => {
-    console.log({ ...status, hovered: hoveredRecordKey, selected: selectedRecordKey });
+    // console.log({ ...status, hovered: hoveredRecordKey, selected: selectedRecordKey });
+
+    const statusAction = nextStatusActionQueue.current.shift();
+
+    if (statusAction != null) {
+      if (statusAction.statusType === StatusType.selection) {
+        // startSelection(event);
+      } else if (statusAction.statusType === StatusType.transform) {
+        if (statusAction.transformMethod === TransformMethod.move) {
+          // startMove(event);
+        } else if (statusAction.transformMethod === TransformMethod.resize) {
+          startResize(event);
+        } else if (statusAction.transformMethod === TransformMethod.rotate) {
+          startRotate(event);
+        }
+      }
+      return setStatus(statusAction);
+    }
 
     if (status.statusType === StatusType.idle) {
       const target = uiSelectorAPI.fromMouse();
@@ -124,27 +123,16 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       const isSelectableRecord = record instanceof Artboard || record instanceof Layer;
 
       setHovered(isSelectableRecord ? record.key : undefined);
-      return;
-    }
-
-    // if (status.statusType === StatusType.selection) {
-    //   return selection(event);
-    // }
-
-    if (status.statusType === StatusType.transform) {
-      // if (status.transformMethod === TransformMethod.move) {
-      //   return move(event);
-      // }
-
-      if (status.transformMethod === TransformMethod.resize) {
-        return resize(event);
+    } else if (status.statusType === StatusType.selection) {
+      // selection(event);
+    } else if (status.statusType === StatusType.transform) {
+      if (status.transformMethod === TransformMethod.move) {
+        // move(event);
+      } else if (status.transformMethod === TransformMethod.resize) {
+        resize(event);
+      } else if (status.transformMethod === TransformMethod.rotate) {
+        rotate(event);
       }
-
-      if (status.transformMethod === TransformMethod.rotate) {
-        return rotate(event);
-      }
-
-      return;
     }
   });
 

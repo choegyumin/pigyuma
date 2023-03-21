@@ -5,12 +5,12 @@ import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
-type StatusState = {
+export type StatusState = {
   statusType: StatusType;
   transformMethod: TransformMethod;
 };
 
-type StatusAction =
+export type StatusAction =
   | { statusType: typeof StatusType.idle }
   | { statusType: typeof StatusType.selection }
   | { statusType: typeof StatusType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
