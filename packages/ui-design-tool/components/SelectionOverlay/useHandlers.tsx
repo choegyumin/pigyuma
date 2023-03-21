@@ -1,11 +1,11 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
-import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { StatusType } from '@/api/UIDesignTool';
 import useDispatcher from '@/hooks/useDispatcher';
 import useItemReference from '@/hooks/useItemReference';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
-import { UIDesignToolIDAttributeName } from '@/types/Identifier';
+import { UIDesignToolElementDataAttributeName } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useEvent } from '@pigyuma/react-utils';
 import { UseDataType } from './useData';
@@ -41,7 +41,7 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     setHoveredRecordKey(isLayer ? record.key : undefined);
 
     /** @todo Range selection 기능 구현 */
-    // setStatus(UIDesignToolStatus.selecting);
+    // setStatus({ statusType: StatusType.selection });
     // uiControllerAPI.select(records.map(({ key }) => key));
   });
 
@@ -53,12 +53,12 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     setRef(clickedTargetRef, event.target);
 
     /** @todo Range selection 기능 구현 */
-    // setStatus(UIDesignToolStatus.selecting);
+    // setStatus({ statusType: StatusType.selection });
     // uiControllerAPI.select([]);
   });
 
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
-    if (!(event.target instanceof Element && event.target.closest(`[${UIDesignToolIDAttributeName}]`))) {
+    if (!(event.target instanceof Element && event.target.closest(`[${UIDesignToolElementDataAttributeName.id}]`))) {
       return;
     }
 
@@ -78,7 +78,7 @@ export default function useHandlers(deps: UseHandlersDependencys) {
     /** @todo Range selection 기능 구현 */
     const records = isSelectable && record != null ? [record] : [];
 
-    setStatus(UIDesignToolStatus.idle);
+    setStatus({ statusType: StatusType.idle });
     uiControllerAPI.select(records.map(({ key }) => key));
   });
 

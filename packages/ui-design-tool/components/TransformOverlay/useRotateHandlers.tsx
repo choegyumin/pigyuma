@@ -1,4 +1,4 @@
-import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { StatusType, TransformMethod } from '@/api/UIDesignTool';
 import useBrowserMeta from '@/hooks/useBrowserMeta';
 import useDispatcher from '@/hooks/useDispatcher';
 import useItemReference from '@/hooks/useItemReference';
@@ -79,11 +79,11 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
       calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseOffsetPoint),
     );
     setCursor(getRotateCursor(target, mouseClientPoint));
-    setStatus(UIDesignToolStatus.rotating);
+    setStatus({ statusType: StatusType.transform, transformMethod: TransformMethod.rotate });
   });
 
   const onDocumentMouseUpForRotate = useEvent(() => {
-    if (status !== 'rotating') {
+    if (status.statusType !== StatusType.transform || status.transformMethod !== TransformMethod.rotate) {
       return;
     }
 
@@ -104,11 +104,11 @@ export default function useRotateHandlers(deps: UseRotateHandlersDependencys) {
     setRef(transformLastRectRef, undefined);
     setRef(rotateHandleCoordDegreesRef, undefined);
     uiControllerAPI.setRect(record.key, rect);
-    setStatus(UIDesignToolStatus.idle);
+    setStatus({ statusType: StatusType.idle });
   });
 
   const onDocumentMouseMoveForRotate = useEvent(() => {
-    if (status !== UIDesignToolStatus.rotating) {
+    if (status.statusType !== StatusType.transform || status.transformMethod !== TransformMethod.rotate) {
       return;
     }
 

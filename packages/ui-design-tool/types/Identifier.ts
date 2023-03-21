@@ -55,4 +55,10 @@ export const UIInteractionElementDataset = {
   handlePlacement: 'uiInteractionHandlePlacement',
 } as const;
 
-export const UIDesignToolIDAttributeName = 'data-ui-design-tool-id';
+export const UIDesignToolElementDataAttributeName = {
+  id: 'data-ui-design-tool-id',
+} as const;
+
+export const UIDesignToolElementDataset = {
+  id: 'uiDesignToolId',
+} as const;

@@ -1,4 +1,4 @@
-import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { StatusType, TransformMethod } from '@/api/UIDesignTool';
 import useBrowserMeta from '@/hooks/useBrowserMeta';
 import useDispatcher from '@/hooks/useDispatcher';
 import useItemReference from '@/hooks/useItemReference';
@@ -161,11 +161,11 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformLastRectRef, transformInitialRectRef.current);
     setRef(resizeHandlePlacementRef, handle);
     setCursor(isGrabbingCorner ? getResizeCursor(target, mouseClientPoint) : event.target.style.getPropertyValue('cursor'));
-    setStatus(UIDesignToolStatus.resizing);
+    setStatus({ statusType: StatusType.transform, transformMethod: TransformMethod.resize });
   });
 
   const onDocumentMouseUpForResize = useEvent(() => {
-    if (status !== UIDesignToolStatus.resizing) {
+    if (status.statusType !== StatusType.transform || status.transformMethod !== TransformMethod.resize) {
       return;
     }
 
@@ -186,11 +186,11 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
     setRef(transformLastRectRef, undefined);
     setRef(resizeHandlePlacementRef, undefined);
     uiControllerAPI.setRect(record.key, rect);
-    setStatus(UIDesignToolStatus.idle);
+    setStatus({ statusType: StatusType.idle });
   });
 
   const onDocumentMouseMoveForResize = useEvent(() => {
-    if (status !== 'resizing') {
+    if (status.statusType !== StatusType.transform || status.transformMethod !== TransformMethod.resize) {
       return;
     }
 
@@ -234,7 +234,7 @@ export default function useResizeHandlers(deps: UseResizeHandlersDependencys) {
   });
 
   const onDocuemntKeyDownUpForResize = useEvent(() => {
-    if (status !== 'resizing') {
+    if (status.statusType !== StatusType.transform || status.transformMethod !== TransformMethod.resize) {
       return;
     }
 

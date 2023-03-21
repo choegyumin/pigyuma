@@ -8,7 +8,11 @@ import useSelected from '@/hooks/useSelected';
 import useStatus from '@/hooks/useStatus';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
-import { UIInteractionElementDataAttributeName, UIInteractionElementDataset } from '@/types/Identifier';
+import {
+  UIInteractionElementDataAttributeName,
+  UIInteractionElementDataset,
+  UIDesignToolElementDataAttributeName,
+} from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { useEvent, useEventListener } from '@pigyuma/react-utils';
 import React from 'react';
@@ -32,7 +36,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const { setStatus, setHovered } = useDispatcher();
 
   const onDocumentMouseDown = useEvent((event: MouseEvent) => {
-    if (!(event.target instanceof Element)) {
+    if (!(event.target instanceof Element && event.target.closest(`[${UIDesignToolElementDataAttributeName.id}]`))) {
       return;
     }
 

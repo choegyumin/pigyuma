@@ -1,4 +1,4 @@
-import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { StatusType, TransformMethod } from '@/api/UIDesignTool';
 import useCursor from '@/hooks/useCursor';
 import useStatus from '@/hooks/useStatus';
 import React from 'react';
@@ -10,7 +10,9 @@ export const PointerEventsPreventer: React.FC<PointerEventsPreventerProps> = Rea
   const cursor = useCursor();
   const status = useStatus();
 
-  const shouldVisible = status === UIDesignToolStatus.resizing || status === UIDesignToolStatus.rotating;
+  const shouldVisible =
+    status.statusType === StatusType.transform &&
+    (status.transformMethod === TransformMethod.resize || status.transformMethod === TransformMethod.rotate);
 
   const style: React.CSSProperties = {
     [styles.varNames.cursor]: shouldVisible ? cursor : 'default',

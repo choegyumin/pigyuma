@@ -1,6 +1,6 @@
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import {
-  UIDesignToolIDAttributeName,
+  UIDesignToolElementDataAttributeName,
   UIRecordElementDataset,
   UIRecordElementFilter,
   UIRecordElementFilterItem,
@@ -132,7 +132,8 @@ export class UIDesignTool {
     const onMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
-      const rootBounds = document.querySelector(`[${UIDesignToolIDAttributeName}="${this.#id}"]`)?.getBoundingClientRect() ?? new DOMRect();
+      const rootBounds =
+        document.querySelector(`[${UIDesignToolElementDataAttributeName.id}="${this.#id}"]`)?.getBoundingClientRect() ?? new DOMRect();
       this.#browserMeta.mouse.clientX = clientX;
       this.#browserMeta.mouse.clientY = clientY;
       this.#browserMeta.mouse.offsetX = clientX - rootBounds.x;
