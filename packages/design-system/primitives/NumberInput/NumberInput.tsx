@@ -12,7 +12,7 @@ const NumberInput = React.forwardRef<NumberInputRef, NumberInputProps>((props, r
   const { autoSelect, ...restProps } = props;
   const forkedRef = useForkedRef(ref);
 
-  const defaultValue = restProps.defaultValue === null ? '' : restProps.defaultValue ?? '';
+  const defaultValue = restProps.defaultValue === null ? '' : restProps.defaultValue;
   const [value, setValue] = useValue<number | ''>(restProps.value === null ? '' : restProps.value, defaultValue);
 
   const [stepUp, setStepUp] = useState<boolean>(false);

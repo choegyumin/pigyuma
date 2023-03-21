@@ -7,10 +7,12 @@ type UseValueConfig = {
   notifyError?: boolean;
 };
 
+const MESSAGE_WHEN_CONTROLLED_AND_UNCONTROLLED =
+  "Warning: A component contains an component with both value and defaultValue props. 'useValue' hooks must be either controlled or uncontrolled (specify either the value prop, or the defaultValue prop, but not both). Decide between using a controlled or uncontrolled 'useValue' hook and remove one of these props. More info: https://reactjs.org/link/controlled-components";
 const MESSAGE_WHEN_UNCONTROLLED_TO_CONTROLLED =
-  'Warning: A component is changing an uncontrolled input of type text to be controlled. Input elements should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://fb.me/react-controlled-components';
+  "Warning: A component is changing an uncontrolled component to be controlled. 'useValue' hooks should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled 'useValue' hook for the lifetime of the component. More info: https://fb.me/react-controlled-components";
 const MESSAGE_WHEN_CONTROLLED_TO_UNCONTROLLED =
-  'Warning: A component is changing a controlled input of type text to be uncontrolled. Input elements should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://fb.me/react-controlled-components';
+  "Warning: A component is changing a controlled component to be uncontrolled. 'useValue' hooks should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled 'useValue' hook for the lifetime of the component. More info: https://fb.me/react-controlled-components";
 
 function useValue<V>(value: V, defaultValue: V | undefined, config?: UseValueConfig): [V, Dispatch<SetStateAction<V>>];
 function useValue<V>(value: V | undefined, defaultValue: V, config?: UseValueConfig): [V, Dispatch<SetStateAction<V>>];
@@ -20,13 +22,16 @@ function useValue<V>(
   config?: UseValueConfig,
 ): [V | undefined, Dispatch<SetStateAction<V>>];
 function useValue<V>(value: V, defaultValue: V, config: UseValueConfig = {}): [V, Dispatch<SetStateAction<V>>] {
-  const wasNotifyErrorRef = useRef<boolean>(!(config.notifyError ?? true));
+  const shouldNotifyErrorRef = useRef<boolean>(config.notifyError ?? true);
 
   const isControlled = value !== undefined;
   const wasControlled = usePrevious(isControlled);
 
+  const hasDefaultValue = defaultValue !== undefined;
+
   const firstRun = wasControlled == undefined;
 
+  const isControlledAndUncontrolled = isControlled && hasDefaultValue;
   const toBeControlled = !wasControlled && isControlled;
   const toBeUncontrolled = wasControlled && !isControlled;
 
@@ -40,18 +45,26 @@ function useValue<V>(value: V, defaultValue: V, config: UseValueConfig = {}): [V
   }, [isControlled, controlled]);
 
   useEffect(() => {
-    if (firstRun || wasNotifyErrorRef.current) {
+    if (!shouldNotifyErrorRef.current) {
       return;
     }
-    if (toBeControlled) {
-      console.error(MESSAGE_WHEN_UNCONTROLLED_TO_CONTROLLED);
-      return setRef(wasNotifyErrorRef, true);
+    let message: string | undefined;
+    if (firstRun) {
+      if (isControlledAndUncontrolled) {
+        message = MESSAGE_WHEN_CONTROLLED_AND_UNCONTROLLED;
+      }
+    } else {
+      if (toBeControlled) {
+        message = MESSAGE_WHEN_UNCONTROLLED_TO_CONTROLLED;
+      } else if (toBeUncontrolled) {
+        message = MESSAGE_WHEN_CONTROLLED_TO_UNCONTROLLED;
+      }
     }
-    if (toBeUncontrolled) {
-      console.error(MESSAGE_WHEN_CONTROLLED_TO_UNCONTROLLED);
-      return setRef(wasNotifyErrorRef, true);
+    if (message != null) {
+      console.error(message);
+      return setRef(shouldNotifyErrorRef, false);
     }
-  }, [firstRun, toBeControlled, toBeUncontrolled]);
+  }, [firstRun, isControlledAndUncontrolled, toBeControlled, toBeUncontrolled]);
 
   return [isControlled ? controlled : uncontrolled, setValue];
 }
