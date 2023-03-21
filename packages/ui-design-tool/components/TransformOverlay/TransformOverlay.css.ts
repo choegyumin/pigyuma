@@ -74,7 +74,6 @@ export const resizeHandle = style({
   position: 'absolute',
   opacity: '0',
   cursor: 'grab',
-  pointerEvents: 'auto',
 });
 
 export const resizeHandle$ = styleVariants({
@@ -111,7 +110,6 @@ export const resizeCornerHandle = style({
   height: getter.handleSize,
   padding: '3px',
   cursor: 'grab',
-  pointerEvents: 'auto',
   selectors: {
     '&::before': {
       content: '',
@@ -149,7 +147,6 @@ export const rotateHandle = style({
   height: `calc(${getter.handleSize} * 1.5)`,
   opacity: '0',
   cursor: 'grab',
-  pointerEvents: 'auto',
 });
 
 export const rotateHandle$ = styleVariants({
