@@ -1,35 +1,35 @@
 import { Canvas } from '@/api/Canvas/model';
-import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, StatusType, TransformMethod, UIDesignTool } from '@/api/UIDesignTool';
+import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, InteractionType, TransformMethod, UIDesignTool } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 export type StatusState = {
-  statusType: StatusType;
+  interactionType: InteractionType;
   transformMethod: TransformMethod;
 };
 
 export type StatusAction =
-  | { statusType: typeof StatusType.idle }
-  | { statusType: typeof StatusType.selection }
-  | { statusType: typeof StatusType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
+  | { interactionType: typeof InteractionType.idle }
+  | { interactionType: typeof InteractionType.selection }
+  | { interactionType: typeof InteractionType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
 
-const statusInitialState: StatusState = { statusType: StatusType.idle, transformMethod: TransformMethod.none };
+const statusInitialState: StatusState = { interactionType: InteractionType.idle, transformMethod: TransformMethod.fixed };
 
 /**
  * @see UIDesignToolStatus
- * @see StatusType
+ * @see InteractionType
  * @see TransformMethod
  */
 const statusReducer = (state: StatusState, action: StatusAction): StatusState => {
-  switch (action.statusType) {
-    case StatusType.idle:
-      return { statusType: action.statusType, transformMethod: TransformMethod.none };
-    case StatusType.selection:
-      return { statusType: action.statusType, transformMethod: TransformMethod.none };
-    case StatusType.transform:
-      return { statusType: action.statusType, transformMethod: action.transformMethod };
+  switch (action.interactionType) {
+    case InteractionType.idle:
+      return { interactionType: action.interactionType, transformMethod: TransformMethod.fixed };
+    case InteractionType.selection:
+      return { interactionType: action.interactionType, transformMethod: TransformMethod.fixed };
+    case InteractionType.transform:
+      return { interactionType: action.interactionType, transformMethod: action.transformMethod };
     default:
       return state;
   }

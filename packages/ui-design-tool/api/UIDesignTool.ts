@@ -38,15 +38,15 @@ export interface BrowserMeta {
 
 export type UIRecordChanges<T extends UIRecordData> = Omit<DeepPartial<T>, 'key' | 'parent' | 'children'>;
 
-export const StatusType = {
+export const InteractionType = {
   idle: 'idle',
   selection: 'selection',
   transform: 'transform',
 } as const;
-export type StatusType = keyof typeof StatusType;
+export type InteractionType = keyof typeof InteractionType;
 
 export const TransformMethod = {
-  none: 'none',
+  fixed: 'fixed',
   move: 'move',
   resize: 'resize',
   rotate: 'rotate',
@@ -94,7 +94,7 @@ export class UIDesignTool {
   };
 
   #mounted: boolean;
-  #statusType: StatusType;
+  #interactionType: InteractionType;
   #transformMethod: TransformMethod;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
@@ -121,8 +121,8 @@ export class UIDesignTool {
     };
 
     this.#mounted = false;
-    this.#statusType = StatusType.idle;
-    this.#transformMethod = TransformMethod.none;
+    this.#interactionType = InteractionType.idle;
+    this.#transformMethod = TransformMethod.fixed;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
     this.#selectedKeys = new Set();
@@ -154,9 +154,9 @@ export class UIDesignTool {
     };
   }
 
-  #setStatus(status: { statusType: StatusType; transformMethod: TransformMethod }): void {
+  #setStatus(status: { interactionType: InteractionType; transformMethod: TransformMethod }): void {
     if (this.#mounted) {
-      this.#statusType = status.statusType;
+      this.#interactionType = status.interactionType;
       this.#transformMethod = status.transformMethod;
     }
   }
@@ -166,13 +166,13 @@ export class UIDesignTool {
   }
 
   get status(): UIDesignToolStatus {
-    if (this.#statusType === StatusType.idle) {
+    if (this.#interactionType === InteractionType.idle) {
       return UIDesignToolStatus.idle;
     }
-    if (this.#statusType === StatusType.selection) {
+    if (this.#interactionType === InteractionType.selection) {
       return UIDesignToolStatus.select;
     }
-    if (this.#statusType === StatusType.transform) {
+    if (this.#interactionType === InteractionType.transform) {
       if (this.#transformMethod === TransformMethod.move) {
         return UIDesignToolStatus.move;
       }
@@ -219,7 +219,7 @@ export class UIDesignTool {
     return {
       id: this.#id,
       getBrowserMeta: () => this.#browserMeta,
-      setStatus: (status: { statusType: StatusType; transformMethod: TransformMethod }) => this.#setStatus(status),
+      setStatus: (status: { interactionType: InteractionType; transformMethod: TransformMethod }) => this.#setStatus(status),
     };
   }
 
@@ -233,8 +233,8 @@ export class UIDesignTool {
     document.removeEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
 
     this.#mounted = false;
-    this.#statusType = StatusType.idle;
-    this.#transformMethod = TransformMethod.none;
+    this.#interactionType = InteractionType.idle;
+    this.#transformMethod = TransformMethod.fixed;
     this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
     this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
     this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;

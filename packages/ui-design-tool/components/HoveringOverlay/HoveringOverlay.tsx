@@ -1,4 +1,4 @@
-import { StatusType } from '@/api/UIDesignTool';
+import { InteractionType } from '@/api/UIDesignTool';
 import useHovered from '@/hooks/useHovered';
 import useStatus from '@/hooks/useStatus';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
@@ -18,7 +18,7 @@ export const HoveringOverlay: React.FC = React.memo(() => {
 
   const { getRootStyle } = useRenderUtils();
 
-  const isActive = record != null && status.statusType === StatusType.idle;
+  const isActive = record != null && status.interactionType === InteractionType.idle;
 
   if (!isActive) {
     return null;

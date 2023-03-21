@@ -1,6 +1,6 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
-import { StatusType, TransformMethod } from '@/api/UIDesignTool';
+import { InteractionType, TransformMethod } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import useStatus from '@/hooks/useStatus';
 import useUISelector from '@/hooks/useUISelector';
@@ -31,9 +31,9 @@ export default function useRenderUtils() {
   const status = useStatus();
 
   const getMeta = useCallback(() => {
-    const isIdle = status.statusType === StatusType.idle;
-    const isResizing = status.statusType === StatusType.transform && status.transformMethod === TransformMethod.resize;
-    const isRotating = status.statusType === StatusType.transform && status.transformMethod === TransformMethod.rotate;
+    const isIdle = status.interactionType === InteractionType.idle;
+    const isResizing = status.interactionType === InteractionType.transform && status.transformMethod === TransformMethod.resize;
+    const isRotating = status.interactionType === InteractionType.transform && status.transformMethod === TransformMethod.rotate;
     const isTransforming = isResizing || isRotating;
 
     const handleVisible = isIdle;

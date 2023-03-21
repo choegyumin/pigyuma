@@ -1,6 +1,6 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
-import { StatusType, TransformMethod } from '@/api/UIDesignTool';
+import { InteractionType, TransformMethod } from '@/api/UIDesignTool';
 import useDispatcher from '@/hooks/useDispatcher';
 import useHovered from '@/hooks/useHovered';
 import useItemReference from '@/hooks/useItemReference';
@@ -56,17 +56,17 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     const isSelectionGrabbing = isUIRecordKey(hoveredRecordKey);
     const isHandleGrabbing = handle != null;
 
-    const statusType = isSelectionGrabbing || isHandleGrabbing ? StatusType.transform : StatusType.selection;
+    const interactionType = isSelectionGrabbing || isHandleGrabbing ? InteractionType.transform : InteractionType.selection;
 
-    if (statusType === StatusType.selection) {
-      nextStatusActionQueue.current.push({ statusType: StatusType.selection });
+    if (interactionType === InteractionType.selection) {
+      nextStatusActionQueue.current.push({ interactionType: InteractionType.selection });
 
       uiControllerAPI.select([]);
-    } else if (statusType === StatusType.transform) {
+    } else if (interactionType === InteractionType.transform) {
       const transformMethod =
         (handle?.dataset[UIInteractionElementDataset.handleType] as Exclude<TransformMethod, 'none'> | undefined) ?? TransformMethod.move;
 
-      nextStatusActionQueue.current.push({ statusType: StatusType.transform, transformMethod });
+      nextStatusActionQueue.current.push({ interactionType: InteractionType.transform, transformMethod });
 
       if (!isHandleGrabbing) {
         /** @todo 다중 선택 기능 구현 후 조건 추가  */
@@ -80,11 +80,11 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
     // Flush
     setRef(nextStatusActionQueue, []);
-    setStatus({ statusType: StatusType.idle });
+    setStatus({ interactionType: InteractionType.idle });
 
-    if (status.statusType === StatusType.selection) {
+    if (status.interactionType === InteractionType.selection) {
       // endSelection(event);
-    } else if (status.statusType === StatusType.transform) {
+    } else if (status.interactionType === InteractionType.transform) {
       if (status.transformMethod === TransformMethod.move) {
         // endMove(event);
       } else if (status.transformMethod === TransformMethod.resize) {
@@ -101,9 +101,9 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     const statusAction = nextStatusActionQueue.current.shift();
 
     if (statusAction != null) {
-      if (statusAction.statusType === StatusType.selection) {
+      if (statusAction.interactionType === InteractionType.selection) {
         // startSelection(event);
-      } else if (statusAction.statusType === StatusType.transform) {
+      } else if (statusAction.interactionType === InteractionType.transform) {
         if (statusAction.transformMethod === TransformMethod.move) {
           // startMove(event);
         } else if (statusAction.transformMethod === TransformMethod.resize) {
@@ -115,7 +115,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       return setStatus(statusAction);
     }
 
-    if (status.statusType === StatusType.idle) {
+    if (status.interactionType === InteractionType.idle) {
       const target = uiSelectorAPI.fromMouse();
       const recordKey = target != null ? uiSelectorAPI.dataset(target).key : undefined;
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
@@ -123,9 +123,9 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       const isSelectableRecord = record instanceof Artboard || record instanceof Layer;
 
       setHovered(isSelectableRecord ? record.key : undefined);
-    } else if (status.statusType === StatusType.selection) {
+    } else if (status.interactionType === InteractionType.selection) {
       // selection(event);
-    } else if (status.statusType === StatusType.transform) {
+    } else if (status.interactionType === InteractionType.transform) {
       if (status.transformMethod === TransformMethod.move) {
         // move(event);
       } else if (status.transformMethod === TransformMethod.resize) {
