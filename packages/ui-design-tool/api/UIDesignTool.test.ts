@@ -8,7 +8,7 @@ import { vi } from 'vitest';
 import { Artboard, ArtboardData, ArtboardJSON } from './Artboard/model';
 import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from './ShapeLayer/model';
 import { TextLayer, TextLayerData, TextLayerJSON } from './TextLayer/model';
-import { UIDesignTool, UIDesignToolStatus } from './UIDesignTool';
+import { InteractionType, TransformMethod, UIDesignTool, UIDesignToolStatus } from './UIDesignTool';
 import { UIRecord } from './UIRecord/model';
 
 function createDummyArtboard(key: UIRecordKey): ArtboardJSON;
@@ -168,8 +168,17 @@ describe('UIDesignTool', () => {
 
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.idle);
 
-      setStatus(UIDesignToolStatus.select);
+      setStatus({ interactionType: InteractionType.selection, transformMethod: TransformMethod.fixed });
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.select);
+
+      setStatus({ interactionType: InteractionType.transform, transformMethod: TransformMethod.move });
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.move);
+
+      setStatus({ interactionType: InteractionType.transform, transformMethod: TransformMethod.resize });
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.resize);
+
+      setStatus({ interactionType: InteractionType.transform, transformMethod: TransformMethod.rotate });
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.rotate);
     });
   });
 
