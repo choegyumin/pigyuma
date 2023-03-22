@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "@iconscout/react-unicons": "^1.1.6",
+    "@mdi/js": "^7.2.96",
+    "@mdi/react": "^1.6.1",
     "@pigyuma/css-utils": "*",
     "@pigyuma/react-utility-types": "*",
     "@pigyuma/react-utils": "*",
