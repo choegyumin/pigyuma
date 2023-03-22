@@ -15,8 +15,8 @@ import {
   UIRecordKey,
 } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
-import { setRef, useEvent, useEventListener } from '@pigyuma/react-utils';
-import React, { useRef } from 'react';
+import { useEvent, useEventListener } from '@pigyuma/react-utils';
+import React, { useCallback, useMemo } from 'react';
 import { AxisGrid } from '../AxisGrid/AxisGrid';
 import { HoveringOverlay } from '../HoveringOverlay/HoveringOverlay';
 import { PointerEventsController } from '../PointerEventsController/PointerEventsController';
@@ -45,7 +45,58 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const { startResize, resize, endResize } = useResizeFunctions(selectedRecordKey);
   const { startRotate, rotate, endRotate } = useRotateFunctions(selectedRecordKey);
 
-  const nextStatusActionQueue = useRef<StatusAction[]>([]);
+  const interactionQueue = useMemo<Array<{ event: MouseEvent; action: StatusAction; calibrate: number }>>(() => [], []);
+
+  const startInteraction = useCallback(
+    (event: MouseEvent, action: StatusAction) => {
+      if (action.interactionType === InteractionType.selection) {
+        // startSelection(event);
+      } else if (action.interactionType === InteractionType.transform) {
+        if (action.transformMethod === TransformMethod.move) {
+          startMove(event);
+        } else if (action.transformMethod === TransformMethod.resize) {
+          startResize(event);
+        } else if (action.transformMethod === TransformMethod.rotate) {
+          startRotate(event);
+        }
+      }
+    },
+    [startMove, startResize, startRotate],
+  );
+
+  const endInteraction = useCallback(
+    (event: MouseEvent, action: StatusAction) => {
+      if (action.interactionType === InteractionType.selection) {
+        // endSelection(event);
+      } else if (action.interactionType === InteractionType.transform) {
+        if (action.transformMethod === TransformMethod.move) {
+          endMove(event);
+        } else if (action.transformMethod === TransformMethod.resize) {
+          endResize(event);
+        } else if (action.transformMethod === TransformMethod.rotate) {
+          endRotate(event);
+        }
+      }
+    },
+    [endMove, endResize, endRotate],
+  );
+
+  const progressInteraction = useCallback(
+    (event: MouseEvent, action: StatusAction) => {
+      if (action.interactionType === InteractionType.selection) {
+        // selection(event);
+      } else if (action.interactionType === InteractionType.transform) {
+        if (action.transformMethod === TransformMethod.move) {
+          move(event);
+        } else if (action.transformMethod === TransformMethod.resize) {
+          resize(event);
+        } else if (action.transformMethod === TransformMethod.rotate) {
+          rotate(event);
+        }
+      }
+    },
+    [move, resize, rotate],
+  );
 
   const onDocumentMouseDown = useEvent((event: MouseEvent) => {
     if (!(event.target instanceof Element && event.target.closest(`[${UIDesignToolElementDataAttributeName.id}]`))) {
@@ -58,63 +109,66 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     const isSelectionGrabbing = isUIRecordKey(hoveredRecordKey);
     const isHandleGrabbing = handle != null;
 
-    const interactionType = isSelectionGrabbing || isHandleGrabbing ? InteractionType.transform : InteractionType.selection;
+    const interactionType: InteractionType =
+      isSelectionGrabbing || isHandleGrabbing ? InteractionType.transform : InteractionType.selection;
 
-    if (interactionType === InteractionType.selection) {
-      nextStatusActionQueue.current.push({ interactionType: InteractionType.selection });
+    switch (interactionType) {
+      case InteractionType.selection: {
+        interactionQueue.push({
+          event,
+          action: { interactionType: InteractionType.selection },
+          calibrate: 0,
+        });
 
-      uiController.select([]);
-    } else if (interactionType === InteractionType.transform) {
-      const transformMethod =
-        (handle?.dataset[UIInteractionElementDataset.handleType] as Exclude<TransformMethod, 'none'> | undefined) ?? TransformMethod.move;
-
-      nextStatusActionQueue.current.push({ interactionType: InteractionType.transform, transformMethod });
-
-      if (!isHandleGrabbing) {
-        /** @todo 다중 선택 기능 구현 후 조건 추가  */
-        uiController.select(isUIRecordKey(hoveredRecordKey) ? [hoveredRecordKey] : []);
+        uiController.select([]);
+        break;
       }
-    } else {
-      uiController.select([]);
+
+      case InteractionType.transform: {
+        const transformMethod =
+          (handle?.dataset[UIInteractionElementDataset.handleType] as Exclude<TransformMethod, 'none'> | undefined) ?? TransformMethod.move;
+
+        interactionQueue.push({
+          event,
+          action: { interactionType: InteractionType.transform, transformMethod },
+          calibrate: 5,
+        });
+
+        if (!isHandleGrabbing) {
+          /** @todo 다중 선택 기능 구현 후 조건 추가  */
+          uiController.select(isUIRecordKey(hoveredRecordKey) ? [hoveredRecordKey] : []);
+        }
+        break;
+      }
+
+      default: {
+        uiController.select([]);
+        break;
+      }
     }
   });
 
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
     // Flush
-    setRef(nextStatusActionQueue, []);
+    interactionQueue.length = 0;
     setStatus({ interactionType: InteractionType.idle });
-
-    if (status.interactionType === InteractionType.selection) {
-      // endSelection(event);
-    } else if (status.interactionType === InteractionType.transform) {
-      if (status.transformMethod === TransformMethod.move) {
-        endMove(event);
-      } else if (status.transformMethod === TransformMethod.resize) {
-        endResize(event);
-      } else if (status.transformMethod === TransformMethod.rotate) {
-        endRotate(event);
-      }
-    }
+    endInteraction(event, status);
   });
 
   const onDocumentMouseMove = useEvent((event: MouseEvent) => {
-    // console.log({ ...status, hovered: hoveredRecordKey, selected: selectedRecordKey });
+    const interactionItem = interactionQueue.shift();
 
-    const statusAction = nextStatusActionQueue.current.shift();
+    if (interactionItem != null) {
+      const movementRange =
+        Math.abs(interactionItem.event.clientX - event.clientX) + Math.abs(interactionItem.event.clientY - event.clientY);
 
-    if (statusAction != null) {
-      if (statusAction.interactionType === InteractionType.selection) {
-        // startSelection(event);
-      } else if (statusAction.interactionType === InteractionType.transform) {
-        if (statusAction.transformMethod === TransformMethod.move) {
-          startMove(event);
-        } else if (statusAction.transformMethod === TransformMethod.resize) {
-          startResize(event);
-        } else if (statusAction.transformMethod === TransformMethod.rotate) {
-          startRotate(event);
-        }
+      // 마우스가 `calibrate` 이상 움직이지 않은 경우 인터랙션을 시작하지 않음 (사용자가 단순히 무언가를 클릭할 때 마우스가 밀리는 것을 보정)
+      if (movementRange < interactionItem.calibrate) {
+        return interactionQueue.unshift(interactionItem);
       }
-      return setStatus(statusAction);
+
+      setStatus(interactionItem.action);
+      return startInteraction(interactionItem.event, interactionItem.action);
     }
 
     if (status.interactionType === InteractionType.idle) {
@@ -125,20 +179,11 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       const isSelectableRecord = record instanceof Artboard || record instanceof Layer;
 
       setHovered(isSelectableRecord ? record.key : undefined);
-    } else if (status.interactionType === InteractionType.selection) {
-      // selection(event);
-    } else if (status.interactionType === InteractionType.transform) {
-      if (status.transformMethod === TransformMethod.move) {
-        move(event);
-      } else if (status.transformMethod === TransformMethod.resize) {
-        resize(event);
-      } else if (status.transformMethod === TransformMethod.rotate) {
-        rotate(event);
-      }
+    } else {
+      progressInteraction(event, status);
     }
   });
 
-  useEventListener(document, 'mousedown', onDocumentMouseDown);
   useEventListener(document, 'mousedown', onDocumentMouseDown);
   useEventListener(document, 'mouseup', onDocumentMouseUp);
   useEventListener(document, 'mousemove', onDocumentMouseMove);
