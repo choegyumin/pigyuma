@@ -17,7 +17,9 @@ const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
     keyof SelectOnlyHTMLAttributes<HTMLSelectElement>
   >;
 
-  const [selected, setSelected] = useValue<string | number | undefined>(selectProps.value, selectProps.defaultValue);
+  const [selected, setSelected] = useValue<string | number | undefined>(selectProps.value, selectProps.defaultValue, {
+    notifyError: false,
+  });
 
   const onChange = useEvent<NonNullable<typeof selectProps.onChange>>((event, newSelected) => {
     selectProps.onChange?.(event, newSelected);
@@ -29,7 +31,7 @@ const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
       <FieldTrigger className={styles.trigger} aria-hidden={true}>
         <button type="button">{selected}</button>
       </FieldTrigger>
-      <PrimitiveSelect {...selectProps} className={styles.select} value={selected} onChange={onChange}>
+      <PrimitiveSelect {...selectProps} className={styles.select} onChange={onChange}>
         {rootProps.children}
       </PrimitiveSelect>
     </Box>
