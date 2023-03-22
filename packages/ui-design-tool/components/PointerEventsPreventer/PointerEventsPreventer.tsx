@@ -1,18 +1,15 @@
-import { StatusType, TransformMethod } from '@/api/UIDesignTool';
+import { StatusType } from '@/api/UIDesignTool';
 import useCursor from '@/hooks/useCursor';
 import useStatus from '@/hooks/useStatus';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as styles from './PointerEventsPreventer.css';
-import { PointerEventsPreventerProps } from './types';
 
-export const PointerEventsPreventer: React.FC<PointerEventsPreventerProps> = React.memo(() => {
+export const PointerEventsPreventer: React.FC = React.memo(() => {
   const cursor = useCursor();
   const status = useStatus();
 
-  const shouldVisible =
-    status.statusType === StatusType.transform &&
-    (status.transformMethod === TransformMethod.resize || status.transformMethod === TransformMethod.rotate);
+  const shouldVisible = status.statusType !== StatusType.idle;
 
   const style: React.CSSProperties = {
     [styles.varNames.cursor]: shouldVisible ? cursor : 'default',
