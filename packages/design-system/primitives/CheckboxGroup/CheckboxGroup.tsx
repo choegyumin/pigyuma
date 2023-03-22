@@ -8,12 +8,12 @@ import { CheckboxGroupProps, CheckboxGroupRef } from './types';
 const CheckboxGroup = React.forwardRef<CheckboxGroupRef, CheckboxGroupProps>((props, ref) => {
   const { name, value, defaultValue, disabled, required, onChange, onChangeCapture, ...rootProps } = props;
 
-  const [selected, setSelected] = useValue<Array<string | number>>(value, defaultValue ?? []);
+  const [selected = [], setSelected] = useValue<Array<string | number>>(value, defaultValue);
 
   const getSelected = useCallback(
     (checkbox: HTMLInputElement) => {
       const currentValue = convertInputSelectedValue(checkbox);
-      const newSelected = [...selected];
+      const newSelected = selected != null ? [...selected] : [];
       /** @todo value가 정의되지 않은 Checkbox가 있을 때의 동작 정의 */
       if (currentValue != null) {
         if (checkbox.checked) {

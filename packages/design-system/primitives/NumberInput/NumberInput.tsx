@@ -1,5 +1,5 @@
-import { useEvent, useForkedRef, useValue } from '@pigyuma/react-utils';
-import React, { useState } from 'react';
+import { useEvent, useForkedRef } from '@pigyuma/react-utils';
+import React, { useCallback, useState } from 'react';
 import Box from '../Box';
 import { NumberInputProps, NumberInputRef } from './types';
 
@@ -12,19 +12,17 @@ const NumberInput = React.forwardRef<NumberInputRef, NumberInputProps>((props, r
   const { autoSelect, ...restProps } = props;
   const forkedRef = useForkedRef(ref);
 
-  const defaultValue = restProps.defaultValue === null ? '' : restProps.defaultValue ?? '';
-  const [value, setValue] = useValue<number | ''>(restProps.value === null ? '' : restProps.value, defaultValue);
-
   const [stepUp, setStepUp] = useState<boolean>(false);
   const step = Number(restProps.step ?? 1) * (stepUp ? 10 : 1);
 
+  const convertTargetValue = useCallback((string: string): number | null => (string ? Number(string) : null), []);
+
   const onChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
-    restProps.onChange?.(event, Number(event.currentTarget.value));
-    setValue(Number(event.currentTarget.value));
+    restProps.onChange?.(event, convertTargetValue(event.currentTarget.value));
   });
 
   const onChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
-    restProps.onChangeCapture?.(event, Number(event.currentTarget.value));
+    restProps.onChangeCapture?.(event, convertTargetValue(event.currentTarget.value));
   });
 
   const onFocusCapture = useEvent((event: React.FocusEvent<HTMLInputElement>) => {
@@ -55,8 +53,8 @@ const NumberInput = React.forwardRef<NumberInputRef, NumberInputProps>((props, r
       type="number"
       inputMode="decimal"
       spellCheck={false}
-      value={value}
-      defaultValue={defaultValue}
+      value={restProps.value === null ? '' : restProps.value}
+      defaultValue={restProps.defaultValue === null ? '' : restProps.defaultValue}
       step={step}
       onChange={onChange}
       onChangeCapture={onChangeCapture}

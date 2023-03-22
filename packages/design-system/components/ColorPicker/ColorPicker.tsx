@@ -14,7 +14,7 @@ const ColorPicker = React.forwardRef<ColorPickerRef, ColorPickerProps>((props, r
 
   const inputProps = pick(props, InputOnlyHTMLAttributeKeys) as PickExisting<typeof props, keyof InputOnlyHTMLAttributes<HTMLInputElement>>;
 
-  const [color, setColor] = useValue<string>(inputProps.value as string | undefined, (inputProps.defaultValue as string | undefined) ?? '');
+  const [color, setColor] = useValue<string>(inputProps.value, inputProps.defaultValue, { notifyError: false });
 
   const onChange = useEvent<NonNullable<typeof inputProps.onChange>>((event, newColor) => {
     setColor(newColor);
@@ -29,7 +29,7 @@ const ColorPicker = React.forwardRef<ColorPickerRef, ColorPickerProps>((props, r
           {color}
         </button>
       </FieldTrigger>
-      <PrimitiveColorPicker {...inputProps} className={styles.picker} value={color} onChange={onChange} />
+      <PrimitiveColorPicker {...inputProps} className={styles.picker} onChange={onChange} />
     </Box>
   );
 });

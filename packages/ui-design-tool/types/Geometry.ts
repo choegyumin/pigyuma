@@ -1,6 +1,6 @@
 import { getComputedUIRecordStyleValue } from '@/utils/style';
 import { calcBoundsFromPoints, calcDegreesBetweenCoords, calcLayoutFromPoints, calcRectPoints, toDegrees360 } from '@pigyuma/utils';
-import { UIDesignToolIDAttributeName } from './Identifier';
+import { UIDesignToolElementDataAttributeName } from './Identifier';
 import { UIRecordStyle } from './Style';
 
 function getCombinedRotateDegrees(element: HTMLElement): number {
@@ -160,7 +160,7 @@ export class UIRecordRect {
   static fromElement(other: HTMLElement): UIRecordRect {
     const layout = { width: other.offsetWidth, height: other.offsetHeight };
     const bounds = other.getBoundingClientRect();
-    const rootBounds = other.closest(`[${UIDesignToolIDAttributeName}]`)?.getBoundingClientRect() ?? new DOMRect();
+    const rootBounds = other.closest(`[${UIDesignToolElementDataAttributeName.id}]`)?.getBoundingClientRect() ?? new DOMRect();
 
     const x = bounds.x - rootBounds.x + (bounds.width - layout.width) / 2;
     const y = bounds.y - rootBounds.y + (bounds.height - layout.height) / 2;

@@ -1,6 +1,6 @@
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import {
-  UIDesignToolIDAttributeName,
+  UIDesignToolElementDataAttributeName,
   UIRecordElementDataset,
   UIRecordElementFilter,
   UIRecordElementFilterItem,
@@ -38,14 +38,30 @@ export interface BrowserMeta {
 
 export type UIRecordChanges<T extends UIRecordData> = Omit<DeepPartial<T>, 'key' | 'parent' | 'children'>;
 
-/** @todo XState 도입 검토 (상태를 context에서 관리하고 constate로 분리하지 않아도 InteractionController 내에서 눈에 띄는 성능 저하는 없을 것으로 판단됨) */
+export const InteractionType = {
+  idle: 'idle',
+  selection: 'selection',
+  transform: 'transform',
+} as const;
+export type InteractionType = keyof typeof InteractionType;
+
+export const TransformMethod = {
+  fixed: 'fixed',
+  move: 'move',
+  resize: 'resize',
+  rotate: 'rotate',
+} as const;
+export type TransformMethod = keyof typeof TransformMethod;
+
+/** @see 플로우차트 (XState를 사용하진 않음) {@link https://stately.ai/viz/9dbc258b-c910-46da-a1fc-f94c8cbfa932} */
 export const UIDesignToolStatus = {
   unknown: 'unknown',
   idle: 'idle',
   /** Range selection */
-  selecting: 'selecting',
-  resizing: 'resizing',
-  rotating: 'rotating',
+  select: 'select',
+  move: 'move',
+  resize: 'resize',
+  rotate: 'rotate',
 } as const;
 export type UIDesignToolStatus = keyof typeof UIDesignToolStatus;
 
@@ -78,7 +94,8 @@ export class UIDesignTool {
   };
 
   #mounted: boolean;
-  #status: UIDesignToolStatus;
+  #interactionType: InteractionType;
+  #transformMethod: TransformMethod;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
   #selectedKeys: Set<UIRecordKey>;
@@ -104,7 +121,8 @@ export class UIDesignTool {
     };
 
     this.#mounted = false;
-    this.#status = UIDesignToolStatus.idle;
+    this.#interactionType = InteractionType.idle;
+    this.#transformMethod = TransformMethod.fixed;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
     this.#selectedKeys = new Set();
@@ -114,7 +132,8 @@ export class UIDesignTool {
     const onMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
-      const rootBounds = document.querySelector(`[${UIDesignToolIDAttributeName}="${this.#id}"]`)?.getBoundingClientRect() ?? new DOMRect();
+      const rootBounds =
+        document.querySelector(`[${UIDesignToolElementDataAttributeName.id}="${this.#id}"]`)?.getBoundingClientRect() ?? new DOMRect();
       this.#browserMeta.mouse.clientX = clientX;
       this.#browserMeta.mouse.clientY = clientY;
       this.#browserMeta.mouse.offsetX = clientX - rootBounds.x;
@@ -135,9 +154,10 @@ export class UIDesignTool {
     };
   }
 
-  #setStatus(status: UIDesignToolStatus): void {
+  #setStatus(status: { interactionType: InteractionType; transformMethod: TransformMethod }): void {
     if (this.#mounted) {
-      this.#status = status;
+      this.#interactionType = status.interactionType;
+      this.#transformMethod = status.transformMethod;
     }
   }
 
@@ -146,7 +166,24 @@ export class UIDesignTool {
   }
 
   get status(): UIDesignToolStatus {
-    return this.#status;
+    if (this.#interactionType === InteractionType.idle) {
+      return UIDesignToolStatus.idle;
+    }
+    if (this.#interactionType === InteractionType.selection) {
+      return UIDesignToolStatus.select;
+    }
+    if (this.#interactionType === InteractionType.transform) {
+      if (this.#transformMethod === TransformMethod.move) {
+        return UIDesignToolStatus.move;
+      }
+      if (this.#transformMethod === TransformMethod.resize) {
+        return UIDesignToolStatus.resize;
+      }
+      if (this.#transformMethod === TransformMethod.rotate) {
+        return UIDesignToolStatus.rotate;
+      }
+    }
+    return UIDesignToolStatus.unknown;
   }
 
   get tree(): Canvas {
@@ -182,7 +219,7 @@ export class UIDesignTool {
     return {
       id: this.#id,
       getBrowserMeta: () => this.#browserMeta,
-      setStatus: (status: UIDesignToolStatus) => this.#setStatus(status),
+      setStatus: (status: { interactionType: InteractionType; transformMethod: TransformMethod }) => this.#setStatus(status),
     };
   }
 
@@ -196,7 +233,8 @@ export class UIDesignTool {
     document.removeEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
 
     this.#mounted = false;
-    this.#status = UIDesignToolStatus.idle;
+    this.#interactionType = InteractionType.idle;
+    this.#transformMethod = TransformMethod.fixed;
     this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
     this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
     this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;
@@ -672,8 +710,8 @@ export class UIDesignTool {
     }
   }
 
-  dataset(element: HTMLElement): { key: string | undefined; type: string | undefined; layerType: string | undefined } {
-    return mapValues(UIRecordElementDataset, (datasetKey) => element.dataset[datasetKey]);
+  dataset(element: Element | null): { key: string | undefined; type: string | undefined; layerType: string | undefined } {
+    return mapValues(UIRecordElementDataset, (datasetKey) => (element as Partial<HTMLElement | SVGElement> | null)?.dataset?.[datasetKey]);
   }
 
   matches(element: Element | null, filter: UIRecordElementFilter): boolean {

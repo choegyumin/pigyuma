@@ -16,6 +16,6 @@ export type { UIDesignCanvasProps, UIDesignCanvasRef } from './components/UIDesi
 
 export { default as useUIController } from './hooks/useUIController';
 export { default as useUIData } from './hooks/useUIData';
-export { default as useUIElement } from './hooks/useUIElement';
+export { default as useUISelector } from './hooks/useUISelector';
 export { default as useUISubscription } from './hooks/useUISubscription';
 export { default as useUIRecord } from './hooks/useUIRecord';
