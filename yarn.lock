@@ -992,6 +992,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mdi/js@npm:^7.2.96":
+  version: 7.2.96
+  resolution: "@mdi/js@npm:7.2.96"
+  checksum: f8e22da5d994a4b764580d22290c825c1d789a6e015c166e271e2164fb80d33551d6632632897e30ae9033a3fe4aa6a28f2e97c5d3ad56c823f89f859944899e
+  languageName: node
+  linkType: hard
+
+"@mdi/react@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "@mdi/react@npm:1.6.1"
+  dependencies:
+    prop-types: ^15.7.2
+  checksum: d0408c5fcc1cf6e4b1fc7be57a5516453b12c076dc682fe320c2fe7c19a333c265cd16dd2348d5587356f9f9a35cec46fb5f5f530d34c485d23975dcd240f834
+  languageName: node
+  linkType: hard
+
 "@next/env@npm:13.0.0":
   version: 13.0.0
   resolution: "@next/env@npm:13.0.0"
@@ -1173,6 +1189,8 @@ __metadata:
   resolution: "@pigyuma/design-system@workspace:packages/design-system"
   dependencies:
     "@iconscout/react-unicons": ^1.1.6
+    "@mdi/js": ^7.2.96
+    "@mdi/react": ^1.6.1
     "@pigyuma/css-utils": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/react-utils": "*"
@@ -7132,7 +7150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:*, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:*, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:

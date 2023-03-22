@@ -399,6 +399,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.3.17"\
       ],\
       [\
+        "@mdi/js",\
+        "npm:7.2.96"\
+      ],\
+      [\
+        "@mdi/react",\
+        "npm:1.6.1"\
+      ],\
+      [\
         "@next/env",\
         "npm:13.0.0"\
       ],\
@@ -4400,6 +4408,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@mdi/js", [\
+        ["npm:7.2.96", {\
+          "packageLocation": "./.yarn/cache/@mdi-js-npm-7.2.96-27e14692c7-f8e22da5d9.zip/node_modules/@mdi/js/",\
+          "packageDependencies": [\
+            ["@mdi/js", "npm:7.2.96"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@mdi/react", [\
+        ["npm:1.6.1", {\
+          "packageLocation": "./.yarn/cache/@mdi-react-npm-1.6.1-00754d4c4a-d0408c5fcc.zip/node_modules/@mdi/react/",\
+          "packageDependencies": [\
+            ["@mdi/react", "npm:1.6.1"],\
+            ["eslint-import-resolver-node", "npm:0.3.7"],\
+            ["prop-types", "npm:15.8.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@next/env", [\
         ["npm:13.0.0", {\
           "packageLocation": "./.yarn/cache/@next-env-npm-13.0.0-1c93c00d45-3146f10324.zip/node_modules/@next/env/",\
@@ -4619,6 +4647,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@pigyuma/design-system", "workspace:packages/design-system"],\
             ["@iconscout/react-unicons", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:1.1.6"],\
+            ["@mdi/js", "npm:7.2.96"],\
+            ["@mdi/react", "npm:1.6.1"],\
             ["@pigyuma/css-utils", "workspace:packages/css-utils"],\
             ["@pigyuma/react-utility-types", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utility-types"],\
             ["@pigyuma/react-utils", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utils"],\
