@@ -1,16 +1,41 @@
-import { mdiTableLarge, mdiCheckboxMultipleBlank, mdiSquare, mdiGrid, mdiFormatText, mdiViewDashboard, mdiViewAgenda } from '@mdi/js';
+import {
+  mdiTableLarge,
+  mdiCheckboxMultipleBlank,
+  mdiSquare,
+  mdiHandBackRight,
+  mdiHandBackRightOutline,
+  mdiGrid,
+  mdiFormatText,
+  mdiViewDashboard,
+  mdiViewAgenda,
+  mdiCursorDefaultOutline,
+  mdiCursorDefault,
+  mdiViewAgendaOutline,
+  mdiCheckboxMultipleBlankOutline,
+  mdiSquareOutline,
+  mdiViewDashboardOutline,
+} from '@mdi/js';
 import { IconProps as MDIIconProps } from '@mdi/react/dist/IconProps';
 import { mapValues } from '@pigyuma/utils';
 
 export const IconPath = {
   columns: mdiViewAgenda,
-  table: mdiTableLarge,
-  stack: mdiCheckboxMultipleBlank,
-  square: mdiSquare,
+  columnsOutline: mdiViewAgendaOutline,
+  cursor: mdiCursorDefault,
+  cursorOutline: mdiCursorDefaultOutline,
   grid: mdiGrid,
-  text: mdiFormatText,
+  hand: mdiHandBackRight,
+  handOutline: mdiHandBackRightOutline,
   layout: mdiViewDashboard,
+  layoutOutline: mdiViewDashboardOutline,
   rows: mdiViewAgenda,
+  rowsOutline: mdiViewAgendaOutline,
+  stack: mdiCheckboxMultipleBlank,
+  stackOutline: mdiCheckboxMultipleBlankOutline,
+  square: mdiSquare,
+  squareOutline: mdiSquareOutline,
+  table: mdiTableLarge,
+  text: mdiFormatText,
 } as const;
 
 export const IconType = mapValues(IconPath, (value, key) => key) as { [K in keyof typeof IconPath]: K };
