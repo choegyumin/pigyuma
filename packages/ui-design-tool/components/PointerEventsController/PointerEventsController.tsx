@@ -3,9 +3,9 @@ import useCursor from '@/hooks/useCursor';
 import useStatus from '@/hooks/useStatus';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as styles from './PointerEventsPreventer.css';
+import * as styles from './PointerEventsController.css';
 
-export const PointerEventsPreventer: React.FC = React.memo(() => {
+export const PointerEventsController: React.FC = React.memo(() => {
   const cursor = useCursor();
   const status = useStatus();
 
@@ -18,4 +18,4 @@ export const PointerEventsPreventer: React.FC = React.memo(() => {
 
   return ReactDOM.createPortal(<div className={styles.root} style={style} />, document.body);
 });
-PointerEventsPreventer.displayName = 'PointerEventsPreventer';
+PointerEventsController.displayName = 'PointerEventsController';
