@@ -13,8 +13,8 @@ export const transitionDurationNames: { transition: Pick<TransitionThemeTokens, 
 export const transitionDurationTokens: { transition: Pick<TransitionThemeTokens, 'duration'> } = {
   transition: {
     duration: {
-      fast: '0.1s',
-      normal: '0.2s',
+      fast: '0.05s',
+      normal: '0.1s',
       slow: '0.4s',
     },
   },
