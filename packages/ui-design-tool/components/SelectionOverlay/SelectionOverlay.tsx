@@ -1,3 +1,5 @@
+import { Artboard } from '@/api/Artboard/model';
+import { Layer } from '@/api/Layer/model';
 import useSelected from '@/hooks/useSelected';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import { UIInteractionElementDataAttributeName } from '@/types/Identifier';
@@ -21,111 +23,126 @@ export const SelectionOverlay: React.FC = React.memo(() => {
     return null;
   }
 
+  const isResizable = isActive && (record instanceof Layer || record instanceof Artboard);
+  const isRotatable = isActive && record instanceof Layer;
+
   const rootStyle = getRootStyle(record);
   const infoText = getInfoText(record);
   const resizeHandleCursorMap = getResizeHandleCursorMap(record);
   const rotateHandleCursorMap = getRotateHandleCursorMap(record);
 
+  const resizeHandles = (
+    <>
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'resize',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.top,
+        }}
+        className={clsx(styles.resizeHandle, styles.resizeHandle$.top)}
+        style={{ cursor: resizeHandleCursorMap.top }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'resize',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.right,
+        }}
+        className={clsx(styles.resizeHandle, styles.resizeHandle$.right)}
+        style={{ cursor: resizeHandleCursorMap.right }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'resize',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottom,
+        }}
+        className={clsx(styles.resizeHandle, styles.resizeHandle$.bottom)}
+        style={{ cursor: resizeHandleCursorMap.bottom }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'resize',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.left,
+        }}
+        className={clsx(styles.resizeHandle, styles.resizeHandle$.left)}
+        style={{ cursor: resizeHandleCursorMap.left }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'resize',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.topLeft,
+        }}
+        className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.topLeft)}
+        style={{ cursor: resizeHandleCursorMap.topLeft }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'resize',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.topRight,
+        }}
+        className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.topRight)}
+        style={{ cursor: resizeHandleCursorMap.topRight }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'resize',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottomRight,
+        }}
+        className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.bottomRight)}
+        style={{ cursor: resizeHandleCursorMap.bottomRight }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'resize',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottomLeft,
+        }}
+        className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.bottomLeft)}
+        style={{ cursor: resizeHandleCursorMap.bottomLeft }}
+      />
+    </>
+  );
+
+  const rotateHandles = (
+    <>
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'rotate',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.topLeft,
+        }}
+        className={clsx(styles.rotateHandle, styles.rotateHandle$.topLeft)}
+        style={{ cursor: rotateHandleCursorMap.topLeft }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'rotate',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.topRight,
+        }}
+        className={clsx(styles.rotateHandle, styles.rotateHandle$.topRight)}
+        style={{ cursor: rotateHandleCursorMap.topRight }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'rotate',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottomRight,
+        }}
+        className={clsx(styles.rotateHandle, styles.rotateHandle$.bottomRight)}
+        style={{ cursor: rotateHandleCursorMap.bottomRight }}
+      />
+      <div
+        {...{
+          [UIInteractionElementDataAttributeName.handleType]: 'rotate',
+          [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottomLeft,
+        }}
+        className={clsx(styles.rotateHandle, styles.rotateHandle$.bottomLeft)}
+        style={{ cursor: rotateHandleCursorMap.bottomLeft }}
+      />
+    </>
+  );
+
   return (
     <div className={styles.root} style={rootStyle}>
       <div className={styles.wrapper}>
         <div className={styles.outline} />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'rotate',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.topLeft,
-          }}
-          className={clsx(styles.rotateHandle, styles.rotateHandle$.topLeft)}
-          style={{ cursor: rotateHandleCursorMap.topLeft }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'rotate',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.topRight,
-          }}
-          className={clsx(styles.rotateHandle, styles.rotateHandle$.topRight)}
-          style={{ cursor: rotateHandleCursorMap.topRight }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'rotate',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottomRight,
-          }}
-          className={clsx(styles.rotateHandle, styles.rotateHandle$.bottomRight)}
-          style={{ cursor: rotateHandleCursorMap.bottomRight }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'rotate',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottomLeft,
-          }}
-          className={clsx(styles.rotateHandle, styles.rotateHandle$.bottomLeft)}
-          style={{ cursor: rotateHandleCursorMap.bottomLeft }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'resize',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.top,
-          }}
-          className={clsx(styles.resizeHandle, styles.resizeHandle$.top)}
-          style={{ cursor: resizeHandleCursorMap.top }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'resize',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.right,
-          }}
-          className={clsx(styles.resizeHandle, styles.resizeHandle$.right)}
-          style={{ cursor: resizeHandleCursorMap.right }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'resize',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottom,
-          }}
-          className={clsx(styles.resizeHandle, styles.resizeHandle$.bottom)}
-          style={{ cursor: resizeHandleCursorMap.bottom }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'resize',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.left,
-          }}
-          className={clsx(styles.resizeHandle, styles.resizeHandle$.left)}
-          style={{ cursor: resizeHandleCursorMap.left }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'resize',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.topLeft,
-          }}
-          className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.topLeft)}
-          style={{ cursor: resizeHandleCursorMap.topLeft }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'resize',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.topRight,
-          }}
-          className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.topRight)}
-          style={{ cursor: resizeHandleCursorMap.topRight }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'resize',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottomRight,
-          }}
-          className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.bottomRight)}
-          style={{ cursor: resizeHandleCursorMap.bottomRight }}
-        />
-        <div
-          {...{
-            [UIInteractionElementDataAttributeName.handleType]: 'resize',
-            [UIInteractionElementDataAttributeName.handlePlacement]: HandlePlacement.bottomLeft,
-          }}
-          className={clsx(styles.resizeCornerHandle, styles.resizeCornerHandle$.bottomLeft)}
-          style={{ cursor: resizeHandleCursorMap.bottomLeft }}
-        />
+        {isRotatable && rotateHandles}
+        {isResizable && resizeHandles}
       </div>
       <div className={styles.info}>{infoText}</div>
     </div>
