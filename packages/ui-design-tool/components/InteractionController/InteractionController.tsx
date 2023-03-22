@@ -30,8 +30,8 @@ import useRotateFunctions from './useRotateFunctions';
 
 /** @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성 */
 export const InteractionController: React.FC<InteractionControllerProps> = React.memo(() => {
-  const uiControllerAPI = useUIController();
-  const uiSelectorAPI = useUISelector();
+  const uiController = useUIController();
+  const uiSelector = useUISelector();
 
   const status = useStatus();
   const hoveredRecordKey = useHovered();
@@ -63,7 +63,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     if (interactionType === InteractionType.selection) {
       nextStatusActionQueue.current.push({ interactionType: InteractionType.selection });
 
-      uiControllerAPI.select([]);
+      uiController.select([]);
     } else if (interactionType === InteractionType.transform) {
       const transformMethod =
         (handle?.dataset[UIInteractionElementDataset.handleType] as Exclude<TransformMethod, 'none'> | undefined) ?? TransformMethod.move;
@@ -72,10 +72,10 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
 
       if (!isHandleGrabbing) {
         /** @todo 다중 선택 기능 구현 후 조건 추가  */
-        uiControllerAPI.select(isUIRecordKey(hoveredRecordKey) ? [hoveredRecordKey] : []);
+        uiController.select(isUIRecordKey(hoveredRecordKey) ? [hoveredRecordKey] : []);
       }
     } else {
-      uiControllerAPI.select([]);
+      uiController.select([]);
     }
   });
 
@@ -118,8 +118,8 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     }
 
     if (status.interactionType === InteractionType.idle) {
-      const target = uiSelectorAPI.fromMouse();
-      const recordKey = target != null ? uiSelectorAPI.dataset(target).key : undefined;
+      const target = uiSelector.fromMouse();
+      const recordKey = target != null ? uiSelector.dataset(target).key : undefined;
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
 
       const isSelectableRecord = record instanceof Artboard || record instanceof Layer;

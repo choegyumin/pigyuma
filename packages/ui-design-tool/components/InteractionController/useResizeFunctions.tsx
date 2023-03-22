@@ -114,8 +114,8 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
 
   const resizeHandlePlacementRef = useRef<HandlePlacement>();
 
-  const uiControllerAPI = useUIController();
-  const uiSelectorAPI = useUISelector();
+  const uiController = useUIController();
+  const uiSelector = useUISelector();
 
   const getBrowserMeta = useBrowserMeta();
   const getItemReference = useItemReference();
@@ -135,7 +135,7 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
         return console.error(`UIRecord '${recordKey}' not found.`);
       }
 
-      const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
+      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
       if (target == null) {
         return console.error(`element with recordKey of '${recordKey}' not found.`);
       }
@@ -155,7 +155,7 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
       setRef(resizeHandlePlacementRef, handle);
       setCursor(isGrabbingCorner ? getResizeCursor(target, mouseClientPoint) : event.target.style.getPropertyValue('cursor'));
     },
-    [recordKey, uiSelectorAPI, getBrowserMeta, getItemReference, setCursor],
+    [recordKey, uiSelector, getBrowserMeta, getItemReference, setCursor],
   );
 
   const endResize = useCallback(
@@ -166,7 +166,7 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
         return console.error(`UIRecord '${recordKey}' not found.`);
       }
 
-      const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
+      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
       if (target == null) {
         return console.error(`Element with recordKey of '${recordKey}' not found.`);
       }
@@ -176,9 +176,9 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
       setRef(transformInitialRectRef, undefined);
       setRef(transformLastRectRef, undefined);
       setRef(resizeHandlePlacementRef, undefined);
-      uiControllerAPI.setRect(record.key, rect);
+      uiController.setRect(record.key, rect);
     },
-    [recordKey, uiControllerAPI, uiSelectorAPI, getItemReference],
+    [recordKey, uiController, uiSelector, getItemReference],
   );
 
   const resize = useCallback(
@@ -189,7 +189,7 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
         return console.error(`UIRecord '${recordKey}' not found.`);
       }
 
-      const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
+      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
       if (target == null) {
         return console.error(`Element with recordKey of '${recordKey}' not found.`);
       }
@@ -216,13 +216,13 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
 
       if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
         setRef(transformLastRectRef, newRect);
-        uiControllerAPI.setRect(record.key, newRect);
+        uiController.setRect(record.key, newRect);
       }
       if (isGrabbingCorner) {
         setCursor(getResizeCursor(target, mouseClientPoint));
       }
     },
-    [recordKey, uiControllerAPI, uiSelectorAPI, getBrowserMeta, getItemReference, setCursor],
+    [recordKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor],
   );
 
   return { startResize, resize, endResize };

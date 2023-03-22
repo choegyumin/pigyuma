@@ -15,7 +15,7 @@ const initialStyle = {
 };
 
 export default function useRenderUtils() {
-  const uiSelectorAPI = useUISelector();
+  const uiSelector = useUISelector();
 
   const getRootStyle = useCallback(
     (record: UIRecord) => {
@@ -23,7 +23,7 @@ export default function useRenderUtils() {
         return initialStyle;
       }
 
-      const layerElement = uiSelectorAPI.query({ key: record.key });
+      const layerElement = uiSelector.query({ key: record.key });
       if (layerElement == null) {
         console.error(`element not found with key ${record.key}.`);
         return initialStyle;
@@ -40,7 +40,7 @@ export default function useRenderUtils() {
         [styles.varNames.rotate]: `${rotate}deg`,
       };
     },
-    [uiSelectorAPI],
+    [uiSelector],
   );
 
   return { getRootStyle };

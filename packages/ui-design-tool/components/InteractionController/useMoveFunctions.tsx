@@ -27,8 +27,8 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
 
   const moveHandleCoordRef = useRef<{ x: number; y: number }>();
 
-  const uiControllerAPI = useUIController();
-  const uiSelectorAPI = useUISelector();
+  const uiController = useUIController();
+  const uiSelector = useUISelector();
 
   const getBrowserMeta = useBrowserMeta();
   const getItemReference = useItemReference();
@@ -39,7 +39,7 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (event: MouseEvent) => {
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-      const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
+      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
       if (record == null || target == null) {
         return;
       }
@@ -55,7 +55,7 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
       setRef(moveHandleCoordRef, mouseOffsetPoint);
       setCursor(MOVE_CURSOR);
     },
-    [recordKey, uiSelectorAPI, getBrowserMeta, getItemReference, setCursor],
+    [recordKey, uiSelector, getBrowserMeta, getItemReference, setCursor],
   );
 
   const endMove = useCallback(
@@ -66,7 +66,7 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
         return console.error(`UIRecord '${recordKey}' not found.`);
       }
 
-      const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
+      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
       if (target == null) {
         return console.error(`Element with recordKey of '${recordKey}' not found.`);
       }
@@ -76,9 +76,9 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
       setRef(transformInitialRectRef, undefined);
       setRef(transformLastRectRef, undefined);
       setRef(moveHandleCoordRef, undefined);
-      uiControllerAPI.setRect(record.key, rect);
+      uiController.setRect(record.key, rect);
     },
-    [recordKey, uiControllerAPI, uiSelectorAPI, getItemReference],
+    [recordKey, uiController, uiSelector, getItemReference],
   );
 
   const move = useCallback(
@@ -89,7 +89,7 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
         return console.error(`UIRecord '${recordKey}' not found.`);
       }
 
-      const target = isUIRecordKey(recordKey) ? uiSelectorAPI.query({ key: recordKey }) : undefined;
+      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
       if (target == null) {
         return console.error(`Element with recordKey of '${recordKey}' not found.`);
       }
@@ -108,11 +108,11 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
 
       if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
         setRef(transformLastRectRef, newRect);
-        uiControllerAPI.setRect(record.key, newRect);
+        uiController.setRect(record.key, newRect);
       }
       setCursor(MOVE_CURSOR);
     },
-    [recordKey, uiControllerAPI, uiSelectorAPI, getBrowserMeta, getItemReference, setCursor],
+    [recordKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor],
   );
 
   return { startMove, endMove, move };

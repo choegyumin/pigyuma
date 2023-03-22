@@ -26,7 +26,7 @@ const initialRootStyle = {
 const initialInfoText = '';
 
 export default function useRenderUtils() {
-  const uiSelectorAPI = useUISelector();
+  const uiSelector = useUISelector();
 
   const status = useStatus();
 
@@ -55,7 +55,7 @@ export default function useRenderUtils() {
 
   const getOverlayShapeStyle = useCallback(
     (record: UIRecord) => {
-      const element = uiSelectorAPI.query({ key: record.key });
+      const element = uiSelector.query({ key: record.key });
       if (element == null) {
         return {
           [styles.varNames.x]: 0,
@@ -76,26 +76,26 @@ export default function useRenderUtils() {
         [styles.varNames.rotate]: `${rotate}deg`,
       };
     },
-    [uiSelectorAPI],
+    [uiSelector],
   );
 
   const createSizeInfoText = useCallback(
     (record: UIRecord) => {
-      const element = uiSelectorAPI.query({ key: record.key });
+      const element = uiSelector.query({ key: record.key });
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return rect != null ? `${rect.width} × ${rect.height}` : '';
     },
-    [uiSelectorAPI],
+    [uiSelector],
   );
 
   const createDegreesInfoText = useCallback(
     (record: UIRecord) => {
-      const element = uiSelectorAPI.query({ key: record.key });
+      const element = uiSelector.query({ key: record.key });
       /** @todo 우측 패널도 `Layer.rotate.length` 대신 `UIRecordRect.fromElement(element).rotate` 가 노출되어야 함 (데이터를 nested·combined 값으로 조작하면 잦은 변경이 발생하므로 rotate 값만 예외 케이스로 적절한 설계 필요) */
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return rect != null ? `${toDegrees360(rect.rotate)}°` : '';
     },
-    [uiSelectorAPI],
+    [uiSelector],
   );
 
   const getRootStyle = useCallback(
@@ -133,11 +133,11 @@ export default function useRenderUtils() {
       if (!isRotatableUIRecord(record)) {
         return cursor.resizeMap(0);
       }
-      const element = uiSelectorAPI.query({ key: record.key });
+      const element = uiSelector.query({ key: record.key });
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return cursor.resizeMap(rect?.rotate || 0);
     },
-    [uiSelectorAPI],
+    [uiSelector],
   );
 
   const getRotateHandleCursorMap = useCallback(
@@ -145,11 +145,11 @@ export default function useRenderUtils() {
       if (!isRotatableUIRecord(record)) {
         return cursor.rotateMap(0);
       }
-      const element = uiSelectorAPI.query({ key: record.key });
+      const element = uiSelector.query({ key: record.key });
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
       return cursor.rotateMap(rect?.rotate || 0);
     },
-    [uiSelectorAPI],
+    [uiSelector],
   );
 
   return { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap };

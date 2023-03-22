@@ -21,7 +21,7 @@ const initialStyle = {
 };
 
 export default function useRenderUtils() {
-  const uiSelectorAPI = useUISelector();
+  const uiSelector = useUISelector();
 
   const getRootStyle = useCallback(
     (record: UIRecord) => {
@@ -29,7 +29,7 @@ export default function useRenderUtils() {
         return initialStyle;
       }
 
-      const layerElement = uiSelectorAPI.query({ key: record.key });
+      const layerElement = uiSelector.query({ key: record.key });
       if (layerElement == null) {
         console.error(`element not found with key ${record.key}.`);
         return initialStyle;
@@ -51,7 +51,7 @@ export default function useRenderUtils() {
       styleValues[styles.varNames.axisYLength] = 0;
 
       const artboardRecord = hasUIRecordParent(record) ? record.parent : null;
-      const artboardElement = artboardRecord != null ? uiSelectorAPI.query({ type: UIRecordType.artboard, key: artboardRecord.key }) : null;
+      const artboardElement = artboardRecord != null ? uiSelector.query({ type: UIRecordType.artboard, key: artboardRecord.key }) : null;
 
       if (!(artboardRecord instanceof Artboard) || artboardElement == null) {
         return styleValues;
@@ -81,7 +81,7 @@ export default function useRenderUtils() {
 
       return styleValues;
     },
-    [uiSelectorAPI],
+    [uiSelector],
   );
 
   return { getRootStyle };
