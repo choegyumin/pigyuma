@@ -2,7 +2,7 @@ import { CanvasComponent } from '@/api/Canvas/component';
 import { Canvas } from '@/api/Canvas/model';
 import useInstanceID from '@/hooks/useInstanceID';
 import useUIController from '@/hooks/useUIController';
-import { UIDesignToolIDAttributeName } from '@/types/Identifier';
+import { UIDesignToolElementDataAttributeName } from '@/types/Identifier';
 import { useMount } from '@pigyuma/react-utils';
 import { cloneDeep } from '@pigyuma/utils';
 import clsx from 'clsx';
@@ -22,7 +22,7 @@ export const UIDesignCanvas = React.memo(
     });
 
     return (
-      <div {...attrs} ref={ref} className={clsx(styles.root, attrs.className)} {...{ [UIDesignToolIDAttributeName]: id }}>
+      <div {...attrs} ref={ref} className={clsx(styles.root, attrs.className)} {...{ [UIDesignToolElementDataAttributeName.id]: id }}>
         <CanvasComponent dataKey={Canvas.key} aria-hidden={true} />
         <InteractionController />
       </div>

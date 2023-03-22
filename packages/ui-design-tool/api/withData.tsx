@@ -1,3 +1,4 @@
+import useSelected from '@/hooks/useSelected';
 import useUIRecord from '@/hooks/useUIRecord';
 import { UIRecordElementDataAttributeName, UIRecordKey } from '@/types/Identifier';
 import React from 'react';
@@ -18,6 +19,7 @@ export default function withData<R, P extends DefaultComponentProps>(
     const { dataKey: recordKey, ...restProps } = props;
 
     const record = useUIRecord(recordKey);
+    const selectedRecord = useSelected();
 
     if (record == null) {
       return null;
@@ -28,6 +30,7 @@ export default function withData<R, P extends DefaultComponentProps>(
       [UIRecordElementDataAttributeName.key]: dataValues?.key,
       [UIRecordElementDataAttributeName.type]: dataValues?.type,
       [UIRecordElementDataAttributeName.layerType]: dataValues?.layerType,
+      [UIRecordElementDataAttributeName.selected]: selectedRecord.has(record.key),
     };
 
     return <MemoizedComponent {...restProps} {...dataProps} data={record as UIRecord} ref={ref} />;

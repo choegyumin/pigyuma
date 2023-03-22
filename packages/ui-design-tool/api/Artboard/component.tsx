@@ -15,9 +15,12 @@ export const RawArtboardComponent = React.forwardRef<ArtboardRef, ArtboardProps>
 
   return (
     <div {...restProps} ref={ref} className={styles.root} style={artboard.style}>
-      {artboard.children.map((it) => (
-        <LayerComponent key={it.key} dataKey={it.key} />
-      ))}
+      <div className={styles.name}>{artboard.name}</div>
+      <div className={styles.frame}>
+        {artboard.children.map((it) => (
+          <LayerComponent key={it.key} dataKey={it.key} />
+        ))}
+      </div>
     </div>
   );
 });

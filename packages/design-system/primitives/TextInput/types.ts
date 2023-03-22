@@ -6,8 +6,8 @@ type Value = string;
 type TextInputCustomProps = {
   value?: Value;
   defaultValue?: Value;
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>, value: Value) => void;
-  onChangeCapture?: (event: React.FormEvent<HTMLTextAreaElement>, value: Value) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>, value: Value) => void;
+  onChangeCapture?: (event: React.FormEvent<HTMLInputElement>, value: Value) => void;
   autoSelect?: boolean;
 };
 

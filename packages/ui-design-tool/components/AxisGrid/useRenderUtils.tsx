@@ -1,6 +1,7 @@
+import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
-import useUIElement from '@/hooks/useUIElement';
+import useUISelector from '@/hooks/useUISelector';
 import { UIRecordQuad } from '@/types/Geometry';
 import { UIRecordType } from '@/types/Identifier';
 import { hasUIRecordParent } from '@/utils/model';
@@ -20,7 +21,7 @@ const initialStyle = {
 };
 
 export default function useRenderUtils() {
-  const uiElementAPI = useUIElement();
+  const uiSelector = useUISelector();
 
   const getRootStyle = useCallback(
     (record: UIRecord) => {
@@ -28,7 +29,7 @@ export default function useRenderUtils() {
         return initialStyle;
       }
 
-      const layerElement = uiElementAPI.query({ key: record.key });
+      const layerElement = uiSelector.query({ key: record.key });
       if (layerElement == null) {
         console.error(`element not found with key ${record.key}.`);
         return initialStyle;
@@ -50,8 +51,9 @@ export default function useRenderUtils() {
       styleValues[styles.varNames.axisYLength] = 0;
 
       const artboardRecord = hasUIRecordParent(record) ? record.parent : null;
-      const artboardElement = layerElement.parentElement;
-      if (artboardRecord == null || artboardElement == null || !uiElementAPI.matches(artboardElement, { type: UIRecordType.artboard })) {
+      const artboardElement = artboardRecord != null ? uiSelector.query({ type: UIRecordType.artboard, key: artboardRecord.key }) : null;
+
+      if (!(artboardRecord instanceof Artboard) || artboardElement == null) {
         return styleValues;
       }
 
@@ -79,7 +81,7 @@ export default function useRenderUtils() {
 
       return styleValues;
     },
-    [uiElementAPI],
+    [uiSelector],
   );
 
   return { getRootStyle };

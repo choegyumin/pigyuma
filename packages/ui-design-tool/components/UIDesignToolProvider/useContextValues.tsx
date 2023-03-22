@@ -1,9 +1,39 @@
 import { Canvas } from '@/api/Canvas/model';
-import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool, UIDesignToolStatus } from '@/api/UIDesignTool';
+import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, InteractionType, TransformMethod, UIDesignTool } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+
+export type StatusState = {
+  interactionType: InteractionType;
+  transformMethod: TransformMethod;
+};
+
+export type StatusAction =
+  | { interactionType: typeof InteractionType.idle }
+  | { interactionType: typeof InteractionType.selection }
+  | { interactionType: typeof InteractionType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
+
+const statusInitialState: StatusState = { interactionType: InteractionType.idle, transformMethod: TransformMethod.fixed };
+
+/**
+ * @see UIDesignToolStatus
+ * @see InteractionType
+ * @see TransformMethod
+ */
+const statusReducer = (state: StatusState, action: StatusAction): StatusState => {
+  switch (action.interactionType) {
+    case InteractionType.idle:
+      return { interactionType: action.interactionType, transformMethod: TransformMethod.fixed };
+    case InteractionType.selection:
+      return { interactionType: action.interactionType, transformMethod: TransformMethod.fixed };
+    case InteractionType.transform:
+      return { interactionType: action.interactionType, transformMethod: action.transformMethod };
+    default:
+      return state;
+  }
+};
 
 export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;
@@ -11,7 +41,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const privateRef = useRef<{
     id: string;
     getBrowserMeta: () => BrowserMeta;
-    setStatus: React.Dispatch<UIDesignToolStatus>;
+    setStatus: React.Dispatch<StatusState>;
   }>({
     id: INITIAL_INSTANCE_ID,
     getBrowserMeta: () => INITIAL_BROWSER_META,
@@ -21,39 +51,18 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const instanceId = privateRef.current.id;
   const getBrowserMeta = useCallback(() => privateRef.current.getBrowserMeta(), []);
 
-  /**
-   * @todo 상태를 세분화해야 하는지 검토
-   * @todo XState 도입 검토 (상태를 context에서 관리하고 constate로 분리하지 않아도 InteractionController 내에서 눈에 띄는 성능 저하는 없을 것으로 판단됨)
-   */
-  const [status, setStatus] = useState<UIDesignToolStatus>(UIDesignToolStatus.idle);
-  privateRef.current.setStatus(status);
-  // const [interaction, setInteraction] = useState<UIDesignToolInteractionStatus>(UIDesignToolInteractionStatus.idle);
-  // const status = useMemo<UIDesignToolStatus>(() => {
-  //   switch (interaction) {
-  //     case UIDesignToolInteractionStatus.resizing:
-  //     case UIDesignToolInteractionStatus.resizingFromCenter:
-  //     case UIDesignToolInteractionStatus.resizingCorner:
-  //     case UIDesignToolInteractionStatus.resizingCornerFromCenter:
-  //       return UIDesignToolStatus.resizing;
-  //     case UIDesignToolInteractionStatus.rotating:
-  //       return UIDesignToolStatus.rotating;
-  //     case UIDesignToolInteractionStatus.selecting:
-  //       return UIDesignToolStatus.selecting;
-  //     case UIDesignToolInteractionStatus.idle:
-  //       return UIDesignToolStatus.idle;
-  //     default:
-  //       return UIDesignToolStatus.unknown;
-  //   }
-  // }, [interaction]);
-
   const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
+  const [hovered, setHovered] = useState<UIRecordKey>();
+  const [status, setStatus] = useReducer(statusReducer, statusInitialState);
+  privateRef.current.setStatus(status);
 
   const dispatcher = useMemo(
     () => ({
       setCursor,
+      setHovered,
       setStatus,
     }),
-    [setCursor, setStatus],
+    [setCursor, setHovered, setStatus],
   );
 
   /**
@@ -93,7 +102,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     [api, status, pairs, tree, selected],
   );
 
-  const elementInterface = useMemo(
+  const selectorInterface = useMemo(
     () => ({
       dataset: ((...args) => api.dataset(...args)) as typeof api.dataset,
       matches: ((...args) => api.matches(...args)) as typeof api.matches,
@@ -165,8 +174,10 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   return {
     instanceId,
     getBrowserMeta,
-    status,
+
     cursor,
+    hovered,
+    status,
     dispatcher,
 
     getItemReference,
@@ -179,7 +190,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
     controllerInterface,
     dataInterface,
-    elementInterface,
+    selectorInterface,
     subscriptionInterface,
   };
 }

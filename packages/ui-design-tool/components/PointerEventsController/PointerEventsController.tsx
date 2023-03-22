@@ -1,16 +1,15 @@
-import { UIDesignToolStatus } from '@/api/UIDesignTool';
+import { InteractionType } from '@/api/UIDesignTool';
 import useCursor from '@/hooks/useCursor';
 import useStatus from '@/hooks/useStatus';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as styles from './PointerEventsPreventer.css';
-import { PointerEventsPreventerProps } from './types';
+import * as styles from './PointerEventsController.css';
 
-export const PointerEventsPreventer: React.FC<PointerEventsPreventerProps> = React.memo(() => {
+export const PointerEventsController: React.FC = React.memo(() => {
   const cursor = useCursor();
   const status = useStatus();
 
-  const shouldVisible = status === UIDesignToolStatus.resizing || status === UIDesignToolStatus.rotating;
+  const shouldVisible = status.interactionType !== InteractionType.idle;
 
   const style: React.CSSProperties = {
     [styles.varNames.cursor]: shouldVisible ? cursor : 'default',
@@ -19,4 +18,4 @@ export const PointerEventsPreventer: React.FC<PointerEventsPreventerProps> = Rea
 
   return ReactDOM.createPortal(<div className={styles.root} style={style} />, document.body);
 });
-PointerEventsPreventer.displayName = 'PointerEventsPreventer';
+PointerEventsController.displayName = 'PointerEventsController';
