@@ -359,10 +359,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.2.1"\
       ],\
       [\
-        "@iconscout/react-unicons",\
-        "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:1.1.6"\
-      ],\
-      [\
         "@istanbuljs/schema",\
         "npm:0.1.3"\
       ],\
@@ -4272,30 +4268,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@iconscout/react-unicons", [\
-        ["npm:1.1.6", {\
-          "packageLocation": "./.yarn/cache/@iconscout-react-unicons-npm-1.1.6-d0e7c96bff-a9710b748d.zip/node_modules/@iconscout/react-unicons/",\
-          "packageDependencies": [\
-            ["@iconscout/react-unicons", "npm:1.1.6"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:1.1.6", {\
-          "packageLocation": "./.yarn/__virtual__/@iconscout-react-unicons-virtual-f8ac73c356/0/cache/@iconscout-react-unicons-npm-1.1.6-d0e7c96bff-a9710b748d.zip/node_modules/@iconscout/react-unicons/",\
-          "packageDependencies": [\
-            ["@iconscout/react-unicons", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:1.1.6"],\
-            ["@types/react", "npm:18.0.26"],\
-            ["eslint-import-resolver-node", "npm:0.3.7"],\
-            ["prop-types", "npm:15.8.1"],\
-            ["react", "npm:18.2.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/react",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@istanbuljs/schema", [\
         ["npm:0.1.3", {\
           "packageLocation": "./.yarn/cache/@istanbuljs-schema-npm-0.1.3-466bd3eaaa-5282759d96.zip/node_modules/@istanbuljs/schema/",\
@@ -4423,7 +4395,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@mdi/react", "npm:1.6.1"],\
             ["eslint-import-resolver-node", "npm:0.3.7"],\
-            ["prop-types", "npm:15.8.1"]\
+            ["prop-types", "npm:15.8.1"],\
+            ["react", "npm:18.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4646,7 +4619,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/design-system/",\
           "packageDependencies": [\
             ["@pigyuma/design-system", "workspace:packages/design-system"],\
-            ["@iconscout/react-unicons", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:1.1.6"],\
             ["@mdi/js", "npm:7.2.96"],\
             ["@mdi/react", "npm:1.6.1"],\
             ["@pigyuma/css-utils", "workspace:packages/css-utils"],\
