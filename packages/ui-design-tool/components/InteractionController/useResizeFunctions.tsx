@@ -96,8 +96,8 @@ const getTransformedRect = (
 
   newRectInit.x = Math.round(newRectInit.x);
   newRectInit.y = Math.round(newRectInit.y);
-  newRectInit.width = Math.round(newRectInit.width);
-  newRectInit.height = Math.round(newRectInit.height);
+  newRectInit.width = Math.max(Math.round(newRectInit.width), 1);
+  newRectInit.height = Math.max(Math.round(newRectInit.height), 1);
   newRectInit.rotate = rect.rotate;
 
   return UIRecordRect.fromRect(newRectInit);
