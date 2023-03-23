@@ -411,10 +411,10 @@ export class UIDesignTool {
         v.y = fixNumberValue(v.y);
       }
       if (v.width) {
-        v.width = fixNumberValue(Math.max(v.width, 0));
+        v.width = fixNumberValue(Math.max(v.width, 1));
       }
       if (v.height) {
-        v.height = fixNumberValue(Math.max(v.height, 0));
+        v.height = fixNumberValue(Math.max(v.height, 1));
       }
     } else if (targetValue instanceof ShapeLayer) {
       const { x, y, width, height, rotate, stroke } = newTargetValue as UIRecordChanges<ShapeLayerData>;
@@ -426,10 +426,10 @@ export class UIDesignTool {
         y.length = fixNumberValue(y.length);
       }
       if (width?.length != null) {
-        width.length = fixNumberValue(Math.max(width.length, 0));
+        width.length = fixNumberValue(Math.max(width.length, 1));
       }
       if (height?.length != null) {
-        height.length = fixNumberValue(Math.max(height.length, 0));
+        height.length = fixNumberValue(Math.max(height.length, 1));
       }
       if (rotate?.degrees != null) {
         rotate.degrees = fixNumberValue(toDegrees360(rotate.degrees));
