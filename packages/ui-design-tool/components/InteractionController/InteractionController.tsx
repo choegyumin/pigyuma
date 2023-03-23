@@ -1,9 +1,10 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
-import { InteractionType, TransformMethod } from '@/api/UIDesignTool';
+import { InteractionType, TransformMethod, UIDesignToolMode } from '@/api/UIDesignTool';
 import useDispatcher from '@/hooks/useDispatcher';
 import useHovered from '@/hooks/useHovered';
 import useItemReference from '@/hooks/useItemReference';
+import useMode from '@/hooks/useMode';
 import useSelected from '@/hooks/useSelected';
 import useStatus from '@/hooks/useStatus';
 import useUIController from '@/hooks/useUIController';
@@ -33,6 +34,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const uiController = useUIController();
   const uiSelector = useUISelector();
 
+  const mode = useMode();
   const status = useStatus();
   const hoveredRecordKey = useHovered();
   /** @todo 다중 선택 기능 구현 후 코드 변경  */
@@ -51,6 +53,8 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     (event: MouseEvent, action: StatusAction) => {
       if (action.interactionType === InteractionType.selection) {
         // startSelection(event);
+      } else if (action.interactionType === InteractionType.drawing) {
+        // startDrawing(event);
       } else if (action.interactionType === InteractionType.transform) {
         if (action.transformMethod === TransformMethod.move) {
           startMove(event);
@@ -68,6 +72,8 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     (event: MouseEvent, action: StatusAction) => {
       if (action.interactionType === InteractionType.selection) {
         // endSelection(event);
+      } else if (action.interactionType === InteractionType.drawing) {
+        // endDrawing(event);
       } else if (action.interactionType === InteractionType.transform) {
         if (action.transformMethod === TransformMethod.move) {
           endMove(event);
@@ -85,6 +91,8 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     (event: MouseEvent, action: StatusAction) => {
       if (action.interactionType === InteractionType.selection) {
         // selection(event);
+      } else if (action.interactionType === InteractionType.drawing) {
+        // drawing(event);
       } else if (action.interactionType === InteractionType.transform) {
         if (action.transformMethod === TransformMethod.move) {
           move(event);
@@ -109,14 +117,25 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     const isSelectionGrabbing = isUIRecordKey(hoveredRecordKey);
     const isHandleGrabbing = handle != null;
 
-    const interactionType: InteractionType =
-      isSelectionGrabbing || isHandleGrabbing ? InteractionType.transform : InteractionType.selection;
+    const interactionType: InteractionType = (() => {
+      if (mode === UIDesignToolMode.select) {
+        if (isSelectionGrabbing || isHandleGrabbing) {
+          return InteractionType.transform;
+        }
+        return InteractionType.selection;
+      }
+      if (mode === UIDesignToolMode.artboard || mode === UIDesignToolMode.shape || mode === UIDesignToolMode.text) {
+        return InteractionType.drawing;
+      }
+      return InteractionType.idle;
+    })();
 
     switch (interactionType) {
-      case InteractionType.selection: {
+      case InteractionType.selection:
+      case InteractionType.drawing: {
         interactionQueue.push({
           event,
-          action: { interactionType: InteractionType.selection },
+          action: { interactionType },
           calibrate: 0,
         });
 
@@ -130,7 +149,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
 
         interactionQueue.push({
           event,
-          action: { interactionType: InteractionType.transform, transformMethod },
+          action: { interactionType, transformMethod },
           calibrate: 5,
         });
 
