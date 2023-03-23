@@ -168,7 +168,7 @@ describe('UIDesignTool', () => {
 
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.idle);
 
-      setStatus({ interactionType: InteractionType.selection, transformMethod: TransformMethod.fixed });
+      setStatus({ interactionType: InteractionType.selection, transformMethod: TransformMethod.unable });
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.select);
 
       setStatus({ interactionType: InteractionType.transform, transformMethod: TransformMethod.move });
