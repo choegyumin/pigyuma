@@ -53,7 +53,10 @@ export const TransformMethod = {
 } as const;
 export type TransformMethod = keyof typeof TransformMethod;
 
-/** @see 플로우차트 (XState를 사용하진 않음) {@link https://stately.ai/viz/9dbc258b-c910-46da-a1fc-f94c8cbfa932} */
+/**
+ * @see 플로우차트 (XState를 사용하진 않음) {@link https://stately.ai/viz/9dbc258b-c910-46da-a1fc-f94c8cbfa932}
+ * @todo 모델 변경 {@link https://stately.ai/viz/6a265ced-0d2c-4412-9088-f511f6105e2e}
+ */
 export const UIDesignToolStatus = {
   unknown: 'unknown',
   idle: 'idle',
