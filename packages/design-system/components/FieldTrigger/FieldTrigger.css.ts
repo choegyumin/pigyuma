@@ -5,10 +5,10 @@ export const root = style({
   position: 'relative',
   display: 'inline-flex',
   width: 'stretch',
-  height: '32px',
+  minHeight: '32px',
 });
 
-globalStyle(`${root} > input, ${root} > button`, {
+globalStyle(`${root} > input, ${root} > textarea, ${root} > button`, {
   width: 'stretch',
   paddingBlock: '7px',
   paddingInline: '11px',
@@ -21,20 +21,20 @@ globalStyle(`${root} > input, ${root} > button`, {
   textAlign: 'left',
 });
 
-globalStyle(`${root} > input:focus, ${root} > button:focus`, {
+globalStyle(`${root} > input:focus, ${root} > textarea:focus, ${root} > button:focus`, {
   outline: 0,
   boxShadow: `inset 0 0 0 2px ${foundations.color.accent.primary}`,
 });
 
-globalStyle(`${root} > input::placeholder`, {
+globalStyle(`${root} > input::placeholder, ${root} > textarea::placeholder`, {
   color: `hsl(0 0% 100% / 0.5)`,
 });
 
-globalStyle(`${root} > input:read-only`, {
+globalStyle(`${root} > input:read-only, ${root} > textarea:read-only`, {
   cursor: 'default',
 });
 
-globalStyle(`${root} > input:disabled`, {
+globalStyle(`${root} > input:disabled, ${root} > textarea:disabled`, {
   color: `hsl(0 0% 100% / 0.2)`,
   cursor: 'default',
 });

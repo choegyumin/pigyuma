@@ -13,9 +13,15 @@ export const RawTextLayerComponent = React.forwardRef<TextLayerRef, TextLayerPro
   const { data: textLayer, ...restProps } = props;
 
   return (
-    <div {...restProps} ref={ref} className={styles.root} style={textLayer.style}>
-      {textLayer.content}
-    </div>
+    <div
+      {...restProps}
+      ref={ref}
+      className={styles.root}
+      style={textLayer.style}
+      dangerouslySetInnerHTML={{
+        __html: textLayer.content.replaceAll(/(\r\n|\r|\n)/g, '<br />'),
+      }}
+    />
   );
 });
 RawTextLayerComponent.displayName = 'RawTextLayer';
