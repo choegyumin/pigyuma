@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 /*
 type AllEventMap =
@@ -72,46 +72,67 @@ type AllEventMap =
   | XMLHttpRequestEventTargetEventMap;
 */
 
+type ElementWrapper<T> =
+  | T
+  // for SSR
+  | (() => T)
+  // for ReactElement
+  | React.RefObject<T>;
+
 function useEventListener<K extends keyof DocumentEventMap>(
-  element: Document | null,
+  element: ElementWrapper<Document | null>,
   type: K,
   listener?: (this: Document, event: DocumentEventMap[K]) => void,
   options?: boolean | AddEventListenerOptions,
 ): void;
 function useEventListener<K extends keyof HTMLElementEventMap>(
-  element: HTMLElement | null,
+  element: ElementWrapper<HTMLElement | null>,
   type: K,
   listener?: (this: HTMLElement, event: HTMLElementEventMap[K]) => void,
   options?: boolean | AddEventListenerOptions,
 ): void;
 function useEventListener<K extends keyof SVGElementEventMap>(
-  element: SVGElement | null,
+  element: ElementWrapper<SVGElement | null>,
   type: K,
   listener?: (this: SVGElement, event: SVGElementEventMap[K]) => void,
   options?: boolean | AddEventListenerOptions,
 ): void;
 function useEventListener<K extends keyof WindowEventMap>(
-  element: Window | null,
+  element: ElementWrapper<Window | null>,
   type: K,
   listener?: (this: Window, event: WindowEventMap[K]) => void,
   options?: boolean | AddEventListenerOptions,
 ): void;
 function useEventListener<K extends keyof GlobalEventHandlersEventMap>(
-  element: Document | HTMLElement | SVGElement | Window | null,
+  element: ElementWrapper<Document | HTMLElement | SVGElement | Window | null>,
   type: K,
   listener?: (this: Document | HTMLElement | SVGElement | Window, event: Event) => void,
   options?: boolean | AddEventListenerOptions,
 ): void {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedElement = useMemo(() => element, []);
   useEffect(() => {
-    if (element == null || listener == null) {
+    if (listener == null) {
       return;
     }
-    element.addEventListener(type, listener, options);
+    const target = (() => {
+      if (memoizedElement instanceof EventTarget) {
+        return memoizedElement;
+      }
+      if (typeof memoizedElement === 'function') {
+        return memoizedElement();
+      }
+      return memoizedElement?.current ?? null;
+    })();
+    if (target == null) {
+      return;
+    }
+    target.addEventListener(type, listener, options);
     return () => {
-      element.removeEventListener(type, listener, options);
+      target.removeEventListener(type, listener, options);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [element, type, listener, JSON.stringify(options)]);
+  }, [type, listener, JSON.stringify(options)]);
 }
 
 export default useEventListener;

@@ -76,7 +76,7 @@ export const resizeHandle = style({
   cursor: 'grab',
 });
 
-export const resizeHandle$ = styleVariants({
+export const resizeHandle_placement = styleVariants({
   top: {
     bottom: getter.handleCoordinate,
     left: '0',
@@ -122,7 +122,7 @@ export const resizeCornerHandle = style({
   },
 });
 
-export const resizeCornerHandle$ = styleVariants({
+export const resizeCornerHandle_placement = styleVariants({
   topLeft: {
     bottom: getter.handleCoordinate,
     right: getter.handleCoordinate,
@@ -149,7 +149,7 @@ export const rotateHandle = style({
   cursor: 'grab',
 });
 
-export const rotateHandle$ = styleVariants({
+export const rotateHandle_placement = styleVariants({
   topLeft: {
     bottom: getter.handleCoordinate,
     right: getter.handleCoordinate,

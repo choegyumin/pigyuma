@@ -1,3 +1,4 @@
+import { InteractionHandleType, UIInteractionElementDataAttributeName } from '@/types/Identifier';
 import React from 'react';
 import { LayerComponent } from '../Layer/component';
 import withData from '../withData';
@@ -14,7 +15,13 @@ export const RawShapeLayerComponent = React.forwardRef<ShapeLayerRef, ShapeLayer
   const { data: shapeLayer, ...restProps } = props;
 
   return (
-    <div {...restProps} ref={ref} className={styles.root} style={shapeLayer.style}>
+    <div
+      {...restProps}
+      ref={ref}
+      className={styles.root}
+      style={shapeLayer.style}
+      {...{ [UIInteractionElementDataAttributeName.handleType]: InteractionHandleType.select }}
+    >
       {shapeLayer.children.map((it) => (
         <LayerComponent key={it.key} dataKey={it.key} />
       ))}

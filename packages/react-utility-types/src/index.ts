@@ -382,6 +382,38 @@ export const TextareaOnlyHTMLAttributeKeys = [
   'tabIndex',
   'value',
   'wrap',
+
+  // Focus Events
+  'onFocus', // AllTypes
+  'onFocusCapture', // AllTypes
+  'onBlur', // AllTypes
+  'onBlurCapture', // AllTypes
+
+  // Form Events
+  'onChange', // AllTypes
+  'onChangeCapture', // AllTypes
+  'onBeforeInput', // TextTypes | 'number'
+  'onBeforeInputCapture', // TextTypes | 'number'
+  'onInput', // TextTypes | 'number'
+  'onInputCapture', // TextTypes | 'number'
+  'onReset', // AllTypes
+  'onResetCapture', // AllTypes
+  'onSubmit', // AllTypes
+  'onSubmitCapture', // AllTypes
+  'onInvalid', // AllTypes
+  'onInvalidCapture', // AllTypes
+
+  // Keyboard Events
+  'onKeyDown', // AllTypes
+  'onKeyDownCapture', // AllTypes
+  'onKeyPress', // AllTypes
+  'onKeyPressCapture', // AllTypes
+  'onKeyUp', // AllTypes
+  'onKeyUpCapture', // AllTypes
+
+  // Selection Events
+  'onSelect', // TextTypes | 'number'
+  'onSelectCapture', // TextTypes | 'number'
 ] as const;
 export type TextareaOnlyHTMLAttributes<T> = Pick<React.TextareaHTMLAttributes<T>, ArrayElements<typeof TextareaOnlyHTMLAttributeKeys>>;
 
@@ -398,11 +430,13 @@ export const SelectOnlyHTMLAttributeKeys = [
   'tabIndex',
   'value',
   'defaultValue',
+
   // Focus Events
   'onFocus',
   'onFocusCapture',
   'onBlur',
   'onBlurCapture',
+
   // Form Events
   'onChange',
   'onChangeCapture',
@@ -412,6 +446,7 @@ export const SelectOnlyHTMLAttributeKeys = [
   'onSubmitCapture',
   'onInvalid',
   'onInvalidCapture',
+
   // Keyboard Events
   'onKeyDown',
   'onKeyDownCapture',
@@ -435,11 +470,13 @@ export const ButtonOnlyHTMLAttributeKeys = [
   'name',
   'type',
   'value',
+
   // Focus Events
   'onFocus',
   'onFocusCapture',
   'onBlur',
   'onBlurCapture',
+
   // Keyboard Events
   'onKeyDown',
   'onKeyDownCapture',

@@ -1,3 +1,4 @@
+import { InteractionHandleType, UIInteractionElementDataAttributeName } from '@/types/Identifier';
 import React from 'react';
 import withData from '../withData';
 import { TextLayer } from './model';
@@ -13,9 +14,16 @@ export const RawTextLayerComponent = React.forwardRef<TextLayerRef, TextLayerPro
   const { data: textLayer, ...restProps } = props;
 
   return (
-    <div {...restProps} ref={ref} className={styles.root} style={textLayer.style}>
-      {textLayer.content}
-    </div>
+    <div
+      {...restProps}
+      ref={ref}
+      className={styles.root}
+      style={textLayer.style}
+      {...{ [UIInteractionElementDataAttributeName.handleType]: InteractionHandleType.select }}
+      dangerouslySetInnerHTML={{
+        __html: textLayer.content.replaceAll(/(\r\n|\r|\n)/g, '<br />'),
+      }}
+    />
   );
 });
 RawTextLayerComponent.displayName = 'RawTextLayer';

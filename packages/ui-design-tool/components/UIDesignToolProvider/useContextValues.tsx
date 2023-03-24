@@ -1,5 +1,14 @@
 import { Canvas } from '@/api/Canvas/model';
-import { BrowserMeta, INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, InteractionType, TransformMethod, UIDesignTool } from '@/api/UIDesignTool';
+import {
+  BrowserMeta,
+  INITIAL_BROWSER_META,
+  INITIAL_INSTANCE_ID,
+  InteractionType,
+  UIDesignToolMode,
+  TransformMethod,
+  UIDesignTool,
+  UIDesignToolStatus,
+} from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
@@ -13,9 +22,10 @@ export type StatusState = {
 export type StatusAction =
   | { interactionType: typeof InteractionType.idle }
   | { interactionType: typeof InteractionType.selection }
+  | { interactionType: typeof InteractionType.drawing }
   | { interactionType: typeof InteractionType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
 
-const statusInitialState: StatusState = { interactionType: InteractionType.idle, transformMethod: TransformMethod.fixed };
+const statusInitialState: StatusState = { interactionType: InteractionType.idle, transformMethod: TransformMethod.unable };
 
 /**
  * @see UIDesignToolStatus
@@ -25,9 +35,11 @@ const statusInitialState: StatusState = { interactionType: InteractionType.idle,
 const statusReducer = (state: StatusState, action: StatusAction): StatusState => {
   switch (action.interactionType) {
     case InteractionType.idle:
-      return { interactionType: action.interactionType, transformMethod: TransformMethod.fixed };
+      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
     case InteractionType.selection:
-      return { interactionType: action.interactionType, transformMethod: TransformMethod.fixed };
+      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
+    case InteractionType.drawing:
+      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
     case InteractionType.transform:
       return { interactionType: action.interactionType, transformMethod: action.transformMethod };
     default:
@@ -53,17 +65,20 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
   const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
   const [hovered, setHovered] = useState<UIRecordKey>();
-  const [status, setStatus] = useReducer(statusReducer, statusInitialState);
-  privateRef.current.setStatus(status);
+  const [statusMeta, setStatusMeta] = useReducer(statusReducer, statusInitialState);
+  privateRef.current.setStatus(statusMeta);
 
   const dispatcher = useMemo(
     () => ({
       setCursor,
       setHovered,
-      setStatus,
+      setStatus: setStatusMeta,
     }),
-    [setCursor, setHovered, setStatus],
+    [setCursor, setHovered, setStatusMeta],
   );
+
+  const [mode, setMode] = useState<UIDesignToolMode>(() => api.mode);
+  const [status, setStatus] = useState<UIDesignToolStatus>(() => api.status);
 
   /**
    * 상태의 Life cycle을 React에 의존하기 위해 참조 제거
@@ -75,6 +90,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
   const controllerInterface = useMemo(
     () => ({
+      toggleMode: ((...args) => api.toggleMode(...args)) as typeof api.toggleMode,
       reset: ((...args) => api.reset(...args)) as typeof api.reset,
       select: ((...args) => api.select(...args)) as typeof api.select,
       set: ((...args) => api.set(...args)) as typeof api.set,
@@ -91,6 +107,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
   const dataInterface = useMemo(
     () => ({
+      mode,
       status,
       get: ((targetKey) => pairs.get(targetKey)) as typeof api.get,
       has: ((targetKey) => pairs.has(targetKey)) as typeof api.has,
@@ -99,7 +116,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       selected,
       isSelected: ((targetKey) => selected.has(targetKey)) as typeof api.isSelected,
     }),
-    [api, status, pairs, tree, selected],
+    [api, mode, status, pairs, tree, selected],
   );
 
   const selectorInterface = useMemo(
@@ -118,6 +135,16 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   // unsubscribe 함수를 `useEffect`의 Clean-up 함수 형태로 제공
   const subscriptionInterface = useMemo(
     () => ({
+      subscribeMode: (...args: Parameters<typeof api.subscribeMode>): (() => void) => {
+        api.subscribeMode(...args);
+        const unsubscribe = () => api.unsubscribeMode(...args);
+        return unsubscribe;
+      },
+      subscribeStatus: (...args: Parameters<typeof api.subscribeStatus>): (() => void) => {
+        api.subscribeStatus(...args);
+        const unsubscribe = () => api.unsubscribeStatus(...args);
+        return unsubscribe;
+      },
       subscribeTree: (...args: Parameters<typeof api.subscribeTree>): (() => void) => {
         api.subscribeTree(...args);
         const unsubscribe = () => api.unsubscribeTree(...args);
@@ -156,6 +183,22 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   }, [api]);
 
   useEffect(() => {
+    const callback = (mode: UIDesignToolMode) => {
+      setMode(mode);
+    };
+    const unsubscribe = subscriptionInterface.subscribeMode(callback);
+    return unsubscribe;
+  }, [api, subscriptionInterface, setMode]);
+
+  useEffect(() => {
+    const callback = (status: UIDesignToolStatus) => {
+      setStatus(status);
+    };
+    const unsubscribe = subscriptionInterface.subscribeStatus(callback);
+    return unsubscribe;
+  }, [api, subscriptionInterface, setStatus]);
+
+  useEffect(() => {
     const callback = (all: UIRecord[]) => {
       setPairs(new Map(all.map((it) => [it.key, it])));
     };
@@ -177,7 +220,9 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
     cursor,
     hovered,
+    mode,
     status,
+    statusMeta,
     dispatcher,
 
     getItemReference,

@@ -19,7 +19,6 @@ export const root = style({
   width: vars.width,
   height: vars.height,
   background: vars.background,
-  pointerEvents: 'none',
 });
 
 export const name = style({
@@ -30,7 +29,7 @@ export const name = style({
   fontSize: 11,
   color: foundations.color.neutral.white,
   opacity: 0.5,
-  pointerEvents: 'auto',
+  whiteSpace: 'nowrap',
   selectors: {
     [`${root}[${UIRecordElementDataAttributeName.selected}="true"] &, &:hover`]: {
       color: foundations.color.accent.primary,
@@ -46,15 +45,11 @@ export const frame = style({
   right: 0,
   bottom: 0,
   left: 0,
-  pointerEvents: 'none',
   selectors: {
-    [`${root}[${UIRecordElementDataAttributeName.selected}="true"] &`]: {
-      pointerEvents: 'auto',
-    },
+    [`${root}[${UIRecordElementDataAttributeName.selected}="true"] &`]: {},
   },
 });
 
 globalStyle(`:where(${frame} > *)`, {
   vars: emptyVars,
-  pointerEvents: 'auto',
 });

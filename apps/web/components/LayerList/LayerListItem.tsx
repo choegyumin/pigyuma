@@ -1,7 +1,7 @@
-import Icon from '@pigyuma/design-system/components/Icon';
+import Icon, { IconType } from '@pigyuma/design-system/components/Icon';
 import Box from '@pigyuma/design-system/primitives/Box';
-import { useEvent, useForkedRef } from '@pigyuma/react-utils';
-import { Artboard, TextLayer, useUIController, useUIData, useUISubscription } from '@pigyuma/ui-design-tool';
+import { useEvent, useForkedRef, useWatch } from '@pigyuma/react-utils';
+import { Artboard, TextLayer, useUIController, useUIData } from '@pigyuma/ui-design-tool';
 import { hasUIRecordChildren } from '@pigyuma/ui-design-tool/utils/model';
 import clsx from 'clsx';
 import React, { useEffect, useId, useState } from 'react';
@@ -9,14 +9,14 @@ import LayerList from './LayerList';
 import * as styles from './LayerList.css';
 import { LayerListItemProps, LayerListItemRef } from './types';
 
-const TypeIconComponentDict = {
-  artboard: Icon.Layout,
-  container: Icon.Square,
-  stack: Icon.Stack,
-  columns: Icon.Columns,
-  rows: Icon.Rows,
-  grid: Icon.Grid,
-  text: Icon.Text,
+const IconTypeDict = {
+  artboard: IconType.layout,
+  container: IconType.square,
+  stack: IconType.stack,
+  columns: IconType.columns,
+  rows: IconType.rows,
+  grid: IconType.grid,
+  text: IconType.text,
 } as const;
 
 /** @todo type, layerType에 따른 아이콘 추가 */
@@ -31,7 +31,6 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
 
   const uiController = useUIController();
   const uiData = useUIData();
-  const uiSubscription = useUISubscription();
 
   const hasChildren = hasUIRecordChildren(record);
 
@@ -58,33 +57,29 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
     }
   }, [hasChildren]);
 
-  useEffect(() => {
-    const unsubscribe = uiSubscription.subscribeSelection((newSelected) => {
-      if (newSelected.find((key) => key === record.key) != null) {
-        onGroupOpenProp?.();
-        // 상위 Group들이 열리기를 기다림
-        window.requestAnimationFrame(() => {
-          forkedRef.current?.scrollIntoView();
-        });
-      }
-    });
-    return unsubscribe;
-  }, [uiSubscription, record.key, forkedRef, onGroupOpenProp]);
+  useWatch(() => {
+    if (selected) {
+      onGroupOpenProp?.();
+      // 상위 Group들이 열리기를 기다림
+      window.requestAnimationFrame(() => {
+        forkedRef.current?.scrollIntoView();
+      });
+    }
+  }, [selected]);
 
-  const TypeIconComponentName = Artboard.isModel(record) ? 'artboard' : TextLayer.isModel(record) ? 'text' : record.shapeType;
-
-  const TypeIcon = TypeIconComponentDict[TypeIconComponentName];
+  const iconTypeKey = Artboard.isModel(record) ? 'artboard' : TextLayer.isModel(record) ? 'text' : record.shapeType;
+  const iconType = IconTypeDict[iconTypeKey];
 
   return (
-    <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row$.selected]: selected })}>
+    <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row_state.selected]: selected })}>
       <div className={styles.item} role={role} onClick={onItemClick}>
         <div className={styles.name}>
-          <TypeIcon className={styles.icon} />
+          <Icon type={iconType} className={styles.icon} />
           {record.name}
         </div>
         {hasChildren && (
           <button
-            className={clsx(styles.toggle, { [styles.toggle$.expanded]: expanded })}
+            className={clsx(styles.toggle, { [styles.toggle_state.expanded]: expanded })}
             aria-controls={listId}
             aria-expanded={expanded}
             aria-label="Open group"

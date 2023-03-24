@@ -1,5 +1,5 @@
 import { Canvas } from '@/api/Canvas/model';
-import { InteractionType, TransformMethod, UIDesignTool } from '@/api/UIDesignTool';
+import { UIDesignTool, UIDesignToolStatus } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { cloneDeep } from '@pigyuma/utils';
@@ -31,7 +31,7 @@ describe('useUIData', () => {
   test('should return UIDesignTool status', () => {
     const { result } = renderHook(() => useUIData(), { wrapper });
     const { status } = result.current;
-    expect(status).toEqual({ interactionType: InteractionType.idle, transformMethod: TransformMethod.fixed });
+    expect(status).toEqual(UIDesignToolStatus.idle);
   });
 
   test('should return UIRecord data', () => {

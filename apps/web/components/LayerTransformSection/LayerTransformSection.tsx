@@ -70,7 +70,7 @@ const LayerTransformSection = React.forwardRef<LayerTransformSectionRef, LayerTr
     if (!canEditSize) {
       return;
     }
-    const length = value ?? 0;
+    const length = value ?? 1;
     if (isArtboard) {
       uiController.set<Artboard>(uiRecord.key, { width: length });
     } else {
@@ -87,7 +87,7 @@ const LayerTransformSection = React.forwardRef<LayerTransformSectionRef, LayerTr
     if (!canEditSize) {
       return;
     }
-    const length = value ?? 0;
+    const length = value ?? 1;
     if (isArtboard) {
       uiController.set<Artboard>(uiRecord.key, { height: length });
     } else {
@@ -119,10 +119,10 @@ const LayerTransformSection = React.forwardRef<LayerTransformSectionRef, LayerTr
           <NumberField autoSelect={true} value={y} onChange={onYLengthChange} disabled={!canEditPosition} />
         </LayerField>
         <LayerField label="Width">
-          <NumberField autoSelect={true} min={0} value={width} onChange={onWidthLengthChange} disabled={!canEditSize} />
+          <NumberField autoSelect={true} min={1} value={width} onChange={onWidthLengthChange} disabled={!canEditSize} />
         </LayerField>
         <LayerField label="Height">
-          <NumberField autoSelect={true} min={0} value={height} onChange={onHeightLengthChange} disabled={!canEditSize} />
+          <NumberField autoSelect={true} min={1} value={height} onChange={onHeightLengthChange} disabled={!canEditSize} />
         </LayerField>
         <LayerField label="Rotate">
           <NumberField autoSelect={true} value={rotate} onChange={onRotateDegChange} disabled={!canEditRotate} />

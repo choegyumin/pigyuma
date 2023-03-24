@@ -38,38 +38,50 @@ export interface BrowserMeta {
 
 export type UIRecordChanges<T extends UIRecordData> = Omit<DeepPartial<T>, 'key' | 'parent' | 'children'>;
 
-export const InteractionType = {
-  idle: 'idle',
-  selection: 'selection',
-  transform: 'transform',
+export const UIDesignToolMode = {
+  /** Select & Move */
+  select: 'select',
+  artboard: 'artboard',
+  /** Rectangle, ... */
+  shape: 'shape',
+  text: 'text',
+  hand: 'hand',
 } as const;
-export type InteractionType = keyof typeof InteractionType;
+export type UIDesignToolMode = keyof typeof UIDesignToolMode;
 
-export const TransformMethod = {
-  fixed: 'fixed',
-  move: 'move',
-  resize: 'resize',
-  rotate: 'rotate',
-} as const;
-export type TransformMethod = keyof typeof TransformMethod;
-
-/** @see 플로우차트 (XState를 사용하진 않음) {@link https://stately.ai/viz/9dbc258b-c910-46da-a1fc-f94c8cbfa932} */
+/** * @see 플로우차트 (XState를 사용하진 않음) {@link https://stately.ai/viz/6a265ced-0d2c-4412-9088-f511f6105e2e} */
 export const UIDesignToolStatus = {
   unknown: 'unknown',
   idle: 'idle',
   /** Range selection */
   select: 'select',
+  draw: 'draw',
   move: 'move',
   resize: 'resize',
   rotate: 'rotate',
 } as const;
 export type UIDesignToolStatus = keyof typeof UIDesignToolStatus;
 
+export const InteractionType = {
+  idle: 'idle',
+  selection: 'selection',
+  drawing: 'drawing',
+  transform: 'transform',
+} as const;
+export type InteractionType = keyof typeof InteractionType;
+
+export const TransformMethod = {
+  unable: 'unable',
+  move: 'move',
+  resize: 'resize',
+  rotate: 'rotate',
+} as const;
+export type TransformMethod = keyof typeof TransformMethod;
+
 export interface UIDesignToolOptions {
   strict?: boolean;
+  id?: string;
 }
-
-export const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: Canvas.key };
 
 export const INITIAL_INSTANCE_ID = 'UNKNOWN';
 
@@ -84,21 +96,24 @@ export const INITIAL_BROWSER_META: BrowserMeta = {
  * @todo Exception 발생 및 처리 기준 정의
  */
 export class UIDesignTool {
-  #strict: boolean;
-  #id: string;
+  readonly #strict: boolean;
+  readonly #id: string;
 
   readonly #browserMeta: BrowserMeta;
   readonly #listeners: {
+    readonly mode: Set<(mode: UIDesignToolMode) => void>;
+    readonly status: Set<(status: UIDesignToolStatus) => void>;
     readonly tree: Set<(tree: UIRecord[], changed: UIRecord[], removed: UIRecordKey[]) => void>;
     readonly selection: Set<(selected: UIRecordKey[]) => void>;
   };
 
   #mounted: boolean;
+  #mode: UIDesignToolMode;
   #interactionType: InteractionType;
   #transformMethod: TransformMethod;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
-  #selectedKeys: Set<UIRecordKey>;
+  readonly #selectedKeys: Set<UIRecordKey>;
 
   #hoveredElement: HTMLElement | null;
 
@@ -109,20 +124,23 @@ export class UIDesignTool {
   };
 
   constructor(options?: UIDesignToolOptions) {
-    const { strict = true } = options ?? {};
+    const { strict = true, id = uuid.v4() } = options ?? {};
 
     this.#strict = strict;
-    this.#id = uuid.v4();
+    this.#id = id;
 
     this.#browserMeta = INITIAL_BROWSER_META;
     this.#listeners = {
+      mode: new Set(),
+      status: new Set(),
       tree: new Set(),
       selection: new Set(),
     };
 
     this.#mounted = false;
+    this.#mode = UIDesignToolMode.select;
     this.#interactionType = InteractionType.idle;
-    this.#transformMethod = TransformMethod.fixed;
+    this.#transformMethod = TransformMethod.unable;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
     this.#selectedKeys = new Set();
@@ -132,8 +150,7 @@ export class UIDesignTool {
     const onMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
-      const rootBounds =
-        document.querySelector(`[${UIDesignToolElementDataAttributeName.id}="${this.#id}"]`)?.getBoundingClientRect() ?? new DOMRect();
+      const rootBounds = document.querySelector(this.#rootElementSelector)?.getBoundingClientRect() ?? new DOMRect();
       this.#browserMeta.mouse.clientX = clientX;
       this.#browserMeta.mouse.clientY = clientY;
       this.#browserMeta.mouse.offsetX = clientX - rootBounds.x;
@@ -154,15 +171,27 @@ export class UIDesignTool {
     };
   }
 
-  #setStatus(status: { interactionType: InteractionType; transformMethod: TransformMethod }): void {
+  #setStatus(statusMeta: { interactionType: InteractionType; transformMethod: TransformMethod }): void {
     if (this.#mounted) {
-      this.#interactionType = status.interactionType;
-      this.#transformMethod = status.transformMethod;
+      const prevStatus = this.status;
+      this.#interactionType = statusMeta.interactionType;
+      this.#transformMethod = statusMeta.transformMethod;
+      if (prevStatus !== this.status) {
+        this.#listeners.status.forEach((callback) => callback(this.status));
+      }
     }
   }
 
   get #canvas(): Canvas {
     return this.#items.get(Canvas.key) as Canvas;
+  }
+
+  get #rootElementSelector(): string {
+    return `[${UIDesignToolElementDataAttributeName.id}="${this.#id}"]`;
+  }
+
+  get mode(): UIDesignToolMode {
+    return this.#mode;
   }
 
   get status(): UIDesignToolStatus {
@@ -171,6 +200,9 @@ export class UIDesignTool {
     }
     if (this.#interactionType === InteractionType.selection) {
       return UIDesignToolStatus.select;
+    }
+    if (this.#interactionType === InteractionType.drawing) {
+      return UIDesignToolStatus.draw;
     }
     if (this.#interactionType === InteractionType.transform) {
       if (this.#transformMethod === TransformMethod.move) {
@@ -233,8 +265,9 @@ export class UIDesignTool {
     document.removeEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
 
     this.#mounted = false;
+    this.#mode = UIDesignToolMode.select;
     this.#interactionType = InteractionType.idle;
-    this.#transformMethod = TransformMethod.fixed;
+    this.#transformMethod = TransformMethod.unable;
     this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
     this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
     this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;
@@ -242,6 +275,22 @@ export class UIDesignTool {
     this.#browserMeta.keyboard.metaKey = INITIAL_BROWSER_META.keyboard.metaKey;
     this.#browserMeta.keyboard.shiftKey = INITIAL_BROWSER_META.keyboard.shiftKey;
     this.#hoveredElement = null;
+  }
+
+  subscribeMode(callback: (mode: UIDesignToolMode) => void): void {
+    this.#listeners.mode.add(callback);
+  }
+
+  unsubscribeMode(callback: (mode: UIDesignToolMode) => void): void {
+    this.#listeners.mode.delete(callback);
+  }
+
+  subscribeStatus(callback: (status: UIDesignToolStatus) => void): void {
+    this.#listeners.status.add(callback);
+  }
+
+  unsubscribeStatus(callback: (status: UIDesignToolStatus) => void): void {
+    this.#listeners.status.delete(callback);
   }
 
   subscribeTree(callback: (all: UIRecord[], changed: UIRecord[], removed: UIRecordKey[]) => void): void {
@@ -260,6 +309,14 @@ export class UIDesignTool {
     this.#listeners.selection.delete(callback);
   }
 
+  toggleMode(mode: UIDesignToolMode): void {
+    const prevMode = this.mode;
+    this.#mode = mode;
+    if (prevMode !== this.mode) {
+      this.#listeners.mode.forEach((callback) => callback(this.mode));
+    }
+  }
+
   reset(data: CanvasData['children']): void {
     const newChildren = data.map((it) => toUIRecordInstance<ArrayElements<Canvas['children']>>(it));
     const canvas = this.#canvas;
@@ -267,7 +324,7 @@ export class UIDesignTool {
     const deletedKeys = [...this.#items.keys()];
 
     this.#items.clear();
-    this.#selectedKeys = new Set();
+    this.#selectedKeys.clear();
 
     while (canvas.children.length > 0) {
       canvas.children.pop();
@@ -320,7 +377,8 @@ export class UIDesignTool {
     const isSelectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
 
     if (isSelectionChanged) {
-      this.#selectedKeys = new Set(newSelectedKeys);
+      this.#selectedKeys.clear();
+      newSelectedKeys.forEach((key) => this.#selectedKeys.add(key));
       this.#listeners.selection.forEach((callback) => callback(newSelectedKeys));
     }
   }
@@ -354,10 +412,10 @@ export class UIDesignTool {
         v.y = fixNumberValue(v.y);
       }
       if (v.width) {
-        v.width = fixNumberValue(Math.max(v.width, 0));
+        v.width = fixNumberValue(Math.max(v.width, 1));
       }
       if (v.height) {
-        v.height = fixNumberValue(Math.max(v.height, 0));
+        v.height = fixNumberValue(Math.max(v.height, 1));
       }
     } else if (targetValue instanceof ShapeLayer) {
       const { x, y, width, height, rotate, stroke } = newTargetValue as UIRecordChanges<ShapeLayerData>;
@@ -369,10 +427,10 @@ export class UIDesignTool {
         y.length = fixNumberValue(y.length);
       }
       if (width?.length != null) {
-        width.length = fixNumberValue(Math.max(width.length, 0));
+        width.length = fixNumberValue(Math.max(width.length, 1));
       }
       if (height?.length != null) {
-        height.length = fixNumberValue(Math.max(height.length, 0));
+        height.length = fixNumberValue(Math.max(height.length, 1));
       }
       if (rotate?.degrees != null) {
         rotate.degrees = fixNumberValue(toDegrees360(rotate.degrees));
@@ -701,7 +759,8 @@ export class UIDesignTool {
     const isSelectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
 
     if (isSelectionChanged) {
-      this.#selectedKeys = new Set(newSelectedKeys);
+      this.#selectedKeys.clear();
+      newSelectedKeys.forEach((key) => this.#selectedKeys.add(key));
     }
 
     this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], hasParent ? [parentValue] : [], deletedKeys));
@@ -725,19 +784,20 @@ export class UIDesignTool {
     return from?.closest<HTMLElement>(targetSelector) ?? null;
   }
 
-  query(target: UIRecordElementFilterItem, container: UIRecordElementFilter | Element | null = CANVAS_ELEMENT_FILTER): HTMLElement | null {
+  query(target: UIRecordElementFilterItem, container?: UIRecordElementFilter | Element | null): HTMLElement | null {
     const from =
-      container instanceof Element ? container : document.querySelector(createUIRecordSelector(container ?? CANVAS_ELEMENT_FILTER));
+      container instanceof Element
+        ? container
+        : document.querySelector(container ? createUIRecordSelector(container) : this.#rootElementSelector);
     const targetSelector = createUIRecordSelector(target);
     return from?.querySelector<HTMLElement>(targetSelector) ?? null;
   }
 
-  queryAll(
-    target: UIRecordElementFilter,
-    container: UIRecordElementFilter | Element | null = CANVAS_ELEMENT_FILTER,
-  ): NodeListOf<HTMLElement> {
+  queryAll(target: UIRecordElementFilter, container?: UIRecordElementFilter | Element | null): NodeListOf<HTMLElement> {
     const from =
-      container instanceof Element ? container : document.querySelector(createUIRecordSelector(container ?? CANVAS_ELEMENT_FILTER));
+      container instanceof Element
+        ? container
+        : document.querySelector(container ? createUIRecordSelector(container) : this.#rootElementSelector);
     const targetSelector = createUIRecordSelector(target);
     return from?.querySelectorAll<HTMLElement>(targetSelector) ?? document.querySelectorAll(NULL_ELEMENT_SELECTOR);
   }
