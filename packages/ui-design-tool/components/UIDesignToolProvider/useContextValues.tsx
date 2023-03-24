@@ -7,6 +7,7 @@ import {
   UIDesignToolMode,
   TransformMethod,
   UIDesignTool,
+  UIDesignToolStatus,
 } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
@@ -64,19 +65,20 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
   const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
   const [hovered, setHovered] = useState<UIRecordKey>();
-  const [status, setStatus] = useReducer(statusReducer, statusInitialState);
-  privateRef.current.setStatus(status);
+  const [statusMeta, setStatusMeta] = useReducer(statusReducer, statusInitialState);
+  privateRef.current.setStatus(statusMeta);
 
   const dispatcher = useMemo(
     () => ({
       setCursor,
       setHovered,
-      setStatus,
+      setStatus: setStatusMeta,
     }),
-    [setCursor, setHovered, setStatus],
+    [setCursor, setHovered, setStatusMeta],
   );
 
   const [mode, setMode] = useState<UIDesignToolMode>(() => api.mode);
+  const [status, setStatus] = useState<UIDesignToolStatus>(() => api.status);
 
   /**
    * 상태의 Life cycle을 React에 의존하기 위해 참조 제거
@@ -189,6 +191,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   }, [api, subscriptionInterface, setMode]);
 
   useEffect(() => {
+    const callback = (status: UIDesignToolStatus) => {
+      setStatus(status);
+    };
+    const unsubscribe = subscriptionInterface.subscribeStatus(callback);
+    return unsubscribe;
+  }, [api, subscriptionInterface, setStatus]);
+
+  useEffect(() => {
     const callback = (all: UIRecord[]) => {
       setPairs(new Map(all.map((it) => [it.key, it])));
     };
@@ -210,8 +220,9 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
     cursor,
     hovered,
-    status,
     mode,
+    status,
+    statusMeta,
     dispatcher,
 
     getItemReference,

@@ -174,11 +174,14 @@ export class UIDesignTool {
     };
   }
 
-  #setStatus(status: { interactionType: InteractionType; transformMethod: TransformMethod }): void {
+  #setStatus(statusMeta: { interactionType: InteractionType; transformMethod: TransformMethod }): void {
     if (this.#mounted) {
-      this.#interactionType = status.interactionType;
-      this.#transformMethod = status.transformMethod;
-      this.#listeners.status.forEach((callback) => callback(this.status));
+      const prevStatus = this.status;
+      this.#interactionType = statusMeta.interactionType;
+      this.#transformMethod = statusMeta.transformMethod;
+      if (prevStatus !== this.status) {
+        this.#listeners.status.forEach((callback) => callback(this.status));
+      }
     }
   }
 
@@ -306,8 +309,11 @@ export class UIDesignTool {
   }
 
   toggleMode(mode: UIDesignToolMode): void {
+    const prevMode = this.mode;
     this.#mode = mode;
-    this.#listeners.mode.forEach((callback) => callback(mode));
+    if (prevMode !== this.mode) {
+      this.#listeners.mode.forEach((callback) => callback(this.mode));
+    }
   }
 
   reset(data: CanvasData['children']): void {
