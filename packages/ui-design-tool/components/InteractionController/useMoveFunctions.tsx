@@ -7,7 +7,7 @@ import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef } from '@pigyuma/react-utils';
 import { isEqual, pick } from '@pigyuma/utils';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.context';
 
 const getTransformedRect = (rect: UIRecordRect, mousePoint: { x: number; y: number }, handleCoord: { x: number; y: number }) => {
@@ -21,7 +21,9 @@ const getTransformedRect = (rect: UIRecordRect, mousePoint: { x: number; y: numb
 
 const MOVE_CURSOR = 'default';
 
-export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
+export default function useMoveFunctions() {
+  const [targetKey, setTargetKey] = useState<UIRecordKey>();
+
   const transformInitialRectRef = useRef<UIRecordRect>();
   const transformLastRectRef = useRef<UIRecordRect>();
 
@@ -35,53 +37,60 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
 
   const { setCursor } = useDispatcher();
 
-  const startMove = useCallback(() => {
-    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
-    if (record == null || target == null) {
-      return;
-    }
+  const startMove = useCallback(
+    (recordKey: UIRecordKey) => {
+      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+      if (record == null || target == null) {
+        return;
+      }
 
-    const browserMeta = getBrowserMeta();
-    const mouseMeta = browserMeta.mouse;
-    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+      const browserMeta = getBrowserMeta();
+      const mouseMeta = browserMeta.mouse;
+      const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
 
-    const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
+      const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
-    setRef(transformInitialRectRef, rect);
-    setRef(transformLastRectRef, transformInitialRectRef.current);
-    setRef(moveHandleCoordRef, mouseOffsetPoint);
-    setCursor(MOVE_CURSOR);
-  }, [recordKey, uiSelector, getBrowserMeta, getItemReference, setCursor]);
+      setTargetKey(recordKey);
+      setRef(transformInitialRectRef, rect);
+      setRef(transformLastRectRef, transformInitialRectRef.current);
+      setRef(moveHandleCoordRef, mouseOffsetPoint);
+      setCursor(MOVE_CURSOR);
+    },
+    [uiSelector, getBrowserMeta, getItemReference, setCursor],
+  );
 
   const endMove = useCallback(() => {
-    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
     if (record == null) {
-      return console.error(`UIRecord '${recordKey}' not found.`);
+      setTargetKey(undefined);
+      return console.warn(`UIRecord '${targetKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(targetKey) ? uiSelector.query({ key: targetKey }) : undefined;
     if (target == null) {
-      return console.error(`Element with recordKey of '${recordKey}' not found.`);
+      setTargetKey(undefined);
+      return console.warn(`Element with recordKey of '${targetKey}' not found.`);
     }
 
     const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
 
+    setTargetKey(undefined);
     setRef(transformInitialRectRef, undefined);
     setRef(transformLastRectRef, undefined);
     setRef(moveHandleCoordRef, undefined);
     uiController.setRect(record.key, rect);
-  }, [recordKey, uiController, uiSelector, getItemReference]);
+  }, [targetKey, uiController, uiSelector, getItemReference]);
 
   const move = useCallback(() => {
-    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
     if (record == null) {
-      return console.error(`UIRecord '${recordKey}' not found.`);
+      return console.error(`UIRecord '${targetKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(targetKey) ? uiSelector.query({ key: targetKey }) : undefined;
     if (target == null) {
-      return console.error(`Element with recordKey of '${recordKey}' not found.`);
+      return console.error(`Element with recordKey of '${targetKey}' not found.`);
     }
 
     const initialRect = transformInitialRectRef.current;
@@ -101,7 +110,7 @@ export default function useMoveFunctions(recordKey: UIRecordKey | undefined) {
       uiController.setRect(record.key, newRect);
     }
     setCursor(MOVE_CURSOR);
-  }, [recordKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
+  }, [targetKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
 
   return { startMove, endMove, move };
 }

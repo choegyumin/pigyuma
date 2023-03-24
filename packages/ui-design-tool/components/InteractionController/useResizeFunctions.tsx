@@ -8,7 +8,7 @@ import { isUIRecordKey } from '@/utils/model';
 import { cursor } from '@pigyuma/css-utils';
 import { setRef } from '@pigyuma/react-utils';
 import { calcCoordByDistance, calcDistancePointFromLine, isEqual, pick } from '@pigyuma/utils';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.context';
 
 const getTransformedRect = (
@@ -121,7 +121,9 @@ const getResizeCursor = (element: Element, mousePoint: { x: number; y: number })
   return cursor.resizePoint({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mousePoint);
 };
 
-export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
+export default function useResizeFunctions() {
+  const [targetKey, setTargetKey] = useState<UIRecordKey>();
+
   const transformInitialRectRef = useRef<UIRecordRect>();
   const transformLastRectRef = useRef<UIRecordRect>();
 
@@ -136,7 +138,7 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
   const { setCursor } = useDispatcher();
 
   const startResize = useCallback(
-    (handle: HandlePlacement) => {
+    (recordKey: UIRecordKey, handle: HandlePlacement) => {
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
       if (record == null) {
         return console.error(`UIRecord '${recordKey}' not found.`);
@@ -153,42 +155,46 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
 
       const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
+      setTargetKey(recordKey);
       setRef(transformInitialRectRef, rect);
       setRef(transformLastRectRef, transformInitialRectRef.current);
       setRef(resizeHandlePlacementRef, handle);
       setCursor(getResizeCursor(target, mouseClientPoint));
     },
-    [recordKey, uiSelector, getBrowserMeta, getItemReference, setCursor],
+    [uiSelector, getBrowserMeta, getItemReference, setCursor],
   );
 
   const endResize = useCallback(() => {
-    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
     if (record == null) {
-      return console.error(`UIRecord '${recordKey}' not found.`);
+      setTargetKey(undefined);
+      return console.warn(`UIRecord '${targetKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(targetKey) ? uiSelector.query({ key: targetKey }) : undefined;
     if (target == null) {
-      return console.error(`Element with recordKey of '${recordKey}' not found.`);
+      setTargetKey(undefined);
+      return console.warn(`Element with recordKey of '${targetKey}' not found.`);
     }
 
     const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
 
+    setTargetKey(undefined);
     setRef(transformInitialRectRef, undefined);
     setRef(transformLastRectRef, undefined);
     setRef(resizeHandlePlacementRef, undefined);
     uiController.setRect(record.key, rect);
-  }, [recordKey, uiController, uiSelector, getItemReference]);
+  }, [targetKey, uiController, uiSelector, getItemReference]);
 
   const resize = useCallback(() => {
-    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
     if (record == null) {
-      return console.error(`UIRecord '${recordKey}' not found.`);
+      return console.error(`UIRecord '${targetKey}' not found.`);
     }
 
-    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    const target = isUIRecordKey(targetKey) ? uiSelector.query({ key: targetKey }) : undefined;
     if (target == null) {
-      return console.error(`Element with recordKey of '${recordKey}' not found.`);
+      return console.error(`Element with recordKey of '${targetKey}' not found.`);
     }
 
     const initialRect = transformInitialRectRef.current;
@@ -217,7 +223,7 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
     if (isGrabbingCorner) {
       setCursor(getResizeCursor(target, mouseClientPoint));
     }
-  }, [recordKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
+  }, [targetKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
 
   return { startResize, resize, endResize };
 }
