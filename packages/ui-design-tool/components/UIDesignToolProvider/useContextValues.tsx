@@ -21,6 +21,7 @@ export type StatusState = {
 
 export type StatusAction =
   | { interactionType: typeof InteractionType.idle }
+  | { interactionType: typeof InteractionType.prepare }
   | { interactionType: typeof InteractionType.selection }
   | { interactionType: typeof InteractionType.drawing }
   | { interactionType: typeof InteractionType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
@@ -35,6 +36,8 @@ const statusInitialState: StatusState = { interactionType: InteractionType.idle,
 const statusReducer = (state: StatusState, action: StatusAction): StatusState => {
   switch (action.interactionType) {
     case InteractionType.idle:
+      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
+    case InteractionType.prepare:
       return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
     case InteractionType.selection:
       return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };

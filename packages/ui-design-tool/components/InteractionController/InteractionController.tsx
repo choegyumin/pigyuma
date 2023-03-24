@@ -109,7 +109,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       event: MouseEvent;
       action: StatusAction;
       flush?: () => void;
-      calibrate?: number;
+      prepare?: number;
     }>
   >(() => [], []);
 
@@ -213,7 +213,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         uiController.select([]);
 
         const action = { interactionType };
-        interactionQueue.push({ event, action, calibrate: 5 });
+        interactionQueue.push({ event, action, prepare: 5 });
 
         break;
       }
@@ -258,7 +258,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         const flush = () => {
           uiController.remove(record.key);
         };
-        interactionQueue.push({ event, action, flush, calibrate: 5 });
+        interactionQueue.push({ event, action, flush, prepare: 5 });
 
         break;
       }
@@ -273,7 +273,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         }
 
         const action = { interactionType, transformMethod };
-        interactionQueue.push({ event, action, calibrate: 5 });
+        interactionQueue.push({ event, action, prepare: 5 });
 
         break;
       }
@@ -284,6 +284,8 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         break;
       }
     }
+
+    setStatus({ interactionType: InteractionType.prepare });
   });
 
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
@@ -300,8 +302,8 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       const movementRange =
         Math.abs(interactionItem.event.clientX - event.clientX) + Math.abs(interactionItem.event.clientY - event.clientY);
 
-      // 마우스가 `calibrate` 이상 움직이지 않은 경우 인터랙션을 시작하지 않음 (사용자가 단순히 무언가를 클릭할 때 마우스가 밀리는 것을 보정)
-      if (movementRange < (interactionItem.calibrate ?? 0)) {
+      // 마우스가 `prepare` 이상 움직이지 않은 경우 인터랙션을 시작하지 않음 (사용자가 단순히 무언가를 클릭할 때 마우스가 밀리는 것을 보정)
+      if (movementRange < (interactionItem.prepare ?? 0)) {
         return interactionQueue.unshift(interactionItem);
       }
 

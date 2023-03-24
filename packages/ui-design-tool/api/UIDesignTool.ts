@@ -53,6 +53,8 @@ export type UIDesignToolMode = keyof typeof UIDesignToolMode;
 export const UIDesignToolStatus = {
   unknown: 'unknown',
   idle: 'idle',
+  /** Change UI before interaction */
+  prepare: 'prepare',
   /** Range selection */
   select: 'select',
   draw: 'draw',
@@ -64,6 +66,7 @@ export type UIDesignToolStatus = keyof typeof UIDesignToolStatus;
 
 export const InteractionType = {
   idle: 'idle',
+  prepare: 'prepare',
   selection: 'selection',
   drawing: 'drawing',
   transform: 'transform',
@@ -197,6 +200,9 @@ export class UIDesignTool {
   get status(): UIDesignToolStatus {
     if (this.#interactionType === InteractionType.idle) {
       return UIDesignToolStatus.idle;
+    }
+    if (this.#interactionType === InteractionType.prepare) {
+      return UIDesignToolStatus.prepare;
     }
     if (this.#interactionType === InteractionType.selection) {
       return UIDesignToolStatus.select;
