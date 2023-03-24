@@ -15,7 +15,7 @@ export const button = style({
   },
 });
 
-export const button$ = styleVariants({
+export const button_state = styleVariants({
   selected: {
     background: foundations.color.accent.primary,
   },

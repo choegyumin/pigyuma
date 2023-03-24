@@ -8,7 +8,7 @@ const Panel = React.forwardRef<HTMLElement, PanelProps>((props, ref) => {
   const { as = 'aside', role = 'complementary', placement, ...restProps } = props;
 
   return (
-    <Box {...restProps} ref={ref} as={as} role={role} className={clsx(styles.root, styles.root$[placement], props.className)}>
+    <Box {...restProps} ref={ref} as={as} role={role} className={clsx(styles.root, styles.root_placement[placement], props.className)}>
       {props.children}
     </Box>
   );

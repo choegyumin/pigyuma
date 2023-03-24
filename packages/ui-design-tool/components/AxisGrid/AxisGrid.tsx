@@ -26,8 +26,8 @@ export const AxisGrid: React.FC = React.memo(() => {
 
   return (
     <div className={styles.root} style={rootStyle}>
-      <div className={clsx(styles.axis, styles.axis$.x)} />
-      <div className={clsx(styles.axis, styles.axis$.y)} />
+      <div className={clsx(styles.axis, styles.axis_direction.x)} />
+      <div className={clsx(styles.axis, styles.axis_direction.y)} />
     </div>
   );
 });

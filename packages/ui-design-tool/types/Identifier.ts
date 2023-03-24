@@ -15,6 +15,25 @@ export const LayerType = {
 } as const;
 export type LayerType = keyof typeof LayerType;
 
+export const InteractionHandleType = {
+  select: 'select',
+  resize: 'resize',
+  rotate: 'rotate',
+} as const;
+export type InteractionHandleType = keyof typeof InteractionHandleType;
+
+export const HandlePlacement = {
+  top: 'top',
+  right: 'right',
+  bottom: 'bottom',
+  left: 'left',
+  topLeft: 'topLeft',
+  topRight: 'topRight',
+  bottomRight: 'bottomRight',
+  bottomLeft: 'bottomLeft',
+} as const;
+export type HandlePlacement = keyof typeof HandlePlacement;
+
 export const UIRecordIdentifiers = {
   key: 'key',
   type: 'type',

@@ -75,7 +75,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
   const iconType = IconTypeDict[iconTypeKey];
 
   return (
-    <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row$.selected]: selected })}>
+    <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row_state.selected]: selected })}>
       <div className={styles.item} role={role} onClick={onItemClick}>
         <div className={styles.name}>
           <Icon type={iconType} className={styles.icon} />
@@ -83,7 +83,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
         </div>
         {hasChildren && (
           <button
-            className={clsx(styles.toggle, { [styles.toggle$.expanded]: expanded })}
+            className={clsx(styles.toggle, { [styles.toggle_state.expanded]: expanded })}
             aria-controls={listId}
             aria-expanded={expanded}
             aria-label="Open group"
