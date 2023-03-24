@@ -1,7 +1,7 @@
 import Icon, { IconType } from '@pigyuma/design-system/components/Icon';
 import Box from '@pigyuma/design-system/primitives/Box';
-import { useEvent, useForkedRef } from '@pigyuma/react-utils';
-import { Artboard, TextLayer, useUIController, useUIData, useUISubscription } from '@pigyuma/ui-design-tool';
+import { useEvent, useForkedRef, useWatch } from '@pigyuma/react-utils';
+import { Artboard, TextLayer, useUIController, useUIData } from '@pigyuma/ui-design-tool';
 import { hasUIRecordChildren } from '@pigyuma/ui-design-tool/utils/model';
 import clsx from 'clsx';
 import React, { useEffect, useId, useState } from 'react';
@@ -31,7 +31,6 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
 
   const uiController = useUIController();
   const uiData = useUIData();
-  const uiSubscription = useUISubscription();
 
   const hasChildren = hasUIRecordChildren(record);
 
@@ -58,18 +57,15 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
     }
   }, [hasChildren]);
 
-  useEffect(() => {
-    const unsubscribe = uiSubscription.subscribeSelection((newSelected) => {
-      if (newSelected.find((key) => key === record.key) != null) {
-        onGroupOpenProp?.();
-        // 상위 Group들이 열리기를 기다림
-        window.requestAnimationFrame(() => {
-          forkedRef.current?.scrollIntoView();
-        });
-      }
-    });
-    return unsubscribe;
-  }, [uiSubscription, record.key, forkedRef, onGroupOpenProp]);
+  useWatch(() => {
+    if (selected) {
+      onGroupOpenProp?.();
+      // 상위 Group들이 열리기를 기다림
+      window.requestAnimationFrame(() => {
+        forkedRef.current?.scrollIntoView();
+      });
+    }
+  }, [selected]);
 
   const iconTypeKey = Artboard.isModel(record) ? 'artboard' : TextLayer.isModel(record) ? 'text' : record.shapeType;
   const iconType = IconTypeDict[iconTypeKey];

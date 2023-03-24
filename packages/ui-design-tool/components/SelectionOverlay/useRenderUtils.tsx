@@ -32,20 +32,22 @@ export default function useRenderUtils() {
 
   const getMeta = useCallback(() => {
     const isIdle = statusMeta.interactionType === InteractionType.idle;
-    const isResizing = statusMeta.interactionType === InteractionType.transform && statusMeta.transformMethod === TransformMethod.resize;
-    const isRotating = statusMeta.interactionType === InteractionType.transform && statusMeta.transformMethod === TransformMethod.rotate;
-    const isTransforming = isResizing || isRotating;
+    const isDrawing = statusMeta.interactionType === InteractionType.drawing;
+    const isTransforming = statusMeta.interactionType === InteractionType.transform;
+    const isResizing = isTransforming && statusMeta.transformMethod === TransformMethod.resize;
+    const isRotating = isTransforming && statusMeta.transformMethod === TransformMethod.rotate;
 
     const handleVisible = isIdle;
-    const infoVisible = isTransforming;
+    const infoVisible = isDrawing || isResizing || isRotating;
     const outlineVisible = isIdle;
-    const cursorVisible = isTransforming;
+    const cursorVisible = isDrawing || isTransforming;
 
     return {
       isIdle,
+      isDrawing,
+      isTransforming,
       isResizing,
       isRotating,
-      isTransforming,
       handleVisible,
       infoVisible,
       outlineVisible,
@@ -123,7 +125,11 @@ export default function useRenderUtils() {
       }
 
       const meta = getMeta();
-      return meta.isResizing ? createSizeInfoText(record) : meta.isRotating ? createDegreesInfoText(record) : initialInfoText;
+      return meta.isDrawing || meta.isResizing
+        ? createSizeInfoText(record)
+        : meta.isRotating
+        ? createDegreesInfoText(record)
+        : initialInfoText;
     },
     [getMeta, createSizeInfoText, createDegreesInfoText],
   );

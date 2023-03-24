@@ -1,3 +1,4 @@
+import { InteractionHandleType, UIInteractionElementDataAttributeName, UIRecordElementDataAttributeName } from '@/types/Identifier';
 import React from 'react';
 import { LayerComponent } from '../Layer/component';
 import withData from '../withData';
@@ -13,9 +14,14 @@ export type ArtboardRef = HTMLDivElement;
 export const RawArtboardComponent = React.forwardRef<ArtboardRef, ArtboardProps>((props, ref) => {
   const { data: artboard, ...restProps } = props;
 
+  const selected = !!restProps[UIRecordElementDataAttributeName.selected];
+  const handleProps = { [UIInteractionElementDataAttributeName.handleType]: InteractionHandleType.select };
+
   return (
-    <div {...restProps} ref={ref} className={styles.root} style={artboard.style}>
-      <div className={styles.name}>{artboard.name}</div>
+    <div {...restProps} ref={ref} className={styles.root} style={artboard.style} {...(selected ? handleProps : {})}>
+      <div className={styles.name} {...(selected ? {} : handleProps)}>
+        {artboard.name}
+      </div>
       <div className={styles.frame}>
         {artboard.children.map((it) => (
           <LayerComponent key={it.key} dataKey={it.key} />

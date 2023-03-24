@@ -83,8 +83,6 @@ export interface UIDesignToolOptions {
   id?: string;
 }
 
-export const CANVAS_ELEMENT_FILTER: UIRecordElementFilter = { key: Canvas.key };
-
 export const INITIAL_INSTANCE_ID = 'UNKNOWN';
 
 export const INITIAL_BROWSER_META: BrowserMeta = {
@@ -152,8 +150,7 @@ export class UIDesignTool {
     const onMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
-      const rootBounds =
-        document.querySelector(`[${UIDesignToolElementDataAttributeName.id}="${this.#id}"]`)?.getBoundingClientRect() ?? new DOMRect();
+      const rootBounds = document.querySelector(this.#rootElementSelector)?.getBoundingClientRect() ?? new DOMRect();
       this.#browserMeta.mouse.clientX = clientX;
       this.#browserMeta.mouse.clientY = clientY;
       this.#browserMeta.mouse.offsetX = clientX - rootBounds.x;
@@ -187,6 +184,10 @@ export class UIDesignTool {
 
   get #canvas(): Canvas {
     return this.#items.get(Canvas.key) as Canvas;
+  }
+
+  get #rootElementSelector(): string {
+    return `[${UIDesignToolElementDataAttributeName.id}="${this.#id}"]`;
   }
 
   get mode(): UIDesignToolMode {
@@ -783,19 +784,20 @@ export class UIDesignTool {
     return from?.closest<HTMLElement>(targetSelector) ?? null;
   }
 
-  query(target: UIRecordElementFilterItem, container: UIRecordElementFilter | Element | null = CANVAS_ELEMENT_FILTER): HTMLElement | null {
+  query(target: UIRecordElementFilterItem, container?: UIRecordElementFilter | Element | null): HTMLElement | null {
     const from =
-      container instanceof Element ? container : document.querySelector(createUIRecordSelector(container ?? CANVAS_ELEMENT_FILTER));
+      container instanceof Element
+        ? container
+        : document.querySelector(container ? createUIRecordSelector(container) : this.#rootElementSelector);
     const targetSelector = createUIRecordSelector(target);
     return from?.querySelector<HTMLElement>(targetSelector) ?? null;
   }
 
-  queryAll(
-    target: UIRecordElementFilter,
-    container: UIRecordElementFilter | Element | null = CANVAS_ELEMENT_FILTER,
-  ): NodeListOf<HTMLElement> {
+  queryAll(target: UIRecordElementFilter, container?: UIRecordElementFilter | Element | null): NodeListOf<HTMLElement> {
     const from =
-      container instanceof Element ? container : document.querySelector(createUIRecordSelector(container ?? CANVAS_ELEMENT_FILTER));
+      container instanceof Element
+        ? container
+        : document.querySelector(container ? createUIRecordSelector(container) : this.#rootElementSelector);
     const targetSelector = createUIRecordSelector(target);
     return from?.querySelectorAll<HTMLElement>(targetSelector) ?? document.querySelectorAll(NULL_ELEMENT_SELECTOR);
   }
