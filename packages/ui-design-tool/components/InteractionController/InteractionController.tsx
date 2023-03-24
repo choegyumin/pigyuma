@@ -93,20 +93,20 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const mode = useMode();
   const statusMeta = useStatusMeta();
   const hoveredRecordKey = useHovered();
-  /** @todo 다중 선택 기능 구현 후 코드 변경  */
-  const selectedRecordKey = [...useSelected()][0] as UIRecordKey | undefined;
+  const selectedRecordKeys = useSelected();
 
   const getItemReference = useItemReference();
 
   const { setHovered, setStatus } = useDispatcher();
 
-  const { startMove, move, endMove } = useMoveFunctions(selectedRecordKey);
-  const { startResize, resize, endResize } = useResizeFunctions(selectedRecordKey);
-  const { startRotate, rotate, endRotate } = useRotateFunctions(selectedRecordKey);
+  const { startMove, move, endMove } = useMoveFunctions();
+  const { startResize, resize, endResize } = useResizeFunctions();
+  const { startRotate, rotate, endRotate } = useRotateFunctions();
 
   const interactionQueue = useMemo<
     Array<{
       event: MouseEvent;
+      target?: UIRecordKey;
       action: StatusAction;
       flush?: () => void;
       calibrate?: number;
@@ -114,26 +114,33 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   >(() => [], []);
 
   const startInteraction = useCallback(
-    (event: MouseEvent, action: StatusAction) => {
+    (event: MouseEvent, target: UIRecordKey | undefined, action: StatusAction) => {
       if (action.interactionType === InteractionType.selection) {
         // startSelection();
       } else if (action.interactionType === InteractionType.drawing) {
-        if (mode === UIDesignToolMode.artboard || mode === UIDesignToolMode.shape) {
-          /** @todo startDrawing 함수 구현 후 분리하면서 resize 로직 추상화(리팩토링), 기능만 재사용할 뿐 보여지는 UI는 달라야 함 */
-          startResize(HandlePlacement.bottomRight);
+        if (target != null) {
+          if (mode === UIDesignToolMode.artboard || mode === UIDesignToolMode.shape) {
+            startResize(target, HandlePlacement.bottomRight);
+          }
         }
       } else if (action.interactionType === InteractionType.transform) {
         if (action.transformMethod === TransformMethod.move) {
-          startMove();
+          if (target != null) {
+            startMove(target);
+          }
         } else if (action.transformMethod === TransformMethod.resize) {
-          const handle = (event.target as HTMLElement | null)?.dataset[UIInteractionElementDataset.handlePlacement] as
-            | HandlePlacement
-            | undefined;
-          if (handle != null) {
-            startResize(handle);
+          if (target != null) {
+            const handle = (event.target as HTMLElement | null)?.dataset[UIInteractionElementDataset.handlePlacement] as
+              | HandlePlacement
+              | undefined;
+            if (handle != null) {
+              startResize(target, handle);
+            }
           }
         } else if (action.transformMethod === TransformMethod.rotate) {
-          startRotate();
+          if (target != null) {
+            startRotate(target);
+          }
         }
       }
     },
@@ -145,7 +152,6 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       if (action.interactionType === InteractionType.selection) {
         // endSelection();
       } else if (action.interactionType === InteractionType.drawing) {
-        /** @todo startDrawing 함수 구현 후 분리하면서 resize 로직 추상화(리팩토링) */
         endResize();
       } else if (action.interactionType === InteractionType.transform) {
         if (action.transformMethod === TransformMethod.move) {
@@ -171,7 +177,6 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       } else if (action.interactionType === InteractionType.selection) {
         // selection();
       } else if (action.interactionType === InteractionType.drawing) {
-        /** @todo startDrawing 함수 구현 후 분리하면서 resize 로직 추상화(리팩토링) */
         resize();
       } else if (action.interactionType === InteractionType.transform) {
         if (action.transformMethod === TransformMethod.move) {
@@ -258,7 +263,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         const flush = () => {
           uiController.remove(record.key);
         };
-        interactionQueue.push({ event, action, flush, calibrate: 5 });
+        interactionQueue.push({ event, target: record.key, action, flush, calibrate: 5 });
 
         break;
       }
@@ -267,13 +272,16 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         const transformMethod: Exclude<TransformMethod, 'unable'> =
           handleType == null || handleType === InteractionHandleType.select ? TransformMethod.move : handleType;
 
+        const recordKeys: UIRecordKey[] =
+          transformMethod === TransformMethod.move ? (isUIRecordKey(hoveredRecordKey) ? [hoveredRecordKey] : []) : [...selectedRecordKeys];
+
         if (transformMethod === TransformMethod.move) {
           /** @todo 다중 선택 기능 구현 후 조건 추가  */
-          uiController.select(isUIRecordKey(hoveredRecordKey) ? [hoveredRecordKey] : []);
+          uiController.select(recordKeys);
         }
 
         const action = { interactionType, transformMethod };
-        interactionQueue.push({ event, action, calibrate: 5 });
+        interactionQueue.push({ event, target: recordKeys[0], action, calibrate: 5 });
 
         break;
       }
@@ -306,7 +314,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       }
 
       setStatus(interactionItem.action);
-      return startInteraction(interactionItem.event, interactionItem.action);
+      return startInteraction(interactionItem.event, interactionItem.target, interactionItem.action);
     }
 
     progressInteraction(event, statusMeta);
