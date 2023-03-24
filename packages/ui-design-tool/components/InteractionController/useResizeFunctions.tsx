@@ -3,7 +3,7 @@ import useDispatcher from '@/hooks/useDispatcher';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
-import { HandlePlacement, UIInteractionElementDataset, UIRecordKey } from '@/types/Identifier';
+import { HandlePlacement, UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { cursor } from '@pigyuma/design-system/extensions';
 import { setRef } from '@pigyuma/react-utils';
@@ -21,49 +21,63 @@ const getTransformedRect = (
 
   const newQuadInit: UIRecordQuadInit = quad.toJSON();
 
+  const getDiff = (distance: number) => distance * (fromCenter ? 2 : 1);
+
   const left = (flip = false) => {
-    const distance = -calcDistancePointFromLine([newQuadInit.p1, newQuadInit.p4], mousePoint, { abs: false });
+    let distance = -calcDistancePointFromLine([newQuadInit.p1, newQuadInit.p4], mousePoint, { abs: false });
+    // 값이 -1과 1 사이일 때 보정 (0은 그릴 수 없음)
+    if (Math.abs(rect.width + getDiff(distance)) < 1) {
+      distance += 1;
+    }
     newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 180, flip ? -distance : distance);
     newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 180, flip ? -distance : distance);
     if (fromCenter) {
       newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 180, flip ? distance : -distance);
       newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 180, flip ? distance : -distance);
     }
-    const diff = distance * (fromCenter ? 2 : 1);
-    return rect.width + diff < 0;
-  };
-  const top = () => {
-    const distance = calcDistancePointFromLine([newQuadInit.p1, newQuadInit.p2], mousePoint, { abs: false });
-    newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 90, distance);
-    newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 90, distance);
-    if (fromCenter) {
-      newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 90, -distance);
-      newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 90, -distance);
-    }
-    const diff = distance * (fromCenter ? 2 : 1);
-    return rect.height + diff < 0;
+    return rect.width + getDiff(distance) < 0;
   };
   const right = (flip = false) => {
-    const distance = calcDistancePointFromLine([newQuadInit.p2, newQuadInit.p3], mousePoint, { abs: false });
+    let distance = calcDistancePointFromLine([newQuadInit.p2, newQuadInit.p3], mousePoint, { abs: false });
+    // 값이 -1과 1 사이일 때 보정 (0은 그릴 수 없음)
+    if (Math.abs(rect.width + getDiff(distance)) < 1) {
+      distance += 1;
+    }
     newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 0, flip ? -distance : distance);
     newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 0, flip ? -distance : distance);
     if (fromCenter) {
       newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 0, flip ? distance : -distance);
       newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 0, flip ? distance : -distance);
     }
-    const diff = distance * (fromCenter ? 2 : 1);
-    return rect.width + diff <= 0;
+    return rect.width + getDiff(distance) < 0;
+  };
+  const top = () => {
+    let distance = calcDistancePointFromLine([newQuadInit.p1, newQuadInit.p2], mousePoint, { abs: false });
+    // 값이 -1과 1 사이일 때 보정 (0은 그릴 수 없음)
+    if (Math.abs(rect.height + getDiff(distance)) < 1) {
+      distance += 1;
+    }
+    newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 90, distance);
+    newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 90, distance);
+    if (fromCenter) {
+      newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 90, -distance);
+      newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 90, -distance);
+    }
+    return rect.height + getDiff(distance) < 0;
   };
   const bottom = () => {
-    const distance = -calcDistancePointFromLine([newQuadInit.p4, newQuadInit.p3], mousePoint, { abs: false });
+    let distance = -calcDistancePointFromLine([newQuadInit.p4, newQuadInit.p3], mousePoint, { abs: false });
+    // 값이 -1과 1 사이일 때 보정 (0은 그릴 수 없음)
+    if (Math.abs(rect.height + getDiff(distance)) < 1) {
+      distance += 1;
+    }
     newQuadInit.p4 = calcCoordByDistance(newQuadInit.p4, rect.rotate + 270, distance);
     newQuadInit.p3 = calcCoordByDistance(newQuadInit.p3, rect.rotate + 270, distance);
     if (fromCenter) {
       newQuadInit.p1 = calcCoordByDistance(newQuadInit.p1, rect.rotate + 270, -distance);
       newQuadInit.p2 = calcCoordByDistance(newQuadInit.p2, rect.rotate + 270, -distance);
     }
-    const diff = distance * (fromCenter ? 2 : 1);
-    return rect.height + diff <= 0;
+    return rect.height + getDiff(distance) < 0;
   };
 
   switch (handlePlacement) {
@@ -122,13 +136,7 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
   const { setCursor } = useDispatcher();
 
   const startResize = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (event: MouseEvent) => {
-      if (!(event.target instanceof HTMLElement) || event.target.dataset[UIInteractionElementDataset.handlePlacement] == null) {
-        return;
-      }
-      const handle = event.target.dataset[UIInteractionElementDataset.handlePlacement] as HandlePlacement;
-
+    (handle: HandlePlacement) => {
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
       if (record == null) {
         return console.error(`UIRecord '${recordKey}' not found.`);
@@ -143,86 +151,73 @@ export default function useResizeFunctions(recordKey: UIRecordKey | undefined) {
       const mouseMeta = browserMeta.mouse;
       const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
 
-      const isGrabbingCorner = (
-        [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
-      ).includes(handle || '');
-
       const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
       setRef(transformInitialRectRef, rect);
       setRef(transformLastRectRef, transformInitialRectRef.current);
       setRef(resizeHandlePlacementRef, handle);
-      setCursor(isGrabbingCorner ? getResizeCursor(target, mouseClientPoint) : event.target.style.getPropertyValue('cursor'));
+      setCursor(getResizeCursor(target, mouseClientPoint));
     },
     [recordKey, uiSelector, getBrowserMeta, getItemReference, setCursor],
   );
 
-  const endResize = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (event: MouseEvent) => {
-      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-      if (record == null) {
-        return console.error(`UIRecord '${recordKey}' not found.`);
-      }
+  const endResize = useCallback(() => {
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    if (record == null) {
+      return console.error(`UIRecord '${recordKey}' not found.`);
+    }
 
-      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
-      if (target == null) {
-        return console.error(`Element with recordKey of '${recordKey}' not found.`);
-      }
+    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    if (target == null) {
+      return console.error(`Element with recordKey of '${recordKey}' not found.`);
+    }
 
-      const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
+    const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
 
-      setRef(transformInitialRectRef, undefined);
-      setRef(transformLastRectRef, undefined);
-      setRef(resizeHandlePlacementRef, undefined);
-      uiController.setRect(record.key, rect);
-    },
-    [recordKey, uiController, uiSelector, getItemReference],
-  );
+    setRef(transformInitialRectRef, undefined);
+    setRef(transformLastRectRef, undefined);
+    setRef(resizeHandlePlacementRef, undefined);
+    uiController.setRect(record.key, rect);
+  }, [recordKey, uiController, uiSelector, getItemReference]);
 
-  const resize = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (event: MouseEvent) => {
-      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-      if (record == null) {
-        return console.error(`UIRecord '${recordKey}' not found.`);
-      }
+  const resize = useCallback(() => {
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    if (record == null) {
+      return console.error(`UIRecord '${recordKey}' not found.`);
+    }
 
-      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
-      if (target == null) {
-        return console.error(`Element with recordKey of '${recordKey}' not found.`);
-      }
+    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    if (target == null) {
+      return console.error(`Element with recordKey of '${recordKey}' not found.`);
+    }
 
-      const initialRect = transformInitialRectRef.current;
-      if (initialRect == null) {
-        throw new Error("'resize' event was not properly initialized.");
-      }
+    const initialRect = transformInitialRectRef.current;
+    if (initialRect == null) {
+      throw new Error("'resize' event was not properly initialized.");
+    }
 
-      const browserMeta = getBrowserMeta();
-      const mouseMeta = browserMeta.mouse;
-      const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
-      const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
-      const keyboardMeta = browserMeta.keyboard;
+    const browserMeta = getBrowserMeta();
+    const mouseMeta = browserMeta.mouse;
+    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const keyboardMeta = browserMeta.keyboard;
 
-      const fromCenter = keyboardMeta.altKey;
-      const handlePlacement = resizeHandlePlacementRef.current;
-      const isGrabbingCorner = (
-        [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
-      ).includes(handlePlacement || '');
+    const fromCenter = keyboardMeta.altKey;
+    const handlePlacement = resizeHandlePlacementRef.current;
+    const isGrabbingCorner = (
+      [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
+    ).includes(handlePlacement || '');
 
-      const newRect =
-        handlePlacement != null ? getTransformedRect(initialRect, mouseOffsetPoint, handlePlacement, fromCenter) : initialRect;
+    const newRect = handlePlacement != null ? getTransformedRect(initialRect, mouseOffsetPoint, handlePlacement, fromCenter) : initialRect;
 
-      if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
-        setRef(transformLastRectRef, newRect);
-        uiController.setRect(record.key, newRect);
-      }
-      if (isGrabbingCorner) {
-        setCursor(getResizeCursor(target, mouseClientPoint));
-      }
-    },
-    [recordKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor],
-  );
+    if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
+      setRef(transformLastRectRef, newRect);
+      uiController.setRect(record.key, newRect);
+    }
+    if (isGrabbingCorner) {
+      setCursor(getResizeCursor(target, mouseClientPoint));
+    }
+  }, [recordKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
 
   return { startResize, resize, endResize };
 }

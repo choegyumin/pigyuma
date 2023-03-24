@@ -49,90 +49,78 @@ export default function useRotateFunctions(recordKey: UIRecordKey | undefined) {
 
   const { setCursor } = useDispatcher();
 
-  const startRotate = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (event: MouseEvent) => {
-      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
-      if (record == null || target == null) {
-        return;
-      }
+  const startRotate = useCallback(() => {
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    if (record == null || target == null) {
+      return;
+    }
 
-      const browserMeta = getBrowserMeta();
-      const mouseMeta = browserMeta.mouse;
-      const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
-      const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const browserMeta = getBrowserMeta();
+    const mouseMeta = browserMeta.mouse;
+    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
 
-      const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
+    const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
-      setRef(transformInitialRectRef, rect);
-      setRef(transformLastRectRef, transformInitialRectRef.current);
-      setRef(
-        rotateHandleCoordDegreesRef,
-        calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseOffsetPoint),
-      );
-      setCursor(getRotateCursor(target, mouseClientPoint));
-    },
-    [recordKey, uiSelector, getBrowserMeta, getItemReference, setCursor],
-  );
+    setRef(transformInitialRectRef, rect);
+    setRef(transformLastRectRef, transformInitialRectRef.current);
+    setRef(
+      rotateHandleCoordDegreesRef,
+      calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseOffsetPoint),
+    );
+    setCursor(getRotateCursor(target, mouseClientPoint));
+  }, [recordKey, uiSelector, getBrowserMeta, getItemReference, setCursor]);
 
-  const endRotate = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (event: MouseEvent) => {
-      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-      if (record == null) {
-        return console.error(`UIRecord '${recordKey}' not found.`);
-      }
+  const endRotate = useCallback(() => {
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    if (record == null) {
+      return console.error(`UIRecord '${recordKey}' not found.`);
+    }
 
-      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
-      if (target == null) {
-        return console.error(`Element with recordKey of '${recordKey}' not found.`);
-      }
+    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    if (target == null) {
+      return console.error(`Element with recordKey of '${recordKey}' not found.`);
+    }
 
-      const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
+    const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
 
-      setRef(transformInitialRectRef, undefined);
-      setRef(transformLastRectRef, undefined);
-      setRef(rotateHandleCoordDegreesRef, undefined);
-      uiController.setRect(record.key, rect);
-    },
-    [recordKey, uiController, uiSelector, getItemReference],
-  );
+    setRef(transformInitialRectRef, undefined);
+    setRef(transformLastRectRef, undefined);
+    setRef(rotateHandleCoordDegreesRef, undefined);
+    uiController.setRect(record.key, rect);
+  }, [recordKey, uiController, uiSelector, getItemReference]);
 
-  const rotate = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (event: MouseEvent) => {
-      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-      if (record == null) {
-        return console.error(`UIRecord '${recordKey}' not found.`);
-      }
+  const rotate = useCallback(() => {
+    const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+    if (record == null) {
+      return console.error(`UIRecord '${recordKey}' not found.`);
+    }
 
-      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
-      if (target == null) {
-        return console.error(`Element with recordKey of '${recordKey}' not found.`);
-      }
+    const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
+    if (target == null) {
+      return console.error(`Element with recordKey of '${recordKey}' not found.`);
+    }
 
-      const initialRect = transformInitialRectRef.current;
-      if (initialRect == null) {
-        throw new Error("'rotate' event was not properly initialized.");
-      }
+    const initialRect = transformInitialRectRef.current;
+    if (initialRect == null) {
+      throw new Error("'rotate' event was not properly initialized.");
+    }
 
-      const browserMeta = getBrowserMeta();
-      const mouseMeta = browserMeta.mouse;
-      const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
-      const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
-      const handleCoordDegrees = rotateHandleCoordDegreesRef.current;
+    const browserMeta = getBrowserMeta();
+    const mouseMeta = browserMeta.mouse;
+    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const handleCoordDegrees = rotateHandleCoordDegreesRef.current;
 
-      const newRect = handleCoordDegrees != null ? getTransformedRect(initialRect, mouseOffsetPoint, handleCoordDegrees) : initialRect;
+    const newRect = handleCoordDegrees != null ? getTransformedRect(initialRect, mouseOffsetPoint, handleCoordDegrees) : initialRect;
 
-      if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
-        setRef(transformLastRectRef, newRect);
-        uiController.setRect(record.key, newRect);
-      }
-      setCursor(getRotateCursor(target, mouseClientPoint));
-    },
-    [recordKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor],
-  );
+    if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
+      setRef(transformLastRectRef, newRect);
+      uiController.setRect(record.key, newRect);
+    }
+    setCursor(getRotateCursor(target, mouseClientPoint));
+  }, [recordKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
 
   return { startRotate, endRotate, rotate };
 }
