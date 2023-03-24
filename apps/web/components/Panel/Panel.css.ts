@@ -13,7 +13,7 @@ export const root = style({
   background: rootVars.panelBackground,
 });
 
-export const root$ = styleVariants({
+export const root_placement = styleVariants({
   left: {
     order: -1,
     borderRightWidth: rootVars.panelBorderWidth,

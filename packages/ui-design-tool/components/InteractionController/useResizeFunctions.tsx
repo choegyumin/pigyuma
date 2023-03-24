@@ -3,13 +3,12 @@ import useDispatcher from '@/hooks/useDispatcher';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordQuad, UIRecordQuadInit, UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
-import { UIInteractionElementDataset, UIRecordKey } from '@/types/Identifier';
+import { HandlePlacement, UIInteractionElementDataset, UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { cursor } from '@pigyuma/design-system/extensions';
 import { setRef } from '@pigyuma/react-utils';
 import { calcCoordByDistance, calcDistancePointFromLine, isEqual, pick } from '@pigyuma/utils';
 import { useCallback, useRef } from 'react';
-import { HandlePlacement } from '../SelectionOverlay/types';
 import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.context';
 
 const getTransformedRect = (

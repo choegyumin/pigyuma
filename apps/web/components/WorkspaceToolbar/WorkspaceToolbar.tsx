@@ -57,7 +57,7 @@ const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarP
     <Toolbar {...props} ref={ref} className={clsx(styles.root, props.className)}>
       <button
         type="button"
-        className={clsx(styles.button, { [styles.button$.selected]: uiData.mode === UIDesignToolMode.select })}
+        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.select })}
         onClick={onSelectClick}
         title="Select & Move (V)"
         aria-label="Select & Move"
@@ -68,7 +68,7 @@ const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarP
       </button>
       <button
         type="button"
-        className={clsx(styles.button, { [styles.button$.selected]: uiData.mode === UIDesignToolMode.artboard })}
+        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.artboard })}
         onClick={onArtboardClick}
         title="Artboard (F)"
         aria-label="Artboard"
@@ -79,7 +79,7 @@ const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarP
       </button>
       <button
         type="button"
-        className={clsx(styles.button, { [styles.button$.selected]: uiData.mode === UIDesignToolMode.shape })}
+        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.shape })}
         onClick={onShapeClick}
         title="Shape (S)"
         aria-label="Shape"
@@ -90,7 +90,7 @@ const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarP
       </button>
       <button
         type="button"
-        className={clsx(styles.button, { [styles.button$.selected]: uiData.mode === UIDesignToolMode.text })}
+        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.text })}
         onClick={onTextClick}
         title="Text (T)"
         aria-label="Text"
@@ -101,7 +101,7 @@ const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarP
       </button>
       <button
         type="button"
-        className={clsx(styles.button, { [styles.button$.selected]: uiData.mode === UIDesignToolMode.hand })}
+        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.hand })}
         onClick={onHandClick}
         title="Hand (H)"
         aria-label="Hand"

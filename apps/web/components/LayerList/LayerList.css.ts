@@ -11,7 +11,7 @@ export const varNames = getVarNames(vars);
 
 export const row = style({});
 
-export const row$ = styleVariants({
+export const row_state = styleVariants({
   selected: {
     background: foundations.color.accent.primary,
     color: '#fff',
@@ -33,7 +33,7 @@ export const icon = style({
   fontSize: 16,
   verticalAlign: 'middle',
   selectors: {
-    [`${row$.selected} &`]: {
+    [`${row_state.selected} &`]: {
       color: '#fff',
     },
   },
@@ -69,13 +69,13 @@ export const toggle = style({
       verticalAlign: 'middle',
       transition: `rotate ${foundations.transition.duration.fast} ${foundations.transition.easing.easeOut}`,
     },
-    [`${row$.selected} &`]: {
+    [`${row_state.selected} &`]: {
       color: '#fff',
     },
   },
 });
 
-export const toggle$ = styleVariants({
+export const toggle_state = styleVariants({
   expanded: {
     selectors: {
       '&::after': {
@@ -97,7 +97,7 @@ export const root = style([
     padding: 0,
     listStyle: 'none',
     selectors: {
-      [`${row$.selected} > &`]: {
+      [`${row_state.selected} > &`]: {
         background: 'hsl(222 28% 34%)',
       },
     },

@@ -50,7 +50,7 @@ export const axis = style({
   border: `0 dashed ${foundations.color.accent.primary}`,
 });
 
-export const axis$ = styleVariants({
+export const axis_direction = styleVariants({
   x: {
     top: '0',
     right: vars.axisXRight,
