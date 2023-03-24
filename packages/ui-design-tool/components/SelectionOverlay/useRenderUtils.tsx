@@ -2,7 +2,7 @@ import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
 import { InteractionType, TransformMethod } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
-import useStatus from '@/hooks/useStatus';
+import useStatusMeta from '@/hooks/useStatusMeta';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
 import { isRotatableUIRecord } from '@/utils/model';
@@ -28,12 +28,12 @@ const initialInfoText = '';
 export default function useRenderUtils() {
   const uiSelector = useUISelector();
 
-  const status = useStatus();
+  const statusMeta = useStatusMeta();
 
   const getMeta = useCallback(() => {
-    const isIdle = status.interactionType === InteractionType.idle;
-    const isResizing = status.interactionType === InteractionType.transform && status.transformMethod === TransformMethod.resize;
-    const isRotating = status.interactionType === InteractionType.transform && status.transformMethod === TransformMethod.rotate;
+    const isIdle = statusMeta.interactionType === InteractionType.idle;
+    const isResizing = statusMeta.interactionType === InteractionType.transform && statusMeta.transformMethod === TransformMethod.resize;
+    const isRotating = statusMeta.interactionType === InteractionType.transform && statusMeta.transformMethod === TransformMethod.rotate;
     const isTransforming = isResizing || isRotating;
 
     const handleVisible = isIdle;
@@ -51,7 +51,7 @@ export default function useRenderUtils() {
       outlineVisible,
       cursorVisible,
     };
-  }, [status]);
+  }, [statusMeta]);
 
   const getOverlayShapeStyle = useCallback(
     (record: UIRecord) => {

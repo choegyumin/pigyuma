@@ -1,6 +1,6 @@
 import { InteractionType } from '@/api/UIDesignTool';
 import useHovered from '@/hooks/useHovered';
-import useStatus from '@/hooks/useStatus';
+import useStatusMeta from '@/hooks/useStatusMeta';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import React from 'react';
 import * as styles from './HoveringOverlay.css';
@@ -11,14 +11,14 @@ import useRenderUtils from './useRenderUtils';
  * @todo HoveringOverlay와 RangeHoveringOverlay 분리
  */
 export const HoveringOverlay: React.FC = React.memo(() => {
-  const status = useStatus();
+  const statusMeta = useStatusMeta();
   const hovered = useHovered();
 
   const record = useUIRecordForInteraction(hovered);
 
   const { getRootStyle } = useRenderUtils();
 
-  const isActive = record != null && status.interactionType === InteractionType.idle;
+  const isActive = record != null && statusMeta.interactionType === InteractionType.idle;
 
   if (!isActive) {
     return null;

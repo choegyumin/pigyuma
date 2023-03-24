@@ -6,7 +6,7 @@ import useHovered from '@/hooks/useHovered';
 import useItemReference from '@/hooks/useItemReference';
 import useMode from '@/hooks/useMode';
 import useSelected from '@/hooks/useSelected';
-import useStatus from '@/hooks/useStatus';
+import useStatusMeta from '@/hooks/useStatusMeta';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
 import {
@@ -35,7 +35,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const uiSelector = useUISelector();
 
   const mode = useMode();
-  const status = useStatus();
+  const statusMeta = useStatusMeta();
   const hoveredRecordKey = useHovered();
   /** @todo 다중 선택 기능 구현 후 코드 변경  */
   const selectedRecordKey = [...useSelected()][0] as UIRecordKey | undefined;
@@ -171,7 +171,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     // Flush
     interactionQueue.length = 0;
     setStatus({ interactionType: InteractionType.idle });
-    endInteraction(event, status);
+    endInteraction(event, statusMeta);
   });
 
   const onDocumentMouseMove = useEvent((event: MouseEvent) => {
@@ -190,7 +190,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       return startInteraction(interactionItem.event, interactionItem.action);
     }
 
-    if (status.interactionType === InteractionType.idle) {
+    if (statusMeta.interactionType === InteractionType.idle) {
       const target = uiSelector.fromMouse();
       const recordKey = target != null ? uiSelector.dataset(target).key : undefined;
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
@@ -199,7 +199,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
 
       setHovered(isSelectableRecord ? record.key : undefined);
     } else {
-      progressInteraction(event, status);
+      progressInteraction(event, statusMeta);
     }
   });
 
