@@ -5,7 +5,6 @@
     "./images/**/*",
     "./types.ts",
     "./config.ts",
-    "./extensions.ts",
     "./foundations.ts",
     "./mixins.ts",
     "./css/index.ts",

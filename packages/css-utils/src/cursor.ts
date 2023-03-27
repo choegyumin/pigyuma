@@ -6,19 +6,19 @@ type CursorDict<T extends string> = Record<CursorPlacement, T>;
 const cursorPlacementsForHuman = ['topLeft', 'top', 'topRight', 'right', 'bottomRight', 'bottom', 'bottomLeft', 'left'] as const;
 const cursorPlacementsForAngle = ['right', 'topRight', 'top', 'topLeft', 'left', 'bottomLeft', 'bottom', 'bottomRight'] as const;
 
-const nsResizeCursor = 'ns-resize';
-const ewResizeCursor = 'ew-resize';
-const nwseResizeCursor = 'nwse-resize';
-const neswResizeCursor = 'nesw-resize';
+const nsResizeCursor = 'var(--ns-resize, ns-resize)';
+const ewResizeCursor = 'var(--ew-resize, ew-resize)';
+const nwseResizeCursor = 'var(--nwse-resize, nwse-resize)';
+const neswResizeCursor = 'var(--nesw-resize, nesw-resize)';
 
-const nwRotateCursor = 'var(--nw-rotate)';
-const nRotateCursor = 'var(--n-rotate)';
-const neRotateCursor = 'var(--ne-rotate)';
-const eRotateCursor = 'var(--e-rotate)';
-const seRotateCursor = 'var(--se-rotate)';
-const sRotateCursor = 'var(--s-rotate)';
-const swRotateCursor = 'var(--sw-rotate)';
-const wRotateCursor = 'var(--w-rotate)';
+const nwRotateCursor = 'var(--nw-rotate, grab)';
+const nRotateCursor = 'var(--n-rotate, grab)';
+const neRotateCursor = 'var(--ne-rotate, grab)';
+const eRotateCursor = 'var(--e-rotate, grab)';
+const seRotateCursor = 'var(--se-rotate, grab)';
+const sRotateCursor = 'var(--s-rotate, grab)';
+const swRotateCursor = 'var(--sw-rotate, grab)';
+const wRotateCursor = 'var(--w-rotate, grab)';
 
 const resizeCursorDict = {
   topLeft: nwseResizeCursor,
@@ -98,9 +98,9 @@ const placementMap = (degrees: number): CursorDict<CursorPlacement> => {
  * Generate resize cursors
  *
  * ```
- * 'nwse-resize'  'ns-resize'  'nesw-resize'
- * 'ew-resize'                   'ew-resize'
- * 'nesw-resize'  'ns-resize'  'nwse-resize'
+ * 'var(--nwse-resize)'  'var(--ns-resize)'  'var(--nesw-resize)'
+ * 'var(--ew-resize)'                          'var(--ew-resize)'
+ * 'var(--nesw-resize)'  'var(--ns-resize)'  'var(--nwse-resize)'
  * ```
  */
 const resizeMap = (degrees: number): CursorDict<ResizeCursor> => {
@@ -140,4 +140,6 @@ const rotateMap = (degrees: number): CursorDict<RotateCursor> => {
   };
 };
 
-export const cursor = { placementPoint, resizePoint, rotatePoint, placementMap, resizeMap, rotateMap };
+const cursor = { placementPoint, resizePoint, rotatePoint, placementMap, resizeMap, rotateMap };
+
+export default cursor;

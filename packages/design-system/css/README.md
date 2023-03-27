@@ -5,7 +5,6 @@
 ##### System
 
 1. Config
-1. Extensions
 1. Foundations
 1. Mixins
 

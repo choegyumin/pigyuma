@@ -5,7 +5,7 @@ import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
-import { cursor } from '@pigyuma/design-system/extensions';
+import { cursor } from '@pigyuma/css-utils';
 import { setRef } from '@pigyuma/react-utils';
 import { calcDegreesBetweenCoords, isEqual, pick, toDegrees360 } from '@pigyuma/utils';
 import { useCallback, useRef } from 'react';

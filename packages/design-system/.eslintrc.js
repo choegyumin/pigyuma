@@ -21,11 +21,6 @@ module.exports = {
             position: 'after',
           },
           {
-            pattern: '@/extensions',
-            group: 'internal',
-            position: 'after',
-          },
-          {
             pattern: '@/foundations',
             group: 'internal',
             position: 'after',

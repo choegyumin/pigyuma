@@ -1,5 +1,5 @@
+import * as rootVars from '@/styles/rootVars.css';
 import { createVar, getVarNames } from '@pigyuma/css-utils';
-import foundations from '@pigyuma/design-system/foundations';
 import { style } from '@vanilla-extract/css';
 
 export const vars = {
@@ -48,6 +48,6 @@ export const outline = style({
   width: vars.width,
   height: vars.height,
   margin: `calc(${getter.overlayBorderWidth} * -1) 0 0 calc(${getter.overlayBorderWidth} * -1)`,
-  border: `${getter.overlayBorderWidth} solid ${foundations.color.accent.primary}`,
+  border: `${getter.overlayBorderWidth} solid ${rootVars.primaryColor}`,
   rotate: getter.cssRotate,
 });

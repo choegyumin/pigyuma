@@ -1,5 +1,5 @@
+import * as rootVars from '@/styles/rootVars.css';
 import { createVar, getVarNames } from '@pigyuma/css-utils';
-import foundations from '@pigyuma/design-system/foundations';
 import { style, styleVariants } from '@vanilla-extract/css';
 
 export const vars = {
@@ -67,7 +67,7 @@ export const outline = style({
   width: '100%',
   height: '100%',
   margin: `calc(${getter.overlayBorderWidth} * -1) 0 0 calc(${getter.overlayBorderWidth} * -1)`,
-  border: `${getter.overlayBorderWidth} solid ${foundations.color.accent.primary}`,
+  border: `${getter.overlayBorderWidth} solid ${rootVars.primaryColor}`,
 });
 
 export const resizeHandle = style({
@@ -116,8 +116,8 @@ export const resizeCornerHandle = style({
       display: 'block',
       width: '100%',
       height: '100%',
-      border: `2px solid ${foundations.color.accent.primary}`,
-      background: foundations.color.neutral.white,
+      border: `2px solid ${rootVars.primaryColor}`,
+      background: '#fff',
     },
   },
 });
@@ -175,8 +175,8 @@ export const info = style({
   left: '50%',
   transform: `translate(-50%, -50%)`,
   width: 'max-content',
-  padding: foundations.spacing(2),
+  padding: '8px',
   borderRadius: '8px',
-  color: foundations.color.neutral.white,
+  color: '#fff',
   background: `hsl(0 0% 0% / 50%)`,
 });

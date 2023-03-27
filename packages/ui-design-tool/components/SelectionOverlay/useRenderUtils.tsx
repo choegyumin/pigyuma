@@ -6,7 +6,7 @@ import useStatusMeta from '@/hooks/useStatusMeta';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
 import { isRotatableUIRecord } from '@/utils/model';
-import { cursor } from '@pigyuma/design-system/extensions';
+import { cursor } from '@pigyuma/css-utils';
 import { toDegrees360 } from '@pigyuma/utils';
 import { useCallback } from 'react';
 import * as styles from './SelectionOverlay.css';

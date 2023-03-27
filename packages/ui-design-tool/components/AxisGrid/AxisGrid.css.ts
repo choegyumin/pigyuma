@@ -1,5 +1,5 @@
+import * as rootVars from '@/styles/rootVars.css';
 import { createVar, getVarNames } from '@pigyuma/css-utils';
-import foundations from '@pigyuma/design-system/foundations';
 import { style, styleVariants } from '@vanilla-extract/css';
 
 export const vars = {
@@ -47,7 +47,7 @@ export const axis = style({
   margin: 'auto',
   width: '0',
   height: '0',
-  border: `0 dashed ${foundations.color.accent.primary}`,
+  border: `0 dashed ${rootVars.primaryColor}`,
 });
 
 export const axis_direction = styleVariants({

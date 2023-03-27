@@ -1271,7 +1271,6 @@ __metadata:
   resolution: "@pigyuma/ui-design-tool@workspace:packages/ui-design-tool"
   dependencies:
     "@pigyuma/css-utils": "*"
-    "@pigyuma/design-system": "*"
     "@pigyuma/react-utility-types": "*"
     "@pigyuma/react-utils": "*"
     "@pigyuma/tsconfig": "*"
