@@ -1,6 +1,6 @@
-import { UIDesignToolInteractionType } from '@/api/UIDesignTool';
 import useCursor from '@/hooks/useCursor';
 import useStatusMeta from '@/hooks/useStatusMeta';
+import { UIDesignToolInteractionType } from '@/types/Status';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as styles from './PointerEventsController.css';

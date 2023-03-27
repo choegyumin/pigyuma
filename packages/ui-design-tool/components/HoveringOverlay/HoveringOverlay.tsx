@@ -1,8 +1,8 @@
-import { UIDesignToolInteractionType, UIDesignToolMode } from '@/api/UIDesignTool';
 import useHovered from '@/hooks/useHovered';
 import useMode from '@/hooks/useMode';
 import useStatusMeta from '@/hooks/useStatusMeta';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
+import { UIDesignToolInteractionType, UIDesignToolMode } from '@/types/Status';
 import React from 'react';
 import * as styles from './HoveringOverlay.css';
 import useRenderUtils from './useRenderUtils';

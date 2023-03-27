@@ -1,15 +1,13 @@
 import { Artboard, ArtboardArgs } from '@/api/Artboard/model';
 import { Canvas } from '@/api/Canvas/model';
-import { Layer } from '@/api/Layer/model';
 import { ShapeLayer, ShapeLayerArgs, ShapeType } from '@/api/ShapeLayer/model';
 import { TextLayer, TextLayerArgs } from '@/api/TextLayer/model';
-import { UIDesignToolInteractionType, UIDesignToolTransformMethod, UIDesignToolMode } from '@/api/UIDesignTool';
 import useDispatcher from '@/hooks/useDispatcher';
 import useHovered from '@/hooks/useHovered';
 import useItemReference from '@/hooks/useItemReference';
 import useMode from '@/hooks/useMode';
 import useSelected from '@/hooks/useSelected';
-import useStatusMeta from '@/hooks/useStatusMeta';
+import useStatus from '@/hooks/useStatus';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
 import {
@@ -21,6 +19,7 @@ import {
   HandlePlacement,
   UIRecordType,
 } from '@/types/Identifier';
+import { UIDesignToolInteractionType, UIDesignToolTransformMethod, UIDesignToolMode, UIDesignToolStatus } from '@/types/Status';
 import {
   FontSizeLengthType,
   HeightLengthType,
@@ -31,6 +30,7 @@ import {
   YLengthType,
 } from '@/types/Unit';
 import { isUIRecordKey } from '@/utils/model';
+import { getStatus } from '@/utils/status';
 import { useEvent, useEventListener } from '@pigyuma/react-utils';
 import React, { useCallback, useMemo } from 'react';
 import { AxisGrid } from '../AxisGrid/AxisGrid';
@@ -38,9 +38,9 @@ import { HoveringOverlay } from '../HoveringOverlay/HoveringOverlay';
 import { PointerEventsController } from '../PointerEventsController/PointerEventsController';
 import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay';
 import { useBrowserMeta } from '../UIDesignToolProvider/UIDesignToolProvider.context';
-import { StatusAction } from '../UIDesignToolProvider/useContextValues';
 import * as styles from './InteractionController.css';
 import { InteractionControllerProps } from './types';
+import useHoverFunctions from './useHoverFunctions';
 import useMoveFunctions from './useMoveFunctions';
 import useResizeFunctions from './useResizeFunctions';
 import useRotateFunctions from './useRotateFunctions';
@@ -94,14 +94,15 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const getBrowserMeta = useBrowserMeta();
 
   const mode = useMode();
-  const statusMeta = useStatusMeta();
+  const currentStatus = useStatus();
   const hoveredRecordKey = useHovered();
   const selectedRecordKeys = useSelected();
 
   const getItemReference = useItemReference();
 
-  const { setHovered, setStatus } = useDispatcher();
+  const { setStatus } = useDispatcher();
 
+  const { hover } = useHoverFunctions();
   const { startMove, move, endMove } = useMoveFunctions();
   const { startResize, resize, endResize } = useResizeFunctions();
   const { startRotate, rotate, endRotate } = useRotateFunctions();
@@ -110,40 +111,54 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     Array<{
       event: MouseEvent;
       target?: UIRecordKey;
-      action: StatusAction;
+      status: UIDesignToolStatus;
       flush?: () => void;
       calibrate?: number;
     }>
   >(() => [], []);
 
   const startInteraction = useCallback(
-    (event: MouseEvent, action: StatusAction, target?: UIRecordKey) => {
-      if (action.interactionType === UIDesignToolInteractionType.selection) {
-        // startSelection();
-      } else if (action.interactionType === UIDesignToolInteractionType.drawing) {
-        if (target == null) {
-          return console.error('event target is null or undefined. drawing interaction should have event target.');
+    (event: MouseEvent, status: UIDesignToolStatus, target?: UIRecordKey) => {
+      switch (status) {
+        case UIDesignToolStatus.selection: {
+          return; // startSelect()
         }
-        if (mode === UIDesignToolMode.artboard || mode === UIDesignToolMode.shape) {
-          /** @todo useDrawFunctions 구현 시 resize 로직 추상화(리팩토링), 기능만 재사용할 뿐 보여지는 UI는 달라야 함 */
-          startResize(target, HandlePlacement.bottomRight);
+        case UIDesignToolStatus.drawing: {
+          if (target == null) {
+            return console.error('event target is null or undefined. drawing interaction should have event target.');
+          }
+          if (mode === UIDesignToolMode.artboard || mode === UIDesignToolMode.shape) {
+            /** @todo useDrawFunctions 구현 시 resize 로직 추상화(리팩토링), 기능만 재사용할 뿐 보여지는 UI는 달라야 함 */
+            return startResize(target, HandlePlacement.bottomRight);
+          }
+          if (mode === UIDesignToolMode.text) {
+            return; // startText()
+          }
+          return console.error('not in drawing mode. drawing interaction is possible only in drawing mode.');
         }
-      } else if (action.interactionType === UIDesignToolInteractionType.transform) {
-        if (target == null) {
-          return console.error('event target is null or undefined. transform interaction should have event target.');
+        case UIDesignToolStatus.moving: {
+          if (target == null) {
+            return console.error('event target is null or undefined. moving interaction should have event target.');
+          }
+          return startMove(target);
         }
-        if (action.transformMethod === UIDesignToolTransformMethod.move) {
-          startMove(target);
-        } else if (action.transformMethod === UIDesignToolTransformMethod.resize) {
+        case UIDesignToolStatus.resizing: {
+          if (target == null) {
+            return console.error('event target is null or undefined. resizing interaction should have event target.');
+          }
           const handlePlacement = (event.target as HTMLElement | null)?.dataset[UIInteractionElementDataset.handlePlacement] as
             | HandlePlacement
             | undefined;
           if (handlePlacement == null) {
             return console.error(`event target has no ${UIInteractionElementDataAttributeName.handlePlacement} attribute.`);
           }
-          startResize(target, handlePlacement);
-        } else if (action.transformMethod === UIDesignToolTransformMethod.rotate) {
-          startRotate(target);
+          return startResize(target, handlePlacement);
+        }
+        case UIDesignToolStatus.rotating: {
+          if (target == null) {
+            return console.error('event target is null or undefined. rotating interaction should have event target.');
+          }
+          return startRotate(target);
         }
       }
     },
@@ -151,49 +166,43 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   );
 
   const endInteraction = useCallback(
-    (event: MouseEvent, action: StatusAction) => {
-      if (action.interactionType === UIDesignToolInteractionType.selection) {
-        // endSelection();
-      } else if (action.interactionType === UIDesignToolInteractionType.drawing) {
-        /** @todo useDrawFunctions 구현 시 resize 로직 추상화(리팩토링) */
-        endResize();
-      } else if (action.interactionType === UIDesignToolInteractionType.transform) {
-        if (action.transformMethod === UIDesignToolTransformMethod.move) {
-          endMove();
-        } else if (action.transformMethod === UIDesignToolTransformMethod.resize) {
-          endResize();
-        } else if (action.transformMethod === UIDesignToolTransformMethod.rotate) {
-          endRotate();
-        }
+    (event: MouseEvent, status: UIDesignToolStatus) => {
+      switch (status) {
+        case UIDesignToolStatus.selection:
+          return; // endSelect()
+        case UIDesignToolStatus.drawing:
+          /** @todo useDrawFunctions 구현 시 resize 로직 추상화(리팩토링) */
+          return endResize();
+        case UIDesignToolStatus.moving:
+          return endMove();
+        case UIDesignToolStatus.resizing:
+          return endResize();
+        case UIDesignToolStatus.rotating:
+          return endRotate();
       }
     },
     [endMove, endResize, endRotate],
   );
 
   const progressInteraction = useCallback(
-    (event: MouseEvent, action: StatusAction) => {
-      if (action.interactionType === UIDesignToolInteractionType.idle) {
-        const target = uiSelector.fromMouse();
-        const recordKey = target != null ? uiSelector.dataset(target).key : undefined;
-        const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-        const isSelectableRecord = record instanceof Artboard || record instanceof Layer;
-        setHovered(isSelectableRecord ? record.key : undefined);
-      } else if (action.interactionType === UIDesignToolInteractionType.selection) {
-        // selection();
-      } else if (action.interactionType === UIDesignToolInteractionType.drawing) {
-        /** @todo useDrawFunctions 구현 시 resize 로직 추상화(리팩토링) */
-        resize();
-      } else if (action.interactionType === UIDesignToolInteractionType.transform) {
-        if (action.transformMethod === UIDesignToolTransformMethod.move) {
-          move();
-        } else if (action.transformMethod === UIDesignToolTransformMethod.resize) {
-          resize();
-        } else if (action.transformMethod === UIDesignToolTransformMethod.rotate) {
-          rotate();
-        }
+    (event: MouseEvent, status: UIDesignToolStatus) => {
+      switch (status) {
+        case UIDesignToolStatus.idle:
+          return hover();
+        case UIDesignToolStatus.selection:
+          return; // select()
+        case UIDesignToolStatus.drawing:
+          /** @todo useDrawFunctions 구현 시 resize 로직 추상화(리팩토링) */
+          return resize();
+        case UIDesignToolStatus.moving:
+          return move();
+        case UIDesignToolStatus.resizing:
+          return resize();
+        case UIDesignToolStatus.rotating:
+          return rotate();
       }
     },
-    [move, resize, rotate, uiSelector, getItemReference, setHovered],
+    [hover, move, resize, rotate],
   );
 
   const onDocumentMouseDown = useEvent((event: MouseEvent) => {
@@ -218,12 +227,23 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       return UIDesignToolInteractionType.idle;
     })();
 
+    const transformMethod: UIDesignToolTransformMethod = (() => {
+      if (handleType == null) {
+        return UIDesignToolTransformMethod.unable;
+      }
+      if (handleType === InteractionHandleType.select) {
+        return UIDesignToolTransformMethod.move;
+      }
+      return handleType;
+    })();
+
+    const nextStatus: UIDesignToolStatus = getStatus({ interactionType, transformMethod });
+
     switch (interactionType) {
       case UIDesignToolInteractionType.selection: {
         uiController.select([]);
 
-        const action = { interactionType };
-        interactionQueue.push({ event, action, calibrate: 5 });
+        interactionQueue.push({ event, status: nextStatus, calibrate: 5 });
 
         break;
       }
@@ -275,11 +295,10 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         uiController.append(parentRecordKey, record);
         uiController.select([record.key]);
 
-        const action = { interactionType };
         const flush = () => {
           uiController.remove(record.key);
         };
-        interactionQueue.push({ event, target: record.key, action, flush, calibrate: 5 });
+        interactionQueue.push({ event, target: record.key, status: nextStatus, flush, calibrate: 5 });
 
         break;
       }
@@ -300,8 +319,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
           uiController.select(recordKeys);
         }
 
-        const action = { interactionType, transformMethod };
-        interactionQueue.push({ event, target: recordKeys[0], action, calibrate: 5 });
+        interactionQueue.push({ event, target: recordKeys[0], status: nextStatus, calibrate: 5 });
 
         break;
       }
@@ -317,8 +335,8 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
     interactionQueue.forEach((it) => it.flush?.());
     interactionQueue.length = 0;
-    setStatus({ interactionType: UIDesignToolInteractionType.idle });
-    endInteraction(event, statusMeta);
+    setStatus(UIDesignToolStatus.idle);
+    endInteraction(event, currentStatus);
   });
 
   const onDocumentMouseMove = useEvent((event: MouseEvent) => {
@@ -333,11 +351,11 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         return interactionQueue.unshift(interactionItem);
       }
 
-      setStatus(interactionItem.action);
-      return startInteraction(interactionItem.event, interactionItem.action, interactionItem.target);
+      setStatus(interactionItem.status);
+      return startInteraction(interactionItem.event, interactionItem.status, interactionItem.target);
     }
 
-    progressInteraction(event, statusMeta);
+    progressInteraction(event, currentStatus);
   });
 
   useEventListener(document, 'mousedown', onDocumentMouseDown);

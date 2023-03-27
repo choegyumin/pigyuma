@@ -1,54 +1,11 @@
 import { Canvas } from '@/api/Canvas/model';
-import {
-  BrowserMeta,
-  INITIAL_BROWSER_META,
-  INITIAL_INSTANCE_ID,
-  UIDesignToolInteractionType,
-  UIDesignToolMode,
-  UIDesignToolTransformMethod,
-  UIDesignTool,
-  UIDesignToolStatus,
-} from '@/api/UIDesignTool';
+import { INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
+import { BrowserMeta } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
+import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMeta } from '@/types/Status';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
-import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-
-export type StatusState = {
-  interactionType: UIDesignToolInteractionType;
-  transformMethod: UIDesignToolTransformMethod;
-};
-
-export type StatusAction =
-  | { interactionType: typeof UIDesignToolInteractionType.idle }
-  | { interactionType: typeof UIDesignToolInteractionType.selection }
-  | { interactionType: typeof UIDesignToolInteractionType.drawing }
-  | { interactionType: typeof UIDesignToolInteractionType.transform; transformMethod: Exclude<UIDesignToolTransformMethod, 'none'> };
-
-const statusInitialState: StatusState = {
-  interactionType: UIDesignToolInteractionType.idle,
-  transformMethod: UIDesignToolTransformMethod.unable,
-};
-
-/**
- * @see UIDesignToolStatus
- * @see UIDesignToolInteractionType
- * @see UIDesignToolTransformMethod
- */
-const statusReducer = (state: StatusState, action: StatusAction): StatusState => {
-  switch (action.interactionType) {
-    case UIDesignToolInteractionType.idle:
-      return { interactionType: action.interactionType, transformMethod: UIDesignToolTransformMethod.unable };
-    case UIDesignToolInteractionType.selection:
-      return { interactionType: action.interactionType, transformMethod: UIDesignToolTransformMethod.unable };
-    case UIDesignToolInteractionType.drawing:
-      return { interactionType: action.interactionType, transformMethod: UIDesignToolTransformMethod.unable };
-    case UIDesignToolInteractionType.transform:
-      return { interactionType: action.interactionType, transformMethod: action.transformMethod };
-    default:
-      return state;
-  }
-};
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;
@@ -56,7 +13,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const privateRef = useRef<{
     id: string;
     getBrowserMeta: () => BrowserMeta;
-    setStatus: React.Dispatch<StatusState>;
+    setStatus: React.Dispatch<UIDesignToolStatus>;
   }>({
     id: INITIAL_INSTANCE_ID,
     getBrowserMeta: () => INITIAL_BROWSER_META,
@@ -64,24 +21,33 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   });
 
   const instanceId = privateRef.current.id;
-  const getBrowserMeta = useCallback(() => privateRef.current.getBrowserMeta(), []);
+  const getBrowserMeta = useCallback(
+    (...args: Parameters<typeof privateRef.current.getBrowserMeta>) => privateRef.current.getBrowserMeta(...args),
+    [],
+  );
+  const setStatusDispatcher = useCallback(
+    (...args: Parameters<typeof privateRef.current.setStatus>) => privateRef.current.setStatus(...args),
+    [],
+  );
 
   const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
   const [hovered, setHovered] = useState<UIRecordKey>();
-  const [statusMeta, setStatusMeta] = useReducer(statusReducer, statusInitialState);
-  privateRef.current.setStatus(statusMeta);
 
   const dispatcher = useMemo(
     () => ({
       setCursor,
       setHovered,
-      setStatus: setStatusMeta,
+      setStatus: setStatusDispatcher,
     }),
-    [setCursor, setHovered, setStatusMeta],
+    [setCursor, setHovered, setStatusDispatcher],
   );
 
   const [mode, setMode] = useState<UIDesignToolMode>(() => api.mode);
   const [status, setStatus] = useState<UIDesignToolStatus>(() => api.status);
+  const [statusMeta, setStatueMeta] = useState<UIDesignToolStatusMeta>(() => ({
+    interactionType: api.interactionType,
+    transformMethod: api.transformMethod,
+  }));
 
   /**
    * 상태의 Life cycle을 React에 의존하기 위해 참조 제거
@@ -194,12 +160,13 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   }, [api, subscriptionInterface, setMode]);
 
   useEffect(() => {
-    const callback = (status: UIDesignToolStatus) => {
+    const callback = (status: UIDesignToolStatus, meta: UIDesignToolStatusMeta) => {
       setStatus(status);
+      setStatueMeta(meta);
     };
     const unsubscribe = subscriptionInterface.subscribeStatus(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setStatus]);
+  }, [api, subscriptionInterface, setStatus, setStatueMeta]);
 
   useEffect(() => {
     const callback = (all: UIRecord[]) => {

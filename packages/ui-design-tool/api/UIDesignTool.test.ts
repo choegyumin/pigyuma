@@ -2,13 +2,14 @@
 
 import { UIRecordRect } from '@/types/Geometry';
 import { LayerType, UIRecordKey, UIRecordType } from '@/types/Identifier';
+import { UIDesignToolInteractionType, UIDesignToolTransformMethod, UIDesignToolStatus } from '@/types/Status';
 import { XLengthType } from '@/types/Unit';
 import { flatUIRecords } from '@/utils/model';
 import { vi } from 'vitest';
 import { Artboard, ArtboardData, ArtboardJSON } from './Artboard/model';
 import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from './ShapeLayer/model';
 import { TextLayer, TextLayerData, TextLayerJSON } from './TextLayer/model';
-import { UIDesignToolInteractionType, UIDesignToolTransformMethod, UIDesignTool, UIDesignToolStatus } from './UIDesignTool';
+import { UIDesignTool } from './UIDesignTool';
 import { UIRecord } from './UIRecord/model';
 
 function createDummyArtboard(key: UIRecordKey): ArtboardJSON;
@@ -167,18 +168,34 @@ describe('UIDesignTool', () => {
       const { setStatus } = uiDesignTool.mount();
 
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.idle);
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.idle);
+      expect(uiDesignTool.interactionType).toBe(UIDesignToolInteractionType.idle);
+      expect(uiDesignTool.transformMethod).toBe(UIDesignToolTransformMethod.unable);
 
-      setStatus({ interactionType: UIDesignToolInteractionType.selection, transformMethod: UIDesignToolTransformMethod.unable });
-      expect(uiDesignTool.status).toBe(UIDesignToolStatus.select);
+      setStatus(UIDesignToolStatus.selection);
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.selection);
+      expect(uiDesignTool.interactionType).toBe(UIDesignToolInteractionType.selection);
+      expect(uiDesignTool.transformMethod).toBe(UIDesignToolTransformMethod.unable);
 
-      setStatus({ interactionType: UIDesignToolInteractionType.transform, transformMethod: UIDesignToolTransformMethod.move });
-      expect(uiDesignTool.status).toBe(UIDesignToolStatus.move);
+      setStatus(UIDesignToolStatus.drawing);
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.drawing);
+      expect(uiDesignTool.interactionType).toBe(UIDesignToolInteractionType.drawing);
+      expect(uiDesignTool.transformMethod).toBe(UIDesignToolTransformMethod.unable);
 
-      setStatus({ interactionType: UIDesignToolInteractionType.transform, transformMethod: UIDesignToolTransformMethod.resize });
-      expect(uiDesignTool.status).toBe(UIDesignToolStatus.resize);
+      setStatus(UIDesignToolStatus.moving);
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.moving);
+      expect(uiDesignTool.interactionType).toBe(UIDesignToolInteractionType.transform);
+      expect(uiDesignTool.transformMethod).toBe(UIDesignToolTransformMethod.move);
 
-      setStatus({ interactionType: UIDesignToolInteractionType.transform, transformMethod: UIDesignToolTransformMethod.rotate });
-      expect(uiDesignTool.status).toBe(UIDesignToolStatus.rotate);
+      setStatus(UIDesignToolStatus.resizing);
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.resizing);
+      expect(uiDesignTool.interactionType).toBe(UIDesignToolInteractionType.transform);
+      expect(uiDesignTool.transformMethod).toBe(UIDesignToolTransformMethod.resize);
+
+      setStatus(UIDesignToolStatus.rotating);
+      expect(uiDesignTool.status).toBe(UIDesignToolStatus.rotating);
+      expect(uiDesignTool.interactionType).toBe(UIDesignToolInteractionType.transform);
+      expect(uiDesignTool.transformMethod).toBe(UIDesignToolTransformMethod.rotate);
     });
   });
 

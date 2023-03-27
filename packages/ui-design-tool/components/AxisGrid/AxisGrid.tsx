@@ -1,7 +1,7 @@
-import { UIDesignToolInteractionType } from '@/api/UIDesignTool';
 import useSelected from '@/hooks/useSelected';
 import useStatusMeta from '@/hooks/useStatusMeta';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
+import { UIDesignToolInteractionType } from '@/types/Status';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './AxisGrid.css';

@@ -1,10 +1,10 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
-import { UIDesignToolInteractionType, UIDesignToolTransformMethod } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import useStatusMeta from '@/hooks/useStatusMeta';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
+import { UIDesignToolInteractionType, UIDesignToolTransformMethod } from '@/types/Status';
 import { isRotatableUIRecord } from '@/utils/model';
 import { cursor } from '@pigyuma/css-utils';
 import { toDegrees360 } from '@pigyuma/utils';

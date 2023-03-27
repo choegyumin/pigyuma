@@ -1,7 +1,7 @@
 import Icon from '@pigyuma/design-system/components/Icon';
 import { useEvent, useEventListener } from '@pigyuma/react-utils';
 import { useUIController, useUIData } from '@pigyuma/ui-design-tool';
-import { UIDesignToolMode, UIDesignToolStatus } from '@pigyuma/ui-design-tool/api/UIDesignTool';
+import { UIDesignToolMode, UIDesignToolStatus } from '@pigyuma/ui-design-tool/types/Status';
 import clsx from 'clsx';
 import React from 'react';
 import Toolbar from '../Toolbar';
