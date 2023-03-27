@@ -8,7 +8,7 @@ import { vi } from 'vitest';
 import { Artboard, ArtboardData, ArtboardJSON } from './Artboard/model';
 import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from './ShapeLayer/model';
 import { TextLayer, TextLayerData, TextLayerJSON } from './TextLayer/model';
-import { InteractionType, TransformMethod, UIDesignTool, UIDesignToolStatus } from './UIDesignTool';
+import { UIDesignToolInteractionType, UIDesignToolTransformMethod, UIDesignTool, UIDesignToolStatus } from './UIDesignTool';
 import { UIRecord } from './UIRecord/model';
 
 function createDummyArtboard(key: UIRecordKey): ArtboardJSON;
@@ -168,16 +168,16 @@ describe('UIDesignTool', () => {
 
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.idle);
 
-      setStatus({ interactionType: InteractionType.selection, transformMethod: TransformMethod.unable });
+      setStatus({ interactionType: UIDesignToolInteractionType.selection, transformMethod: UIDesignToolTransformMethod.unable });
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.select);
 
-      setStatus({ interactionType: InteractionType.transform, transformMethod: TransformMethod.move });
+      setStatus({ interactionType: UIDesignToolInteractionType.transform, transformMethod: UIDesignToolTransformMethod.move });
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.move);
 
-      setStatus({ interactionType: InteractionType.transform, transformMethod: TransformMethod.resize });
+      setStatus({ interactionType: UIDesignToolInteractionType.transform, transformMethod: UIDesignToolTransformMethod.resize });
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.resize);
 
-      setStatus({ interactionType: InteractionType.transform, transformMethod: TransformMethod.rotate });
+      setStatus({ interactionType: UIDesignToolInteractionType.transform, transformMethod: UIDesignToolTransformMethod.rotate });
       expect(uiDesignTool.status).toBe(UIDesignToolStatus.rotate);
     });
   });

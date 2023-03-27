@@ -3,9 +3,9 @@ import {
   BrowserMeta,
   INITIAL_BROWSER_META,
   INITIAL_INSTANCE_ID,
-  InteractionType,
+  UIDesignToolInteractionType,
   UIDesignToolMode,
-  TransformMethod,
+  UIDesignToolTransformMethod,
   UIDesignTool,
   UIDesignToolStatus,
 } from '@/api/UIDesignTool';
@@ -15,32 +15,35 @@ import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-uti
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 export type StatusState = {
-  interactionType: InteractionType;
-  transformMethod: TransformMethod;
+  interactionType: UIDesignToolInteractionType;
+  transformMethod: UIDesignToolTransformMethod;
 };
 
 export type StatusAction =
-  | { interactionType: typeof InteractionType.idle }
-  | { interactionType: typeof InteractionType.selection }
-  | { interactionType: typeof InteractionType.drawing }
-  | { interactionType: typeof InteractionType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
+  | { interactionType: typeof UIDesignToolInteractionType.idle }
+  | { interactionType: typeof UIDesignToolInteractionType.selection }
+  | { interactionType: typeof UIDesignToolInteractionType.drawing }
+  | { interactionType: typeof UIDesignToolInteractionType.transform; transformMethod: Exclude<UIDesignToolTransformMethod, 'none'> };
 
-const statusInitialState: StatusState = { interactionType: InteractionType.idle, transformMethod: TransformMethod.unable };
+const statusInitialState: StatusState = {
+  interactionType: UIDesignToolInteractionType.idle,
+  transformMethod: UIDesignToolTransformMethod.unable,
+};
 
 /**
  * @see UIDesignToolStatus
- * @see InteractionType
- * @see TransformMethod
+ * @see UIDesignToolInteractionType
+ * @see UIDesignToolTransformMethod
  */
 const statusReducer = (state: StatusState, action: StatusAction): StatusState => {
   switch (action.interactionType) {
-    case InteractionType.idle:
-      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
-    case InteractionType.selection:
-      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
-    case InteractionType.drawing:
-      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
-    case InteractionType.transform:
+    case UIDesignToolInteractionType.idle:
+      return { interactionType: action.interactionType, transformMethod: UIDesignToolTransformMethod.unable };
+    case UIDesignToolInteractionType.selection:
+      return { interactionType: action.interactionType, transformMethod: UIDesignToolTransformMethod.unable };
+    case UIDesignToolInteractionType.drawing:
+      return { interactionType: action.interactionType, transformMethod: UIDesignToolTransformMethod.unable };
+    case UIDesignToolInteractionType.transform:
       return { interactionType: action.interactionType, transformMethod: action.transformMethod };
     default:
       return state;

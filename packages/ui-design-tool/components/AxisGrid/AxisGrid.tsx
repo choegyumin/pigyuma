@@ -1,4 +1,4 @@
-import { InteractionType } from '@/api/UIDesignTool';
+import { UIDesignToolInteractionType } from '@/api/UIDesignTool';
 import useSelected from '@/hooks/useSelected';
 import useStatusMeta from '@/hooks/useStatusMeta';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
@@ -16,7 +16,7 @@ export const AxisGrid: React.FC = React.memo(() => {
 
   const { getRootStyle } = useRenderUtils();
 
-  const isActive = record != null && selected.size === 1 && statusMeta.interactionType === InteractionType.idle;
+  const isActive = record != null && selected.size === 1 && statusMeta.interactionType === UIDesignToolInteractionType.idle;
 
   if (!isActive) {
     return null;

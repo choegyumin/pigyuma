@@ -62,21 +62,21 @@ export const UIDesignToolStatus = {
 } as const;
 export type UIDesignToolStatus = keyof typeof UIDesignToolStatus;
 
-export const InteractionType = {
+export const UIDesignToolInteractionType = {
   idle: 'idle',
   selection: 'selection',
   drawing: 'drawing',
   transform: 'transform',
 } as const;
-export type InteractionType = keyof typeof InteractionType;
+export type UIDesignToolInteractionType = keyof typeof UIDesignToolInteractionType;
 
-export const TransformMethod = {
+export const UIDesignToolTransformMethod = {
   unable: 'unable',
   move: 'move',
   resize: 'resize',
   rotate: 'rotate',
 } as const;
-export type TransformMethod = keyof typeof TransformMethod;
+export type UIDesignToolTransformMethod = keyof typeof UIDesignToolTransformMethod;
 
 export interface UIDesignToolOptions {
   strict?: boolean;
@@ -109,8 +109,8 @@ export class UIDesignTool {
 
   #mounted: boolean;
   #mode: UIDesignToolMode;
-  #interactionType: InteractionType;
-  #transformMethod: TransformMethod;
+  #interactionType: UIDesignToolInteractionType;
+  #transformMethod: UIDesignToolTransformMethod;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
   readonly #selectedKeys: Set<UIRecordKey>;
@@ -139,8 +139,8 @@ export class UIDesignTool {
 
     this.#mounted = false;
     this.#mode = UIDesignToolMode.select;
-    this.#interactionType = InteractionType.idle;
-    this.#transformMethod = TransformMethod.unable;
+    this.#interactionType = UIDesignToolInteractionType.idle;
+    this.#transformMethod = UIDesignToolTransformMethod.unable;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
     this.#selectedKeys = new Set();
@@ -171,7 +171,7 @@ export class UIDesignTool {
     };
   }
 
-  #setStatus(statusMeta: { interactionType: InteractionType; transformMethod: TransformMethod }): void {
+  #setStatus(statusMeta: { interactionType: UIDesignToolInteractionType; transformMethod: UIDesignToolTransformMethod }): void {
     if (this.#mounted) {
       const prevStatus = this.status;
       this.#interactionType = statusMeta.interactionType;
@@ -195,23 +195,23 @@ export class UIDesignTool {
   }
 
   get status(): UIDesignToolStatus {
-    if (this.#interactionType === InteractionType.idle) {
+    if (this.#interactionType === UIDesignToolInteractionType.idle) {
       return UIDesignToolStatus.idle;
     }
-    if (this.#interactionType === InteractionType.selection) {
+    if (this.#interactionType === UIDesignToolInteractionType.selection) {
       return UIDesignToolStatus.select;
     }
-    if (this.#interactionType === InteractionType.drawing) {
+    if (this.#interactionType === UIDesignToolInteractionType.drawing) {
       return UIDesignToolStatus.draw;
     }
-    if (this.#interactionType === InteractionType.transform) {
-      if (this.#transformMethod === TransformMethod.move) {
+    if (this.#interactionType === UIDesignToolInteractionType.transform) {
+      if (this.#transformMethod === UIDesignToolTransformMethod.move) {
         return UIDesignToolStatus.move;
       }
-      if (this.#transformMethod === TransformMethod.resize) {
+      if (this.#transformMethod === UIDesignToolTransformMethod.resize) {
         return UIDesignToolStatus.resize;
       }
-      if (this.#transformMethod === TransformMethod.rotate) {
+      if (this.#transformMethod === UIDesignToolTransformMethod.rotate) {
         return UIDesignToolStatus.rotate;
       }
     }
@@ -251,7 +251,8 @@ export class UIDesignTool {
     return {
       id: this.#id,
       getBrowserMeta: () => this.#browserMeta,
-      setStatus: (status: { interactionType: InteractionType; transformMethod: TransformMethod }) => this.#setStatus(status),
+      setStatus: (status: { interactionType: UIDesignToolInteractionType; transformMethod: UIDesignToolTransformMethod }) =>
+        this.#setStatus(status),
     };
   }
 
@@ -266,8 +267,8 @@ export class UIDesignTool {
 
     this.#mounted = false;
     this.#mode = UIDesignToolMode.select;
-    this.#interactionType = InteractionType.idle;
-    this.#transformMethod = TransformMethod.unable;
+    this.#interactionType = UIDesignToolInteractionType.idle;
+    this.#transformMethod = UIDesignToolTransformMethod.unable;
     this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
     this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
     this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;
