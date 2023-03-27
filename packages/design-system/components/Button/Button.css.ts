@@ -2,6 +2,6 @@ import { style } from '@vanilla-extract/css';
 import foundations from '@/foundations';
 
 export const root = style({
-  color: 'white',
+  color: foundations.color.neutral.white,
   background: foundations.color.accent.primary,
 });
