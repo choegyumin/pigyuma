@@ -6,7 +6,7 @@ import { isUIRecordKey } from '@/utils/model';
 import { setRef, useForceUpdate } from '@pigyuma/react-utils';
 import { startTransition, useEffect, useRef } from 'react';
 
-/** @todo 렌더링이 늦을 경우: startTransition을 RAF로 변경 (3ba4789) */
+/** @todo 렌더링이 눈에 띄게 늦어질 경우: startTransition을 RAF로 변경 (3ba4789) */
 export default function useUIRecordForInteraction<T extends UIRecord>(recordKey: UIRecordKey | undefined): T | undefined {
   const forceUpdate = useForceUpdate();
   const firstRunRef = useRef<boolean>(true);
@@ -22,7 +22,6 @@ export default function useUIRecordForInteraction<T extends UIRecord>(recordKey:
 
   useEffect(() => {
     startTransition(() => {
-      // 재조정 범위를 줄이기 위해 `useUIData` 반환 값을 사용하는 대신 직접 구독함
       forceUpdate();
     });
   }, [recordKey, forceUpdate]);
@@ -31,16 +30,14 @@ export default function useUIRecordForInteraction<T extends UIRecord>(recordKey:
     if (!isUIRecordKey(recordKey)) {
       return;
     }
-    const callback = (_: unknown, changed: UIRecord[], removed: UIRecordKey[]) => {
-      const shouldUpdate = (changed.find((it) => it.key === recordKey) || removed.find((key) => key === recordKey)) != null;
-      if (shouldUpdate) {
-        // 이미 렌더링이 끝난 엘리먼트에 접근하기 위해 상태 변경을 지연시킴
-        // (callback 실행 시점은 다른 상태 변경과 동일하지만, queue는 따로 관리되는 것으로 추측됨)
-        // (startTransition의 용도와 해결하려는 문제가 서로 상충해 오히려 렌더링이 늦어질 수 있음)
-        startTransition(() => {
-          forceUpdate();
-        });
-      }
+    const callback = () => {
+      // 이미 렌더링이 끝난 엘리먼트에 접근하기 위해 상태 변경을 지연시킴
+      // (callback 실행 시점은 다른 상태 변경과 동일하지만, queue는 따로 관리되는 것으로 추측됨)
+      startTransition(() => {
+        // 다른 record의 변경으로 인한 엘리먼트의 리렌더링도 감지해야 하므로,
+        // tree의 모든 record 변경을 구독하도록 조건을 걸지 않음
+        forceUpdate();
+      });
     };
     const unsubscribe = subscribeTree(callback);
     return unsubscribe;

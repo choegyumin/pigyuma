@@ -19,7 +19,7 @@ export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey |
 
   // 가능하면 browser painting 이전에 상태 변경이 이뤄지도록 함
   useIsomorphicLayoutEffect(() => {
-    // initial state와 값이 동일하지만 참조는 항상 끊어지므로, 최초 발생한 effect를 무시해 재조정을 차단함
+    // 최초 발생한 effect는 무시해 재조정을 차단함
     if (!firstRunRef.current) {
       forceUpdate();
     }
