@@ -4,8 +4,7 @@ import Box from '../Box';
 import { NumberInputProps, NumberInputRef } from './types';
 
 /**
- * @todo NumberField 컴포넌트 고도화
- * - [type=number] 대신 [type=text] 사용
+ * @todo NumberInput 컴포넌트 고도화
  * - `step`이 `value`, `min`, `max` HTML Attributes 대신, 현재 입력된 값을 기준으로 동작하도록 개선
  */
 const NumberInput = React.forwardRef<NumberInputRef, NumberInputProps>((props, ref) => {

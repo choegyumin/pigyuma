@@ -12,6 +12,7 @@ export { default as useForceUpdate } from './useForceUpdate';
 export { default as useForkedRef } from './useForkedRef';
 export { default as useImmutableCallback } from './useImmutableCallback';
 export { default as useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
+export { default as useIsomorphicLayoutMount } from './useIsomorphicLayoutMount';
 export { default as useLayoutMount } from './useLayoutMount';
 export { default as useMount } from './useMount';
 export { default as usePrevious } from './usePrevious';
