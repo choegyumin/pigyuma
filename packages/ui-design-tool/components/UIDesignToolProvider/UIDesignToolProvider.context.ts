@@ -18,12 +18,13 @@ const [UIDesignToolContextProvider, ...hooks] = constate(
   (value) => value.hovered,
   (value) => value.tree,
   (value) => value.pairs,
+  (value) => value.drafts,
   (value) => value.selected,
   (value) => value.getItemReference,
   (value) => value.getTreeReference,
   (value) => value.getPairsReference,
-  (value) => value.getSelectedReference,
   (value) => value.getDraftsReference,
+  (value) => value.getSelectedReference,
 );
 
 export const [
@@ -46,12 +47,13 @@ export const [
   useHovered,
   useTree,
   usePairs,
+  useDrafts,
   useSelected,
   useItemReference,
   useTreeReference,
   usePairsReference,
-  useSelectedReference,
   useDraftsReference,
+  useSelectedReference,
 ] = hooks;
 
 export default UIDesignToolContextProvider;

@@ -55,6 +55,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
    */
   const [pairs, setPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
   const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
+  const [drafts, setDrafts] = useCloneDeepState<typeof api.drafts>(() => api.drafts);
   const [selected, setSelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
 
   const controllerInterface = useMemo(
@@ -80,14 +81,16 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       mode,
       status,
       get: ((targetKey) => pairs.get(targetKey)) as typeof api.get,
+      getDraft: ((targetKey) => drafts.get(targetKey)) as typeof api.getDraft,
       has: ((targetKey) => pairs.has(targetKey)) as typeof api.has,
+      hasDraft: ((targetKey) => drafts.has(targetKey)) as typeof api.hasDraft,
       pairs,
       tree,
+      drafts,
       selected,
       isSelected: ((targetKey) => selected.has(targetKey)) as typeof api.isSelected,
-      previewDrafts: ((...args) => api.previewDrafts(...args)) as typeof api.previewDrafts,
     }),
-    [api, mode, status, pairs, tree, selected],
+    [api, mode, status, pairs, tree, drafts, selected],
   );
 
   const selectorInterface = useMemo(
@@ -131,11 +134,17 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   );
 
   // 필요 시 React의 Life cycle을 무시하고 값에 직접 접근
-  const getItemReference = useStableCallback(((...args) => dataInterface.get(...args)) as typeof api.get);
+  const getItemReference = useStableCallback(function <T extends UIRecord>(
+    targetKey: UIRecordKey,
+    options: { includeDraft?: boolean } = {},
+  ): T | undefined {
+    const { includeDraft = false } = options;
+    return ((includeDraft ? dataInterface.getDraft<T>(targetKey) : undefined) as T) ?? dataInterface.get<T>(targetKey);
+  });
   const getTreeReference = useStableCallback(() => dataInterface.tree);
   const getPairsReference = useStableCallback(() => dataInterface.pairs);
+  const getDraftsReference = useStableCallback(() => dataInterface.drafts);
   const getSelectedReference = useStableCallback(() => dataInterface.selected);
-  const getDraftsReference = useStableCallback(() => dataInterface.previewDrafts());
 
   useEffect(() => {
     const { id, getBrowserMeta, setStatus } = api.mount();
@@ -172,12 +181,13 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   }, [api, subscriptionInterface, setStatus, setStatueMeta]);
 
   useEffect(() => {
-    const callback = (all: UIRecord[]) => {
-      setPairs(new Map(all.map((it) => [it.key, it])));
+    const callback = () => {
+      setPairs(api.pairs);
+      setDrafts(api.drafts);
     };
     const unsubscribe = subscriptionInterface.subscribeTree(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setPairs]);
+  }, [api, subscriptionInterface, setPairs, setDrafts]);
 
   useEffect(() => {
     const callback = (newSelected: UIRecordKey[]) => {
@@ -200,12 +210,13 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
     tree,
     pairs,
+    drafts,
     selected,
     getItemReference,
     getTreeReference,
     getPairsReference,
-    getSelectedReference,
     getDraftsReference,
+    getSelectedReference,
 
     controllerInterface,
     dataInterface,

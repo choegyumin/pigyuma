@@ -5,7 +5,6 @@ import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useForceUpdate } from '@pigyuma/react-utils';
 import { startTransition, useEffect, useRef } from 'react';
-import useDraftsReference from './useDraftsReference';
 
 export interface UseUIRecordForInteractionOptions {
   includeDraft?: boolean;
@@ -25,13 +24,10 @@ export default function useUIRecordForInteraction<T extends UIRecord>(
 
   // 재조정 범위를 줄이기 위해 `useUIData` 반환 값을 사용하는 대신 직접 값에 접근
   const getRecord = useItemReference();
-  const getDrafts = useDraftsReference();
 
   // 이미 렌더링 된 UIRecord 엘리먼트에 접근해야 하므로,
   // initial state를 effect에서 설정해 렌더링 시점을 조정함
-  const tempRecord = !firstRunRef.current && isUIRecordKey(recordKey) ? (getDrafts().get(recordKey) as T | undefined) : undefined;
-  const realRecord = !firstRunRef.current && isUIRecordKey(recordKey) ? getRecord<T>(recordKey) : undefined;
-  const record = includeDraft ? tempRecord ?? realRecord : realRecord;
+  const record = !firstRunRef.current && isUIRecordKey(recordKey) ? getRecord<T>(recordKey, { includeDraft }) : undefined;
 
   useEffect(() => {
     startTransition(() => {

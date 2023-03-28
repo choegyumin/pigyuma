@@ -68,7 +68,8 @@ export class UIDesignTool {
   #status: UIDesignToolStatus;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
-  readonly #drafts: Array<[UIRecordKey, UIRecord | UIRecordChanges<UIRecord>]>;
+  readonly #draftItems: Map<UIRecordKey, UIRecord>;
+  readonly #draftChanges: Array<[UIRecordKey, UIRecord | UIRecordChanges<UIRecord>]>;
   readonly #selectedKeys: Set<UIRecordKey>;
 
   #hoveredElement: HTMLElement | null;
@@ -98,7 +99,8 @@ export class UIDesignTool {
     this.#status = UIDesignToolStatus.idle;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
-    this.#drafts = [];
+    this.#draftItems = new Map();
+    this.#draftChanges = [];
     this.#selectedKeys = new Set();
 
     this.#hoveredElement = null;
@@ -131,7 +133,7 @@ export class UIDesignTool {
     const { saveDraft = false } = options;
 
     if (saveDraft) {
-      this.#drafts.push([targetKey, instance]);
+      this.#draftChanges.push([targetKey, instance]);
     } else {
       this.#items.set(targetKey, instance);
     }
@@ -152,7 +154,7 @@ export class UIDesignTool {
     }
 
     if (saveDraft) {
-      this.#drafts.push([targetKey, changes]);
+      this.#draftChanges.push([targetKey, changes]);
     } else {
       assignChanges(targetValue, changes);
     }
@@ -161,9 +163,9 @@ export class UIDesignTool {
   }
 
   #remove(targetKey: UIRecordKey) {
-    const newDrafts = this.#drafts.filter(([key]) => key !== targetKey);
-    this.#drafts.length = 0;
-    this.#drafts.push(...newDrafts);
+    const newDrafts = this.#draftChanges.filter(([key]) => key !== targetKey);
+    this.#draftChanges.length = 0;
+    this.#draftChanges.push(...newDrafts);
     this.#items.delete(targetKey);
   }
 
@@ -253,6 +255,40 @@ export class UIDesignTool {
     return this.#makeChanges<T, C>(targetKey, newChanges);
   }
 
+  #buildDrafts(): void {
+    const missingRecordKeys: UIRecordKey[] = [];
+
+    const drafts = this.#draftChanges.filter(([targetKey, changesOrInstance]) => {
+      const isInstance = changesOrInstance instanceof UIRecord;
+      const hasOriginal = this.get(targetKey) != null;
+      const passed = isInstance || hasOriginal;
+      if (!passed) {
+        missingRecordKeys.push(targetKey);
+      }
+      return passed;
+    });
+
+    if (missingRecordKeys.length > 0) {
+      console.error(`UIRecord '${missingRecordKeys.join("', '")}' not found.`);
+    }
+
+    this.#draftItems.clear();
+    drafts.forEach(([targetKey, changesOrInstance]) => {
+      const instance = (() => {
+        if (changesOrInstance instanceof UIRecord) {
+          return changesOrInstance;
+        }
+        const instance = this.#draftItems.get(targetKey) ?? cloneDeep(this.get(targetKey)!);
+        assignChanges(instance, changesOrInstance);
+        return instance;
+      })();
+
+      // 순서 조정
+      this.#draftItems.delete(targetKey);
+      this.#draftItems.set(targetKey, instance);
+    });
+  }
+
   #setStatus(status: UIDesignToolStatus): void {
     if (!this.#mounted) {
       return console.error('UIDesignTool is not mounted.');
@@ -299,6 +335,10 @@ export class UIDesignTool {
 
   get pairs(): Map<UIRecordKey, UIRecord> {
     return this.#items;
+  }
+
+  get drafts(): Map<UIRecordKey, UIRecord> {
+    return this.#draftItems;
   }
 
   get selected(): Set<UIRecordKey> {
@@ -402,7 +442,7 @@ export class UIDesignTool {
 
     this.#items.clear();
     this.#selectedKeys.clear();
-    this.#drafts.length = 0;
+    this.#draftChanges.length = 0;
 
     while (canvas.children.length > 0) {
       canvas.children.pop();
@@ -429,7 +469,7 @@ export class UIDesignTool {
     const newSelectedKeys: UIRecordKey[] = [];
 
     targetKeys.forEach((key) => {
-      const record = this.previewDrafts().get(key) ?? this.get(key);
+      const record = this.getDraft(key) ?? this.get(key);
       if (record == null) {
         missingRecordKeys.push(key);
         return;
@@ -465,8 +505,16 @@ export class UIDesignTool {
     return this.pairs.get(targetKey) as T | undefined;
   }
 
+  getDraft<T extends UIRecord>(targetKey: UIRecordKey): T | undefined {
+    return this.drafts.get(targetKey) as T | undefined;
+  }
+
   has(targetKey: UIRecordKey): boolean {
     return this.pairs.has(targetKey);
+  }
+
+  hasDraft(targetKey: UIRecordKey): boolean {
+    return this.drafts.has(targetKey);
   }
 
   isSelected(targetKey: UIRecordKey): boolean {
@@ -481,6 +529,7 @@ export class UIDesignTool {
     try {
       const changes = this.#makeChanges(targetKey, value as UIRecordChanges<T>);
       const targetValue = this.#assign(targetKey, changes, options);
+      this.#buildDrafts();
       this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [targetValue], []));
     } catch (error) {
       console.error(error);
@@ -491,6 +540,7 @@ export class UIDesignTool {
     try {
       const changes = this.#makeChangesFromRect(targetKey, rect);
       const targetValue = this.#assign(targetKey, changes, options);
+      this.#buildDrafts();
       this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [targetValue], []));
     } catch (error) {
       console.error(error);
@@ -565,6 +615,7 @@ export class UIDesignTool {
       this.#assign<typeof startValue>(startKey, { children: newStartChildren }, options);
       this.#assign<typeof destValue>(destKey, { children: newDestChildren }, options);
 
+      this.#buildDrafts();
       this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [startValue, destValue, handleValue], []));
     } else if (method === 'insertBefore' || method === 'insertAfter') {
       if (!hasUIRecordParent(destValue)) {
@@ -603,6 +654,7 @@ export class UIDesignTool {
       this.#assign<typeof startValue>(startKey, { children: newStartChildren }, options);
       this.#assign<typeof destParentValue>(destParentKey, { children: newDestParentChildren }, options);
 
+      this.#buildDrafts();
       this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [startValue, destParentValue, handleValue], []));
     }
   }
@@ -637,6 +689,7 @@ export class UIDesignTool {
     this.#create(targetValue.key, targetValue, options);
     this.#assign<typeof parentValue>(parentValue.key, { children: newParentChildren }, options);
 
+    this.#buildDrafts();
     this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [parentValue, targetValue], []));
   }
 
@@ -700,6 +753,7 @@ export class UIDesignTool {
     this.#create(targetValue.key, targetValue, options);
     this.#assign<typeof parentValue>(parentValue.key, { children: newParentChildren }, options);
 
+    this.#buildDrafts();
     this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [parentValue, targetValue], []));
   }
 
@@ -724,27 +778,25 @@ export class UIDesignTool {
     const hasParent = isUIRecordKey(parentKey) && parentValue != null;
 
     if (canHaveParent) {
-      (() => {
-        if (!hasParent) {
-          console.error(`Parent ${parentKey} of UIRecord '${targetKey}' not found.`);
-          return;
-        }
+      if (!hasParent) {
+        console.error(`Parent ${parentKey} of UIRecord '${targetKey}' not found.`);
+        return;
+      }
 
-        if (!isUIRecordWithChildren(parentValue)) {
-          console.error(`children of UIRecord '${parentKey}' is not array.`);
-          return;
-        }
+      if (!isUIRecordWithChildren(parentValue)) {
+        console.error(`children of UIRecord '${parentKey}' is not array.`);
+        return;
+      }
 
-        const targetIndex = parentValue.children.findIndex((it) => it.key === targetKey);
-        if (targetIndex < 0) {
-          console.error(`children of UIRecord '${parentKey}' has no UIRecord '${targetKey}'.`);
-          return;
-        }
+      const targetIndex = parentValue.children.findIndex((it) => it.key === targetKey);
+      if (targetIndex < 0) {
+        console.error(`children of UIRecord '${parentKey}' has no UIRecord '${targetKey}'.`);
+        return;
+      }
 
-        const newChildren = [...parentValue.children];
-        newChildren.splice(targetIndex, 1);
-        this.#assign<typeof parentValue>(parentKey, { children: newChildren });
-      })();
+      const newChildren = [...parentValue.children];
+      newChildren.splice(targetIndex, 1);
+      this.#assign<typeof parentValue>(parentKey, { children: newChildren });
     }
 
     const deleteTree = (record: UIRecord, stack: UIRecord[] = []): UIRecord[] => {
@@ -766,74 +818,29 @@ export class UIDesignTool {
       newSelectedKeys.forEach((key) => this.#selectedKeys.add(key));
     }
 
+    this.#buildDrafts();
     this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], hasParent ? [parentValue] : [], deletedKeys));
     if (isSelectionChanged) {
       this.#listeners.selection.forEach((callback) => callback(newSelectedKeys));
     }
   }
 
-  previewDrafts(): typeof this.pairs {
-    const draftItems = new Map<UIRecordKey, UIRecord>();
-
-    const missingRecordKeys: UIRecordKey[] = [];
-
-    const drafts = this.#drafts.filter(([targetKey, changesOrInstance]) => {
-      const isInstance = changesOrInstance instanceof UIRecord;
-      const hasOriginal = this.get(targetKey) != null;
-      const passed = isInstance || hasOriginal;
-      if (!passed) {
-        missingRecordKeys.push(targetKey);
-      }
-      return passed;
-    });
-
-    if (missingRecordKeys.length > 0) {
-      console.error(`UIRecord '${missingRecordKeys.join("', '")}' not found.`);
-    }
-
-    drafts.forEach(([targetKey, changesOrInstance]) => {
-      const instance = (() => {
-        if (changesOrInstance instanceof UIRecord) {
-          return changesOrInstance;
-        }
-        const instance = draftItems.get(targetKey) ?? cloneDeep(this.get(targetKey)!);
-        assignChanges(instance, changesOrInstance);
-        return instance;
-      })();
-
-      // 순서 조정
-      draftItems.delete(targetKey);
-      draftItems.set(targetKey, instance);
-    });
-
-    return draftItems;
-  }
-
   flushDrafts(): void {
-    const hasDrafts = this.#drafts.length > 0;
-    if (!hasDrafts) {
-      return;
-    }
-
     const newValues: UIRecord[] = [];
 
-    this.#drafts.forEach(([targetKey, changesOrInstance]) => {
-      try {
-        const isInstance = changesOrInstance instanceof UIRecord;
-        if (isInstance) {
-          this.#create(targetKey, changesOrInstance, { saveDraft: false });
-          newValues.push(changesOrInstance);
-        } else {
-          this.#assign(targetKey, changesOrInstance, { saveDraft: false });
-          newValues.push(this.get(targetKey)!);
-        }
-      } catch (error) {
-        console.error(error);
+    this.#draftItems.forEach((value, key) => {
+      const hasOrigin = this.get(key) != null;
+      if (hasOrigin) {
+        this.#assign(key, value);
+      } else {
+        this.#create(key, value);
       }
+      newValues.push(value);
     });
 
-    this.#drafts.length = 0;
+    this.#draftChanges.length = 0;
 
+    this.#buildDrafts();
     this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], newValues, []));
   }
 
