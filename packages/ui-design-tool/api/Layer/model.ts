@@ -1,11 +1,13 @@
 import { UIRecordKey, LayerType, UIRecordType, UIRecordElementDataset } from '@/types/Identifier';
 import { HeightValueObject, RotateValueObject, StyleValue, WidthValueObject, XValueObject, YValueObject } from '@/types/Value';
-import { convertHeightValue, convertRotateValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
-import { clone, uuid } from '@pigyuma/utils';
+import { convertHeightValue, convertRotateValue, convertWidthValue, convertXValue, convertYValue, fixNumberValue } from '@/utils/value';
+import { clone, cloneDeep, merge, toDegrees360, uuid } from '@pigyuma/utils';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
-import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
+import { UIRecord, UIRecordArgs, UIRecordChanges, UIRecordJSON } from '../UIRecord/model';
 import * as styles from './styles.css';
+
+export interface LayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
 
 export interface LayerJSON extends UIRecordJSON {
   key: UIRecordKey;
@@ -19,31 +21,11 @@ export interface LayerJSON extends UIRecordJSON {
   rotate: RotateValueObject;
 }
 
-export interface LayerData {
-  key?: LayerJSON['key'];
-  type: LayerJSON['type'];
-  layerType: LayerJSON['layerType'];
-  name: LayerJSON['name'];
-  x: LayerJSON['x'];
-  y: LayerJSON['y'];
-  width: LayerJSON['width'];
-  height: LayerJSON['height'];
-  rotate: LayerJSON['rotate'];
-}
+type OptionalLayerDataKey = 'key';
+export interface LayerData extends Partial<Pick<LayerJSON, OptionalLayerDataKey>>, Omit<LayerJSON, OptionalLayerDataKey> {}
 
-export interface LayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
-
-export interface LayerArgs {
-  key?: LayerData['key'];
-  type?: LayerData['type'];
-  layerType: LayerData['layerType'];
-  name: LayerData['name'];
-  x: LayerData['x'];
-  y: LayerData['y'];
-  width: LayerData['width'];
-  height: LayerData['height'];
-  rotate: LayerData['rotate'];
-}
+type OptionalLayerArgsKey = 'key' | 'type';
+export interface LayerArgs extends Partial<Pick<LayerJSON, OptionalLayerArgsKey>>, Omit<LayerJSON, OptionalLayerArgsKey> {}
 
 export class Layer extends UIRecord implements LayerJSON {
   readonly key: UIRecordKey;
@@ -104,6 +86,7 @@ export class Layer extends UIRecord implements LayerJSON {
     };
   }
 
+  /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isJSON(object: any): object is LayerJSON {
     return object != null && typeof object === 'object' && !Array.isArray(object) && object.type === UIRecordType.layer;
@@ -116,5 +99,40 @@ export class Layer extends UIRecord implements LayerJSON {
 
   static isElement(element: Element | null): boolean {
     return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] === UIRecordType.layer;
+  }
+
+  static makeChanges(values: DeepPartial<LayerData>, origin: LayerData) {
+    const v = UIRecord.makeChanges(values, origin) as UIRecordChanges<LayerData>;
+    if (v.x != null) {
+      v.x = merge(cloneDeep(origin.x), v.x);
+      if (v.x.length != null) {
+        v.x.length = fixNumberValue(v.x.length);
+      }
+    }
+    if (v.y != null) {
+      v.y = merge(cloneDeep(origin.y), v.y);
+      if (v.y.length != null) {
+        v.y.length = fixNumberValue(v.y.length);
+      }
+    }
+    if (v.width != null) {
+      v.width = merge(cloneDeep(origin.width), v.width);
+      if (v.width.length != null) {
+        v.width.length = fixNumberValue(Math.max(v.width.length, 1));
+      }
+    }
+    if (v.height != null) {
+      v.height = merge(cloneDeep(origin.height), v.height);
+      if (v.height.length != null) {
+        v.height.length = fixNumberValue(Math.max(v.height.length, 1));
+      }
+    }
+    if (v.rotate != null) {
+      v.rotate = merge(cloneDeep(origin.rotate), v.rotate);
+      if (v.rotate.degrees != null) {
+        v.rotate.degrees = fixNumberValue(toDegrees360(v.rotate.degrees));
+      }
+    }
+    return v;
   }
 }

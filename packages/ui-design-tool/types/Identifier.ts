@@ -55,6 +55,7 @@ export const UIRecordElementDataAttributeName = {
   type: 'data-ui-record-type',
   layerType: 'data-ui-record-layer-type',
   selected: 'data-ui-record-selected',
+  draft: 'data-ui-record-draft',
 } as const;
 
 export const UIRecordElementDataset = {
@@ -62,6 +63,7 @@ export const UIRecordElementDataset = {
   type: 'uiRecordType',
   layerType: 'uiRecordLayerType',
   selected: 'uiRecordSelected',
+  draft: 'uiRecordDraft',
 } as const;
 
 export const UIInteractionElementDataAttributeName = {

@@ -1,15 +1,12 @@
-import { Artboard, ArtboardArgs } from '@/api/Artboard/model';
+import { Artboard } from '@/api/Artboard/model';
 import { Canvas } from '@/api/Canvas/model';
-import { Layer } from '@/api/Layer/model';
-import { ShapeLayer, ShapeLayerArgs, ShapeType } from '@/api/ShapeLayer/model';
-import { TextLayer, TextLayerArgs } from '@/api/TextLayer/model';
-import { InteractionType, TransformMethod, UIDesignToolMode } from '@/api/UIDesignTool';
+import { ShapeLayer } from '@/api/ShapeLayer/model';
 import useDispatcher from '@/hooks/useDispatcher';
 import useHovered from '@/hooks/useHovered';
 import useItemReference from '@/hooks/useItemReference';
 import useMode from '@/hooks/useMode';
 import useSelected from '@/hooks/useSelected';
-import useStatusMeta from '@/hooks/useStatusMeta';
+import useStatus from '@/hooks/useStatus';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
 import {
@@ -18,70 +15,22 @@ import {
   UIDesignToolElementDataAttributeName,
   UIRecordKey,
   InteractionHandleType,
-  HandlePlacement,
   UIRecordType,
 } from '@/types/Identifier';
-import {
-  FontSizeLengthType,
-  HeightLengthType,
-  LetterSpacingLengthType,
-  LineHeightLengthType,
-  WidthLengthType,
-  XLengthType,
-  YLengthType,
-} from '@/types/Unit';
+import { UIDesignToolInteractionType, UIDesignToolTransformMethod, UIDesignToolMode, UIDesignToolStatus } from '@/types/Status';
 import { isUIRecordKey } from '@/utils/model';
+import { getStatus } from '@/utils/status';
 import { useEvent, useEventListener } from '@pigyuma/react-utils';
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { AxisGrid } from '../AxisGrid/AxisGrid';
 import { HoveringOverlay } from '../HoveringOverlay/HoveringOverlay';
 import { PointerEventsController } from '../PointerEventsController/PointerEventsController';
 import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay';
 import { useBrowserMeta } from '../UIDesignToolProvider/UIDesignToolProvider.context';
-import { StatusAction } from '../UIDesignToolProvider/useContextValues';
 import * as styles from './InteractionController.css';
-import { InteractionControllerProps } from './types';
-import useMoveFunctions from './useMoveFunctions';
-import useResizeFunctions from './useResizeFunctions';
-import useRotateFunctions from './useRotateFunctions';
-
-const makeDefaultArtboardArgs = (name: string, x: number, y: number): ArtboardArgs => ({
-  name,
-  x,
-  y,
-  width: 1,
-  height: 1,
-  fill: '#ffffff',
-  children: [],
-});
-
-const makeDefaultShapeLayerArgs = (name: string, x: number, y: number): ShapeLayerArgs => ({
-  name,
-  x: { length: x, lengthType: XLengthType.px },
-  y: { length: y, lengthType: YLengthType.px },
-  shapeType: ShapeType.container,
-  width: { length: 1, lengthType: WidthLengthType.px },
-  height: { length: 1, lengthType: HeightLengthType.px },
-  rotate: { degrees: 0 },
-  stroke: { color: 'transparent', pattern: 'solid', width: { top: 0, right: 0, bottom: 0, left: 0 } },
-  fill: { color: '#aaaaaa' },
-  children: [],
-});
-
-const makeDefaultTextLayerArgs = (name: string, x: number, y: number): TextLayerArgs => ({
-  name,
-  x: { length: x, lengthType: XLengthType.px },
-  y: { length: y, lengthType: YLengthType.px },
-  rotate: { degrees: 0 },
-  width: { length: 1, lengthType: WidthLengthType.flexible },
-  height: { length: 1, lengthType: HeightLengthType.flexible },
-  textColor: { color: '#000000' },
-  fontSize: { length: 16, lengthType: FontSizeLengthType.px },
-  lineHeight: { length: 150, lengthType: LineHeightLengthType.percent },
-  fontWeight: { value: 400 },
-  letterSpacing: { length: 0, lengthType: LetterSpacingLengthType.px },
-  content: '',
-});
+import { makeDefaultArtboardArgs, makeDefaultShapeLayerArgs } from './record';
+import { InteractionControllerProps, InteractionTask } from './types';
+import useInteraction from './useInteraction';
 
 /** @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성 */
 export const InteractionController: React.FC<InteractionControllerProps> = React.memo(() => {
@@ -91,100 +40,18 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const getBrowserMeta = useBrowserMeta();
 
   const mode = useMode();
-  const statusMeta = useStatusMeta();
+  const currentStatus = useStatus();
   const hoveredRecordKey = useHovered();
-  /** @todo 다중 선택 기능 구현 후 코드 변경  */
-  const selectedRecordKey = [...useSelected()][0] as UIRecordKey | undefined;
+  const selectedRecordKeys = useSelected();
 
   const getItemReference = useItemReference();
 
-  const { setHovered, setStatus } = useDispatcher();
+  const { setStatus } = useDispatcher();
 
-  const { startMove, move, endMove } = useMoveFunctions(selectedRecordKey);
-  const { startResize, resize, endResize } = useResizeFunctions(selectedRecordKey);
-  const { startRotate, rotate, endRotate } = useRotateFunctions(selectedRecordKey);
+  const { interactStart, interactInProgress, interactEnd } = useInteraction();
 
-  const interactionQueue = useMemo<
-    Array<{
-      event: MouseEvent;
-      action: StatusAction;
-      flush?: () => void;
-      calibrate?: number;
-    }>
-  >(() => [], []);
-
-  const startInteraction = useCallback(
-    (event: MouseEvent, action: StatusAction) => {
-      if (action.interactionType === InteractionType.selection) {
-        // startSelection();
-      } else if (action.interactionType === InteractionType.drawing) {
-        if (mode === UIDesignToolMode.artboard || mode === UIDesignToolMode.shape) {
-          /** @todo startDrawing 함수 구현 후 분리하면서 resize 로직 추상화(리팩토링), 기능만 재사용할 뿐 보여지는 UI는 달라야 함 */
-          startResize(HandlePlacement.bottomRight);
-        }
-      } else if (action.interactionType === InteractionType.transform) {
-        if (action.transformMethod === TransformMethod.move) {
-          startMove();
-        } else if (action.transformMethod === TransformMethod.resize) {
-          const handle = (event.target as HTMLElement | null)?.dataset[UIInteractionElementDataset.handlePlacement] as
-            | HandlePlacement
-            | undefined;
-          if (handle != null) {
-            startResize(handle);
-          }
-        } else if (action.transformMethod === TransformMethod.rotate) {
-          startRotate();
-        }
-      }
-    },
-    [mode, startMove, startResize, startRotate],
-  );
-
-  const endInteraction = useCallback(
-    (event: MouseEvent, action: StatusAction) => {
-      if (action.interactionType === InteractionType.selection) {
-        // endSelection();
-      } else if (action.interactionType === InteractionType.drawing) {
-        /** @todo startDrawing 함수 구현 후 분리하면서 resize 로직 추상화(리팩토링) */
-        endResize();
-      } else if (action.interactionType === InteractionType.transform) {
-        if (action.transformMethod === TransformMethod.move) {
-          endMove();
-        } else if (action.transformMethod === TransformMethod.resize) {
-          endResize();
-        } else if (action.transformMethod === TransformMethod.rotate) {
-          endRotate();
-        }
-      }
-    },
-    [endMove, endResize, endRotate],
-  );
-
-  const progressInteraction = useCallback(
-    (event: MouseEvent, action: StatusAction) => {
-      if (action.interactionType === InteractionType.idle) {
-        const target = uiSelector.fromMouse();
-        const recordKey = target != null ? uiSelector.dataset(target).key : undefined;
-        const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-        const isSelectableRecord = record instanceof Artboard || record instanceof Layer;
-        setHovered(isSelectableRecord ? record.key : undefined);
-      } else if (action.interactionType === InteractionType.selection) {
-        // selection();
-      } else if (action.interactionType === InteractionType.drawing) {
-        /** @todo startDrawing 함수 구현 후 분리하면서 resize 로직 추상화(리팩토링) */
-        resize();
-      } else if (action.interactionType === InteractionType.transform) {
-        if (action.transformMethod === TransformMethod.move) {
-          move();
-        } else if (action.transformMethod === TransformMethod.resize) {
-          resize();
-        } else if (action.transformMethod === TransformMethod.rotate) {
-          rotate();
-        }
-      }
-    },
-    [move, resize, rotate, uiSelector, getItemReference, setHovered],
-  );
+  const waitingQueue = useMemo<Array<InteractionTask>>(() => [], []);
+  const inProgressQueue = useMemo<Array<InteractionTask>>(() => [], []);
 
   const onDocumentMouseDown = useEvent((event: MouseEvent) => {
     if (!(event.target instanceof Element && event.target.closest(`[${UIDesignToolElementDataAttributeName.id}]`))) {
@@ -198,82 +65,120 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     const handle = event.target.closest<HTMLElement>(`[${UIInteractionElementDataAttributeName.handleType}]`);
     const handleType = handle?.dataset[UIInteractionElementDataset.handleType] as InteractionHandleType | undefined;
 
-    const interactionType: InteractionType = (() => {
+    const interactionType: UIDesignToolInteractionType = (() => {
       if (mode === UIDesignToolMode.select) {
-        return handleType != null ? InteractionType.transform : InteractionType.selection;
+        return handleType != null ? UIDesignToolInteractionType.transform : UIDesignToolInteractionType.selection;
       }
-      if (mode === UIDesignToolMode.artboard || mode === UIDesignToolMode.shape || mode === UIDesignToolMode.text) {
-        return InteractionType.drawing;
+      if (mode === UIDesignToolMode.artboard || mode === UIDesignToolMode.shape) {
+        return UIDesignToolInteractionType.drawing;
       }
-      return InteractionType.idle;
+      if (mode === UIDesignToolMode.text) {
+        return UIDesignToolInteractionType.input;
+      }
+      return UIDesignToolInteractionType.idle;
     })();
 
+    const transformMethod: UIDesignToolTransformMethod = (() => {
+      if (handleType == null) {
+        return UIDesignToolTransformMethod.unable;
+      }
+      if (handleType === InteractionHandleType.select) {
+        return UIDesignToolTransformMethod.move;
+      }
+      return handleType;
+    })();
+
+    const nextStatus: UIDesignToolStatus = getStatus({ interactionType, transformMethod });
+
     switch (interactionType) {
-      case InteractionType.selection: {
+      case UIDesignToolInteractionType.selection: {
         uiController.select([]);
 
-        const action = { interactionType };
-        interactionQueue.push({ event, action, calibrate: 5 });
+        waitingQueue.push({ event, status: nextStatus, calibrate: 5 });
 
         break;
       }
 
-      case InteractionType.drawing: {
-        /* eslint-disable @typescript-eslint/no-non-null-assertion */
-        const parentElement: HTMLElement =
-          uiSelector.closest(
-            { type: UIRecordType.artboard },
-            isUIRecordKey(hoveredRecordKey) ? uiSelector.query({ key: hoveredRecordKey }) : null,
-          ) ?? uiSelector.query({ key: Canvas.key })!;
+      case UIDesignToolInteractionType.drawing: {
+        const isDrawingArtboard = mode === UIDesignToolMode.artboard;
+        const isDrawingShape = mode === UIDesignToolMode.shape;
+
+        const parentElement: HTMLElement = (() => {
+          const canvas = uiSelector.query({ key: Canvas.key })!;
+          if (isDrawingArtboard) {
+            return canvas;
+          }
+          return (
+            uiSelector.closest(
+              { type: UIRecordType.artboard },
+              isUIRecordKey(hoveredRecordKey) ? uiSelector.query({ key: hoveredRecordKey }) : null,
+            ) ?? canvas
+          );
+        })();
         const parentRecordKey = uiSelector.dataset(parentElement).key ?? Canvas.key;
         const parentRecord = getItemReference<Canvas | Artboard>(parentRecordKey)!;
-        /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
         const xLength = offsetX - ((parentRecord as Artboard).x ?? 0);
         const yLength = offsetY - ((parentRecord as Artboard).y ?? 0);
 
         const record = (() => {
-          if (mode === UIDesignToolMode.artboard) {
+          if (isDrawingArtboard) {
             return new Artboard(makeDefaultArtboardArgs('New artboard', xLength, yLength));
           }
-          if (mode === UIDesignToolMode.shape) {
+          if (isDrawingShape) {
             return new ShapeLayer(makeDefaultShapeLayerArgs('New shape', xLength, yLength));
-          }
-          /** @todo TextLayer 추가 기능 구현 */
-          // eslint-disable-next-line no-constant-condition
-          if (false /* mode === UIDesignToolMode.text */) {
-            return new TextLayer(makeDefaultTextLayerArgs('New text', xLength, yLength));
           }
         })();
 
+        uiController.select([]);
+
         if (record == null) {
-          uiController.select([]);
           break;
         }
 
-        uiController.append(parentRecordKey, record);
-        uiController.select([record.key]);
+        uiController.append(parentRecordKey, record, { saveDraft: true });
 
-        const action = { interactionType };
-        const flush = () => {
+        const enter = () => {
+          uiController.select([record.key]);
+        };
+        const leave = () => {
+          uiController.flushDrafts();
+          uiController.toggleMode(UIDesignToolMode.select);
+        };
+        const clear = () => {
           uiController.remove(record.key);
         };
-        interactionQueue.push({ event, action, flush, calibrate: 5 });
+        waitingQueue.push({ event, target: record.key, status: nextStatus, enter, leave, clear, calibrate: 5 });
 
         break;
       }
 
-      case InteractionType.transform: {
-        const transformMethod: Exclude<TransformMethod, 'unable'> =
-          handleType == null || handleType === InteractionHandleType.select ? TransformMethod.move : handleType;
+      /** @todo TextLayer 추가 및 수정 기능 구현 */
+      // case UIDesignToolInteractionType.input: {
+      //   const record = new TextLayer(makeDefaultTextLayerArgs('New text', xLength, yLength));
+      //   uiController.append(parentRecordKey, record);
+      //   uiController.select([record.key]);
+      //   waitingQueue.push({ event, target: record.key, status: nextStatus, calibrate: 5 });
+      //   break;
+      // }
 
-        if (transformMethod === TransformMethod.move) {
+      case UIDesignToolInteractionType.transform: {
+        const transformMethod: Exclude<UIDesignToolTransformMethod, 'unable'> =
+          handleType == null || handleType === InteractionHandleType.select ? UIDesignToolTransformMethod.move : handleType;
+
+        const recordKeys: UIRecordKey[] =
+          transformMethod === UIDesignToolTransformMethod.move
+            ? isUIRecordKey(hoveredRecordKey)
+              ? [hoveredRecordKey]
+              : []
+            : [...selectedRecordKeys];
+
+        if (transformMethod === UIDesignToolTransformMethod.move) {
           /** @todo 다중 선택 기능 구현 후 조건 추가  */
-          uiController.select(isUIRecordKey(hoveredRecordKey) ? [hoveredRecordKey] : []);
+          uiController.select(recordKeys);
         }
 
-        const action = { interactionType, transformMethod };
-        interactionQueue.push({ event, action, calibrate: 5 });
+        waitingQueue.push({ event, target: recordKeys[0], status: nextStatus, calibrate: 5 });
 
         break;
       }
@@ -287,29 +192,32 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   });
 
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
-    interactionQueue.forEach((it) => it.flush?.());
-    interactionQueue.length = 0;
-    setStatus({ interactionType: InteractionType.idle });
-    endInteraction(event, statusMeta);
+    waitingQueue.forEach((it) => it.clear?.());
+    waitingQueue.length = 0;
+    setStatus(UIDesignToolStatus.idle);
+    interactEnd(event, currentStatus);
+    inProgressQueue.forEach((it) => it.leave?.());
+    inProgressQueue.length = 0;
   });
 
   const onDocumentMouseMove = useEvent((event: MouseEvent) => {
-    const interactionItem = interactionQueue.shift();
+    const task = waitingQueue.shift();
 
-    if (interactionItem != null) {
-      const movementRange =
-        Math.abs(interactionItem.event.clientX - event.clientX) + Math.abs(interactionItem.event.clientY - event.clientY);
+    if (task != null) {
+      const movementRange = Math.abs(task.event.clientX - event.clientX) + Math.abs(task.event.clientY - event.clientY);
 
       // 마우스가 `calibrate` 이상 움직이지 않은 경우 인터랙션을 시작하지 않음 (사용자가 단순히 무언가를 클릭할 때 마우스가 밀리는 것을 보정)
-      if (movementRange < (interactionItem.calibrate ?? 0)) {
-        return interactionQueue.unshift(interactionItem);
+      if (movementRange < (task.calibrate ?? 0)) {
+        return waitingQueue.unshift(task);
       }
 
-      setStatus(interactionItem.action);
-      return startInteraction(interactionItem.event, interactionItem.action);
+      setStatus(task.status);
+      task.enter?.();
+      interactStart(task.event, task.status, task.target);
+      return inProgressQueue.push(task);
     }
 
-    progressInteraction(event, statusMeta);
+    interactInProgress(event, currentStatus);
   });
 
   useEventListener(document, 'mousedown', onDocumentMouseDown);

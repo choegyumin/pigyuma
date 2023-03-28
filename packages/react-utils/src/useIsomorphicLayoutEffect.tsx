@@ -1,3 +1,7 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { DependencyList, EffectCallback, useEffect, useLayoutEffect } from 'react';
 
-export default typeof window === 'undefined' ? useEffect : useLayoutEffect;
+const useIsomorphicEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+export default function useIsomorphicLayoutEffect(effect: EffectCallback, deps?: DependencyList): void {
+  return useIsomorphicEffect(effect, deps);
+}

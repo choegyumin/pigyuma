@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@pigyuma/css-utils": "*",
-    "@pigyuma/design-system": "*",
     "@pigyuma/react-utility-types": "*",
     "@pigyuma/react-utils": "*",
     "@pigyuma/utils": "*",

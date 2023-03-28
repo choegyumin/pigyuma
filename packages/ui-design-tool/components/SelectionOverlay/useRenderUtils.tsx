@@ -1,12 +1,12 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
-import { InteractionType, TransformMethod } from '@/api/UIDesignTool';
 import { UIRecord } from '@/api/UIRecord/model';
 import useStatusMeta from '@/hooks/useStatusMeta';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
+import { UIDesignToolInteractionType, UIDesignToolTransformMethod } from '@/types/Status';
 import { isRotatableUIRecord } from '@/utils/model';
-import { cursor } from '@pigyuma/design-system/extensions';
+import { cursor } from '@pigyuma/css-utils';
 import { toDegrees360 } from '@pigyuma/utils';
 import { useCallback } from 'react';
 import * as styles from './SelectionOverlay.css';
@@ -31,15 +31,15 @@ export default function useRenderUtils() {
   const statusMeta = useStatusMeta();
 
   const getMeta = useCallback(() => {
-    const isIdle = statusMeta.interactionType === InteractionType.idle;
-    const isDrawing = statusMeta.interactionType === InteractionType.drawing;
-    const isTransforming = statusMeta.interactionType === InteractionType.transform;
-    const isResizing = isTransforming && statusMeta.transformMethod === TransformMethod.resize;
-    const isRotating = isTransforming && statusMeta.transformMethod === TransformMethod.rotate;
+    const isIdle = statusMeta.interactionType === UIDesignToolInteractionType.idle;
+    const isDrawing = statusMeta.interactionType === UIDesignToolInteractionType.drawing;
+    const isTransforming = statusMeta.interactionType === UIDesignToolInteractionType.transform;
+    const isResizing = isTransforming && statusMeta.transformMethod === UIDesignToolTransformMethod.resize;
+    const isRotating = isTransforming && statusMeta.transformMethod === UIDesignToolTransformMethod.rotate;
 
     const handleVisible = isIdle;
     const infoVisible = isDrawing || isResizing || isRotating;
-    const outlineVisible = isIdle;
+    const outlineVisible = isIdle || isDrawing || isResizing || isRotating;
     const cursorVisible = isDrawing || isTransforming;
 
     return {

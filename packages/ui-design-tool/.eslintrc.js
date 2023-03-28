@@ -5,7 +5,17 @@ module.exports = {
     'no-restricted-imports': [
       'error',
       {
-        paths: ['@/components/UIDesignToolProvider/UIDesignToolProvider.context'],
+        paths: [
+          {
+            name: '@/components/UIDesignToolProvider/UIDesignToolProvider.context',
+            message: 'Please use `@/hooks/*` instead.',
+          },
+          {
+            name: '@/hooks/useUIData',
+            message:
+              'Please use useMode, useStatus, useTree, useItemReference... instead inside this package. See UIDesignToolProvider.context.ts',
+          },
+        ],
       },
     ],
   },

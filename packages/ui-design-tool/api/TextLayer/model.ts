@@ -30,7 +30,10 @@ import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
 import { Layer, LayerArgs, LayerJSON } from '../Layer/model';
 import { ShapeLayer } from '../ShapeLayer/model';
+import { UIRecordChanges } from '../UIRecord/model';
 import * as styles from './styles.css';
+
+export interface TextLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
 
 export interface TextLayerJSON extends LayerJSON {
   key: UIRecordKey;
@@ -50,43 +53,15 @@ export interface TextLayerJSON extends LayerJSON {
   content: string;
 }
 
-export interface TextLayerData {
-  key?: TextLayerJSON['key'];
-  type: TextLayerJSON['type'];
-  layerType: TextLayerJSON['layerType'];
-  name: TextLayerJSON['name'];
-  x: TextLayerJSON['x'];
-  y: TextLayerJSON['y'];
-  width: TextLayerJSON['width'];
-  height: TextLayerJSON['height'];
-  rotate: TextLayerJSON['rotate'];
-  textColor: TextLayerJSON['textColor'];
-  fontSize: TextLayerJSON['fontSize'];
-  lineHeight: TextLayerJSON['lineHeight'];
-  fontWeight: TextLayerJSON['fontWeight'];
-  letterSpacing: TextLayerJSON['letterSpacing'];
-  content: TextLayerJSON['content'];
-}
+type OptionalTextLayerDataKey = 'key';
+export interface TextLayerData
+  extends Partial<Pick<TextLayerJSON, OptionalTextLayerDataKey>>,
+    Omit<TextLayerJSON, OptionalTextLayerDataKey> {}
 
-export interface TextLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
-
-export interface TextLayerArgs {
-  key?: TextLayerData['key'];
-  type?: TextLayerData['type'];
-  layerType?: TextLayerData['layerType'];
-  name: TextLayerData['name'];
-  x: TextLayerData['x'];
-  y: TextLayerData['y'];
-  width: TextLayerData['width'];
-  height: TextLayerData['height'];
-  rotate: TextLayerData['rotate'];
-  textColor: TextLayerData['textColor'];
-  fontSize: TextLayerData['fontSize'];
-  lineHeight: TextLayerData['lineHeight'];
-  fontWeight: TextLayerData['fontWeight'];
-  letterSpacing: TextLayerData['letterSpacing'];
-  content: TextLayerData['content'];
-}
+type OptionalTextLayerArgsKey = 'key' | 'type' | 'layerType';
+export interface TextLayerArgs
+  extends Partial<Pick<TextLayerJSON, OptionalTextLayerArgsKey>>,
+    Omit<TextLayerJSON, OptionalTextLayerArgsKey> {}
 
 export class TextLayer extends Layer implements TextLayerJSON {
   readonly key: UIRecordKey;
@@ -172,6 +147,7 @@ export class TextLayer extends Layer implements TextLayerJSON {
     };
   }
 
+  /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isJSON(object: any): object is TextLayerJSON {
     return (
@@ -194,5 +170,10 @@ export class TextLayer extends Layer implements TextLayerJSON {
       element.dataset[UIRecordElementDataset.type] === UIRecordType.layer &&
       element.dataset[UIRecordElementDataset.layerType] === LayerType.text
     );
+  }
+
+  static makeChanges(values: DeepPartial<TextLayerData>, origin: TextLayerData) {
+    const v = Layer.makeChanges(values, origin) as UIRecordChanges<TextLayerData>;
+    return v;
   }
 }

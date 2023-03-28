@@ -1,7 +1,8 @@
-import { InteractionType } from '@/api/UIDesignTool';
+import useDrafts from '@/hooks/useDrafts';
 import useSelected from '@/hooks/useSelected';
 import useStatusMeta from '@/hooks/useStatusMeta';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
+import { UIDesignToolInteractionType } from '@/types/Status';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './AxisGrid.css';
@@ -11,12 +12,14 @@ import useRenderUtils from './useRenderUtils';
 export const AxisGrid: React.FC = React.memo(() => {
   const statusMeta = useStatusMeta();
   const selected = useSelected();
+  const drafts = useDrafts();
 
   const record = useUIRecordForInteraction([...selected][0]);
 
   const { getRootStyle } = useRenderUtils();
 
-  const isActive = record != null && selected.size === 1 && statusMeta.interactionType === InteractionType.idle;
+  const isActive =
+    record != null && selected.size === 1 && !drafts.has(record?.key) && statusMeta.interactionType === UIDesignToolInteractionType.idle;
 
   if (!isActive) {
     return null;

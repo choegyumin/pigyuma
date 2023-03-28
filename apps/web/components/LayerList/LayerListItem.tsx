@@ -34,6 +34,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
 
   const hasChildren = hasUIRecordChildren(record);
 
+  const draft = uiData.isDraft(record.key);
   const selected = uiData.isSelected(record.key);
   const [expanded, setExpanded] = useState<boolean>(false);
 
@@ -58,14 +59,18 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
   }, [hasChildren]);
 
   useWatch(() => {
-    if (selected) {
+    if (!draft && selected) {
       onGroupOpenProp?.();
       // 상위 Group들이 열리기를 기다림
       window.requestAnimationFrame(() => {
         forkedRef.current?.scrollIntoView();
       });
     }
-  }, [selected]);
+  }, [draft, selected]);
+
+  if (draft) {
+    return null;
+  }
 
   const iconTypeKey = Artboard.isModel(record) ? 'artboard' : TextLayer.isModel(record) ? 'text' : record.shapeType;
   const iconType = IconTypeDict[iconTypeKey];

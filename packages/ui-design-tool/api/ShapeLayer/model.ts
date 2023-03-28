@@ -19,14 +19,18 @@ import {
   convertWidthValue,
   convertXValue,
   convertYValue,
+  fixNumberValue,
 } from '@/utils/value';
-import { clone, nonNullable, uuid } from '@pigyuma/utils';
+import { clone, cloneDeep, merge, nonNullable, uuid } from '@pigyuma/utils';
 import React from 'react';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
 import { Layer, LayerArgs, LayerJSON } from '../Layer/model';
-import { TextLayer, TextLayerData, TextLayerJSON } from '../TextLayer/model';
+import { TextLayer, TextLayerArgs, TextLayerData, TextLayerJSON } from '../TextLayer/model';
+import { UIRecordChanges } from '../UIRecord/model';
 import * as styles from './styles.css';
+
+export interface ShapeLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
 
 export const ShapeType = {
   /** `display: block;`. It behaves as `position: absolute;`, If inside Stack */
@@ -58,38 +62,20 @@ export interface ShapeLayerJSON extends LayerJSON {
   children: Array<ShapeLayerJSON | TextLayerJSON>;
 }
 
-export interface ShapeLayerData {
-  key?: ShapeLayerJSON['key'];
-  type: ShapeLayerJSON['type'];
-  layerType: ShapeLayerJSON['layerType'];
-  name: ShapeLayerJSON['name'];
-  shapeType: ShapeLayerJSON['shapeType'];
-  x: ShapeLayerJSON['x'];
-  y: ShapeLayerJSON['y'];
-  width: ShapeLayerJSON['width'];
-  height: ShapeLayerJSON['height'];
-  rotate: ShapeLayerJSON['rotate'];
-  stroke: ShapeLayerJSON['stroke'];
-  fill: ShapeLayerJSON['fill'];
+type OptionalShapeLayerDataKey = 'key';
+type OmitShapeLayerDataKey = 'children';
+export interface ShapeLayerData
+  extends Partial<Pick<ShapeLayerJSON, OptionalShapeLayerDataKey>>,
+    Omit<ShapeLayerJSON, OptionalShapeLayerDataKey | OmitShapeLayerDataKey> {
   children: Array<ShapeLayerData | TextLayerData>;
 }
 
-export interface ShapeLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
-
-export interface ShapeLayerArgs {
-  key?: ShapeLayerData['key'];
-  type?: ShapeLayerData['type'];
-  layerType?: ShapeLayerData['layerType'];
-  name: ShapeLayerData['name'];
-  shapeType: ShapeLayerData['shapeType'];
-  x: ShapeLayerData['x'];
-  y: ShapeLayerData['y'];
-  width: ShapeLayerData['width'];
-  height: ShapeLayerData['height'];
-  rotate: ShapeLayerData['rotate'];
-  stroke: ShapeLayerData['stroke'];
-  fill: ShapeLayerData['fill'];
-  children: ShapeLayerData['children'];
+type OptionalShapeLayerArgsKey = 'key' | 'type' | 'layerType';
+type OmitShapeLayerArgsKey = 'children';
+export interface ShapeLayerArgs
+  extends Partial<Pick<ShapeLayerJSON, OptionalShapeLayerArgsKey>>,
+    Omit<ShapeLayerJSON, OptionalShapeLayerArgsKey | OmitShapeLayerArgsKey> {
+  children: Array<ShapeLayerArgs | TextLayerArgs>;
 }
 
 export class ShapeLayer extends Layer implements ShapeLayerJSON {
@@ -184,6 +170,7 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
     };
   }
 
+  /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isJSON(object: any): object is ShapeLayerJSON {
     return (
@@ -206,5 +193,25 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
       element.dataset[UIRecordElementDataset.type] === UIRecordType.layer &&
       element.dataset[UIRecordElementDataset.layerType] === LayerType.shape
     );
+  }
+
+  static makeChanges(values: DeepPartial<ShapeLayerData>, origin: ShapeLayerData) {
+    const v = Layer.makeChanges(values, origin) as UIRecordChanges<ShapeLayerData>;
+    if (v.stroke != null) {
+      v.stroke = merge(cloneDeep(origin.stroke), v.stroke);
+      if (v.stroke.width?.top != null) {
+        v.stroke.width.top = fixNumberValue(Math.max(v.stroke.width.top, 0));
+      }
+      if (v.stroke.width?.right != null) {
+        v.stroke.width.right = fixNumberValue(Math.max(v.stroke.width.right, 0));
+      }
+      if (v.stroke.width?.bottom != null) {
+        v.stroke.width.bottom = fixNumberValue(Math.max(v.stroke.width.bottom, 0));
+      }
+      if (v.stroke.width?.left != null) {
+        v.stroke.width.left = fixNumberValue(Math.max(v.stroke.width.left, 0));
+      }
+    }
+    return v;
   }
 }

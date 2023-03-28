@@ -1,51 +1,11 @@
 import { Canvas } from '@/api/Canvas/model';
-import {
-  BrowserMeta,
-  INITIAL_BROWSER_META,
-  INITIAL_INSTANCE_ID,
-  InteractionType,
-  UIDesignToolMode,
-  TransformMethod,
-  UIDesignTool,
-  UIDesignToolStatus,
-} from '@/api/UIDesignTool';
-import { UIRecord } from '@/api/UIRecord/model';
+import { UIDesignTool } from '@/api/UIDesignTool';
+import { INITIAL_BROWSER_META, INITIAL_DOCUMENT_ID } from '@/api/UIDesignToolDOM';
+import { BrowserMeta } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
+import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMeta } from '@/types/Status';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
-import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-
-export type StatusState = {
-  interactionType: InteractionType;
-  transformMethod: TransformMethod;
-};
-
-export type StatusAction =
-  | { interactionType: typeof InteractionType.idle }
-  | { interactionType: typeof InteractionType.selection }
-  | { interactionType: typeof InteractionType.drawing }
-  | { interactionType: typeof InteractionType.transform; transformMethod: Exclude<TransformMethod, 'none'> };
-
-const statusInitialState: StatusState = { interactionType: InteractionType.idle, transformMethod: TransformMethod.unable };
-
-/**
- * @see UIDesignToolStatus
- * @see InteractionType
- * @see TransformMethod
- */
-const statusReducer = (state: StatusState, action: StatusAction): StatusState => {
-  switch (action.interactionType) {
-    case InteractionType.idle:
-      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
-    case InteractionType.selection:
-      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
-    case InteractionType.drawing:
-      return { interactionType: action.interactionType, transformMethod: TransformMethod.unable };
-    case InteractionType.transform:
-      return { interactionType: action.interactionType, transformMethod: action.transformMethod };
-    default:
-      return state;
-  }
-};
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;
@@ -53,32 +13,41 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const privateRef = useRef<{
     id: string;
     getBrowserMeta: () => BrowserMeta;
-    setStatus: React.Dispatch<StatusState>;
+    setStatus: React.Dispatch<UIDesignToolStatus>;
   }>({
-    id: INITIAL_INSTANCE_ID,
+    id: INITIAL_DOCUMENT_ID,
     getBrowserMeta: () => INITIAL_BROWSER_META,
     setStatus: () => undefined,
   });
 
   const instanceId = privateRef.current.id;
-  const getBrowserMeta = useCallback(() => privateRef.current.getBrowserMeta(), []);
+  const getBrowserMeta = useCallback(
+    (...args: Parameters<typeof privateRef.current.getBrowserMeta>) => privateRef.current.getBrowserMeta(...args),
+    [],
+  );
+  const setStatusDispatcher = useCallback(
+    (...args: Parameters<typeof privateRef.current.setStatus>) => privateRef.current.setStatus(...args),
+    [],
+  );
 
   const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
   const [hovered, setHovered] = useState<UIRecordKey>();
-  const [statusMeta, setStatusMeta] = useReducer(statusReducer, statusInitialState);
-  privateRef.current.setStatus(statusMeta);
 
   const dispatcher = useMemo(
     () => ({
       setCursor,
       setHovered,
-      setStatus: setStatusMeta,
+      setStatus: setStatusDispatcher,
     }),
-    [setCursor, setHovered, setStatusMeta],
+    [setCursor, setHovered, setStatusDispatcher],
   );
 
   const [mode, setMode] = useState<UIDesignToolMode>(() => api.mode);
   const [status, setStatus] = useState<UIDesignToolStatus>(() => api.status);
+  const [statusMeta, setStatueMeta] = useState<UIDesignToolStatusMeta>(() => ({
+    interactionType: api.interactionType,
+    transformMethod: api.transformMethod,
+  }));
 
   /**
    * 상태의 Life cycle을 React에 의존하기 위해 참조 제거
@@ -86,6 +55,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
    */
   const [pairs, setPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
   const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
+  const [drafts, setDrafts] = useCloneDeepState<typeof api.drafts>(() => api.drafts);
   const [selected, setSelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
 
   const controllerInterface = useMemo(
@@ -101,6 +71,8 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       insertBefore: ((...args) => api.insertBefore(...args)) as typeof api.insertBefore,
       insertAfter: ((...args) => api.insertAfter(...args)) as typeof api.insertAfter,
       remove: ((...args) => api.remove(...args)) as typeof api.remove,
+      toggleDraft: ((...args) => api.toggleDraft(...args)) as typeof api.toggleDraft,
+      flushDrafts: ((...args) => api.flushDrafts(...args)) as typeof api.flushDrafts,
     }),
     [api],
   );
@@ -111,14 +83,17 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       status,
       get: ((targetKey) => pairs.get(targetKey)) as typeof api.get,
       has: ((targetKey) => pairs.has(targetKey)) as typeof api.has,
-      pairs,
       tree,
+      pairs,
+      drafts,
+      isDraft: ((targetKey) => drafts.has(targetKey)) as typeof api.isDraft,
       selected,
       isSelected: ((targetKey) => selected.has(targetKey)) as typeof api.isSelected,
     }),
-    [api, mode, status, pairs, tree, selected],
+    [api, mode, status, tree, pairs, drafts, selected],
   );
 
+  /** @see UIDesignToolDOM */
   const selectorInterface = useMemo(
     () => ({
       dataset: ((...args) => api.dataset(...args)) as typeof api.dataset,
@@ -163,6 +138,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const getItemReference = useStableCallback(((...args) => dataInterface.get(...args)) as typeof api.get);
   const getTreeReference = useStableCallback(() => dataInterface.tree);
   const getPairsReference = useStableCallback(() => dataInterface.pairs);
+  const getDraftsReference = useStableCallback(() => dataInterface.drafts);
   const getSelectedReference = useStableCallback(() => dataInterface.selected);
 
   useEffect(() => {
@@ -191,20 +167,22 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   }, [api, subscriptionInterface, setMode]);
 
   useEffect(() => {
-    const callback = (status: UIDesignToolStatus) => {
+    const callback = (status: UIDesignToolStatus, meta: UIDesignToolStatusMeta) => {
       setStatus(status);
+      setStatueMeta(meta);
     };
     const unsubscribe = subscriptionInterface.subscribeStatus(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setStatus]);
+  }, [api, subscriptionInterface, setStatus, setStatueMeta]);
 
   useEffect(() => {
-    const callback = (all: UIRecord[]) => {
-      setPairs(new Map(all.map((it) => [it.key, it])));
+    const callback = () => {
+      setPairs(api.pairs);
+      setDrafts(api.drafts);
     };
     const unsubscribe = subscriptionInterface.subscribeTree(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setPairs]);
+  }, [api, subscriptionInterface, setPairs, setDrafts]);
 
   useEffect(() => {
     const callback = (newSelected: UIRecordKey[]) => {
@@ -225,12 +203,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     statusMeta,
     dispatcher,
 
-    getItemReference,
     tree,
-    getTreeReference,
     pairs,
-    getPairsReference,
+    drafts,
     selected,
+    getItemReference,
+    getTreeReference,
+    getPairsReference,
+    getDraftsReference,
     getSelectedReference,
 
     controllerInterface,

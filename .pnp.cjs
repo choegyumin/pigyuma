@@ -4597,7 +4597,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@pigyuma/css-utils", "workspace:packages/css-utils"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
             ["@pigyuma/utils", "workspace:packages/utils"],\
-            ["@types/color", "npm:3.0.3"],\
             ["@types/node", "npm:18.11.18"],\
             ["@vanilla-extract/css", "npm:1.9.2"],\
             ["@vanilla-extract/css-utils", "npm:0.1.3"],\
@@ -4605,7 +4604,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vanilla-extract/vite-plugin", "virtual:29268c701f14bfa20c8645fcfb47fda9b7ee497cc2e91ac1ffaec9efcf9ee7f7677fff6fb7b56ccd195770cbc6d6c9bacac724753efc700f2f5ba342e8622099#npm:3.7.1"],\
             ["@vitest/coverage-c8", "npm:0.28.4"],\
             ["@vitest/ui", "npm:0.28.4"],\
-            ["color", "npm:4.2.3"],\
             ["csstype", "npm:3.1.1"],\
             ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"],\
             ["vite", "virtual:9cdf49ac8e38f5d197f6b5bb0d13f986aa65952fadc594bbbf7b9ef9596bd5fda3890c1aff46d6940ed39140f44213741ad8ec32cac440deb6c15a62c0d01e61#npm:4.0.4"],\

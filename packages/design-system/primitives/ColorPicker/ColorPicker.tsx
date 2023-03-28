@@ -6,6 +6,7 @@ import { ColorPickerProps, ColorPickerRef } from './types';
 /**
  * @todo ColorPicker 컴포넌트 고도화
  * - Modal, Popover, Dropdown, Palette 구현
+ * - 투명도 옵션 추가
  */
 const ColorPicker = React.forwardRef<ColorPickerRef, ColorPickerProps>((props, ref) => {
   const onChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {

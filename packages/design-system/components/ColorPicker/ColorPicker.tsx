@@ -4,6 +4,7 @@ import { InputOnlyHTMLAttributes, InputOnlyHTMLAttributeKeys } from '@pigyuma/re
 import { useEvent, useValue } from '@pigyuma/react-utils';
 import { pick, omit } from '@pigyuma/utils';
 import clsx from 'clsx';
+import Color from 'color';
 import React from 'react';
 import FieldTrigger from '../FieldTrigger';
 import * as styles from './ColorPicker.css';
@@ -26,7 +27,7 @@ const ColorPicker = React.forwardRef<ColorPickerRef, ColorPickerProps>((props, r
       <FieldTrigger className={styles.trigger} aria-hidden={true}>
         <button type="button">
           <span className={styles.color} style={{ [styles.varNames.color]: color }} />
-          {color}
+          {color === 'transparent' ? color : Color(color).hex()}
         </button>
       </FieldTrigger>
       <PrimitiveColorPicker {...inputProps} className={styles.picker} onChange={onChange} />

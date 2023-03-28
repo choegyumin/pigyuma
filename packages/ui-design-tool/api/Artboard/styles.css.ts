@@ -1,8 +1,8 @@
+import * as rootVars from '@/styles/rootVars.css';
 import { UIRecordElementDataAttributeName } from '@/types/Identifier';
 import { UIRecordStyleVarNames, UIRecordStyleVars } from '@/types/Style';
-import foundations from '@pigyuma/design-system/foundations';
 import { mapEntries, pick } from '@pigyuma/utils';
-import { globalStyle, style } from '@vanilla-extract/css';
+import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 
 const pickedVars = ['x', 'y', 'width', 'height', 'background'] as const;
 
@@ -25,16 +25,21 @@ export const name = style({
   position: 'absolute',
   left: 0,
   bottom: '100%',
-  padding: `0 ${foundations.spacing(1)} ${foundations.spacing(2)}`,
+  padding: '0 4px 8px',
   fontSize: 11,
-  color: foundations.color.neutral.white,
-  opacity: 0.5,
+  color: '#888',
   whiteSpace: 'nowrap',
   selectors: {
     [`${root}[${UIRecordElementDataAttributeName.selected}="true"] &, &:hover`]: {
-      color: foundations.color.accent.primary,
+      color: rootVars.primaryColor,
       opacity: 1,
     },
+  },
+});
+
+export const name_state = styleVariants({
+  draft: {
+    visibility: 'hidden',
   },
 });
 
