@@ -31,7 +31,7 @@ export default function useDrawFunctions() {
 
   const drawStart = useCallback(
     (recordKey: UIRecordKey, handle: HandlePlacement) => {
-      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
+      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey, { includeDraft: true }) : undefined;
       if (record == null) {
         return console.error(`UIRecord '${recordKey}' not found.`);
       }
@@ -57,7 +57,7 @@ export default function useDrawFunctions() {
   );
 
   const drawEnd = useCallback(() => {
-    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
+    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey, { includeDraft: true }) : undefined;
     if (record == null) {
       setTargetKey(undefined);
       return console.warn(`UIRecord '${targetKey}' not found.`);
@@ -75,11 +75,12 @@ export default function useDrawFunctions() {
     setRef(transformInitialRectRef, undefined);
     setRef(transformLastRectRef, undefined);
     setRef(resizeHandlePlacementRef, undefined);
-    uiController.setRect(record.key, rect);
+    uiController.setRect(record.key, rect, { saveDraft: true });
+    uiController.flushDrafts();
   }, [targetKey, uiController, uiSelector, getItemReference]);
 
   const drawInProgress = useCallback(() => {
-    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
+    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey, { includeDraft: true }) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${targetKey}' not found.`);
     }
@@ -110,7 +111,7 @@ export default function useDrawFunctions() {
 
     if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
       setRef(transformLastRectRef, newRect);
-      uiController.setRect(record.key, newRect);
+      uiController.setRect(record.key, newRect, { saveDraft: true });
     }
     if (isGrabbingCorner) {
       setCursor(getResizingCursor(target, mouseClientPoint));

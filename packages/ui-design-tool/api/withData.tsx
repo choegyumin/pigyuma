@@ -18,7 +18,7 @@ export default function withData<R, P extends DefaultComponentProps>(
   const DataHOC = React.forwardRef<R, withDataProps>((props, ref) => {
     const { dataKey: recordKey, ...restProps } = props;
 
-    const record = useUIRecord(recordKey);
+    const record = useUIRecord(recordKey, { includeDraft: true });
     const selectedRecord = useSelected();
 
     if (record == null) {

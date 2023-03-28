@@ -135,14 +135,16 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
           break;
         }
 
-        /** @todo useDrawFunctions 구현 시 레이어 목록에 보이지 않도록 숨겨서 append하도록 수정 */
-        uiController.append(parentRecordKey, record);
+        uiController.append(parentRecordKey, record, { saveDraft: true });
         uiController.select([record.key]);
 
+        const flush = () => {
+          uiController.flushDrafts();
+        };
         const clear = () => {
           uiController.remove(record.key);
         };
-        waitingQueue.push({ event, target: record.key, status: nextStatus, clear, calibrate: 5 });
+        waitingQueue.push({ event, target: record.key, status: nextStatus, flush, clear, calibrate: 5 });
 
         break;
       }

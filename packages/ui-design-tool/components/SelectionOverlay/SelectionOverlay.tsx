@@ -12,7 +12,9 @@ import useRenderUtils from './useRenderUtils';
 export const SelectionOverlay: React.FC = React.memo(() => {
   const selected = useSelected();
 
-  const record = useUIRecordForInteraction([...selected][0]);
+  const record = useUIRecordForInteraction([...selected][0], { includeDraft: true });
+
+  console.log(record);
 
   const { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap } = useRenderUtils();
 
