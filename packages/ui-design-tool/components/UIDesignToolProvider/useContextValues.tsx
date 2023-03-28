@@ -1,5 +1,6 @@
 import { Canvas } from '@/api/Canvas/model';
-import { INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool } from '@/api/UIDesignTool';
+import { UIDesignTool } from '@/api/UIDesignTool';
+import { INITIAL_BROWSER_META, INITIAL_DOCUMENT_ID } from '@/api/UIDesignToolDOM';
 import { BrowserMeta } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMeta } from '@/types/Status';
@@ -14,7 +15,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     getBrowserMeta: () => BrowserMeta;
     setStatus: React.Dispatch<UIDesignToolStatus>;
   }>({
-    id: INITIAL_INSTANCE_ID,
+    id: INITIAL_DOCUMENT_ID,
     getBrowserMeta: () => INITIAL_BROWSER_META,
     setStatus: () => undefined,
   });
@@ -92,6 +93,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     [api, mode, status, tree, pairs, drafts, selected],
   );
 
+  /** @see UIDesignToolDOM */
   const selectorInterface = useMemo(
     () => ({
       dataset: ((...args) => api.dataset(...args)) as typeof api.dataset,
