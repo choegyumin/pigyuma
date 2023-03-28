@@ -135,14 +135,17 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
           break;
         }
 
-        /** @todo useDrawFunctions 구현 시 레이어 목록에 보이지 않도록 숨겨서 append하도록 수정 */
-        uiController.append(parentRecordKey, record);
+        uiController.append(parentRecordKey, record, { saveDraft: true });
         uiController.select([record.key]);
 
+        const flush = () => {
+          uiController.flushDrafts();
+          uiController.toggleMode(UIDesignToolMode.select);
+        };
         const clear = () => {
           uiController.remove(record.key);
         };
-        waitingQueue.push({ event, target: record.key, status: nextStatus, clear, calibrate: 5 });
+        waitingQueue.push({ event, target: record.key, status: nextStatus, flush, clear, calibrate: 5 });
 
         break;
       }
@@ -186,12 +189,12 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   });
 
   const onDocumentMouseUp = useEvent((event: MouseEvent) => {
-    inProgressQueue.forEach((it) => it.flush?.());
-    inProgressQueue.length = 0;
     waitingQueue.forEach((it) => it.clear?.());
     waitingQueue.length = 0;
     setStatus(UIDesignToolStatus.idle);
     interactEnd(event, currentStatus);
+    inProgressQueue.forEach((it) => it.flush?.());
+    inProgressQueue.length = 0;
   });
 
   const onDocumentMouseMove = useEvent((event: MouseEvent) => {
