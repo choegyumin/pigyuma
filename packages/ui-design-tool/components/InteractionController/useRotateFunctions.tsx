@@ -2,38 +2,15 @@ import useBrowserMeta from '@/hooks/useBrowserMeta';
 import useDispatcher from '@/hooks/useDispatcher';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
-import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
+import { UIRecordRect } from '@/types/Geometry';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
-import { cursor } from '@pigyuma/css-utils';
 import { setRef } from '@pigyuma/react-utils';
-import { calcDegreesBetweenCoords, isEqual, pick, toDegrees360 } from '@pigyuma/utils';
+import { calcDegreesBetweenCoords, isEqual } from '@pigyuma/utils';
 import { useCallback, useRef, useState } from 'react';
 import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.context';
-
-const getTransformedRect = (rect: UIRecordRect, mousePoint: { x: number; y: number }, handleCoordDegrees: number) => {
-  const newRectInit: UIRecordRectInit = pick(rect, ['x', 'y', 'width', 'height', 'rotate']);
-
-  let rotate = calcDegreesBetweenCoords(
-    {
-      x: rect.x + rect.width / 2,
-      y: rect.y + rect.height / 2,
-    },
-    mousePoint,
-  );
-  rotate -= handleCoordDegrees;
-  rotate += rect.rotate;
-  rotate = Math.round(rotate);
-
-  newRectInit.rotate = toDegrees360(rotate);
-
-  return UIRecordRect.fromRect(newRectInit);
-};
-
-const getRotateCursor = (element: Element, mousePoint: { x: number; y: number }) => {
-  const rect = element.getBoundingClientRect();
-  return cursor.rotatePoint({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mousePoint);
-};
+import { getRotatingCursor } from './cursor';
+import { calcRotatedRect } from './rect';
 
 export default function useRotateFunctions() {
   const [targetKey, setTargetKey] = useState<UIRecordKey>();
@@ -51,7 +28,7 @@ export default function useRotateFunctions() {
 
   const { setCursor } = useDispatcher();
 
-  const startRotate = useCallback(
+  const rotateStart = useCallback(
     (recordKey: UIRecordKey) => {
       const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
       const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
@@ -73,12 +50,12 @@ export default function useRotateFunctions() {
         rotateHandleCoordDegreesRef,
         calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseOffsetPoint),
       );
-      setCursor(getRotateCursor(target, mouseClientPoint));
+      setCursor(getRotatingCursor(target, mouseClientPoint));
     },
     [uiSelector, getBrowserMeta, getItemReference, setCursor],
   );
 
-  const endRotate = useCallback(() => {
+  const rotateEnd = useCallback(() => {
     const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
     if (record == null) {
       setTargetKey(undefined);
@@ -100,7 +77,7 @@ export default function useRotateFunctions() {
     uiController.setRect(record.key, rect);
   }, [targetKey, uiController, uiSelector, getItemReference]);
 
-  const rotate = useCallback(() => {
+  const rotateInProgress = useCallback(() => {
     const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
     if (record == null) {
       return console.error(`UIRecord '${targetKey}' not found.`);
@@ -122,14 +99,14 @@ export default function useRotateFunctions() {
     const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
     const handleCoordDegrees = rotateHandleCoordDegreesRef.current;
 
-    const newRect = handleCoordDegrees != null ? getTransformedRect(initialRect, mouseOffsetPoint, handleCoordDegrees) : initialRect;
+    const newRect = handleCoordDegrees != null ? calcRotatedRect(initialRect, mouseOffsetPoint, handleCoordDegrees) : initialRect;
 
     if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
       setRef(transformLastRectRef, newRect);
       uiController.setRect(record.key, newRect);
     }
-    setCursor(getRotateCursor(target, mouseClientPoint));
+    setCursor(getRotatingCursor(target, mouseClientPoint));
   }, [targetKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
 
-  return { startRotate, endRotate, rotate };
+  return { rotateStart, rotateEnd, rotateInProgress };
 }

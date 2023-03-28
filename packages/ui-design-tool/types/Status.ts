@@ -15,6 +15,7 @@ export const UIDesignToolStatus = {
   /** Range selection */
   selection: 'selection',
   drawing: 'drawing',
+  input: 'input',
   moving: 'moving',
   resizing: 'resizing',
   rotating: 'rotating',
@@ -25,6 +26,7 @@ export const UIDesignToolInteractionType = {
   idle: 'idle',
   selection: 'selection',
   drawing: 'drawing',
+  input: 'input',
   transform: 'transform',
 } as const;
 export type UIDesignToolInteractionType = keyof typeof UIDesignToolInteractionType;

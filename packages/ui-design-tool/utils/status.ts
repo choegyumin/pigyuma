@@ -7,6 +7,9 @@ export const getStatus = (meta: UIDesignToolStatusMeta): UIDesignToolStatus => {
   if (meta.interactionType === UIDesignToolInteractionType.drawing) {
     return UIDesignToolStatus.drawing;
   }
+  if (meta.interactionType === UIDesignToolInteractionType.input) {
+    return UIDesignToolStatus.input;
+  }
   if (meta.interactionType === UIDesignToolInteractionType.transform) {
     if (meta.transformMethod === UIDesignToolTransformMethod.move) {
       return UIDesignToolStatus.moving;
@@ -32,6 +35,9 @@ export const getInteractionType = (status: UIDesignToolStatus): UIDesignToolInte
     }
     case UIDesignToolStatus.drawing: {
       return UIDesignToolInteractionType.drawing;
+    }
+    case UIDesignToolStatus.input: {
+      return UIDesignToolInteractionType.input;
     }
     case UIDesignToolStatus.moving:
     case UIDesignToolStatus.resizing:
