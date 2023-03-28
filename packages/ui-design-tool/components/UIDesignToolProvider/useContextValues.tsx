@@ -1,6 +1,5 @@
 import { Canvas } from '@/api/Canvas/model';
 import { INITIAL_BROWSER_META, INITIAL_INSTANCE_ID, UIDesignTool } from '@/api/UIDesignTool';
-import { UIRecord } from '@/api/UIRecord/model';
 import { BrowserMeta } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMeta } from '@/types/Status';
@@ -55,6 +54,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
    */
   const [pairs, setPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
   const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
+  const [drafts, setDrafts] = useCloneDeepState<typeof api.drafts>(() => api.drafts);
   const [selected, setSelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
 
   const controllerInterface = useMemo(
@@ -70,6 +70,8 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       insertBefore: ((...args) => api.insertBefore(...args)) as typeof api.insertBefore,
       insertAfter: ((...args) => api.insertAfter(...args)) as typeof api.insertAfter,
       remove: ((...args) => api.remove(...args)) as typeof api.remove,
+      toggleDraft: ((...args) => api.toggleDraft(...args)) as typeof api.toggleDraft,
+      flushDrafts: ((...args) => api.flushDrafts(...args)) as typeof api.flushDrafts,
     }),
     [api],
   );
@@ -80,12 +82,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       status,
       get: ((targetKey) => pairs.get(targetKey)) as typeof api.get,
       has: ((targetKey) => pairs.has(targetKey)) as typeof api.has,
-      pairs,
       tree,
+      pairs,
+      drafts,
+      isDraft: ((targetKey) => drafts.has(targetKey)) as typeof api.isDraft,
       selected,
       isSelected: ((targetKey) => selected.has(targetKey)) as typeof api.isSelected,
     }),
-    [api, mode, status, pairs, tree, selected],
+    [api, mode, status, tree, pairs, drafts, selected],
   );
 
   const selectorInterface = useMemo(
@@ -132,6 +136,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const getItemReference = useStableCallback(((...args) => dataInterface.get(...args)) as typeof api.get);
   const getTreeReference = useStableCallback(() => dataInterface.tree);
   const getPairsReference = useStableCallback(() => dataInterface.pairs);
+  const getDraftsReference = useStableCallback(() => dataInterface.drafts);
   const getSelectedReference = useStableCallback(() => dataInterface.selected);
 
   useEffect(() => {
@@ -169,12 +174,13 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   }, [api, subscriptionInterface, setStatus, setStatueMeta]);
 
   useEffect(() => {
-    const callback = (all: UIRecord[]) => {
-      setPairs(new Map(all.map((it) => [it.key, it])));
+    const callback = () => {
+      setPairs(api.pairs);
+      setDrafts(api.drafts);
     };
     const unsubscribe = subscriptionInterface.subscribeTree(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setPairs]);
+  }, [api, subscriptionInterface, setPairs, setDrafts]);
 
   useEffect(() => {
     const callback = (newSelected: UIRecordKey[]) => {
@@ -195,12 +201,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     statusMeta,
     dispatcher,
 
-    getItemReference,
     tree,
-    getTreeReference,
     pairs,
-    getPairsReference,
+    drafts,
     selected,
+    getItemReference,
+    getTreeReference,
+    getPairsReference,
+    getDraftsReference,
     getSelectedReference,
 
     controllerInterface,
