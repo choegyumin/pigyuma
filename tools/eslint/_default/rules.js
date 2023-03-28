@@ -14,6 +14,7 @@ module.exports = {
         ignoreRestSiblings: true,
       },
     ],
+    '@typescript-eslint/no-non-null-assertion': 'off',
 
     'import/no-anonymous-default-export': 'warn',
     'import/no-named-as-default-member': 'off',

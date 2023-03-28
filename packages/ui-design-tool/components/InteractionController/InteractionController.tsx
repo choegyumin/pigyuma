@@ -249,7 +249,6 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       }
 
       case UIDesignToolInteractionType.drawing: {
-        /* eslint-disable @typescript-eslint/no-non-null-assertion */
         const isDrawingArtboard = mode === UIDesignToolMode.artboard;
         const isDrawingShape = mode === UIDesignToolMode.shape;
 
@@ -267,7 +266,6 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
         })();
         const parentRecordKey = uiSelector.dataset(parentElement).key ?? Canvas.key;
         const parentRecord = getItemReference<Canvas | Artboard>(parentRecordKey)!;
-        /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
         const xLength = offsetX - ((parentRecord as Artboard).x ?? 0);
         const yLength = offsetY - ((parentRecord as Artboard).y ?? 0);

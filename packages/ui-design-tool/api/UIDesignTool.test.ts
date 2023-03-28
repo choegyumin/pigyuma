@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import { UIRecordRect } from '@/types/Geometry';
 import { LayerType, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { UIDesignToolInteractionType, UIDesignToolTransformMethod, UIDesignToolStatus } from '@/types/Status';
