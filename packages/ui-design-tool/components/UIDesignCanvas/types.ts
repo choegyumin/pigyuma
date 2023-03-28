@@ -1,7 +1,7 @@
-import { CanvasArgs } from '@/api/Canvas/model';
+import { CanvasData } from '@/api/Canvas/model';
 
 export type UIDesignCanvasProps = React.HTMLAttributes<HTMLDivElement> & {
-  initialData: CanvasArgs['children'];
+  initialData: CanvasData['children'];
 };
 
 export type UIDesignCanvasRef = HTMLDivElement;

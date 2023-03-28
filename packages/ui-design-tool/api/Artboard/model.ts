@@ -1,13 +1,15 @@
 import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { HeightLengthType, WidthLengthType, XLengthType, YLengthType } from '@/types/Unit';
 import { StyleValue } from '@/types/Value';
-import { convertFillValue, convertHeightValue, convertWidthValue, convertXValue, convertYValue } from '@/utils/value';
+import { convertFillValue, convertHeightValue, convertWidthValue, convertXValue, convertYValue, fixNumberValue } from '@/utils/value';
 import { clone, nonNullable, uuid } from '@pigyuma/utils';
 import { Canvas } from '../Canvas/model';
-import { ShapeLayer, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
-import { TextLayer, TextLayerData, TextLayerJSON } from '../TextLayer/model';
-import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
+import { ShapeLayer, ShapeLayerArgs, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
+import { TextLayer, TextLayerArgs, TextLayerData, TextLayerJSON } from '../TextLayer/model';
+import { UIRecord, UIRecordArgs, UIRecordChanges, UIRecordJSON } from '../UIRecord/model';
 import * as styles from './styles.css';
+
+export interface ArtboardStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
 
 export interface ArtboardJSON extends UIRecordJSON {
   key: UIRecordKey;
@@ -21,30 +23,20 @@ export interface ArtboardJSON extends UIRecordJSON {
   children: Array<ShapeLayerJSON | TextLayerJSON>;
 }
 
-export interface ArtboardData {
-  key?: ArtboardJSON['key'];
-  type: ArtboardJSON['type'];
-  name: ArtboardJSON['name'];
-  x: ArtboardJSON['x'];
-  y: ArtboardJSON['y'];
-  width: ArtboardJSON['width'];
-  height: ArtboardJSON['height'];
-  fill: ArtboardJSON['fill'];
+type OptionalArtboardDataKey = 'key';
+type OmitArtboardDataKey = 'children';
+export interface ArtboardData
+  extends Partial<Pick<ArtboardJSON, OptionalArtboardDataKey>>,
+    Omit<ArtboardJSON, OptionalArtboardDataKey | OmitArtboardDataKey> {
   children: Array<ShapeLayerData | TextLayerData>;
 }
 
-export interface ArtboardStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
-
-export interface ArtboardArgs {
-  key?: ArtboardData['key'];
-  type?: ArtboardData['type'];
-  name: ArtboardData['name'];
-  x: ArtboardData['x'];
-  y: ArtboardData['y'];
-  width: ArtboardData['width'];
-  height: ArtboardData['height'];
-  fill: ArtboardData['fill'];
-  children: Array<ShapeLayerData | TextLayerData>;
+type OptionalArtboardArgsKey = 'key' | 'type';
+type OmitArtboardArgsKey = 'children';
+export interface ArtboardArgs
+  extends Partial<Pick<ArtboardJSON, OptionalArtboardArgsKey>>,
+    Omit<ArtboardJSON, OptionalArtboardArgsKey | OmitArtboardArgsKey> {
+  children: Array<ShapeLayerArgs | TextLayerArgs>;
 }
 
 export class Artboard extends UIRecord implements ArtboardJSON {
@@ -122,6 +114,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
     };
   }
 
+  /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isJSON(object: any): object is ArtboardJSON {
     return object != null && typeof object === 'object' && !Array.isArray(object) && object.type === UIRecordType.artboard;
@@ -134,5 +127,22 @@ export class Artboard extends UIRecord implements ArtboardJSON {
 
   static isElement(element: Element | null): boolean {
     return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] === UIRecordType.artboard;
+  }
+
+  static makeChanges(values: DeepPartial<ArtboardData>, origin: ArtboardData) {
+    const v = UIRecord.makeChanges(values, origin) as UIRecordChanges<ArtboardData>;
+    if (v.x != null) {
+      v.x = fixNumberValue(v.x);
+    }
+    if (v.y != null) {
+      v.y = fixNumberValue(v.y);
+    }
+    if (v.width != null) {
+      v.width = fixNumberValue(Math.max(v.width, 1));
+    }
+    if (v.height != null) {
+      v.height = fixNumberValue(Math.max(v.height, 1));
+    }
+    return v;
   }
 }

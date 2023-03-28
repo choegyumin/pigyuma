@@ -70,6 +70,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       insertBefore: ((...args) => api.insertBefore(...args)) as typeof api.insertBefore,
       insertAfter: ((...args) => api.insertAfter(...args)) as typeof api.insertAfter,
       remove: ((...args) => api.remove(...args)) as typeof api.remove,
+      flushDrafts: ((...args) => api.flushDrafts(...args)) as typeof api.flushDrafts,
     }),
     [api],
   );
@@ -84,6 +85,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       tree,
       selected,
       isSelected: ((targetKey) => selected.has(targetKey)) as typeof api.isSelected,
+      previewDrafts: ((...args) => api.previewDrafts(...args)) as typeof api.previewDrafts,
     }),
     [api, mode, status, pairs, tree, selected],
   );
@@ -133,6 +135,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const getTreeReference = useStableCallback(() => dataInterface.tree);
   const getPairsReference = useStableCallback(() => dataInterface.pairs);
   const getSelectedReference = useStableCallback(() => dataInterface.selected);
+  const getDraftsReference = useStableCallback(() => dataInterface.previewDrafts());
 
   useEffect(() => {
     const { id, getBrowserMeta, setStatus } = api.mount();
@@ -195,13 +198,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     statusMeta,
     dispatcher,
 
-    getItemReference,
     tree,
-    getTreeReference,
     pairs,
-    getPairsReference,
     selected,
+    getItemReference,
+    getTreeReference,
+    getPairsReference,
     getSelectedReference,
+    getDraftsReference,
 
     controllerInterface,
     dataInterface,

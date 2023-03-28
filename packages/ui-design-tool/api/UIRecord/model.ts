@@ -1,20 +1,19 @@
 import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { uuid } from '@pigyuma/utils';
 
+export type UIRecordChanges<T extends UIRecordData> = DeepPartial<Omit<T, 'key'>>;
+export type UIRecordValueChanges<T extends UIRecordData> = DeepPartial<Omit<T, 'key' | 'parent' | 'children'>>;
+
 export interface UIRecordJSON {
   key: UIRecordKey;
   type: UIRecordType;
 }
 
-export interface UIRecordData {
-  key?: UIRecordJSON['key'];
-  type: UIRecordJSON['type'];
-}
+type OptionalUIRecordDataKey = 'key';
+export interface UIRecordData extends Partial<Pick<UIRecordJSON, OptionalUIRecordDataKey>>, Omit<UIRecordJSON, OptionalUIRecordDataKey> {}
 
-export interface UIRecordArgs {
-  key?: UIRecordData['key'];
-  type: UIRecordData['type'];
-}
+type OptionalUIRecordArgsKey = 'key';
+export interface UIRecordArgs extends Partial<Pick<UIRecordJSON, OptionalUIRecordArgsKey>>, Omit<UIRecordJSON, OptionalUIRecordArgsKey> {}
 
 export class UIRecord implements UIRecordJSON {
   readonly key: UIRecordKey;
@@ -32,6 +31,7 @@ export class UIRecord implements UIRecordJSON {
     };
   }
 
+  /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isJSON(object: any): object is UIRecordJSON {
     return object != null && typeof object === 'object' && !Array.isArray(object) && Object.values(UIRecordType).includes(object.type);
@@ -44,5 +44,10 @@ export class UIRecord implements UIRecordJSON {
 
   static isElement(element: Element | null): boolean {
     return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] != null;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static makeChanges(values: DeepPartial<UIRecordData>, origin: UIRecordData) {
+    return { ...values };
   }
 }

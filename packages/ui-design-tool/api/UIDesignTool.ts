@@ -18,19 +18,25 @@ import {
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
 import { getInteractionType, getTransformMethod } from '@/utils/status';
-import { fixNumberValue } from '@/utils/value';
-import { exclude, mapValues, merge, toDegrees360, uuid } from '@pigyuma/utils';
+import { cloneDeep, exclude, mapValues, nonUndefined, pickBy, uuid } from '@pigyuma/utils';
 import { Artboard, ArtboardData } from './Artboard/model';
 import { Canvas, CanvasData } from './Canvas/model';
+import { Layer, LayerData } from './Layer/model';
 import { ShapeLayer, ShapeLayerData } from './ShapeLayer/model';
 import { TextLayer, TextLayerData } from './TextLayer/model';
-import { UIRecord, UIRecordData } from './UIRecord/model';
+import { UIRecord, UIRecordChanges, UIRecordData, UIRecordValueChanges } from './UIRecord/model';
 
-export type UIRecordChanges<T extends UIRecordData> = Omit<DeepPartial<T>, 'key' | 'parent' | 'children'>;
+const assignChanges = <T extends UIRecord, C extends UIRecordChanges<T> = UIRecordChanges<T>>(targetValue: T, changes: C): T => {
+  return Object.assign(targetValue, pickBy(changes, nonUndefined));
+};
 
 export interface UIDesignToolOptions {
   strict?: boolean;
   id?: string;
+}
+
+export interface UIDesignToolEditOptions {
+  saveDraft?: boolean;
 }
 
 export const INITIAL_INSTANCE_ID = 'UNKNOWN';
@@ -62,6 +68,7 @@ export class UIDesignTool {
   #status: UIDesignToolStatus;
 
   readonly #items: Map<UIRecordKey, UIRecord>;
+  readonly #drafts: Array<[UIRecordKey, UIRecord | UIRecordChanges<UIRecord>]>;
   readonly #selectedKeys: Set<UIRecordKey>;
 
   #hoveredElement: HTMLElement | null;
@@ -72,8 +79,8 @@ export class UIDesignTool {
     onKeyUp: (event: KeyboardEvent) => void;
   };
 
-  constructor(options?: UIDesignToolOptions) {
-    const { strict = true, id = uuid.v4() } = options ?? {};
+  constructor(options: UIDesignToolOptions = {}) {
+    const { strict = true, id = uuid.v4() } = options;
 
     this.#strict = strict;
     this.#id = id;
@@ -91,6 +98,7 @@ export class UIDesignTool {
     this.#status = UIDesignToolStatus.idle;
 
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
+    this.#drafts = [];
     this.#selectedKeys = new Set();
 
     this.#hoveredElement = null;
@@ -119,13 +127,139 @@ export class UIDesignTool {
     };
   }
 
+  #create<T extends UIRecord>(targetKey: UIRecordKey, instance: T, options: UIDesignToolEditOptions = {}): T {
+    const { saveDraft = false } = options;
+
+    if (saveDraft) {
+      this.#drafts.push([targetKey, instance]);
+    } else {
+      this.#items.set(targetKey, instance);
+    }
+
+    return instance;
+  }
+
+  #assign<T extends UIRecord, C extends UIRecordChanges<T> = UIRecordChanges<T>>(
+    targetKey: UIRecordKey,
+    changes: C,
+    options: UIDesignToolEditOptions = {},
+  ): T {
+    const { saveDraft = false } = options;
+
+    const targetValue = this.get<T>(targetKey);
+    if (targetValue == null) {
+      throw new Error(`UIRecord '${targetKey}' not found.`);
+    }
+
+    if (saveDraft) {
+      this.#drafts.push([targetKey, changes]);
+    } else {
+      assignChanges(targetValue, changes);
+    }
+
+    return targetValue;
+  }
+
+  #remove(targetKey: UIRecordKey) {
+    const newDrafts = this.#drafts.filter(([key]) => key !== targetKey);
+    this.#drafts.length = 0;
+    this.#drafts.push(...newDrafts);
+    this.#items.delete(targetKey);
+  }
+
+  #makeChanges<T extends UIRecordData, C extends UIRecordChanges<T> = UIRecordChanges<T>>(
+    targetKey: UIRecordKey,
+    changes: C | ((prev: T) => C),
+  ): C {
+    const targetValue = this.get(targetKey);
+    if (targetValue == null) {
+      throw new Error(`UIRecord '${targetKey}' not found.`);
+    }
+
+    const isArtboard = targetValue instanceof Artboard;
+    const isShapeLayer = targetValue instanceof ShapeLayer;
+    const isTextLayer = targetValue instanceof TextLayer;
+    const isLayer = targetValue instanceof Layer;
+    const isCanvas = targetValue instanceof Canvas;
+
+    const newChanges = { ...(typeof changes === 'function' ? changes(targetValue as unknown as T) : changes) };
+
+    if (isArtboard) {
+      return Artboard.makeChanges(newChanges as UIRecordChanges<ArtboardData>, targetValue) as C;
+    } else if (isShapeLayer) {
+      return ShapeLayer.makeChanges(newChanges as UIRecordChanges<ShapeLayerData>, targetValue) as C;
+    } else if (isTextLayer) {
+      return TextLayer.makeChanges(newChanges as UIRecordChanges<TextLayerData>, targetValue) as C;
+    } else if (isLayer) {
+      return Layer.makeChanges(newChanges as UIRecordChanges<LayerData>, targetValue) as C;
+    } else if (isCanvas) {
+      return Canvas.makeChanges(newChanges as UIRecordChanges<CanvasData>, targetValue) as C;
+    }
+
+    return UIRecord.makeChanges(newChanges as UIRecordChanges<UIRecord>, targetValue) as C;
+  }
+
+  #makeChangesFromRect<T extends UIRecordData, C extends UIRecordChanges<T> = UIRecordChanges<T>>(
+    targetKey: UIRecordKey,
+    rect: UIRecordRect | UIRecordRectInit,
+  ): C {
+    const targetValue = this.get(targetKey);
+    if (targetValue == null) {
+      throw new Error(`UIRecord '${targetKey}' not found.`);
+    }
+
+    const isArtboard = targetValue instanceof Artboard;
+    const isShapeLayer = targetValue instanceof ShapeLayer;
+    const isTextLayer = targetValue instanceof TextLayer;
+
+    if (!isArtboard && !isShapeLayer && !isTextLayer) {
+      throw new Error(`UIRecord '${targetKey}' is not a layer. setRect() only supports Artboard and Layer.`);
+    }
+
+    if (!hasUIRecordParent(targetValue)) {
+      throw new Error(`UIRecord '${targetKey}' has no parent.`);
+    }
+
+    const parentValue = targetValue.parent;
+    const parentElement = this.query({ key: parentValue.key });
+    const parentRect = parentElement != null ? UIRecordRect.fromElement(parentElement) : new UIRecordRect(0, 0, 0, 0, 0);
+
+    const x = rect.x - parentRect.x;
+    const y = rect.y - parentRect.y;
+    const width = rect.width;
+    const height = rect.height;
+    const rotate = rect.rotate;
+
+    /** @todo px 외 lengthType(unit) 지원 */
+    const newChanges = {} as C;
+    if (isArtboard) {
+      const v = newChanges as UIRecordChanges<ArtboardData>;
+      v.x = x;
+      v.y = y;
+      v.width = width;
+      v.height = height;
+    } else if (isShapeLayer) {
+      const v = newChanges as UIRecordChanges<ShapeLayerData>;
+      v.x = { length: x };
+      v.y = { length: y };
+      v.width = { length: width };
+      v.height = { length: height };
+      v.rotate = { degrees: rotate };
+    } else if (isTextLayer) {
+      const v = newChanges as UIRecordChanges<TextLayerData>;
+      v.rotate = { degrees: rotate };
+    }
+
+    return this.#makeChanges<T, C>(targetKey, newChanges);
+  }
+
   #setStatus(status: UIDesignToolStatus): void {
     if (!this.#mounted) {
       return console.error('UIDesignTool is not mounted.');
     }
-    const prevStatus = this.#status;
+    const prevStatus = this.status;
     this.#status = status;
-    if (prevStatus !== this.#status) {
+    if (prevStatus !== this.status) {
       this.#listeners.status.forEach((callback) =>
         callback(this.status, {
           interactionType: this.interactionType,
@@ -136,7 +270,7 @@ export class UIDesignTool {
   }
 
   get #canvas(): Canvas {
-    return this.#items.get(Canvas.key) as Canvas;
+    return this.get(Canvas.key) as Canvas;
   }
 
   get #rootElementSelector(): string {
@@ -152,11 +286,11 @@ export class UIDesignTool {
   }
 
   get interactionType(): UIDesignToolInteractionType {
-    return getInteractionType(this.#status);
+    return getInteractionType(this.status);
   }
 
   get transformMethod(): UIDesignToolTransformMethod {
-    return getTransformMethod(this.#status);
+    return getTransformMethod(this.status);
   }
 
   get tree(): Canvas {
@@ -250,7 +384,7 @@ export class UIDesignTool {
   }
 
   toggleMode(mode: UIDesignToolMode): void {
-    if (this.#status !== UIDesignToolStatus.idle) {
+    if (this.status !== UIDesignToolStatus.idle) {
       return console.error('mode can only be changed when status is idle.');
     }
     const prevMode = this.mode;
@@ -268,12 +402,13 @@ export class UIDesignTool {
 
     this.#items.clear();
     this.#selectedKeys.clear();
+    this.#drafts.length = 0;
 
     while (canvas.children.length > 0) {
       canvas.children.pop();
     }
     newChildren.forEach((it) => {
-      merge(it, { parent: canvas });
+      assignChanges(it, { parent: canvas });
       canvas.children.push(it);
     });
 
@@ -294,7 +429,7 @@ export class UIDesignTool {
     const newSelectedKeys: UIRecordKey[] = [];
 
     targetKeys.forEach((key) => {
-      const record = this.#items.get(key);
+      const record = this.previewDrafts().get(key) ?? this.get(key);
       if (record == null) {
         missingRecordKeys.push(key);
         return;
@@ -327,162 +462,77 @@ export class UIDesignTool {
   }
 
   get<T extends UIRecord>(targetKey: UIRecordKey): T | undefined {
-    return this.#items.get(targetKey) as T | undefined;
+    return this.pairs.get(targetKey) as T | undefined;
   }
 
   has(targetKey: UIRecordKey): boolean {
-    return this.#items.has(targetKey);
+    return this.pairs.has(targetKey);
   }
 
   isSelected(targetKey: UIRecordKey): boolean {
-    return this.#selectedKeys.has(targetKey);
+    return this.selected.has(targetKey);
   }
 
-  set<T extends UIRecordData>(targetKey: UIRecordKey, value: UIRecordChanges<T> | ((prev: T) => UIRecordChanges<T>)): void {
-    const targetValue = this.#items.get(targetKey);
-    if (targetValue == null) {
-      console.error(`UIRecord '${targetKey}' not found.`);
-      return;
+  set<T extends UIRecord>(
+    targetKey: UIRecordKey,
+    value: UIRecordValueChanges<T> | ((prev: T) => UIRecordValueChanges<T>),
+    options?: UIDesignToolEditOptions,
+  ): void {
+    try {
+      const changes = this.#makeChanges(targetKey, value as UIRecordChanges<T>);
+      const targetValue = this.#assign(targetKey, changes, options);
+      this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [targetValue], []));
+    } catch (error) {
+      console.error(error);
     }
-
-    const newTargetValue = typeof value === 'function' ? value(targetValue as unknown as T) : value;
-    if (targetValue instanceof Artboard) {
-      const v = newTargetValue as UIRecordChanges<ArtboardData>;
-      if (v.x) {
-        v.x = fixNumberValue(v.x);
-      }
-      if (v.y) {
-        v.y = fixNumberValue(v.y);
-      }
-      if (v.width) {
-        v.width = fixNumberValue(Math.max(v.width, 1));
-      }
-      if (v.height) {
-        v.height = fixNumberValue(Math.max(v.height, 1));
-      }
-    } else if (targetValue instanceof ShapeLayer) {
-      const { x, y, width, height, rotate, stroke } = newTargetValue as UIRecordChanges<ShapeLayerData>;
-      const strokeWidth = stroke?.width;
-      if (x?.length != null) {
-        x.length = fixNumberValue(x.length);
-      }
-      if (y?.length != null) {
-        y.length = fixNumberValue(y.length);
-      }
-      if (width?.length != null) {
-        width.length = fixNumberValue(Math.max(width.length, 1));
-      }
-      if (height?.length != null) {
-        height.length = fixNumberValue(Math.max(height.length, 1));
-      }
-      if (rotate?.degrees != null) {
-        rotate.degrees = fixNumberValue(toDegrees360(rotate.degrees));
-      }
-      if (strokeWidth?.top != null) {
-        strokeWidth.top = fixNumberValue(Math.max(strokeWidth.top, 0));
-      }
-      if (strokeWidth?.right != null) {
-        strokeWidth.right = fixNumberValue(Math.max(strokeWidth.right, 0));
-      }
-      if (strokeWidth?.bottom != null) {
-        strokeWidth.bottom = fixNumberValue(Math.max(strokeWidth.bottom, 0));
-      }
-      if (strokeWidth?.left != null) {
-        strokeWidth.left = fixNumberValue(Math.max(strokeWidth.left, 0));
-      }
-    }
-    if (targetValue instanceof TextLayer) {
-      const { rotate } = newTargetValue as UIRecordChanges<TextLayerData>;
-      if (rotate?.degrees != null) {
-        rotate.degrees = fixNumberValue(toDegrees360(rotate.degrees));
-      }
-    }
-
-    merge(targetValue, newTargetValue);
-
-    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [targetValue], []));
   }
 
-  setRect(targetKey: UIRecordKey, rect: UIRecordRect | UIRecordRectInit): void {
-    const targetValue = this.#items.get(targetKey);
-    if (targetValue == null) {
-      console.error(`UIRecord '${targetKey}' not found.`);
-      return;
+  setRect(targetKey: UIRecordKey, rect: UIRecordRect | UIRecordRectInit, options?: UIDesignToolEditOptions): void {
+    try {
+      const changes = this.#makeChangesFromRect(targetKey, rect);
+      const targetValue = this.#assign(targetKey, changes, options);
+      this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [targetValue], []));
+    } catch (error) {
+      console.error(error);
     }
-
-    const isArtboard = targetValue instanceof Artboard;
-    const isShapeLayer = targetValue instanceof ShapeLayer;
-    const isTextLayer = targetValue instanceof TextLayer;
-
-    if (!isArtboard && !isShapeLayer && !isTextLayer) {
-      console.error(`UIRecord '${targetKey}' is not a layer. setRect() only supports Artboard and Layer.`);
-      return;
-    }
-
-    if (!hasUIRecordParent(targetValue)) {
-      console.error(`UIRecord '${targetKey}' has no parent.`);
-      return;
-    }
-
-    const parentValue = targetValue.parent;
-    const parentElement = this.query({ key: parentValue.key });
-    const parentRect = parentElement != null ? UIRecordRect.fromElement(parentElement) : new UIRecordRect(0, 0, 0, 0, 0);
-
-    const x = rect.x - parentRect.x;
-    const y = rect.y - parentRect.y;
-    const width = rect.width;
-    const height = rect.height;
-    const rotate = rect.rotate;
-
-    /** @todo px 외 lengthType(unit) 지원 */
-    const newTargetValue: UIRecordChanges<UIRecordData> = {};
-    if (isArtboard) {
-      const v = newTargetValue as UIRecordChanges<ArtboardData>;
-      v.x = x;
-      v.y = y;
-      v.width = width;
-      v.height = height;
-    } else if (isShapeLayer) {
-      const v = newTargetValue as UIRecordChanges<ShapeLayerData>;
-      v.x = { length: x };
-      v.y = { length: y };
-      v.width = { length: width };
-      v.height = { length: height };
-      v.rotate = { degrees: rotate };
-    } else if (isTextLayer) {
-      const v = newTargetValue as UIRecordChanges<TextLayerData>;
-      v.rotate = { degrees: rotate };
-    }
-
-    this.set(targetKey, newTargetValue);
   }
 
   // 타입은 동일하지만, IDE에서 인자명을 보여주기 위해 Overloading 함
-  move(method: 'append', handleKey: UIRecordKey, parentKey: UIRecordKey): void;
-  move(method: 'prepend', handleKey: UIRecordKey, parentKey: UIRecordKey): void;
-  move(method: 'insertBefore', handleKey: UIRecordKey, nextSiblingKey: UIRecordKey): void;
-  move(method: 'insertAfter', handleKey: UIRecordKey, prevSiblingKey: UIRecordKey): void;
-  move(method: 'append' | 'prepend' | 'insertBefore' | 'insertAfter', handleKey: UIRecordKey, destKey: UIRecordKey): void;
-  move(method: 'append' | 'prepend' | 'insertBefore' | 'insertAfter', handleKey: UIRecordKey, destKey: UIRecordKey): void {
-    const handleValue = this.#items.get(handleKey);
+  move(method: 'append', handleKey: UIRecordKey, parentKey: UIRecordKey, options?: UIDesignToolEditOptions): void;
+  move(method: 'prepend', handleKey: UIRecordKey, parentKey: UIRecordKey, options?: UIDesignToolEditOptions): void;
+  move(method: 'insertBefore', handleKey: UIRecordKey, nextSiblingKey: UIRecordKey, options?: UIDesignToolEditOptions): void;
+  move(method: 'insertAfter', handleKey: UIRecordKey, prevSiblingKey: UIRecordKey, options?: UIDesignToolEditOptions): void;
+  move(
+    method: 'append' | 'prepend' | 'insertBefore' | 'insertAfter',
+    handleKey: UIRecordKey,
+    destKey: UIRecordKey,
+    options?: UIDesignToolEditOptions,
+  ): void;
+  move(
+    method: 'append' | 'prepend' | 'insertBefore' | 'insertAfter',
+    handleKey: UIRecordKey,
+    destKey: UIRecordKey,
+    options?: UIDesignToolEditOptions,
+  ): void {
+    const handleValue = this.get(handleKey);
     if (handleValue == null) {
       console.error(`UIRecord '${handleKey}' not found.`);
       return;
     }
 
-    const destValue = this.#items.get(destKey);
+    const destValue = this.get(destKey);
     if (destValue == null) {
       console.error(`UIRecord '${destKey}' not found.`);
       return;
     }
 
-    if (!hasUIRecordParent(handleValue)) {
+    if (!hasUIRecordParent<Artboard | ShapeLayer | TextLayer>(handleValue)) {
       console.error(`UIRecord '${handleKey}' has no parent.`);
       return;
     }
 
     const startKey = handleValue.parent.key;
-    const startValue = this.#items.get(startKey);
+    const startValue = this.get(startKey);
     if (startValue == null) {
       console.error(`Parent ${startKey} of UIRecord '${handleKey}' not found.`);
       return;
@@ -505,12 +555,17 @@ export class UIDesignTool {
         return;
       }
 
-      startValue.children.splice(handleIndex, 1);
-      merge(handleValue, { parent: destValue });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      destValue.children[method === 'prepend' ? 'unshift' : 'push'](handleValue as any);
+      const newStartChildren = [...startValue.children];
+      newStartChildren.splice(handleIndex, 1);
 
-      this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [startValue, destValue, handleValue], []));
+      const newDestChildren = [...destValue.children];
+      newDestChildren[method === 'prepend' ? 'unshift' : 'push'](handleValue);
+
+      this.#assign<typeof handleValue>(handleKey, { parent: destValue as typeof handleValue['parent'] }, options);
+      this.#assign<typeof startValue>(startKey, { children: newStartChildren }, options);
+      this.#assign<typeof destValue>(destKey, { children: newDestChildren }, options);
+
+      this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [startValue, destValue, handleValue], []));
     } else if (method === 'insertBefore' || method === 'insertAfter') {
       if (!hasUIRecordParent(destValue)) {
         console.error(`UIRecord '${destKey}' has no parent.`);
@@ -518,7 +573,7 @@ export class UIDesignTool {
       }
 
       const destParentKey = destValue.parent.key;
-      const destParentValue = this.#items.get(destParentKey);
+      const destParentValue = this.get(destParentKey);
       if (destParentValue == null) {
         console.error(`Parent ${destParentKey} of UIRecord '${destKey}' not found.`);
         return;
@@ -538,47 +593,32 @@ export class UIDesignTool {
         targetIndex += 1;
       }
 
-      startValue.children.splice(handleIndex, 1);
-      merge(handleValue, { parent: destParentValue });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      destParentValue.children.splice(targetIndex, 0, handleValue as any);
+      const newStartChildren = [...startValue.children];
+      newStartChildren.splice(handleIndex, 1);
 
-      this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [startValue, destParentValue, handleValue], []));
+      const newDestParentChildren = [...destParentValue.children];
+      newDestParentChildren.splice(targetIndex, 0, handleValue);
+
+      this.#assign<typeof handleValue>(handleKey, { parent: destParentValue as typeof handleValue['parent'] }, options);
+      this.#assign<typeof startValue>(startKey, { children: newStartChildren }, options);
+      this.#assign<typeof destParentValue>(destParentKey, { children: newDestParentChildren }, options);
+
+      this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [startValue, destParentValue, handleValue], []));
     }
   }
 
-  append<T extends UIRecord | UIRecordData>(parentKey: UIRecordKey, value: T): void {
-    if (value.key != null && this.#items.get(value.key)) {
+  #join<T extends UIRecord | UIRecordData>(
+    method: 'prepend' | 'append',
+    parentKey: UIRecordKey,
+    value: T,
+    options?: UIDesignToolEditOptions,
+  ): void {
+    if (value.key != null && this.get(value.key)) {
       console.error(`UIRecord '${value.key}' already exists. Did you try to call \`move()\`?`);
       return;
     }
 
-    const parentValue = this.#items.get(parentKey);
-    if (parentValue == null) {
-      console.error(`UIRecord '${parentKey}' not found.`);
-      return;
-    }
-
-    if (!isUIRecordWithChildren(parentValue)) {
-      console.error(`children of UIRecord '${parentKey}' is not array.`);
-      return;
-    }
-    const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
-
-    this.#items.set(targetValue.key, targetValue);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    parentValue.children.push(targetValue as any);
-
-    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [parentValue, targetValue], []));
-  }
-
-  prepend<T extends UIRecord | UIRecordData>(parentKey: UIRecordKey, value: T): void {
-    if (value.key != null && this.#items.get(value.key)) {
-      console.error(`UIRecord '${value.key}' already exists. Did you try to call \`move()\`?`);
-      return;
-    }
-
-    const parentValue = this.#items.get(parentKey);
+    const parentValue = this.get(parentKey);
     if (parentValue == null) {
       console.error(`UIRecord '${parentKey}' not found.`);
       return;
@@ -591,20 +631,35 @@ export class UIDesignTool {
 
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
 
-    this.#items.set(targetValue.key, targetValue);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    parentValue.children.unshift(targetValue as any);
+    const newParentChildren = [...parentValue.children];
+    newParentChildren[method === 'prepend' ? 'unshift' : 'push'](targetValue);
 
-    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [parentValue, targetValue], []));
+    this.#create(targetValue.key, targetValue, options);
+    this.#assign<typeof parentValue>(parentValue.key, { children: newParentChildren }, options);
+
+    this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [parentValue, targetValue], []));
   }
 
-  #insert<T extends UIRecord | UIRecordData>(method: 'before' | 'after', siblingKey: UIRecordKey, value: T): void {
-    if (value.key != null && this.#items.get(value.key)) {
+  append<T extends UIRecord | UIRecordData>(parentKey: UIRecordKey, value: T, options?: UIDesignToolEditOptions): void {
+    return this.#join('append', parentKey, value, options);
+  }
+
+  prepend<T extends UIRecord | UIRecordData>(parentKey: UIRecordKey, value: T, options?: UIDesignToolEditOptions): void {
+    return this.#join('prepend', parentKey, value, options);
+  }
+
+  #insert<T extends UIRecord | UIRecordData>(
+    method: 'before' | 'after',
+    siblingKey: UIRecordKey,
+    value: T,
+    options?: UIDesignToolEditOptions,
+  ): void {
+    if (value.key != null && this.get(value.key)) {
       console.error(`UIRecord '${value.key}' already exists. Did you try to call \`move()\`?`);
       return;
     }
 
-    const siblingValue = this.#items.get(siblingKey);
+    const siblingValue = this.get(siblingKey);
     if (siblingValue == null) {
       console.error(`UIRecord '${siblingKey}' not found.`);
       return;
@@ -616,7 +671,7 @@ export class UIDesignTool {
     }
 
     const parentKey = siblingValue.parent.key;
-    const parentValue = this.#items.get(parentKey ?? '');
+    const parentValue = this.get(parentKey ?? '');
     if (parentKey == null || parentValue == null) {
       console.error(`Parent ${parentKey} of UIRecord '${siblingKey}' not found.`);
       return;
@@ -639,22 +694,25 @@ export class UIDesignTool {
 
     const targetValue = toUIRecordInstance<ArrayElements<typeof parentValue['children']>>(value, parentValue, { replaceParent: true });
 
-    this.#items.set(targetValue.key, targetValue);
-    parentValue.children.splice(targetIndex, 0, targetValue);
+    const newParentChildren = [...parentValue.children];
+    newParentChildren.splice(targetIndex, 0, targetValue);
 
-    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], [parentValue, targetValue], []));
+    this.#create(targetValue.key, targetValue, options);
+    this.#assign<typeof parentValue>(parentValue.key, { children: newParentChildren }, options);
+
+    this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], [parentValue, targetValue], []));
   }
 
-  insertBefore<T extends UIRecord | UIRecordData>(nextSiblingKey: UIRecordKey, value: T): void {
-    return this.#insert('before', nextSiblingKey, value);
+  insertBefore<T extends UIRecord | UIRecordData>(nextSiblingKey: UIRecordKey, value: T, options?: UIDesignToolEditOptions): void {
+    return this.#insert('before', nextSiblingKey, value, options);
   }
 
-  insertAfter<T extends UIRecord | UIRecordData>(prevSiblingKey: UIRecordKey, value: T): void {
-    return this.#insert('after', prevSiblingKey, value);
+  insertAfter<T extends UIRecord | UIRecordData>(prevSiblingKey: UIRecordKey, value: T, options?: UIDesignToolEditOptions): void {
+    return this.#insert('after', prevSiblingKey, value, options);
   }
 
   remove(targetKey: UIRecordKey): void {
-    const targetValue = this.#items.get(targetKey);
+    const targetValue = this.get(targetKey);
     if (targetValue == null) {
       console.warn(`UIRecord '${targetKey}' not found.`);
       return;
@@ -662,7 +720,7 @@ export class UIDesignTool {
 
     const canHaveParent = hasUIRecordParent(targetValue);
     const parentKey = canHaveParent ? targetValue.parent.key : undefined;
-    const parentValue = this.#items.get(parentKey ?? '');
+    const parentValue = this.get(parentKey ?? '');
     const hasParent = isUIRecordKey(parentKey) && parentValue != null;
 
     if (canHaveParent) {
@@ -683,13 +741,15 @@ export class UIDesignTool {
           return;
         }
 
-        parentValue.children.splice(targetIndex, 1);
+        const newChildren = [...parentValue.children];
+        newChildren.splice(targetIndex, 1);
+        this.#assign<typeof parentValue>(parentKey, { children: newChildren });
       })();
     }
 
     const deleteTree = (record: UIRecord, stack: UIRecord[] = []): UIRecord[] => {
       stack.push(record);
-      this.#items.delete(record.key);
+      this.#remove(record.key);
       if (isUIRecordWithChildren(record)) {
         record.children.forEach((it) => deleteTree(it, stack));
       }
@@ -706,10 +766,75 @@ export class UIDesignTool {
       newSelectedKeys.forEach((key) => this.#selectedKeys.add(key));
     }
 
-    this.#listeners.tree.forEach((callback) => callback([...this.#items.values()], hasParent ? [parentValue] : [], deletedKeys));
+    this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], hasParent ? [parentValue] : [], deletedKeys));
     if (isSelectionChanged) {
       this.#listeners.selection.forEach((callback) => callback(newSelectedKeys));
     }
+  }
+
+  previewDrafts(): typeof this.pairs {
+    const draftItems = new Map<UIRecordKey, UIRecord>();
+
+    const missingRecordKeys: UIRecordKey[] = [];
+
+    const drafts = this.#drafts.filter(([targetKey, changesOrInstance]) => {
+      const isInstance = changesOrInstance instanceof UIRecord;
+      const hasOriginal = this.get(targetKey) != null;
+      const passed = isInstance || hasOriginal;
+      if (!passed) {
+        missingRecordKeys.push(targetKey);
+      }
+      return passed;
+    });
+
+    if (missingRecordKeys.length > 0) {
+      console.error(`UIRecord '${missingRecordKeys.join("', '")}' not found.`);
+    }
+
+    drafts.forEach(([targetKey, changesOrInstance]) => {
+      const instance = (() => {
+        if (changesOrInstance instanceof UIRecord) {
+          return changesOrInstance;
+        }
+        const instance = draftItems.get(targetKey) ?? cloneDeep(this.get(targetKey)!);
+        assignChanges(instance, changesOrInstance);
+        return instance;
+      })();
+
+      // 순서 조정
+      draftItems.delete(targetKey);
+      draftItems.set(targetKey, instance);
+    });
+
+    return draftItems;
+  }
+
+  flushDrafts(): void {
+    const hasDrafts = this.#drafts.length > 0;
+    if (!hasDrafts) {
+      return;
+    }
+
+    const newValues: UIRecord[] = [];
+
+    this.#drafts.forEach(([targetKey, changesOrInstance]) => {
+      try {
+        const isInstance = changesOrInstance instanceof UIRecord;
+        if (isInstance) {
+          this.#create(targetKey, changesOrInstance, { saveDraft: false });
+          newValues.push(changesOrInstance);
+        } else {
+          this.#assign(targetKey, changesOrInstance, { saveDraft: false });
+          newValues.push(this.get(targetKey)!);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    this.#drafts.length = 0;
+
+    this.#listeners.tree.forEach((callback) => callback([...this.pairs.values()], newValues, []));
   }
 
   dataset(element: Element | null): { key: string | undefined; type: string | undefined; layerType: string | undefined } {

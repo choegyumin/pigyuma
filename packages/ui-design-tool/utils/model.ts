@@ -6,9 +6,9 @@ import { TextLayer, TextLayerData } from '@/api/TextLayer/model';
 import { UIRecord, UIRecordData } from '@/api/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 
-type UIRecordWithParent = Artboard | Layer | ShapeLayer | TextLayer;
-type UIRecordWithChildren = Artboard | Canvas | ShapeLayer;
-type RotatableUIRecord = Layer | ShapeLayer | TextLayer;
+export type UIRecordWithParent = UIRecord & { parent: Artboard | Canvas | ShapeLayer | null };
+export type UIRecordWithChildren = UIRecord & { children: Array<Artboard | ShapeLayer | TextLayer> };
+export type RotatableUIRecord = Layer | ShapeLayer | TextLayer;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isUIRecordKey = (object: any): object is UIRecordKey => {
@@ -16,28 +16,28 @@ export const isUIRecordKey = (object: any): object is UIRecordKey => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isUIRecordWithParent = (object: any): object is UIRecordWithParent => {
+export const isUIRecordWithParent = <T extends UIRecordWithParent>(object: any): object is T => {
   // 타입 검증이므로 parent가 null이어도 존재하는 걸로 판단함
   return UIRecord.isModel(object) && (object as AnyObject).parent !== undefined;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const hasUIRecordParent = (object: any): object is UIRecordWithParent & NonNullableRequired<Pick<UIRecordWithParent, 'parent'>> => {
+export const hasUIRecordParent = <T extends UIRecordWithParent>(object: any): object is T & NonNullableRequired<Pick<T, 'parent'>> => {
   return isUIRecordWithParent(object) && object.parent != null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isUIRecordWithChildren = (object: any): object is UIRecordWithChildren => {
+export const isUIRecordWithChildren = <T extends UIRecordWithChildren>(object: any): object is T => {
   return UIRecord.isModel(object) && Array.isArray((object as AnyObject).children);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const hasUIRecordChildren = (object: any): object is UIRecordWithChildren => {
+export const hasUIRecordChildren = <T extends UIRecordWithChildren>(object: any): object is T => {
   return isUIRecordWithChildren(object) && object.children.length > 0;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isRotatableUIRecord = (object: any): object is RotatableUIRecord => {
+export const isRotatableUIRecord = <T extends RotatableUIRecord>(object: any): object is T => {
   return UIRecord.isModel(object) && (object as AnyObject).rotate != null;
 };
 

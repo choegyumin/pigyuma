@@ -12,6 +12,10 @@ type Property<T extends {}, P extends PropertyKey, D = undefined> = P extends ke
 
 type ValueOf<T> = T[keyof T];
 
+type NonNull<T> = Exclude<T, null>;
+
+type NonUndefined<T> = Exclude<T, undefined>;
+
 type DynamicRecord<T, K extends keyof any = PropertyKey> = Partial<Record<K, T>>;
 
 type DeepPartial<T extends {}> = {

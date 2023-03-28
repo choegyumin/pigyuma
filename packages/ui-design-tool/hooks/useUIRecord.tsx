@@ -5,8 +5,18 @@ import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useForceUpdate, useIsomorphicLayoutEffect } from '@pigyuma/react-utils';
 import { useEffect, useRef } from 'react';
+import useDraftsReference from './useDraftsReference';
 
-export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey | undefined): T | undefined {
+export interface UseUIRecordOptions {
+  includeDraft?: boolean;
+}
+
+export default function useUIRecord<T extends UIRecord>(
+  recordKey: UIRecordKey | undefined,
+  options: UseUIRecordOptions = {},
+): T | undefined {
+  const { includeDraft = false } = options;
+
   const forceUpdate = useForceUpdate();
   const firstRunRef = useRef<boolean>(true);
 
@@ -14,8 +24,11 @@ export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey |
 
   // 재조정 범위를 줄이기 위해 `useUIData` 반환 값을 사용하는 대신 직접 값에 접근
   const getRecord = useItemReference();
+  const getDrafts = useDraftsReference();
 
-  const record = isUIRecordKey(recordKey) ? getRecord<T>(recordKey) : undefined;
+  const tempRecord = isUIRecordKey(recordKey) ? (getDrafts().get(recordKey) as T | undefined) : undefined;
+  const realRecord = isUIRecordKey(recordKey) ? getRecord<T>(recordKey) : undefined;
+  const record = includeDraft ? tempRecord ?? realRecord : realRecord;
 
   // 가능하면 browser painting 이전에 상태 변경이 이뤄지도록 함
   useIsomorphicLayoutEffect(() => {
