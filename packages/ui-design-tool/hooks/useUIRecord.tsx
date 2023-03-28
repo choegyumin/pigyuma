@@ -3,7 +3,7 @@ import useItemReference from '@/hooks/useItemReference';
 import useUISubscription from '@/hooks/useUISubscription';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
-import { setRef, useForceUpdate, useIsomorphicLayoutEffect } from '@pigyuma/react-utils';
+import { setRef, useForceUpdate } from '@pigyuma/react-utils';
 import { useEffect, useRef } from 'react';
 
 export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey | undefined): T | undefined {
@@ -17,8 +17,7 @@ export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey |
 
   const record = isUIRecordKey(recordKey) ? getRecord<T>(recordKey) : undefined;
 
-  // 가능하면 browser painting 이전에 상태 변경이 이뤄지도록 함
-  useIsomorphicLayoutEffect(() => {
+  useEffect(() => {
     // 최초 발생한 effect는 무시해 재조정을 차단함
     if (!firstRunRef.current) {
       forceUpdate();
