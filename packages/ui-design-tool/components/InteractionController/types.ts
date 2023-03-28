@@ -8,7 +8,8 @@ export type InteractionTask = {
   event: MouseEvent;
   target?: UIRecordKey;
   status: UIDesignToolStatus;
-  flush?: () => void;
+  enter?: () => void;
+  leave?: () => void;
   clear?: () => void;
   calibrate?: number;
 };

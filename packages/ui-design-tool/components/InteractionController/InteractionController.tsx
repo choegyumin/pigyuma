@@ -130,22 +130,25 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
           }
         })();
 
+        uiController.select([]);
+
         if (record == null) {
-          uiController.select([]);
           break;
         }
 
         uiController.append(parentRecordKey, record, { saveDraft: true });
-        uiController.select([record.key]);
 
-        const flush = () => {
+        const enter = () => {
+          uiController.select([record.key]);
+        };
+        const leave = () => {
           uiController.flushDrafts();
           uiController.toggleMode(UIDesignToolMode.select);
         };
         const clear = () => {
           uiController.remove(record.key);
         };
-        waitingQueue.push({ event, target: record.key, status: nextStatus, flush, clear, calibrate: 5 });
+        waitingQueue.push({ event, target: record.key, status: nextStatus, enter, leave, clear, calibrate: 5 });
 
         break;
       }
@@ -155,7 +158,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       //   const record = new TextLayer(makeDefaultTextLayerArgs('New text', xLength, yLength));
       //   uiController.append(parentRecordKey, record);
       //   uiController.select([record.key]);
-      //   waitingQueue.push({ event, target: record.key, status: nextStatus, flush, calibrate: 5 });
+      //   waitingQueue.push({ event, target: record.key, status: nextStatus, calibrate: 5 });
       //   break;
       // }
 
@@ -193,7 +196,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
     waitingQueue.length = 0;
     setStatus(UIDesignToolStatus.idle);
     interactEnd(event, currentStatus);
-    inProgressQueue.forEach((it) => it.flush?.());
+    inProgressQueue.forEach((it) => it.leave?.());
     inProgressQueue.length = 0;
   });
 
@@ -209,6 +212,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
       }
 
       setStatus(task.status);
+      task.enter?.();
       interactStart(task.event, task.status, task.target);
       return inProgressQueue.push(task);
     }

@@ -12,7 +12,6 @@ import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.c
 import { getResizingCursor } from './cursor';
 import { calcResizedRect } from './rect';
 
-/** @todo useDrawFunctions와 로직을 공유하도록 추상화(리팩토링) */
 export default function useResizeFunctions() {
   const [targetKey, setTargetKey] = useState<UIRecordKey>();
 

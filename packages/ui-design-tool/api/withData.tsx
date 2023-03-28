@@ -1,3 +1,4 @@
+import useDrafts from '@/hooks/useDrafts';
 import useSelected from '@/hooks/useSelected';
 import useUIRecord from '@/hooks/useUIRecord';
 import { UIRecordElementDataAttributeName, UIRecordKey } from '@/types/Identifier';
@@ -19,7 +20,8 @@ export default function withData<R, P extends DefaultComponentProps>(
     const { dataKey: recordKey, ...restProps } = props;
 
     const record = useUIRecord(recordKey);
-    const selectedRecord = useSelected();
+    const selectedRecords = useSelected();
+    const draftRecords = useDrafts();
 
     if (record == null) {
       return null;
@@ -30,7 +32,8 @@ export default function withData<R, P extends DefaultComponentProps>(
       [UIRecordElementDataAttributeName.key]: dataValues?.key,
       [UIRecordElementDataAttributeName.type]: dataValues?.type,
       [UIRecordElementDataAttributeName.layerType]: dataValues?.layerType,
-      [UIRecordElementDataAttributeName.selected]: selectedRecord.has(record.key),
+      [UIRecordElementDataAttributeName.selected]: selectedRecords.has(record.key),
+      [UIRecordElementDataAttributeName.draft]: draftRecords.has(record.key),
     };
 
     return <MemoizedComponent {...restProps} {...dataProps} data={record as UIRecord} ref={ref} />;

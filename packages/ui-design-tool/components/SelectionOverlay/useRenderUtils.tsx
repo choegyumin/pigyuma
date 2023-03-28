@@ -39,7 +39,7 @@ export default function useRenderUtils() {
 
     const handleVisible = isIdle;
     const infoVisible = isDrawing || isResizing || isRotating;
-    const outlineVisible = isIdle;
+    const outlineVisible = isIdle || isDrawing || isResizing || isRotating;
     const cursorVisible = isDrawing || isTransforming;
 
     return {
