@@ -4,7 +4,10 @@ import React from 'react';
 const Document: React.FC = () => {
   return (
     <Html lang="en">
-      <Head />
+      <Head>
+        <meta httpEquiv="Content-Language" content="en_US" />
+        <meta name="google" content="notranslate" />
+      </Head>
       <body>
         <Main />
         <NextScript />

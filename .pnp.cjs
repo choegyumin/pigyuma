@@ -4394,6 +4394,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@mdi-react-npm-1.6.1-00754d4c4a-d0408c5fcc.zip/node_modules/@mdi/react/",\
           "packageDependencies": [\
             ["@mdi/react", "npm:1.6.1"],\
+            ["@types/react", "npm:18.0.25"],\
             ["eslint-import-resolver-node", "npm:0.3.7"],\
             ["prop-types", "npm:15.8.1"],\
             ["react", "npm:18.2.0"]\
@@ -4772,7 +4773,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@pigyuma/ui-design-tool", "workspace:packages/ui-design-tool"],\
             ["@pigyuma/css-utils", "workspace:packages/css-utils"],\
-            ["@pigyuma/design-system", "workspace:packages/design-system"],\
             ["@pigyuma/react-utility-types", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utility-types"],\
             ["@pigyuma/react-utils", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#workspace:packages/react-utils"],\
             ["@pigyuma/tsconfig", "workspace:packages/tsconfig"],\
