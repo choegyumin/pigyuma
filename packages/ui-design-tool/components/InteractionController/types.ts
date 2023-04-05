@@ -2,7 +2,7 @@ import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolStatus } from '@/types/Status';
 import ReactTypes from '@pigyuma/react-utility-types';
 
-export type InteractionControllerProps = ReactTypes.UnknownProps;
+export interface InteractionControllerProps extends ReactTypes.UnknownProps {}
 
 export type InteractionTask = {
   event: MouseEvent;

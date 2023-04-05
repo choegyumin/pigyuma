@@ -42,12 +42,12 @@ export const UIRecordIdentifiers = {
 } as const;
 export type UIRecordIdentifiers = keyof typeof UIRecordIdentifiers;
 
-export type UIRecordElementFilterItem = {
+export interface UIRecordElementFilterItem {
   key?: string;
   type?: string | string[];
   layerType?: string | string[];
   selected?: boolean;
-};
+}
 export type UIRecordElementFilter = UIRecordElementFilterItem | UIRecordElementFilterItem[];
 
 export const UIRecordElementDataAttributeName = {

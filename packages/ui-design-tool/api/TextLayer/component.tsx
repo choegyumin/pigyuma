@@ -4,9 +4,9 @@ import withData from '../withData';
 import { TextLayer } from './model';
 import * as styles from './styles.css';
 
-export type TextLayerProps = {
+export interface TextLayerProps {
   data: TextLayer;
-};
+}
 
 export type TextLayerRef = HTMLDivElement;
 

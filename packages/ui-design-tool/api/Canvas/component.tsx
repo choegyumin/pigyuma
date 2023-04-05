@@ -4,9 +4,9 @@ import withData from '../withData';
 import { Canvas } from './model';
 import * as styles from './styles.css';
 
-export type CanvasProps = {
+export interface CanvasProps {
   data: Canvas;
-};
+}
 
 export type CanvasRef = HTMLDivElement;
 

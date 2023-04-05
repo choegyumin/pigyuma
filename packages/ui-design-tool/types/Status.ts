@@ -39,4 +39,7 @@ export const UIDesignToolTransformMethod = {
 } as const;
 export type UIDesignToolTransformMethod = keyof typeof UIDesignToolTransformMethod;
 
-export type UIDesignToolStatusMeta = { interactionType: UIDesignToolInteractionType; transformMethod: UIDesignToolTransformMethod };
+export interface UIDesignToolStatusMeta {
+  interactionType: UIDesignToolInteractionType;
+  transformMethod: UIDesignToolTransformMethod;
+}

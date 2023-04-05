@@ -6,9 +6,9 @@ import { Layer } from '../Layer/model';
 import withData from '../withData';
 import { UIRecord } from './model';
 
-export type UIRecordProps = {
+export interface UIRecordProps {
   data: UIRecord;
-};
+}
 
 export type UIRecordRef = HTMLDivElement;
 

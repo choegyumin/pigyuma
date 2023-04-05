@@ -5,9 +5,13 @@ import { UIRecordElementDataAttributeName, UIRecordKey } from '@/types/Identifie
 import React from 'react';
 import { UIRecord } from './UIRecord/model';
 
-export type withDataProps = { dataKey: UIRecordKey };
+export interface WithDataProps {
+  dataKey: UIRecordKey;
+}
 
-type DefaultComponentProps = { data: UIRecord };
+interface DefaultComponentProps {
+  data: UIRecord;
+}
 
 export default function withData<R, P extends DefaultComponentProps>(
   Component: React.ForwardRefExoticComponent<React.PropsWithoutRef<P> & React.RefAttributes<R>>,
@@ -16,7 +20,7 @@ export default function withData<R, P extends DefaultComponentProps>(
     Component as React.ForwardRefExoticComponent<React.PropsWithoutRef<DefaultComponentProps> & React.RefAttributes<R>>,
   );
 
-  const DataHOC = React.forwardRef<R, withDataProps>((props, ref) => {
+  const DataHOC = React.forwardRef<R, WithDataProps>((props, ref) => {
     const { dataKey: recordKey, ...restProps } = props;
 
     const record = useUIRecord(recordKey);

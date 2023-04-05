@@ -1,9 +1,14 @@
 import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@/primitives/Box';
-import { PRadioGroupItemProps, PRadioGroupProps, PRadioGroupRef } from '@/primitives/RadioGroup';
+import {
+  RadioGroupItemProps as PRadioGroupItemProps,
+  RadioGroupProps as PRadioGroupProps,
+  RadioGroupRef as PRadioGroupRef,
+} from '@/primitives/RadioGroup';
 
-export type RadioButtonGroupProps = PRadioGroupProps;
+export interface RadioButtonGroupProps extends PRadioGroupProps {}
 export type RadioButtonGroupRef = PRadioGroupRef;
 
-export type RadioButtonGroupItemProps = Omit<ComponentPropsWithoutRefByBox<'label'>, 'for' | keyof PRadioGroupItemProps> &
-  PRadioGroupItemProps;
+export interface RadioButtonGroupItemProps
+  extends Omit<ComponentPropsWithoutRefByBox<'label'>, 'for' | keyof PRadioGroupItemProps>,
+    PRadioGroupItemProps {}
 export type RadioButtonGroupItemRef = ComponentElementRefByBox<'label'>;

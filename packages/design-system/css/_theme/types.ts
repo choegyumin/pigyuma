@@ -7,7 +7,7 @@ type TokenNames<T extends AnyObject> = {
   [P in keyof T]: T[P] extends AnyObject ? TokenNames<T[P]> : TokenName;
 };
 
-export type ColorThemeTokens = {
+export interface ColorThemeTokens {
   accent: {
     primary: Token;
   };
@@ -18,23 +18,23 @@ export type ColorThemeTokens = {
   text: {
     primary: Token;
   };
-};
-export type ColorThemeTokenNames = TokenNames<ColorThemeTokens>;
+}
+export interface ColorThemeTokenNames extends TokenNames<ColorThemeTokens> {}
 
-export type ShadowThemeTokens = {
+export interface ShadowThemeTokens {
   box: {
     level0: Token;
     level1: Token;
   };
-};
-export type ShadowThemeTokenNames = TokenNames<ShadowThemeTokens>;
+}
+export interface ShadowThemeTokenNames extends TokenNames<ShadowThemeTokens> {}
 
-export type SpacingThemeTokens = {
+export interface SpacingThemeTokens {
   scale: Token;
-};
-export type SpacingThemeTokenNames = TokenNames<SpacingThemeTokens>;
+}
+export interface SpacingThemeTokenNames extends TokenNames<SpacingThemeTokens> {}
 
-export type SystemThemeTokens = {
+export interface SystemThemeTokens {
   base: {
     color: Token;
     letterSpacing: Token;
@@ -47,10 +47,10 @@ export type SystemThemeTokens = {
   interaction: {
     focusRingColor: Token;
   };
-};
-export type SystemThemeTokenNames = TokenNames<SystemThemeTokens>;
+}
+export interface SystemThemeTokenNames extends TokenNames<SystemThemeTokens> {}
 
-export type TransitionThemeTokens = {
+export interface TransitionThemeTokens {
   duration: {
     fast: Token;
     normal: Token;
@@ -61,10 +61,10 @@ export type TransitionThemeTokens = {
     easeIn: Token;
     easeOut: Token;
   };
-};
-export type TransitionThemeTokenNames = TokenNames<TransitionThemeTokens>;
+}
+export interface TransitionThemeTokenNames extends TokenNames<TransitionThemeTokens> {}
 
-export type TypographyThemeTokens = {
+export interface TypographyThemeTokens {
   fontFamily: {
     monospace: Token;
     sansSerif: Token;
@@ -100,17 +100,17 @@ export type TypographyThemeTokens = {
       fontWeight: Token;
     };
   };
-};
-export type TypographyThemeTokenNames = TokenNames<TypographyThemeTokens>;
+}
+export interface TypographyThemeTokenNames extends TokenNames<TypographyThemeTokens> {}
 
-export type GlobalThemeTokens = {
+export interface GlobalThemeTokens {
   color: ColorThemeTokens;
   shadow: ShadowThemeTokens;
   spacing: SpacingThemeTokens;
   system: SystemThemeTokens;
   transition: TransitionThemeTokens;
   typography: TypographyThemeTokens;
-};
-export type GlobalThemeTokenNames = TokenNames<GlobalThemeTokens>;
+}
+export interface GlobalThemeTokenNames extends TokenNames<GlobalThemeTokens> {}
 
-export type GlobalThemeVars = ReturnType<typeof createGlobalThemeContract<GlobalThemeTokens>>;
+export type GlobalThemeVars = ReturnType<typeof createGlobalThemeContract<GlobalThemeTokenNames>>;

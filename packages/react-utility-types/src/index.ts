@@ -83,7 +83,7 @@ export const InputOnlyHTMLAttributeKeys = [
   'onSelect', // TextTypes | 'number'
   'onSelectCapture', // TextTypes | 'number'
 ] as const;
-export type InputOnlyHTMLAttributes<T> = Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof InputOnlyHTMLAttributeKeys>>;
+export interface InputOnlyHTMLAttributes<T> extends Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof InputOnlyHTMLAttributeKeys>> {}
 
 /** @see React.InputHTMLAttributes */
 export const TextInputOnlyHTMLAttributeKeys = [
@@ -139,7 +139,8 @@ export const TextInputOnlyHTMLAttributeKeys = [
   'onSelect', // TextTypes | 'number'
   'onSelectCapture', // TextTypes | 'number'
 ] as const;
-export type TextInputOnlyHTMLAttributes<T> = Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof TextInputOnlyHTMLAttributeKeys>>;
+export interface TextInputOnlyHTMLAttributes<T>
+  extends Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof TextInputOnlyHTMLAttributeKeys>> {}
 
 /** @see React.InputHTMLAttributes */
 export const NumberInputOnlyHTMLAttributeKeys = [
@@ -191,7 +192,8 @@ export const NumberInputOnlyHTMLAttributeKeys = [
   'onSelect', // TextTypes | 'number'
   'onSelectCapture', // TextTypes | 'number'
 ] as const;
-export type NumberInputOnlyHTMLAttributes<T> = Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof NumberInputOnlyHTMLAttributeKeys>>;
+export interface NumberInputOnlyHTMLAttributes<T>
+  extends Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof NumberInputOnlyHTMLAttributeKeys>> {}
 
 /** @see React.InputHTMLAttributes */
 export const CheckableInputOnlyHTMLAttributeKeys = [
@@ -231,10 +233,8 @@ export const CheckableInputOnlyHTMLAttributeKeys = [
   'onKeyUp', // AllTypes
   'onKeyUpCapture', // AllTypes
 ] as const;
-export type CheckableInputOnlyHTMLAttributes<T> = Pick<
-  React.InputHTMLAttributes<T>,
-  ArrayElements<typeof CheckableInputOnlyHTMLAttributeKeys>
->;
+export interface CheckableInputOnlyHTMLAttributes<T>
+  extends Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof CheckableInputOnlyHTMLAttributeKeys>> {}
 
 /** @see React.InputHTMLAttributes */
 export const ColorInputOnlyHTMLAttributeKeys = [
@@ -273,7 +273,8 @@ export const ColorInputOnlyHTMLAttributeKeys = [
   'onKeyUp', // AllTypes
   'onKeyUpCapture', // AllTypes
 ] as const;
-export type ColorInputOnlyHTMLAttributes<T> = Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof ColorInputOnlyHTMLAttributeKeys>>;
+export interface ColorInputOnlyHTMLAttributes<T>
+  extends Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof ColorInputOnlyHTMLAttributeKeys>> {}
 
 /** @see React.InputHTMLAttributes */
 export const FileInputOnlyHTMLAttributeKeys = [
@@ -314,7 +315,8 @@ export const FileInputOnlyHTMLAttributeKeys = [
   'onKeyUp', // AllTypes
   'onKeyUpCapture', // AllTypes
 ] as const;
-export type FileInputOnlyHTMLAttributes<T> = Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof FileInputOnlyHTMLAttributeKeys>>;
+export interface FileInputOnlyHTMLAttributes<T>
+  extends Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof FileInputOnlyHTMLAttributeKeys>> {}
 
 /** @see React.InputHTMLAttributes */
 export const ButtonInputOnlyHTMLAttributeKeys = [
@@ -362,7 +364,8 @@ export const ButtonInputOnlyHTMLAttributeKeys = [
   'onKeyUp', // AllTypes
   'onKeyUpCapture', // AllTypes
 ] as const;
-export type ButtonInputOnlyHTMLAttributes<T> = Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof ButtonInputOnlyHTMLAttributeKeys>>;
+export interface ButtonInputOnlyHTMLAttributes<T>
+  extends Pick<React.InputHTMLAttributes<T>, ArrayElements<typeof ButtonInputOnlyHTMLAttributeKeys>> {}
 
 /** @see React.TextareaHTMLAttributes */
 export const TextareaOnlyHTMLAttributeKeys = [
@@ -415,7 +418,8 @@ export const TextareaOnlyHTMLAttributeKeys = [
   'onSelect', // TextTypes | 'number'
   'onSelectCapture', // TextTypes | 'number'
 ] as const;
-export type TextareaOnlyHTMLAttributes<T> = Pick<React.TextareaHTMLAttributes<T>, ArrayElements<typeof TextareaOnlyHTMLAttributeKeys>>;
+export interface TextareaOnlyHTMLAttributes<T>
+  extends Pick<React.TextareaHTMLAttributes<T>, ArrayElements<typeof TextareaOnlyHTMLAttributeKeys>> {}
 
 /** @see React.SelectHTMLAttributes */
 export const SelectOnlyHTMLAttributeKeys = [
@@ -455,7 +459,8 @@ export const SelectOnlyHTMLAttributeKeys = [
   'onKeyUp',
   'onKeyUpCapture',
 ] as const;
-export type SelectOnlyHTMLAttributes<T> = Pick<React.SelectHTMLAttributes<T>, ArrayElements<typeof SelectOnlyHTMLAttributeKeys>>;
+export interface SelectOnlyHTMLAttributes<T>
+  extends Pick<React.SelectHTMLAttributes<T>, ArrayElements<typeof SelectOnlyHTMLAttributeKeys>> {}
 
 /** @see React.ButtonHTMLAttributes */
 export const ButtonOnlyHTMLAttributeKeys = [
@@ -485,4 +490,5 @@ export const ButtonOnlyHTMLAttributeKeys = [
   'onKeyUp',
   'onKeyUpCapture',
 ] as const;
-export type ButtonOnlyHTMLAttributes<T> = Pick<React.ButtonHTMLAttributes<T>, ArrayElements<typeof ButtonOnlyHTMLAttributeKeys>>;
+export interface ButtonOnlyHTMLAttributes<T>
+  extends Pick<React.ButtonHTMLAttributes<T>, ArrayElements<typeof ButtonOnlyHTMLAttributeKeys>> {}

@@ -6,9 +6,9 @@ import withData from '../withData';
 import { Artboard } from './model';
 import * as styles from './styles.css';
 
-export type ArtboardProps = {
+export interface ArtboardProps {
   data: Artboard;
-};
+}
 
 export type ArtboardRef = HTMLDivElement;
 

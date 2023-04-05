@@ -1,4 +1,4 @@
 import { ComponentElementRefByBox, ComponentPropsWithoutRefByBox } from '@/primitives/Box';
 
-export type FieldTriggerProps = ComponentPropsWithoutRefByBox<'span'>;
+export interface FieldTriggerProps extends ComponentPropsWithoutRefByBox<'span'> {}
 export type FieldTriggerRef = ComponentElementRefByBox<'span'>;

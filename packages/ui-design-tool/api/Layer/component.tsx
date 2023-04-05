@@ -6,9 +6,9 @@ import { TextLayer } from '../TextLayer/model';
 import withData from '../withData';
 import { Layer } from './model';
 
-export type LayerProps = {
+export interface LayerProps {
   data: Layer;
-};
+}
 
 export type LayerRef = HTMLDivElement;
 

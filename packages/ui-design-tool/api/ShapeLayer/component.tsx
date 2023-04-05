@@ -5,9 +5,9 @@ import withData from '../withData';
 import { ShapeLayer } from './model';
 import * as styles from './styles.css';
 
-export type ShapeLayerProps = {
+export interface ShapeLayerProps {
   data: ShapeLayer;
-};
+}
 
 export type ShapeLayerRef = HTMLDivElement;
 
