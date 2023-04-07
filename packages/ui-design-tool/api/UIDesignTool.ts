@@ -9,13 +9,13 @@ import {
 } from '@/types/Status';
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { getInteractionType, getTransformMethod } from '@/utils/status';
-import { exclude, nonNullable, nonUndefined, pickBy, uuid } from '@pigyuma/utils';
+import { exclude, makeSymbolicFields, nonNullable, nonUndefined, pickBy, uuid } from '@pigyuma/utils';
 import { Artboard, ArtboardData } from './Artboard/model';
 import { Canvas, CanvasData } from './Canvas/model';
 import { Layer, LayerData } from './Layer/model';
 import { ShapeLayer, ShapeLayerData } from './ShapeLayer/model';
 import { TextLayer, TextLayerData } from './TextLayer/model';
-import { UIDesignToolDOM, UIDesignToolDOMOptions } from './UIDesignToolDOM';
+import { Protected as ExtendedProtected, UIDesignToolDOM, UIDesignToolDOMOptions } from './UIDesignToolDOM';
 import { UIRecord, UIRecordChanges, UIRecordData, UIRecordValueChanges } from './UIRecord/model';
 
 const assignChanges = <T extends UIRecord, C extends UIRecordChanges<T> = UIRecordChanges<T>>(record: T, changes: C): T => {
@@ -29,6 +29,8 @@ export interface UIDesignToolOptions extends UIDesignToolDOMOptions {
 export interface UIDesignToolCreatorOptions {
   saveDraft?: boolean;
 }
+
+export const Protected = makeSymbolicFields({}, ExtendedProtected);
 
 /**
  * @todo Design token 모델 및 관리 방식 설계
@@ -189,7 +191,7 @@ export class UIDesignTool extends UIDesignToolDOM {
     return this.#makeChanges<T, C>(targetKey, newChanges);
   }
 
-  protected _setStatus(status: UIDesignToolStatus): void {
+  #setStatus(status: UIDesignToolStatus): void {
     if (!this.#mounted) {
       return console.error('UIDesignTool is not mounted.');
     }
@@ -252,14 +254,14 @@ export class UIDesignTool extends UIDesignToolDOM {
       }
     } else {
       this.#mounted = true;
-      this._mountEvents();
+      this[Protected.registerEvents]();
     }
 
     // 외부에 노출할 필요가 없는 인터페이스는, 내부(UIDesignCanvas)에서만 사용하도록 `mount` 함수의 반환 값으로 은닉
     return {
       id: this.id,
-      getBrowserMeta: () => this._browserMeta,
-      setStatus: (status: UIDesignToolStatus) => this._setStatus(status),
+      getBrowserMeta: () => this[Protected.browserMeta],
+      setStatus: (status: UIDesignToolStatus) => this.#setStatus(status),
     };
   }
 
@@ -268,7 +270,7 @@ export class UIDesignTool extends UIDesignToolDOM {
       console.warn('UIDesignTool is not mounted.');
     }
 
-    this._unmountEvents();
+    this[Protected.deregisterEvents]();
     this.#mounted = false;
     this.#mode = UIDesignToolMode.select;
     this.#status = UIDesignToolStatus.idle;

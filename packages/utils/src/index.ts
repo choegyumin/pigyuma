@@ -21,6 +21,7 @@ export { default as getNumberPrecision } from './getNumberPrecision';
 export { default as isEqual } from 'lodash-es/isEqual';
 export { default as isUnitlessCSSNumber } from './isUnitlessCSSNumber';
 export { default as kebabCase } from 'lodash-es/kebabCase';
+export { default as makeSymbolicFields } from './makeSymbolicFields';
 export { default as mapEntries } from './mapEntries';
 export { default as mapKeys } from './mapKeys';
 export { default as mapValues } from './mapValues';

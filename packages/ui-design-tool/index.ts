@@ -1,6 +1,6 @@
 /** @todo Design token 모델 내보내기 */
 
-export { UIDesignTool as default } from './api/UIDesignTool';
+export { UIDesignTool as default, Protected as ProtectedUIDesignToolFields } from './api/UIDesignTool';
 export type { UIDesignToolOptions } from './api/UIDesignTool';
 export { UIDesignToolProvider } from './components/UIDesignToolProvider/UIDesignToolProvider';
 

@@ -7,7 +7,7 @@ import {
   UIRecordType,
 } from '@/types/Identifier';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
-import { mapValues, uuid } from '@pigyuma/utils';
+import { makeSymbolicFields, mapValues, uuid } from '@pigyuma/utils';
 
 export const INITIAL_DOCUMENT_ID = 'UNKNOWN';
 
@@ -20,9 +20,15 @@ export interface UIDesignToolDOMOptions {
   id?: string;
 }
 
+export const Protected = makeSymbolicFields({
+  browserMeta: 'browserMeta',
+  registerEvents: 'registerEvents',
+  deregisterEvents: 'deregisterEvents',
+});
+
 export class UIDesignToolDOM {
   readonly #id: string;
-  protected readonly _browserMeta: BrowserMeta;
+  readonly #browserMeta: BrowserMeta;
 
   #hoveredElement: HTMLElement | null;
 
@@ -36,7 +42,7 @@ export class UIDesignToolDOM {
     const { id = uuid.v4() } = options;
 
     this.#id = id;
-    this._browserMeta = INITIAL_BROWSER_META;
+    this.#browserMeta = INITIAL_BROWSER_META;
 
     this.#hoveredElement = null;
 
@@ -44,18 +50,18 @@ export class UIDesignToolDOM {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
       const rootBounds = document.querySelector(this.#rootElementSelector)?.getBoundingClientRect() ?? new DOMRect();
-      this._browserMeta.mouse.clientX = clientX;
-      this._browserMeta.mouse.clientY = clientY;
-      this._browserMeta.mouse.offsetX = clientX - rootBounds.x;
-      this._browserMeta.mouse.offsetY = clientY - rootBounds.y;
+      this.#browserMeta.mouse.clientX = clientX;
+      this.#browserMeta.mouse.clientY = clientY;
+      this.#browserMeta.mouse.offsetX = clientX - rootBounds.x;
+      this.#browserMeta.mouse.offsetY = clientY - rootBounds.y;
       this.#hoveredElement = target;
     };
     const onKeyDownUp = (event: KeyboardEvent) => {
       const { altKey, ctrlKey, metaKey, shiftKey } = event;
-      this._browserMeta.keyboard.altKey = altKey;
-      this._browserMeta.keyboard.ctrlKey = ctrlKey;
-      this._browserMeta.keyboard.metaKey = metaKey;
-      this._browserMeta.keyboard.shiftKey = shiftKey;
+      this.#browserMeta.keyboard.altKey = altKey;
+      this.#browserMeta.keyboard.ctrlKey = ctrlKey;
+      this.#browserMeta.keyboard.metaKey = metaKey;
+      this.#browserMeta.keyboard.shiftKey = shiftKey;
     };
     this.#eventHandlers = {
       onMouseMove,
@@ -68,26 +74,30 @@ export class UIDesignToolDOM {
     return this.#id;
   }
 
+  protected get [Protected.browserMeta](): BrowserMeta {
+    return this.#browserMeta;
+  }
+
   get #rootElementSelector(): string {
     return `[${UIDesignToolElementDataAttributeName.id}="${this.id}"]`;
   }
 
-  protected _mountEvents() {
+  protected [Protected.registerEvents]() {
     document.addEventListener('mousemove', this.#eventHandlers.onMouseMove, { capture: true });
     document.addEventListener('keydown', this.#eventHandlers.onKeyDown, { capture: true });
     document.addEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
   }
 
-  protected _unmountEvents() {
+  protected [Protected.deregisterEvents]() {
     document.removeEventListener('mousemove', this.#eventHandlers.onMouseMove, { capture: true });
     document.removeEventListener('keydown', this.#eventHandlers.onKeyDown, { capture: true });
     document.removeEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
-    this._browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
-    this._browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
-    this._browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;
-    this._browserMeta.keyboard.ctrlKey = INITIAL_BROWSER_META.keyboard.ctrlKey;
-    this._browserMeta.keyboard.metaKey = INITIAL_BROWSER_META.keyboard.metaKey;
-    this._browserMeta.keyboard.shiftKey = INITIAL_BROWSER_META.keyboard.shiftKey;
+    this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
+    this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
+    this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;
+    this.#browserMeta.keyboard.ctrlKey = INITIAL_BROWSER_META.keyboard.ctrlKey;
+    this.#browserMeta.keyboard.metaKey = INITIAL_BROWSER_META.keyboard.metaKey;
+    this.#browserMeta.keyboard.shiftKey = INITIAL_BROWSER_META.keyboard.shiftKey;
     this.#hoveredElement = null;
   }
 
