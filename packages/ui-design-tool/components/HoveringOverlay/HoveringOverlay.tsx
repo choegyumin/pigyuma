@@ -1,6 +1,6 @@
 import useHovered from '@/hooks/useHovered';
 import useMode from '@/hooks/useMode';
-import useStatusMeta from '@/hooks/useStatusMeta';
+import useStatusMetadata from '@/hooks/useStatusMetadata';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import { UIDesignToolInteractionType, UIDesignToolMode } from '@/types/Status';
 import React from 'react';
@@ -14,7 +14,7 @@ import useRenderUtils from './useRenderUtils';
  */
 export const HoveringOverlay: React.FC = React.memo(() => {
   const mode = useMode();
-  const statusMeta = useStatusMeta();
+  const statusMetadata = useStatusMetadata();
   const hovered = useHovered();
   const drafts = useDrafts();
 
@@ -26,7 +26,7 @@ export const HoveringOverlay: React.FC = React.memo(() => {
     record != null &&
     !drafts.has(record?.key) &&
     mode === UIDesignToolMode.select &&
-    statusMeta.interactionType === UIDesignToolInteractionType.idle;
+    statusMetadata.interactionType === UIDesignToolInteractionType.idle;
 
   if (!isActive) {
     return null;

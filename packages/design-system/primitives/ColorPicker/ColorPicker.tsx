@@ -9,15 +9,17 @@ import { ColorPickerProps, ColorPickerRef } from './types';
  * - 투명도 옵션 추가
  */
 const ColorPicker = React.forwardRef<ColorPickerRef, ColorPickerProps>((props, ref) => {
-  const onChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
-    props.onChange?.(event, event.currentTarget.value);
+  const { onChange, onChangeCapture, ...rootProps } = props;
+
+  const onFieldChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event, event.currentTarget.value);
   });
 
-  const onChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
-    props.onChangeCapture?.(event, event.currentTarget.value);
+  const onFieldChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
+    onChangeCapture?.(event, event.currentTarget.value);
   });
 
-  return <Box {...props} ref={ref} as="input" type="color" onChange={onChange} onChangeCapture={onChangeCapture} />;
+  return <Box {...rootProps} ref={ref} as="input" type="color" onChange={onFieldChange} onChangeCapture={onFieldChangeCapture} />;
 });
 ColorPicker.displayName = 'ColorPicker';
 

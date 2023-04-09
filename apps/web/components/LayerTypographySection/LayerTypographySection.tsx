@@ -11,7 +11,7 @@ import * as styles from './LayerTypographySection.css';
 import { LayerTypographySectionProps, LayerTypographySectionRef } from './types';
 
 const LayerTypographySection = React.forwardRef<LayerTypographySectionRef, LayerTypographySectionProps>((props, ref) => {
-  const { selected: selectedRecordKey } = props;
+  const { selected: selectedRecordKey, className, ...restProps } = props;
 
   const uiController = useUIController();
 
@@ -40,7 +40,7 @@ const LayerTypographySection = React.forwardRef<LayerTypographySectionRef, Layer
   });
 
   return (
-    <Panel.Group as="div" {...props} ref={ref} className={clsx(styles.root, props.className)} heading="Typography">
+    <Panel.Group as="div" {...restProps} ref={ref} className={clsx(styles.root, className)} heading="Typography">
       <LayerFieldset>
         <LayerField label="Color">
           <ColorPicker value={textColor} onChange={onTextColorChange} disabled={!canEdit} />

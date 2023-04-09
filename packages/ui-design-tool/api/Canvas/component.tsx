@@ -1,6 +1,6 @@
 import React from 'react';
 import { UIRecordComponent } from '../UIRecord/component';
-import withData from '../withData';
+import withModel from '../withModel';
 import { Canvas } from './model';
 import * as styles from './styles.css';
 
@@ -23,5 +23,5 @@ export const RawCanvasComponent = React.forwardRef<CanvasRef, CanvasProps>((prop
 });
 RawCanvasComponent.displayName = 'RawCanvas';
 
-export const CanvasComponent = withData(RawCanvasComponent);
+export const CanvasComponent = withModel(RawCanvasComponent);
 CanvasComponent.displayName = 'Canvas';

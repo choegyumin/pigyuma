@@ -1,4 +1,4 @@
-import { BrowserMeta } from '@/types/Browser';
+import { BrowserStatus } from '@/types/Browser';
 import {
   UIDesignToolElementDataAttributeName,
   UIRecordElementDataset,
@@ -10,7 +10,7 @@ import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector'
 import { makeSymbolicFields, mapValues } from '@pigyuma/utils';
 import { Protected as ExtendsProtected, DataSubscriber, DataSubscriberConfig } from './DataSubscriber';
 
-export const INITIAL_BROWSER_META: BrowserMeta = {
+export const INITIAL_BROWSER_STATUS: BrowserStatus = {
   mouse: { clientX: 0, clientY: 0, offsetX: 0, offsetY: 0 },
   keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
 };
@@ -19,7 +19,7 @@ export interface ElementSelectorConfig extends DataSubscriberConfig {}
 
 export const Protected = makeSymbolicFields(
   {
-    browserMeta: 'browserMeta',
+    browserStatus: 'browserStatus',
     registerEvents: 'registerEvents',
     deregisterEvents: 'deregisterEvents',
   },
@@ -33,7 +33,7 @@ export const Protected = makeSymbolicFields(
  * ElementSelector가 DataSubscriber를 확장하는 형태로 구현.
  */
 export class ElementSelector extends DataSubscriber {
-  readonly #browserMeta: BrowserMeta;
+  readonly #browserStatus: BrowserStatus;
 
   #hoveredElement: HTMLElement | null;
 
@@ -48,7 +48,7 @@ export class ElementSelector extends DataSubscriber {
 
     super({ strict, id });
 
-    this.#browserMeta = INITIAL_BROWSER_META;
+    this.#browserStatus = INITIAL_BROWSER_STATUS;
 
     this.#hoveredElement = null;
 
@@ -56,18 +56,18 @@ export class ElementSelector extends DataSubscriber {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
       const rootBounds = document.querySelector(this.#rootElementSelector)?.getBoundingClientRect() ?? new DOMRect();
-      this.#browserMeta.mouse.clientX = clientX;
-      this.#browserMeta.mouse.clientY = clientY;
-      this.#browserMeta.mouse.offsetX = clientX - rootBounds.x;
-      this.#browserMeta.mouse.offsetY = clientY - rootBounds.y;
+      this.#browserStatus.mouse.clientX = clientX;
+      this.#browserStatus.mouse.clientY = clientY;
+      this.#browserStatus.mouse.offsetX = clientX - rootBounds.x;
+      this.#browserStatus.mouse.offsetY = clientY - rootBounds.y;
       this.#hoveredElement = target;
     };
     const onKeyDownUp = (event: KeyboardEvent) => {
       const { altKey, ctrlKey, metaKey, shiftKey } = event;
-      this.#browserMeta.keyboard.altKey = altKey;
-      this.#browserMeta.keyboard.ctrlKey = ctrlKey;
-      this.#browserMeta.keyboard.metaKey = metaKey;
-      this.#browserMeta.keyboard.shiftKey = shiftKey;
+      this.#browserStatus.keyboard.altKey = altKey;
+      this.#browserStatus.keyboard.ctrlKey = ctrlKey;
+      this.#browserStatus.keyboard.metaKey = metaKey;
+      this.#browserStatus.keyboard.shiftKey = shiftKey;
     };
     this.#eventHandlers = {
       onMouseMove,
@@ -80,8 +80,8 @@ export class ElementSelector extends DataSubscriber {
     return `[${UIDesignToolElementDataAttributeName.id}="${this.id}"]`;
   }
 
-  protected get [Protected.browserMeta]() {
-    return this.#browserMeta;
+  protected get [Protected.browserStatus]() {
+    return this.#browserStatus;
   }
 
   protected [Protected.registerEvents]() {
@@ -94,12 +94,12 @@ export class ElementSelector extends DataSubscriber {
     document.removeEventListener('mousemove', this.#eventHandlers.onMouseMove, { capture: true });
     document.removeEventListener('keydown', this.#eventHandlers.onKeyDown, { capture: true });
     document.removeEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
-    this.#browserMeta.mouse.clientX = INITIAL_BROWSER_META.mouse.clientX;
-    this.#browserMeta.mouse.clientY = INITIAL_BROWSER_META.mouse.clientY;
-    this.#browserMeta.keyboard.altKey = INITIAL_BROWSER_META.keyboard.altKey;
-    this.#browserMeta.keyboard.ctrlKey = INITIAL_BROWSER_META.keyboard.ctrlKey;
-    this.#browserMeta.keyboard.metaKey = INITIAL_BROWSER_META.keyboard.metaKey;
-    this.#browserMeta.keyboard.shiftKey = INITIAL_BROWSER_META.keyboard.shiftKey;
+    this.#browserStatus.mouse.clientX = INITIAL_BROWSER_STATUS.mouse.clientX;
+    this.#browserStatus.mouse.clientY = INITIAL_BROWSER_STATUS.mouse.clientY;
+    this.#browserStatus.keyboard.altKey = INITIAL_BROWSER_STATUS.keyboard.altKey;
+    this.#browserStatus.keyboard.ctrlKey = INITIAL_BROWSER_STATUS.keyboard.ctrlKey;
+    this.#browserStatus.keyboard.metaKey = INITIAL_BROWSER_STATUS.keyboard.metaKey;
+    this.#browserStatus.keyboard.shiftKey = INITIAL_BROWSER_STATUS.keyboard.shiftKey;
     this.#hoveredElement = null;
   }
 

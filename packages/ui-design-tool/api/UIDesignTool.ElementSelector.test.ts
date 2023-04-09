@@ -7,10 +7,10 @@ describe('UIDesignTool - ElementSelector', () => {
     uiDesignTool = new UIDesignTool();
   });
 
-  describe('getBrowserMeta', () => {
+  describe('getBrowserStatus', () => {
     test('should return metadata of browser', () => {
-      const { getBrowserMeta } = uiDesignTool.mount();
-      expect(getBrowserMeta()).toEqual({
+      const { getBrowserStatus } = uiDesignTool.mount();
+      expect(getBrowserStatus()).toEqual({
         keyboard: {
           altKey: false,
           ctrlKey: false,

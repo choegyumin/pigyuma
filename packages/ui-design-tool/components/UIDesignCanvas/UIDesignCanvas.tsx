@@ -14,7 +14,7 @@ import * as styles from './UIDesignCanvas.css';
 
 export const UIDesignCanvas = React.memo(
   React.forwardRef<UIDesignCanvasRef, UIDesignCanvasProps>((props, ref) => {
-    const { initialData, ...attrs } = props;
+    const { initialData, className, ...restProps } = props;
 
     const id = useInstanceID();
     const mode = useMode();
@@ -26,9 +26,9 @@ export const UIDesignCanvas = React.memo(
 
     return (
       <div
-        {...attrs}
+        {...restProps}
         ref={ref}
-        className={clsx(styles.root, styles.root_mode[mode], attrs.className)}
+        className={clsx(styles.root, styles.root_mode[mode], className)}
         {...{ [UIDesignToolElementDataAttributeName.id]: id }}
       >
         <div className={styles.ui}>

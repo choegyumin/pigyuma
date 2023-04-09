@@ -4,23 +4,23 @@ import Box from '../Box';
 import { RadioProps, RadioRef } from './types';
 
 const Radio = React.forwardRef<RadioRef, RadioProps>((props, ref) => {
-  const { cancelable, ...rootProps } = props;
+  const { cancelable, value, onChange, onChangeCapture, ...rootProps } = props;
 
   const isCheckbox = cancelable;
 
   const getSelected = useCallback(
     (radio: HTMLInputElement): string | number | undefined => {
-      return radio.checked ? props.value : undefined;
+      return radio.checked ? value : undefined;
     },
-    [props.value],
+    [value],
   );
 
-  const onChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
-    props.onChange?.(event, getSelected(event.currentTarget));
+  const onFieldChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event, getSelected(event.currentTarget));
   });
 
-  const onChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
-    props.onChangeCapture?.(event, getSelected(event.currentTarget));
+  const onFieldChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
+    onChangeCapture?.(event, getSelected(event.currentTarget));
   });
 
   return (
@@ -30,10 +30,11 @@ const Radio = React.forwardRef<RadioRef, RadioProps>((props, ref) => {
       ref={ref}
       as="input"
       type={isCheckbox ? 'checkbox' : 'radio'}
-      data-value={JSON.stringify(props.value)}
-      data-value-type={typeof props.value}
-      onChange={onChange}
-      onChangeCapture={onChangeCapture}
+      value={value}
+      data-value={JSON.stringify(value)}
+      data-value-type={typeof value}
+      onChange={onFieldChange}
+      onChangeCapture={onFieldChangeCapture}
     />
   );
 });

@@ -5,7 +5,7 @@ import { UIRecordElementDataAttributeName, UIRecordKey } from '@/types/Identifie
 import React from 'react';
 import { UIRecord } from './UIRecord/model';
 
-export interface WithDataProps {
+export interface WithModelProps {
   dataKey: UIRecordKey;
 }
 
@@ -13,14 +13,14 @@ interface DefaultComponentProps {
   data: UIRecord;
 }
 
-export default function withData<R, P extends DefaultComponentProps>(
+export default function withModel<R, P extends DefaultComponentProps>(
   Component: React.ForwardRefExoticComponent<React.PropsWithoutRef<P> & React.RefAttributes<R>>,
 ) {
   const MemoizedComponent = React.memo(
     Component as React.ForwardRefExoticComponent<React.PropsWithoutRef<DefaultComponentProps> & React.RefAttributes<R>>,
   );
 
-  const DataHOC = React.forwardRef<R, WithDataProps>((props, ref) => {
+  const ModelHOC = React.forwardRef<R, WithModelProps>((props, ref) => {
     const { dataKey: recordKey, ...restProps } = props;
 
     const record = useUIRecord(recordKey);
@@ -42,7 +42,7 @@ export default function withData<R, P extends DefaultComponentProps>(
 
     return <MemoizedComponent {...restProps} {...dataProps} data={record as UIRecord} ref={ref} />;
   });
-  DataHOC.displayName = 'withData';
+  ModelHOC.displayName = 'withModel';
 
-  return DataHOC;
+  return ModelHOC;
 }

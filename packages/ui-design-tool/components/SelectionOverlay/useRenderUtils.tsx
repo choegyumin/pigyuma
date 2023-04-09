@@ -1,7 +1,7 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
-import useStatusMeta from '@/hooks/useStatusMeta';
+import useStatusMetadata from '@/hooks/useStatusMetadata';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
 import { UIDesignToolInteractionType, UIDesignToolTransformMethod } from '@/types/Status';
@@ -28,14 +28,14 @@ const initialInfoText = '';
 export default function useRenderUtils() {
   const uiSelector = useUISelector();
 
-  const statusMeta = useStatusMeta();
+  const statusMetadata = useStatusMetadata();
 
   const getMeta = useCallback(() => {
-    const isIdle = statusMeta.interactionType === UIDesignToolInteractionType.idle;
-    const isDrawing = statusMeta.interactionType === UIDesignToolInteractionType.drawing;
-    const isTransforming = statusMeta.interactionType === UIDesignToolInteractionType.transform;
-    const isResizing = isTransforming && statusMeta.transformMethod === UIDesignToolTransformMethod.resize;
-    const isRotating = isTransforming && statusMeta.transformMethod === UIDesignToolTransformMethod.rotate;
+    const isIdle = statusMetadata.interactionType === UIDesignToolInteractionType.idle;
+    const isDrawing = statusMetadata.interactionType === UIDesignToolInteractionType.drawing;
+    const isTransforming = statusMetadata.interactionType === UIDesignToolInteractionType.transform;
+    const isResizing = isTransforming && statusMetadata.transformMethod === UIDesignToolTransformMethod.resize;
+    const isRotating = isTransforming && statusMetadata.transformMethod === UIDesignToolTransformMethod.rotate;
 
     const handleVisible = isIdle;
     const infoVisible = isDrawing || isResizing || isRotating;
@@ -53,7 +53,7 @@ export default function useRenderUtils() {
       outlineVisible,
       cursorVisible,
     };
-  }, [statusMeta]);
+  }, [statusMetadata]);
 
   const getOverlayShapeStyle = useCallback(
     (record: UIRecord) => {

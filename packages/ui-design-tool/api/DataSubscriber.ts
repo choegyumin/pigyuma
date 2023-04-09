@@ -1,11 +1,11 @@
 import { UIRecordKey } from '@/types/Identifier';
-import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMeta } from '@/types/Status';
+import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMetadata } from '@/types/Status';
 import { makeSymbolicFields } from '@pigyuma/utils';
 import { Protected as ExtendsProtected, InstanceEntity, InstanceEntityInit } from './InstanceEntity';
 import { UIRecord } from './UIRecord/model';
 
 type ModeListener = (mode: UIDesignToolMode) => void;
-type StatusListener = (status: UIDesignToolStatus, meta: UIDesignToolStatusMeta) => void;
+type StatusListener = (status: UIDesignToolStatus, meta: UIDesignToolStatusMetadata) => void;
 type TreeListener = (tree: UIRecord[], changed: UIRecord[], removed: UIRecordKey[]) => void;
 type SelectionListener = (selected: UIRecordKey[]) => void;
 
@@ -66,11 +66,11 @@ export class DataSubscriber extends InstanceEntity {
     this.#listeners.mode.delete(callback);
   }
 
-  subscribeStatus(callback: (status: UIDesignToolStatus, meta: UIDesignToolStatusMeta) => void): void {
+  subscribeStatus(callback: (status: UIDesignToolStatus, meta: UIDesignToolStatusMetadata) => void): void {
     this.#listeners.status.add(callback);
   }
 
-  unsubscribeStatus(callback: (status: UIDesignToolStatus, meta: UIDesignToolStatusMeta) => void): void {
+  unsubscribeStatus(callback: (status: UIDesignToolStatus, meta: UIDesignToolStatusMetadata) => void): void {
     this.#listeners.status.delete(callback);
   }
 

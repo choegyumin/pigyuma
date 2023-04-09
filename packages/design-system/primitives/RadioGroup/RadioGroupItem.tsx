@@ -4,7 +4,7 @@ import { useRadioConfig, useRadioEvents, useSelectedValue } from './RadioGroup.c
 import { RadioGroupItemProps, RadioGroupItemRef } from './types';
 
 const RadioGroupItem = React.forwardRef<RadioGroupItemRef, RadioGroupItemProps>((props, ref) => {
-  const { value } = props;
+  const { value, ...rootProps } = props;
 
   const currentValue = useSelectedValue();
   const { name, cancelable, disabled, required } = useRadioConfig();
@@ -12,7 +12,7 @@ const RadioGroupItem = React.forwardRef<RadioGroupItemRef, RadioGroupItemProps>(
 
   return (
     <Radio
-      {...props}
+      {...rootProps}
       ref={ref}
       name={name}
       cancelable={cancelable}
@@ -21,9 +21,7 @@ const RadioGroupItem = React.forwardRef<RadioGroupItemRef, RadioGroupItemProps>(
       checked={value === currentValue}
       onChange={onChange as RadioProps['onChange']}
       onChangeCapture={onChangeCapture as RadioProps['onChangeCapture']}
-    >
-      {props.children}
-    </Radio>
+    />
   );
 });
 RadioGroupItem.displayName = 'RadioGroupItem';

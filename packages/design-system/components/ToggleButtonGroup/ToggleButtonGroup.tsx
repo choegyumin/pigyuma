@@ -5,11 +5,7 @@ import * as styles from './ToggleButtonGroup.css';
 import { ToggleButtonGroupProps, ToggleButtonGroupRef } from './types';
 
 const ToggleButtonGroup = React.forwardRef<ToggleButtonGroupRef, ToggleButtonGroupProps>((props, ref) => {
-  return (
-    <PCheckboxGroup {...props} ref={ref} className={clsx(styles.root, props.className)}>
-      {props.children}
-    </PCheckboxGroup>
-  );
+  return <PCheckboxGroup {...props} ref={ref} className={clsx(styles.root, props.className)} />;
 });
 ToggleButtonGroup.displayName = 'ToggleButtonGroup';
 

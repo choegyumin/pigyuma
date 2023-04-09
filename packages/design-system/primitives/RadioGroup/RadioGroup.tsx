@@ -28,9 +28,7 @@ const RadioGroup = React.forwardRef<RadioGroupRef, RadioGroupProps>((props, ref)
       onChange={onGroupChange}
       onChangeCapture={onGroupChangeCapture}
     >
-      <Box as="span" role="radiogroup" {...rootProps} ref={ref}>
-        {rootProps.children}
-      </Box>
+      <Box as="span" role="radiogroup" {...rootProps} ref={ref} />
     </RadioGroupContextProvider>
   );
 });

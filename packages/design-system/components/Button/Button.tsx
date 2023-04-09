@@ -5,11 +5,7 @@ import * as styles from './Button.css';
 import { ButtonProps, ButtonRef } from './types';
 
 const Button = React.forwardRef<ButtonRef, ButtonProps>((props, ref) => {
-  return (
-    <Box as="button" {...props} ref={ref} className={clsx(styles.root, props.className)}>
-      {props.children}
-    </Box>
-  );
+  return <Box as="button" {...props} ref={ref} className={clsx(styles.root, props.className)} />;
 });
 Button.displayName = 'Button';
 

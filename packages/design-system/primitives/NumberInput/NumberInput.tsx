@@ -8,24 +8,38 @@ import { NumberInputProps, NumberInputRef } from './types';
  * - `step`이 `value`, `min`, `max` HTML Attributes 대신, 현재 입력된 값을 기준으로 동작하도록 개선
  */
 const NumberInput = React.forwardRef<NumberInputRef, NumberInputProps>((props, ref) => {
-  const { autoSelect, ...restProps } = props;
+  const {
+    autoSelect,
+    value: valueProp,
+    defaultValue: defaultValueProp,
+    step: stepProp,
+    onChange,
+    onChangeCapture,
+    onFocusCapture,
+    onKeyDownCapture,
+    onKeyUpCapture,
+    ...rootProps
+  } = props;
   const forkedRef = useForkedRef(ref);
 
+  const value = valueProp === null ? '' : valueProp;
+  const defaultValue = defaultValueProp === null ? '' : defaultValueProp;
+
   const [stepUp, setStepUp] = useState<boolean>(false);
-  const step = Number(restProps.step ?? 1) * (stepUp ? 10 : 1);
+  const step = Number(stepProp ?? 1) * (stepUp ? 10 : 1);
 
   const convertTargetValue = useCallback((string: string): number | null => (string ? Number(string) : null), []);
 
-  const onChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
-    restProps.onChange?.(event, convertTargetValue(event.currentTarget.value));
+  const onFieldChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event, convertTargetValue(event.currentTarget.value));
   });
 
-  const onChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
-    restProps.onChangeCapture?.(event, convertTargetValue(event.currentTarget.value));
+  const onFieldChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
+    onChangeCapture?.(event, convertTargetValue(event.currentTarget.value));
   });
 
-  const onFocusCapture = useEvent((event: React.FocusEvent<HTMLInputElement>) => {
-    restProps.onFocusCapture?.(event);
+  const onFieldFocusCapture = useEvent((event: React.FocusEvent<HTMLInputElement>) => {
+    onFocusCapture?.(event);
     if (autoSelect) {
       const { currentTarget } = event;
       window.requestAnimationFrame(() => {
@@ -34,32 +48,32 @@ const NumberInput = React.forwardRef<NumberInputRef, NumberInputProps>((props, r
     }
   });
 
-  const onKeyDownCapture = useEvent((event: React.KeyboardEvent<HTMLInputElement>) => {
-    restProps.onKeyDownCapture?.(event);
+  const onFieldKeyDownCapture = useEvent((event: React.KeyboardEvent<HTMLInputElement>) => {
+    onKeyDownCapture?.(event);
     setStepUp(event.shiftKey);
   });
 
-  const onKeyUpCapture = useEvent((event: React.KeyboardEvent<HTMLInputElement>) => {
-    restProps.onKeyUpCapture?.(event);
+  const onFieldKeyUpCapture = useEvent((event: React.KeyboardEvent<HTMLInputElement>) => {
+    onKeyUpCapture?.(event);
     setStepUp(event.shiftKey);
   });
 
   return (
     <Box
-      {...restProps}
+      {...rootProps}
       ref={forkedRef}
       as="input"
       type="number"
       inputMode="decimal"
       spellCheck={false}
-      value={restProps.value === null ? '' : restProps.value}
-      defaultValue={restProps.defaultValue === null ? '' : restProps.defaultValue}
+      value={value}
+      defaultValue={defaultValue}
       step={step}
-      onChange={onChange}
-      onChangeCapture={onChangeCapture}
-      onFocusCapture={onFocusCapture}
-      onKeyDownCapture={onKeyDownCapture}
-      onKeyUpCapture={onKeyUpCapture}
+      onChange={onFieldChange}
+      onChangeCapture={onFieldChangeCapture}
+      onFocusCapture={onFieldFocusCapture}
+      onKeyDownCapture={onFieldKeyDownCapture}
+      onKeyUpCapture={onFieldKeyUpCapture}
     />
   );
 });

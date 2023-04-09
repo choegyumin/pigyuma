@@ -1,5 +1,5 @@
 import useCursor from '@/hooks/useCursor';
-import useStatusMeta from '@/hooks/useStatusMeta';
+import useStatusMetadata from '@/hooks/useStatusMetadata';
 import { UIDesignToolInteractionType } from '@/types/Status';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -7,9 +7,9 @@ import * as styles from './PointerEventsController.css';
 
 export const PointerEventsController: React.FC = React.memo(() => {
   const cursor = useCursor();
-  const statusMeta = useStatusMeta();
+  const statusMetadata = useStatusMetadata();
 
-  const shouldVisible = statusMeta.interactionType !== UIDesignToolInteractionType.idle;
+  const shouldVisible = statusMetadata.interactionType !== UIDesignToolInteractionType.idle;
 
   const style: React.CSSProperties = {
     [styles.varNames.cursor]: shouldVisible ? cursor : 'default',

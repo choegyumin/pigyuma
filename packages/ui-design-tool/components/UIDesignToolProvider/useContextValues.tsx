@@ -1,9 +1,9 @@
 import { Canvas } from '@/api/Canvas/model';
-import { INITIAL_BROWSER_META } from '@/api/ElementSelector';
+import { INITIAL_BROWSER_STATUS } from '@/api/ElementSelector';
 import { UIDesignTool } from '@/api/UIDesignTool';
-import { BrowserMeta } from '@/types/Browser';
+import { BrowserStatus } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
-import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMeta } from '@/types/Status';
+import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMetadata } from '@/types/Status';
 import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -11,22 +11,19 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;
 
   const privateRef = useRef<{
-    getBrowserMeta: () => BrowserMeta;
+    getBrowserStatus: () => BrowserStatus;
     setStatus: React.Dispatch<UIDesignToolStatus>;
   }>({
-    getBrowserMeta: () => INITIAL_BROWSER_META,
+    getBrowserStatus: () => INITIAL_BROWSER_STATUS,
     setStatus: () => undefined,
   });
 
   const instanceId = api.id;
-  const getBrowserMeta = useCallback(
-    (...args: Parameters<typeof privateRef.current.getBrowserMeta>) => privateRef.current.getBrowserMeta(...args),
+  const getBrowserStatus = useCallback(
+    (...args: Parameters<typeof privateRef.current.getBrowserStatus>) => privateRef.current.getBrowserStatus(...args),
     [],
   );
-  const setStatusDispatcher = useCallback(
-    (...args: Parameters<typeof privateRef.current.setStatus>) => privateRef.current.setStatus(...args),
-    [],
-  );
+  const setStatus = useCallback((...args: Parameters<typeof privateRef.current.setStatus>) => privateRef.current.setStatus(...args), []);
 
   const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
   const [hovered, setHovered] = useState<UIRecordKey>();
@@ -35,14 +32,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     () => ({
       setCursor,
       setHovered,
-      setStatus: setStatusDispatcher,
+      setStatus,
     }),
-    [setCursor, setHovered, setStatusDispatcher],
+    [setCursor, setHovered, setStatus],
   );
 
-  const [mode, setMode] = useState<UIDesignToolMode>(() => api.mode);
-  const [status, setStatus] = useState<UIDesignToolStatus>(() => api.status);
-  const [statusMeta, setStatueMeta] = useState<UIDesignToolStatusMeta>(() => ({
+  const [mode, applyMode] = useState<UIDesignToolMode>(() => api.mode);
+  const [status, applyStatus] = useState<UIDesignToolStatus>(() => api.status);
+  const [statusMetadata, applyStatusMetadata] = useState<UIDesignToolStatusMetadata>(() => ({
     interactionType: api.interactionType,
     transformMethod: api.transformMethod,
   }));
@@ -51,10 +48,10 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
    * 상태의 Life cycle을 React에 의존하기 위해 참조 제거
    * @todo 성능 저하가 발생하면: 최초 한번 cloneDeep 후, 변경된 아이템만 clone하도록 개선
    */
-  const [pairs, setPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
+  const [pairs, applyPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
   const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
-  const [drafts, setDrafts] = useCloneDeepState<typeof api.drafts>(() => api.drafts);
-  const [selected, setSelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
+  const [drafts, applyDrafts] = useCloneDeepState<typeof api.drafts>(() => api.drafts);
+  const [selected, applySelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
 
   /** @see ModelStore */
   const controllerInterface = useMemo(
@@ -143,14 +140,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const getSelectedReference = useStableCallback(() => dataInterface.selected);
 
   useEffect(() => {
-    const { getBrowserMeta, setStatus } = api.mount();
+    const { getBrowserStatus, setStatus } = api.mount();
     setRef(privateRef, {
-      getBrowserMeta,
+      getBrowserStatus,
       setStatus,
     });
     return () => {
       setRef(privateRef, {
-        getBrowserMeta: () => INITIAL_BROWSER_META,
+        getBrowserStatus: () => INITIAL_BROWSER_STATUS,
         setStatus: () => undefined,
       });
       api.unmount();
@@ -159,47 +156,47 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
   useEffect(() => {
     const callback = (mode: UIDesignToolMode) => {
-      setMode(mode);
+      applyMode(mode);
     };
     const unsubscribe = subscriberInterface.subscribeMode(callback);
     return unsubscribe;
-  }, [api, subscriberInterface, setMode]);
+  }, [api, subscriberInterface, applyMode]);
 
   useEffect(() => {
-    const callback = (status: UIDesignToolStatus, meta: UIDesignToolStatusMeta) => {
-      setStatus(status);
-      setStatueMeta(meta);
+    const callback = (status: UIDesignToolStatus, meta: UIDesignToolStatusMetadata) => {
+      applyStatus(status);
+      applyStatusMetadata(meta);
     };
     const unsubscribe = subscriberInterface.subscribeStatus(callback);
     return unsubscribe;
-  }, [api, subscriberInterface, setStatus, setStatueMeta]);
+  }, [api, subscriberInterface, applyStatus, applyStatusMetadata]);
 
   useEffect(() => {
     const callback = () => {
-      setPairs(api.pairs);
-      setDrafts(api.drafts);
+      applyPairs(api.pairs);
+      applyDrafts(api.drafts);
     };
     const unsubscribe = subscriberInterface.subscribeTree(callback);
     return unsubscribe;
-  }, [api, subscriberInterface, setPairs, setDrafts]);
+  }, [api, subscriberInterface, applyPairs, applyDrafts]);
 
   useEffect(() => {
     const callback = (newSelected: UIRecordKey[]) => {
-      setSelected(new Set(newSelected));
+      applySelected(new Set(newSelected));
     };
     const unsubscribe = subscriberInterface.subscribeSelection(callback);
     return unsubscribe;
-  }, [api, subscriberInterface, setSelected]);
+  }, [api, subscriberInterface, applySelected]);
 
   return {
     instanceId,
-    getBrowserMeta,
+    getBrowserStatus,
 
     cursor,
     hovered,
     mode,
     status,
-    statusMeta,
+    statusMetadata,
     dispatcher,
 
     tree,

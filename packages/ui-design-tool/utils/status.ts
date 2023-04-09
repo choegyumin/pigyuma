@@ -1,6 +1,6 @@
-import { UIDesignToolInteractionType, UIDesignToolStatus, UIDesignToolStatusMeta, UIDesignToolTransformMethod } from '@/types/Status';
+import { UIDesignToolInteractionType, UIDesignToolStatus, UIDesignToolStatusMetadata, UIDesignToolTransformMethod } from '@/types/Status';
 
-export const getStatus = (meta: UIDesignToolStatusMeta): UIDesignToolStatus => {
+export const getStatus = (meta: UIDesignToolStatusMetadata): UIDesignToolStatus => {
   if (meta.interactionType === UIDesignToolInteractionType.selection) {
     return UIDesignToolStatus.selection;
   }

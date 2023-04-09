@@ -3,7 +3,7 @@ import { RawShapeLayerComponent } from '../ShapeLayer/component';
 import { ShapeLayer } from '../ShapeLayer/model';
 import { RawTextLayerComponent } from '../TextLayer/component';
 import { TextLayer } from '../TextLayer/model';
-import withData from '../withData';
+import withModel from '../withModel';
 import { Layer } from './model';
 
 export interface LayerProps {
@@ -28,5 +28,5 @@ export const RawLayerComponent = React.forwardRef<LayerRef, LayerProps>((props, 
 });
 RawLayerComponent.displayName = 'RawLayer';
 
-export const LayerComponent = withData(RawLayerComponent);
+export const LayerComponent = withModel(RawLayerComponent);
 LayerComponent.displayName = 'Layer';

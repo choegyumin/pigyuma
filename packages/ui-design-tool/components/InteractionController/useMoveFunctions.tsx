@@ -1,4 +1,4 @@
-import useBrowserMeta from '@/hooks/useBrowserMeta';
+import useBrowserStatus from '@/hooks/useBrowserStatus';
 import useDispatcher from '@/hooks/useDispatcher';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
@@ -23,7 +23,7 @@ export default function useMoveFunctions() {
   const uiController = useUIController();
   const uiSelector = useUISelector();
 
-  const getBrowserMeta = useBrowserMeta();
+  const getBrowserStatus = useBrowserStatus();
   const getItemReference = useItemReference();
 
   const { setCursor } = useDispatcher();
@@ -36,9 +36,9 @@ export default function useMoveFunctions() {
         return;
       }
 
-      const browserMeta = getBrowserMeta();
-      const mouseMeta = browserMeta.mouse;
-      const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+      const browserStatus = getBrowserStatus();
+      const mouseStatus = browserStatus.mouse;
+      const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
 
       const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
@@ -48,7 +48,7 @@ export default function useMoveFunctions() {
       setRef(moveHandleCoordRef, mouseOffsetPoint);
       setCursor(getMovingCursor());
     },
-    [uiSelector, getBrowserMeta, getItemReference, setCursor],
+    [uiSelector, getBrowserStatus, getItemReference, setCursor],
   );
 
   const moveEnd = useCallback(() => {
@@ -89,9 +89,9 @@ export default function useMoveFunctions() {
       throw new Error("'rotate' event was not properly initialized.");
     }
 
-    const browserMeta = getBrowserMeta();
-    const mouseMeta = browserMeta.mouse;
-    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
+    const browserStatus = getBrowserStatus();
+    const mouseStatus = browserStatus.mouse;
+    const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
     const handleCoord = moveHandleCoordRef.current;
 
     const newRect = handleCoord != null ? calcMovedRect(initialRect, mouseOffsetPoint, handleCoord) : initialRect;
@@ -101,7 +101,7 @@ export default function useMoveFunctions() {
       uiController.setRect(record.key, newRect);
     }
     setCursor(getMovingCursor());
-  }, [targetKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
+  }, [targetKey, uiController, uiSelector, getBrowserStatus, getItemReference, setCursor]);
 
   return { moveStart, moveEnd, moveInProgress };
 }

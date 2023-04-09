@@ -6,7 +6,7 @@ import * as styles from './Icon.css';
 import { IconPath, IconProps, IconRef, InitialIconProps } from './types';
 
 const Icon = React.forwardRef<IconRef, IconProps>((props, ref) => {
-  const { type, color, size, rotate: rotateProp, flipX: flipXProp, flipY: flipYProp, spin, ...restProps } = props;
+  const { type, color, size, rotate: rotateProp, flipX: flipXProp, flipY: flipYProp, spin, className, style, ...restProps } = props;
 
   const initialProps = InitialIconProps[type];
 
@@ -20,14 +20,14 @@ const Icon = React.forwardRef<IconRef, IconProps>((props, ref) => {
       as={MDIIcon}
       {...restProps}
       ref={ref as React.ComponentProps<typeof MDIIcon>['ref']}
-      className={clsx(styles.root, restProps.className)}
+      className={clsx(styles.root, className)}
       path={path}
       horizontal={horizontal}
       vertical={vertical}
-      style={{ ...restProps.style, fontSize: size ?? restProps.style?.fontSize, rotate: rotate ? `${rotate}deg` : undefined }}
+      style={{ ...style, fontSize: size ?? style?.fontSize, rotate: rotate ? `${rotate}deg` : undefined }}
     />
   );
 });
-Icon.displayName = 'withData';
+Icon.displayName = 'Icon';
 
 export default Icon;

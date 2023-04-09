@@ -26,7 +26,7 @@ import { AxisGrid } from '../AxisGrid/AxisGrid';
 import { HoveringOverlay } from '../HoveringOverlay/HoveringOverlay';
 import { PointerEventsController } from '../PointerEventsController/PointerEventsController';
 import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay';
-import { useBrowserMeta } from '../UIDesignToolProvider/UIDesignToolProvider.context';
+import { useBrowserStatus } from '../UIDesignToolProvider/UIDesignToolProvider.context';
 import * as styles from './InteractionController.css';
 import { makeDefaultArtboardArgs, makeDefaultShapeLayerArgs } from './record';
 import { InteractionControllerProps, InteractionTask } from './types';
@@ -37,7 +37,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
   const uiController = useUIController();
   const uiSelector = useUISelector();
 
-  const getBrowserMeta = useBrowserMeta();
+  const getBrowserStatus = useBrowserStatus();
 
   const mode = useMode();
   const currentStatus = useStatus();
@@ -60,7 +60,7 @@ export const InteractionController: React.FC<InteractionControllerProps> = React
 
     const {
       mouse: { offsetX, offsetY },
-    } = getBrowserMeta();
+    } = getBrowserStatus();
 
     const handle = event.target.closest<HTMLElement>(`[${UIInteractionElementDataAttributeName.handleType}]`);
     const handleType = handle?.dataset[UIInteractionElementDataset.handleType] as InteractionHandleType | undefined;

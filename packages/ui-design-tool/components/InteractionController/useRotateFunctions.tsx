@@ -1,4 +1,4 @@
-import useBrowserMeta from '@/hooks/useBrowserMeta';
+import useBrowserStatus from '@/hooks/useBrowserStatus';
 import useDispatcher from '@/hooks/useDispatcher';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
@@ -23,7 +23,7 @@ export default function useRotateFunctions() {
   const uiController = useUIController();
   const uiSelector = useUISelector();
 
-  const getBrowserMeta = useBrowserMeta();
+  const getBrowserStatus = useBrowserStatus();
   const getItemReference = useItemReference();
 
   const { setCursor } = useDispatcher();
@@ -36,10 +36,10 @@ export default function useRotateFunctions() {
         return;
       }
 
-      const browserMeta = getBrowserMeta();
-      const mouseMeta = browserMeta.mouse;
-      const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
-      const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+      const browserStatus = getBrowserStatus();
+      const mouseStatus = browserStatus.mouse;
+      const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
+      const mouseClientPoint = { x: mouseStatus.clientX, y: mouseStatus.clientY };
 
       const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
@@ -52,7 +52,7 @@ export default function useRotateFunctions() {
       );
       setCursor(getRotatingCursor(target, mouseClientPoint));
     },
-    [uiSelector, getBrowserMeta, getItemReference, setCursor],
+    [uiSelector, getBrowserStatus, getItemReference, setCursor],
   );
 
   const rotateEnd = useCallback(() => {
@@ -93,10 +93,10 @@ export default function useRotateFunctions() {
       throw new Error("'rotate' event was not properly initialized.");
     }
 
-    const browserMeta = getBrowserMeta();
-    const mouseMeta = browserMeta.mouse;
-    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
-    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+    const browserStatus = getBrowserStatus();
+    const mouseStatus = browserStatus.mouse;
+    const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
+    const mouseClientPoint = { x: mouseStatus.clientX, y: mouseStatus.clientY };
     const handleCoordDegrees = rotateHandleCoordDegreesRef.current;
 
     const newRect = handleCoordDegrees != null ? calcRotatedRect(initialRect, mouseOffsetPoint, handleCoordDegrees) : initialRect;
@@ -106,7 +106,7 @@ export default function useRotateFunctions() {
       uiController.setRect(record.key, newRect);
     }
     setCursor(getRotatingCursor(target, mouseClientPoint));
-  }, [targetKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
+  }, [targetKey, uiController, uiSelector, getBrowserStatus, getItemReference, setCursor]);
 
   return { rotateStart, rotateEnd, rotateInProgress };
 }

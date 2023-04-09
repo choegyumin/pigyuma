@@ -50,9 +50,7 @@ const CheckboxGroup = React.forwardRef<CheckboxGroupRef, CheckboxGroupProps>((pr
       onChange={onGroupChange}
       onChangeCapture={onGroupChangeCapture}
     >
-      <Box as="span" role="group" {...rootProps} ref={ref}>
-        {rootProps.children}
-      </Box>
+      <Box as="span" role="group" {...rootProps} ref={ref} />
     </CheckboxGroupContextProvider>
   );
 });

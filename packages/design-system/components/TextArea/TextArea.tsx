@@ -9,7 +9,7 @@ import * as styles from './TextArea.css';
 import { TextAreaProps, TextAreaRef } from './types';
 
 const TextArea = React.forwardRef<TextAreaRef, TextAreaProps>((props, ref) => {
-  const { autoSelect, ...rootProps } = omit(props, TextareaOnlyHTMLAttributeKeys) as Omit<
+  const { autoSelect, className, ...rootProps } = omit(props, TextareaOnlyHTMLAttributeKeys) as Omit<
     typeof props,
     keyof TextareaOnlyHTMLAttributes<HTMLTextAreaElement>
   >;
@@ -20,7 +20,7 @@ const TextArea = React.forwardRef<TextAreaRef, TextAreaProps>((props, ref) => {
   >;
 
   return (
-    <Box as="span" {...rootProps} ref={ref} className={clsx(styles.root, rootProps.className)}>
+    <Box as="span" {...rootProps} ref={ref} className={clsx(styles.root, className)}>
       <FieldTrigger>
         <PrimitiveTextArea {...inputProps} autoSelect={autoSelect} />
       </FieldTrigger>

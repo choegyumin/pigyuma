@@ -1,4 +1,4 @@
-import useBrowserMeta from '@/hooks/useBrowserMeta';
+import useBrowserStatus from '@/hooks/useBrowserStatus';
 import useDispatcher from '@/hooks/useDispatcher';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
@@ -23,7 +23,7 @@ export default function useResizeFunctions() {
   const uiController = useUIController();
   const uiSelector = useUISelector();
 
-  const getBrowserMeta = useBrowserMeta();
+  const getBrowserStatus = useBrowserStatus();
   const getItemReference = useItemReference();
 
   const { setCursor } = useDispatcher();
@@ -40,9 +40,9 @@ export default function useResizeFunctions() {
         return console.error(`element with recordKey of '${recordKey}' not found.`);
       }
 
-      const browserMeta = getBrowserMeta();
-      const mouseMeta = browserMeta.mouse;
-      const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
+      const browserStatus = getBrowserStatus();
+      const mouseStatus = browserStatus.mouse;
+      const mouseClientPoint = { x: mouseStatus.clientX, y: mouseStatus.clientY };
 
       const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
 
@@ -52,7 +52,7 @@ export default function useResizeFunctions() {
       setRef(resizeHandlePlacementRef, handle);
       setCursor(getResizingCursor(target, mouseClientPoint));
     },
-    [uiSelector, getBrowserMeta, getItemReference, setCursor],
+    [uiSelector, getBrowserStatus, getItemReference, setCursor],
   );
 
   const resizeEnd = useCallback(() => {
@@ -93,13 +93,13 @@ export default function useResizeFunctions() {
       throw new Error("'resize' event was not properly initialized.");
     }
 
-    const browserMeta = getBrowserMeta();
-    const mouseMeta = browserMeta.mouse;
-    const mouseOffsetPoint = { x: mouseMeta.offsetX, y: mouseMeta.offsetY };
-    const mouseClientPoint = { x: mouseMeta.clientX, y: mouseMeta.clientY };
-    const keyboardMeta = browserMeta.keyboard;
+    const browserStatus = getBrowserStatus();
+    const mouseStatus = browserStatus.mouse;
+    const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
+    const mouseClientPoint = { x: mouseStatus.clientX, y: mouseStatus.clientY };
+    const keyboardStatus = browserStatus.keyboard;
 
-    const fromCenter = keyboardMeta.altKey;
+    const fromCenter = keyboardStatus.altKey;
     const handlePlacement = resizeHandlePlacementRef.current;
     const isGrabbingCorner = (
       [HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]
@@ -114,7 +114,7 @@ export default function useResizeFunctions() {
     if (isGrabbingCorner) {
       setCursor(getResizingCursor(target, mouseClientPoint));
     }
-  }, [targetKey, uiController, uiSelector, getBrowserMeta, getItemReference, setCursor]);
+  }, [targetKey, uiController, uiSelector, getBrowserStatus, getItemReference, setCursor]);
 
   return { resizeStart, resizeEnd, resizeInProgress };
 }

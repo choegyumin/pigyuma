@@ -5,11 +5,7 @@ import * as styles from './RadioButtonGroup.css';
 import { RadioButtonGroupProps, RadioButtonGroupRef } from './types';
 
 const RadioButtonGroup = React.forwardRef<RadioButtonGroupRef, RadioButtonGroupProps>((props, ref) => {
-  return (
-    <PRadioGroup {...props} ref={ref} className={clsx(styles.root, props.className)}>
-      {props.children}
-    </PRadioGroup>
-  );
+  return <PRadioGroup {...props} ref={ref} className={clsx(styles.root, props.className)} />;
 });
 RadioButtonGroup.displayName = 'RadioButtonGroup';
 
