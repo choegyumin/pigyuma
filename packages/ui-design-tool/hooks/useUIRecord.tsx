@@ -4,7 +4,7 @@ import useUISubscriber from '@/hooks/useUISubscriber';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useForceUpdate } from '@pigyuma/react-utils';
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
 export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey | undefined): T | undefined {
   const forceUpdate = useForceUpdate();
@@ -17,9 +17,10 @@ export default function useUIRecord<T extends UIRecord>(recordKey: UIRecordKey |
 
   const record = isUIRecordKey(recordKey) ? getRecord<T>(recordKey) : undefined;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // 최초 발생한 effect는 무시해 재조정을 차단함
     if (!firstRunRef.current) {
+      // https://codesandbox.io/s/useeffect-vs-uselayouteffect-vs-flushsync-1k9yg9
       forceUpdate();
     }
   }, [recordKey, forceUpdate]);

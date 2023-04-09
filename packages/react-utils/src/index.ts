@@ -1,8 +1,8 @@
 export { default as parseReactStyleValue } from './parseReactStyleValue';
 export { default as parseReactStyle } from './parseReactStyle';
+export { default as pushAsyncAfterRender } from './pushAsyncAfterRender';
 export { default as setRef } from './setRef';
 export { default as styleAreEqual } from './styleAreEqual';
-export { default as waitAsyncPaint } from './waitAsyncPaint';
 
 export { default as useCloneDeepState } from './useCloneDeepState';
 export { default as useCloneState } from './useCloneState';
