@@ -1,6 +1,6 @@
 import { UIRecord } from '@/api/UIRecord/model';
 import useItemReference from '@/hooks/useItemReference';
-import useUISubscription from '@/hooks/useUISubscription';
+import useUISubscriber from '@/hooks/useUISubscriber';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useForceUpdate, usePaintEffect, waitAsyncPaint } from '@pigyuma/react-utils';
@@ -10,7 +10,7 @@ export default function useUIRecordForInteraction<T extends UIRecord>(recordKey:
   const forceUpdate = useForceUpdate();
   const firstRunRef = useRef<boolean>(true);
 
-  const { subscribeTree } = useUISubscription();
+  const { subscribeTree } = useUISubscriber();
 
   // 재조정 범위를 줄이기 위해 `useUIData` 반환 값을 사용하는 대신 직접 값에 접근
   const getRecord = useItemReference();

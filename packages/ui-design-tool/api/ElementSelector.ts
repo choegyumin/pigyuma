@@ -7,27 +7,32 @@ import {
   UIRecordType,
 } from '@/types/Identifier';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
-import { makeSymbolicFields, mapValues, uuid } from '@pigyuma/utils';
-
-export const INITIAL_DOCUMENT_ID = 'UNKNOWN';
+import { makeSymbolicFields, mapValues } from '@pigyuma/utils';
+import { Protected as ExtendsProtected, DataSubscriber, DataSubscriberConfig } from './DataSubscriber';
 
 export const INITIAL_BROWSER_META: BrowserMeta = {
   mouse: { clientX: 0, clientY: 0, offsetX: 0, offsetY: 0 },
   keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
 };
 
-export interface UIDesignToolDOMOptions {
-  id?: string;
-}
+export interface ElementSelectorConfig extends DataSubscriberConfig {}
 
-export const Protected = makeSymbolicFields({
-  browserMeta: 'browserMeta',
-  registerEvents: 'registerEvents',
-  deregisterEvents: 'deregisterEvents',
-});
+export const Protected = makeSymbolicFields(
+  {
+    browserMeta: 'browserMeta',
+    registerEvents: 'registerEvents',
+    deregisterEvents: 'deregisterEvents',
+  },
+  ExtendsProtected,
+);
 
-export class UIDesignToolDOM {
-  readonly #id: string;
+/**
+ * 하나로 완성되어야 의미가 있는 클래스를 코드와 관심사만 적절히 분할하는 것이 목적이므로,
+ * 객체 지향 프로그래밍의 사고방식에 맞추기보다, 사용하기 쉬운 인터페이스 형태로 제공하는 것을 목표로 함.
+ * 자식 클래스가 DataSubscriber를 확장하고, ElementSelector 인스턴스를 새로운 프로퍼티에 할당하는 대신,
+ * ElementSelector가 DataSubscriber를 확장하는 형태로 구현.
+ */
+export class ElementSelector extends DataSubscriber {
   readonly #browserMeta: BrowserMeta;
 
   #hoveredElement: HTMLElement | null;
@@ -38,10 +43,11 @@ export class UIDesignToolDOM {
     onKeyUp: (event: KeyboardEvent) => void;
   };
 
-  constructor(options: UIDesignToolDOMOptions = {}) {
-    const { id = uuid.v4() } = options;
+  constructor(config: ElementSelectorConfig = {}) {
+    const { strict, id } = config;
 
-    this.#id = id;
+    super({ strict, id });
+
     this.#browserMeta = INITIAL_BROWSER_META;
 
     this.#hoveredElement = null;
@@ -70,16 +76,12 @@ export class UIDesignToolDOM {
     };
   }
 
-  get id(): string {
-    return this.#id;
-  }
-
-  protected get [Protected.browserMeta](): BrowserMeta {
-    return this.#browserMeta;
-  }
-
   get #rootElementSelector(): string {
     return `[${UIDesignToolElementDataAttributeName.id}="${this.id}"]`;
+  }
+
+  protected get [Protected.browserMeta]() {
+    return this.#browserMeta;
   }
 
   protected [Protected.registerEvents]() {
