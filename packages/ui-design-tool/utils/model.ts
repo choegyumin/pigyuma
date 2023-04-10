@@ -15,6 +15,9 @@ export const isUIRecordKey = (object: any): object is UIRecordKey => {
   return typeof object === 'string';
 };
 
+export type ExtractUIRecordWithParent<T> = T extends UIRecordWithParent ? T : never;
+export type ExcludeUIRecordWithParent<T> = T extends UIRecordWithParent ? never : T;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isUIRecordWithParent = <T extends UIRecordWithParent>(object: any): object is T => {
   // 타입 검증이므로 parent가 null이어도 존재하는 걸로 판단함
@@ -26,6 +29,9 @@ export const hasUIRecordParent = <T extends UIRecordWithParent>(object: any): ob
   return isUIRecordWithParent(object) && object.parent != null;
 };
 
+export type ExtractUIRecordWithChildren<T> = T extends UIRecordWithChildren ? T : never;
+export type ExcludeUIRecordWithChildren<T> = T extends UIRecordWithChildren ? never : T;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isUIRecordWithChildren = <T extends UIRecordWithChildren>(object: any): object is T => {
   return UIRecord.isModel(object) && Array.isArray((object as AnyObject).children);
@@ -35,6 +41,9 @@ export const isUIRecordWithChildren = <T extends UIRecordWithChildren>(object: a
 export const hasUIRecordChildren = <T extends UIRecordWithChildren>(object: any): object is T => {
   return isUIRecordWithChildren(object) && object.children.length > 0;
 };
+
+export type ExtractRotatableUIRecord<T> = T extends RotatableUIRecord ? T : never;
+export type ExcludeRotatableUIRecord<T> = T extends RotatableUIRecord ? never : T;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isRotatableUIRecord = <T extends RotatableUIRecord>(object: any): object is T => {

@@ -101,7 +101,7 @@ export default function useRenderUtils() {
   );
 
   const getRootStyle = useCallback(
-    (record: UIRecord) => {
+    (record: UIRecord): React.CSSProperties => {
       if (!(record instanceof Artboard || record instanceof Layer)) {
         return initialRootStyle;
       }

@@ -24,7 +24,7 @@ export default function useRenderUtils() {
   const uiSelector = useUISelector();
 
   const getRootStyle = useCallback(
-    (record: UIRecord) => {
+    (record: UIRecord): React.CSSProperties => {
       if (!(record instanceof Layer)) {
         return initialStyle;
       }
@@ -86,5 +86,3 @@ export default function useRenderUtils() {
 
   return { getRootStyle };
 }
-
-export type UseRenderUtilsType = ReturnType<typeof useRenderUtils>;

@@ -7,7 +7,7 @@ import useMoveFunctions from './useMoveFunctions';
 import useResizeFunctions from './useResizeFunctions';
 import useRotateFunctions from './useRotateFunctions';
 
-export default function useInteraction() {
+export default function useInteractFunctions() {
   const { hover } = useHoverFunctions();
   const { drawStart, drawInProgress, drawEnd } = useDrawFunctions();
   const { moveStart, moveInProgress, moveEnd } = useMoveFunctions();

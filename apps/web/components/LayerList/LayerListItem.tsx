@@ -1,12 +1,11 @@
 import Icon, { IconType } from '@pigyuma/design-system/components/Icon';
-import { Box, useEvent, useForkedRef, useWatch } from '@pigyuma/react-utils';
-import { Artboard, TextLayer, useUIController, useUIData } from '@pigyuma/ui-design-tool';
-import { hasUIRecordChildren } from '@pigyuma/ui-design-tool/utils/model';
+import { Box } from '@pigyuma/react-utils';
 import clsx from 'clsx';
-import React, { useEffect, useId, useState } from 'react';
+import React from 'react';
 import LayerList from './LayerList';
 import * as styles from './LayerList.css';
 import { LayerListItemProps, LayerListItemRef } from './types';
+import useLayerListItem from './useLayerListItem';
 
 const IconTypeDict = {
   artboard: IconType.layout,
@@ -20,59 +19,28 @@ const IconTypeDict = {
 
 /** @todo type, layerType에 따른 아이콘 추가 */
 const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((props, ref) => {
-  const componentId = useId();
-
-  const forkedRef = useForkedRef(ref);
-
-  const listId = `list-${componentId}`;
-
-  const { record, depth = 0, onGroupOpen: onGroupOpenProp, role = 'treeitem', ...restProps } = props;
-
-  const uiController = useUIController();
-  const uiData = useUIData();
-
-  const hasChildren = hasUIRecordChildren(record);
-
-  const draft = uiData.isDraft(record.key);
-  const selected = uiData.isSelected(record.key);
-  const [expanded, setExpanded] = useState<boolean>(false);
-
-  const onItemClick = useEvent(() => {
-    uiController.select([record.key]);
-  });
-
-  const onToggleClick = useEvent((event: React.MouseEvent) => {
-    event.stopPropagation();
-    setExpanded(hasChildren ? !expanded : false);
-  });
-
-  const onGroupOpen = useEvent(() => {
-    setExpanded(true);
-    onGroupOpenProp?.();
-  });
-
-  useEffect(() => {
-    if (!hasChildren) {
-      setExpanded(false);
-    }
-  }, [hasChildren]);
-
-  useWatch(() => {
-    if (!draft && selected) {
-      onGroupOpenProp?.();
-      // 상위 Group들이 열리기를 기다림
-      window.requestAnimationFrame(() => {
-        forkedRef.current?.scrollIntoView();
-      });
-    }
-  }, [draft, selected]);
-
-  if (draft) {
+  const viewModel = useLayerListItem(props, ref);
+  if (viewModel == null) {
     return null;
   }
 
-  const iconTypeKey = Artboard.isModel(record) ? 'artboard' : TextLayer.isModel(record) ? 'text' : record.shapeType;
-  const iconType = IconTypeDict[iconTypeKey];
+  const {
+    restProps,
+    forkedRef,
+    listId,
+    record,
+    depth,
+    role,
+    selected,
+    expanded,
+    hasChildren,
+    layerType,
+    onItemClick,
+    onToggleClick,
+    onGroupOpen,
+  } = viewModel;
+
+  const iconType = IconTypeDict[layerType];
 
   return (
     <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row_state.selected]: selected })}>

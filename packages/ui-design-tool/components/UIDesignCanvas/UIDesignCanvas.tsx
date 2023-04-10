@@ -1,28 +1,23 @@
 import { CanvasComponent } from '@/api/Canvas/component';
 import { Canvas } from '@/api/Canvas/model';
-import useInstanceID from '@/hooks/useInstanceID';
-import useMode from '@/hooks/useMode';
-import useUIController from '@/hooks/useUIController';
 import { UIDesignToolElementDataAttributeName } from '@/types/Identifier';
-import { useMount } from '@pigyuma/react-utils';
-import { cloneDeep } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React from 'react';
 import { InteractionController } from '../InteractionController/InteractionController';
 import { UIDesignCanvasProps, UIDesignCanvasRef } from './types';
 import * as styles from './UIDesignCanvas.css';
+import useUIDesignCanvas from './useUIDesignCanvas';
 
+/** @todo 오픈 소스로 전환 시: 빌드 시 적은 용량을 가지는 SolidJS 등의 기술로 마이그레이션 (UIDesignTool과 연결된 라이브러리별 API 제공) */
 export const UIDesignCanvas = React.memo(
   React.forwardRef<UIDesignCanvasRef, UIDesignCanvasProps>((props, ref) => {
+    const viewModel = useUIDesignCanvas(props, ref);
+    if (viewModel == null) {
+      return null;
+    }
+
+    const { id, mode } = viewModel;
     const { initialData, className, ...restProps } = props;
-
-    const id = useInstanceID();
-    const mode = useMode();
-    const uiController = useUIController();
-
-    useMount(() => {
-      uiController.reset(cloneDeep(initialData));
-    });
 
     return (
       <div
