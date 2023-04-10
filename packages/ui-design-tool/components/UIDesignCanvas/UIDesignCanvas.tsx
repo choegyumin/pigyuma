@@ -12,9 +12,6 @@ import useUIDesignCanvas from './useUIDesignCanvas';
 export const UIDesignCanvas = React.memo(
   React.forwardRef<UIDesignCanvasRef, UIDesignCanvasProps>((props, ref) => {
     const viewModel = useUIDesignCanvas(props, ref);
-    if (viewModel == null) {
-      return null;
-    }
 
     const { id, mode } = viewModel;
     const { initialData, className, ...restProps } = props;

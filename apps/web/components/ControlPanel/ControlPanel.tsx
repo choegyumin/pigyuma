@@ -11,9 +11,6 @@ import useControlPanel from './useControlPanel';
 
 const ControlPanel = React.forwardRef<ControlPanelRef, ControlPanelProps>((props, ref) => {
   const viewModel = useControlPanel(props, ref);
-  if (viewModel == null) {
-    return null;
-  }
 
   const { selectedRecord, canEditFill, canEditStroke, canEditTypography } = viewModel;
 

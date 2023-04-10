@@ -11,9 +11,6 @@ import useLayerTypographySection from './useLayerTypographySection';
 
 const LayerTypographySection = React.forwardRef<LayerTypographySectionRef, LayerTypographySectionProps>((props, ref) => {
   const viewModel = useLayerTypographySection(props, ref);
-  if (viewModel == null) {
-    return null;
-  }
 
   const { canEdit, textColor, content, onTextColorChange, onContentChange } = viewModel;
   const { selected, className, ...restProps } = props;

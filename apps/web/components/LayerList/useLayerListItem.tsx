@@ -54,7 +54,7 @@ export default function useLayerListItem(props: LayerListItemProps, ref: React.F
   }, [draft, selected]);
 
   if (draft) {
-    return null;
+    return;
   }
 
   const layerType = Artboard.isModel(record) ? 'artboard' : TextLayer.isModel(record) ? 'text' : record.shapeType;

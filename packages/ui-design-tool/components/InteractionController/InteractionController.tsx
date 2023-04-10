@@ -11,13 +11,9 @@ import useInteractionController from './useInteractionController';
 export const InteractionController: React.FC<InteractionControllerProps> = React.memo(() => {
   const viewModel = useInteractionController();
 
-  useEventListener(document, 'mousedown', viewModel?.onDocumentMouseDown);
-  useEventListener(document, 'mouseup', viewModel?.onDocumentMouseUp);
-  useEventListener(document, 'mousemove', viewModel?.onDocumentMouseMove);
-
-  if (viewModel == null) {
-    return null;
-  }
+  useEventListener(document, 'mousedown', viewModel.onDocumentMouseDown);
+  useEventListener(document, 'mouseup', viewModel.onDocumentMouseUp);
+  useEventListener(document, 'mousemove', viewModel.onDocumentMouseMove);
 
   return (
     <div className={styles.root}>

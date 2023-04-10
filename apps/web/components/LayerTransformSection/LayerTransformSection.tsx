@@ -11,9 +11,6 @@ import useLayerTransformSection from './useLayerTransformSection';
 
 const LayerTransformSection = React.forwardRef<LayerTransformSectionRef, LayerTransformSectionProps>((props, ref) => {
   const viewModel = useLayerTransformSection(props, ref);
-  if (viewModel == null) {
-    return null;
-  }
 
   const {
     canEditPosition,

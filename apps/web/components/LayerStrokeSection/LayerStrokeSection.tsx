@@ -12,9 +12,6 @@ import useLayerStrokeSection from './useLayerStrokeSection';
 
 const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRef, LayerStrokeSectionProps>((props, ref) => {
   const viewModel = useLayerStrokeSection(props, ref);
-  if (viewModel == null) {
-    return null;
-  }
 
   const {
     canEdit,

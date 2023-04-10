@@ -10,9 +10,6 @@ import useLayerFillSection from './useLayerFillSection';
 
 const LayerFillSection = React.forwardRef<LayerFillSectionRef, LayerFillSectionProps>((props, ref) => {
   const viewModel = useLayerFillSection(props, ref);
-  if (viewModel == null) {
-    return null;
-  }
 
   const { canEdit, fillColor, onFillColorChange } = viewModel;
   const { selected, className, ...restProps } = props;

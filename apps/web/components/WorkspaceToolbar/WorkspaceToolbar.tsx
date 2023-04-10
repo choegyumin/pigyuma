@@ -11,11 +11,7 @@ import * as styles from './WorkspaceToolbar.css';
 const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarProps>((props, ref) => {
   const viewModel = useWorkspaceToolbar(props, ref);
 
-  useEventListener(() => document, 'keydown', viewModel?.onDocumentKeyDown);
-
-  if (viewModel == null) {
-    return null;
-  }
+  useEventListener(() => document, 'keydown', viewModel.onDocumentKeyDown);
 
   const { selectedMode, onSelectClick, onArtboardClick, onShapeClick } = viewModel;
 
