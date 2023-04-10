@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox } from '@pigyuma/design-system/primitives/Box';
+import { ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
 import Toolbar from '../Toolbar';
 
 export interface WorkspaceToolbarProps extends ComponentPropsWithoutRefByBox<typeof Toolbar> {}

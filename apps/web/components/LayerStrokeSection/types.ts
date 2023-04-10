@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox } from '@pigyuma/design-system/primitives/Box';
+import { ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
 import { UIRecordKey } from '@pigyuma/ui-design-tool/types/Identifier';
 import Panel from '../Panel';
 

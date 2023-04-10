@@ -1,6 +1,5 @@
-import { useEvent } from '@pigyuma/react-utils';
+import { useEvent, Box } from '@pigyuma/react-utils';
 import React from 'react';
-import Box from '../Box';
 import { TextInputProps, TextInputRef } from './types';
 
 const TextInput = React.forwardRef<TextInputRef, TextInputProps>((props, ref) => {

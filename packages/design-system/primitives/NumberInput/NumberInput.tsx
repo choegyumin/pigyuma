@@ -1,6 +1,5 @@
-import { useEvent, useForkedRef } from '@pigyuma/react-utils';
+import { useEvent, useForkedRef, Box } from '@pigyuma/react-utils';
 import React, { useCallback, useState } from 'react';
-import Box from '../Box';
 import { NumberInputProps, NumberInputRef } from './types';
 
 /**

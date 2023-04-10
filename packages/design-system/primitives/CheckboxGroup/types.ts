@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '../Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import { CheckboxProps, CheckboxRef } from '../Checkbox';
 
 type Value = string | number;

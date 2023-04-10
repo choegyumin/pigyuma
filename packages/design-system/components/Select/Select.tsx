@@ -1,7 +1,6 @@
-import Box from '@/primitives/Box';
 import PrimitiveSelect from '@/primitives/Select';
 import { SelectOnlyHTMLAttributeKeys, SelectOnlyHTMLAttributes } from '@pigyuma/react-utility-types';
-import { useEvent, useForceUpdate, useIsomorphicLayoutMount, useValue } from '@pigyuma/react-utils';
+import { useEvent, useForceUpdate, useIsomorphicLayoutMount, useValue, Box } from '@pigyuma/react-utils';
 import { pick, omit } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React, { useRef } from 'react';

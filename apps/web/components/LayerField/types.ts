@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives/Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import React from 'react';
 
 export interface LayerFieldProps extends ComponentPropsWithoutRefByBox<'div'> {

@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '../Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import { RadioProps, RadioRef } from '../Radio';
 
 type Value = string | number;

@@ -1,6 +1,6 @@
-import Box, { ComponentPropsWithoutRefByBox } from '@/primitives/Box';
 import PRadioGroup from '@/primitives/RadioGroup';
 import { InputOnlyHTMLAttributes, InputOnlyHTMLAttributeKeys } from '@pigyuma/react-utility-types';
+import { Box, ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
 import { pick, omit } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React from 'react';

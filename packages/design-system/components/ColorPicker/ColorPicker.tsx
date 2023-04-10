@@ -1,7 +1,6 @@
-import Box from '@/primitives/Box';
 import PrimitiveColorPicker from '@/primitives/ColorPicker';
 import { InputOnlyHTMLAttributes, InputOnlyHTMLAttributeKeys } from '@pigyuma/react-utility-types';
-import { useEvent, useValue } from '@pigyuma/react-utils';
+import { useEvent, useValue, Box } from '@pigyuma/react-utils';
 import { pick, omit } from '@pigyuma/utils';
 import clsx from 'clsx';
 import Color from 'color';

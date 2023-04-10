@@ -1,6 +1,5 @@
-import { useEvent } from '@pigyuma/react-utils';
+import { useEvent, Box } from '@pigyuma/react-utils';
 import React, { useCallback } from 'react';
-import Box from '../Box';
 import { CheckboxProps, CheckboxRef } from './types';
 
 const Checkbox = React.forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {

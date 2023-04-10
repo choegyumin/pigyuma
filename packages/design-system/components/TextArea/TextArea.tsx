@@ -1,6 +1,6 @@
-import Box from '@/primitives/Box';
 import PrimitiveTextArea from '@/primitives/TextArea';
 import { TextareaOnlyHTMLAttributes, TextareaOnlyHTMLAttributeKeys } from '@pigyuma/react-utility-types';
+import { Box } from '@pigyuma/react-utils';
 import { pick, omit } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React from 'react';

@@ -1,4 +1,4 @@
-import Box from '@pigyuma/design-system/primitives/Box';
+import { Box } from '@pigyuma/react-utils';
 import React from 'react';
 import * as styles from './LayerList.css';
 import LayerListItem from './LayerListItem';

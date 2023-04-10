@@ -1,6 +1,5 @@
-import { useEvent } from '@pigyuma/react-utils';
+import { useEvent, Box } from '@pigyuma/react-utils';
 import React from 'react';
-import Box from '../Box';
 import { ColorPickerProps, ColorPickerRef } from './types';
 
 /**

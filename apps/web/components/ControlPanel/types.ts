@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox } from '@pigyuma/design-system/primitives/Box';
+import { ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
 import Panel from '../Panel';
 
 export interface ControlPanelProps extends Omit<ComponentPropsWithoutRefByBox<typeof Panel>, 'role' | 'placement'> {}

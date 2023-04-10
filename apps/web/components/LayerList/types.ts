@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives/Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import { Artboard, ShapeLayer, TextLayer } from '@pigyuma/ui-design-tool';
 
 export interface LayerListProps extends ComponentPropsWithoutRefByBox<'ul'> {

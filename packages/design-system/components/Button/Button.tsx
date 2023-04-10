@@ -1,4 +1,4 @@
-import Box from '@/primitives/Box';
+import { Box } from '@pigyuma/react-utils';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './Button.css';

@@ -1,7 +1,6 @@
 import { convertInputSelectedValue } from '@/utils/input';
-import { useEvent } from '@pigyuma/react-utils';
+import { useEvent, Box } from '@pigyuma/react-utils';
 import React, { useCallback } from 'react';
-import Box from '../Box';
 import { SelectProps, SelectRef } from './types';
 
 /**

@@ -1,5 +1,5 @@
+import { Box } from '@pigyuma/react-utils';
 import React from 'react';
-import Box from '../Box';
 import { SelectItemProps, SelectItemRef } from './types';
 
 const SelectItem = React.forwardRef<SelectItemRef, SelectItemProps>((props, ref) => {

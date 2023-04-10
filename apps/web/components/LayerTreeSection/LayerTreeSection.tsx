@@ -1,5 +1,5 @@
 import mixins from '@pigyuma/design-system/mixins';
-import Box from '@pigyuma/design-system/primitives/Box';
+import { Box } from '@pigyuma/react-utils';
 import { useUIData } from '@pigyuma/ui-design-tool';
 import clsx from 'clsx';
 import React from 'react';

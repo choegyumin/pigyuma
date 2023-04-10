@@ -24,3 +24,6 @@ export { default as usePrevious } from './usePrevious';
 export { default as useStableCallback } from './useStableCallback';
 export { default as useValue } from './useValue';
 export { default as useWatch } from './useWatch';
+
+export { default as Box } from './Box';
+export * from './Box';

@@ -1,4 +1,4 @@
-import { DynamicComponentByBox, DynamicComponentPropsByBox } from '@pigyuma/design-system/primitives/Box';
+import { DynamicComponentByBox, DynamicComponentPropsByBox } from '@pigyuma/react-utils';
 import React from 'react';
 
 interface PanelCustomProps extends React.HTMLAttributes<HTMLElement> {

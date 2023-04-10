@@ -1,5 +1,5 @@
 import { TextareaOnlyHTMLAttributes } from '@pigyuma/react-utility-types';
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '../Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 
 type Value = string;
 

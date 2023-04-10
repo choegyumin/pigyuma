@@ -1,5 +1,5 @@
-import { ComponentElementRefByBox, ComponentPropsWithoutRefByBox } from '@/primitives/Box';
 import { NumberInputProps as PrimitiveNumberInputProps } from '@/primitives/NumberInput';
+import { ComponentElementRefByBox, ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
 
 export interface NumberFieldProps
   extends Omit<ComponentPropsWithoutRefByBox<'span'>, keyof PrimitiveNumberInputProps>,

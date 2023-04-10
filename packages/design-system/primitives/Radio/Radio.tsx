@@ -1,6 +1,5 @@
-import { useEvent } from '@pigyuma/react-utils';
+import { useEvent, Box } from '@pigyuma/react-utils';
 import React, { useCallback } from 'react';
-import Box from '../Box';
 import { RadioProps, RadioRef } from './types';
 
 const Radio = React.forwardRef<RadioRef, RadioProps>((props, ref) => {

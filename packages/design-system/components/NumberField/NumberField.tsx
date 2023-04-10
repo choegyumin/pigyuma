@@ -1,6 +1,6 @@
-import Box from '@/primitives/Box';
 import PrimitiveNumberInput from '@/primitives/NumberInput';
 import { InputOnlyHTMLAttributes, InputOnlyHTMLAttributeKeys } from '@pigyuma/react-utility-types';
+import { Box } from '@pigyuma/react-utils';
 import { pick, omit } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React from 'react';
