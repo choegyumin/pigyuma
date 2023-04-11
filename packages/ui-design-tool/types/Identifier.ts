@@ -34,6 +34,12 @@ export const HandlePlacement = {
 } as const;
 export type HandlePlacement = keyof typeof HandlePlacement;
 
+export const DrawingType = {
+  artboard: 'artboard',
+  shapeLayer: 'shapeLayer',
+} as const;
+export type DrawingType = keyof typeof DrawingType;
+
 export const UIRecordIdentifiers = {
   key: 'key',
   type: 'type',

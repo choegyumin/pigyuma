@@ -1,112 +1,108 @@
-import useBrowserStatus from '@/hooks/useBrowserStatus';
 import useDispatcher from '@/hooks/useDispatcher';
 import useUIController from '@/hooks/useUIController';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
-import { UIRecordKey } from '@/types/Identifier';
-import { isUIRecordKey } from '@/utils/model';
 import { setRef } from '@pigyuma/react-utils';
 import { calcDegreesBetweenCoords, isEqual } from '@pigyuma/utils';
 import { useCallback, useRef, useState } from 'react';
-import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.context';
 import { getRotatingCursor } from './cursor';
 import { calcRotatedRect } from './rect';
+import { BaseInteractionPayload, InteractionTarget, RotatingPayload } from './types';
+
+/** @todo 여러 레이어를 한번에 rotate 할 수 있도록 개선 */
+const pickTarget = (targets: InteractionTarget[]): InteractionTarget | undefined => {
+  return targets[0];
+};
 
 export default function useRotateFunctions() {
-  const [targetKey, setTargetKey] = useState<UIRecordKey>();
+  const [taskPayload, setTaskPayload] = useState<RotatingPayload>();
 
-  const transformInitialRectRef = useRef<UIRecordRect>();
   const transformLastRectRef = useRef<UIRecordRect>();
-
   const rotateHandleCoordDegreesRef = useRef<number>();
 
   const uiController = useUIController();
   const uiSelector = useUISelector();
 
-  const getBrowserStatus = useBrowserStatus();
-  const getItemReference = useItemReference();
-
   const { setCursor } = useDispatcher();
 
-  const rotateStart = useCallback(
-    (recordKey: UIRecordKey) => {
-      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
-      if (record == null || target == null) {
+  const rotatePrepare = useCallback(
+    (taskPayload: RotatingPayload) => {
+      const {
+        mouse,
+        details: { targets },
+      } = taskPayload;
+
+      const target = pickTarget(targets);
+      if (target == null) {
         return;
       }
 
-      const browserStatus = getBrowserStatus();
-      const mouseStatus = browserStatus.mouse;
-      const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
-      const mouseClientPoint = { x: mouseStatus.clientX, y: mouseStatus.clientY };
+      const { record, rect } = target;
 
-      const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
+      const clientPoint = { x: mouse.clientX, y: mouse.clientY };
+      const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
 
-      setTargetKey(recordKey);
-      setRef(transformInitialRectRef, rect);
-      setRef(transformLastRectRef, transformInitialRectRef.current);
+      setTaskPayload(taskPayload);
+      setRef(transformLastRectRef, rect);
       setRef(
         rotateHandleCoordDegreesRef,
-        calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, mouseOffsetPoint),
+        calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, offsetPoint),
       );
-      setCursor(getRotatingCursor(target, mouseClientPoint));
+      // cursor는 viewport에 의존해야 하므로, cursor 관련 로직은 별도의 함수에 테스트 작성 (uiSelector 접근)
+      setCursor(getRotatingCursor(uiSelector.query({ key: record.key })!, clientPoint));
     },
-    [uiSelector, getBrowserStatus, getItemReference, setCursor],
+    [uiSelector, setCursor],
   );
 
-  const rotateEnd = useCallback(() => {
-    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
-    if (record == null) {
-      setTargetKey(undefined);
-      return console.warn(`UIRecord '${targetKey}' not found.`);
-    }
+  const rotateExecute = useCallback(
+    (pingPayload: BaseInteractionPayload) => {
+      if (taskPayload == null) {
+        return console.error(`Rotate interaction is not initialized. Call rotatePrepare() first.`);
+      }
 
-    const target = isUIRecordKey(targetKey) ? uiSelector.query({ key: targetKey }) : undefined;
-    if (target == null) {
-      setTargetKey(undefined);
-      return console.warn(`Element with recordKey of '${targetKey}' not found.`);
-    }
+      const {
+        details: { targets },
+      } = taskPayload;
 
-    const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
+      const target = pickTarget(targets);
+      if (target == null) {
+        return;
+      }
 
-    setTargetKey(undefined);
-    setRef(transformInitialRectRef, undefined);
-    setRef(transformLastRectRef, undefined);
-    setRef(rotateHandleCoordDegreesRef, undefined);
-    uiController.setRect(record.key, rect);
-  }, [targetKey, uiController, uiSelector, getItemReference]);
+      const { mouse } = pingPayload;
+      const { record, rect: initialRect } = target;
 
-  const rotateInProgress = useCallback(() => {
-    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
-    if (record == null) {
-      return console.error(`UIRecord '${targetKey}' not found.`);
-    }
+      const clientPoint = { x: mouse.clientX, y: mouse.clientY };
+      const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
+      const lastRect = transformLastRectRef.current;
+      const handleCoordDegrees = rotateHandleCoordDegreesRef.current;
 
-    const target = isUIRecordKey(targetKey) ? uiSelector.query({ key: targetKey }) : undefined;
-    if (target == null) {
-      return console.error(`Element with recordKey of '${targetKey}' not found.`);
-    }
+      const newRect = handleCoordDegrees != null ? calcRotatedRect(initialRect, offsetPoint, handleCoordDegrees) : initialRect;
 
-    const initialRect = transformInitialRectRef.current;
-    if (initialRect == null) {
-      throw new Error("'rotate' event was not properly initialized.");
-    }
+      if (!isEqual(newRect.toJSON(), lastRect?.toJSON())) {
+        setRef(transformLastRectRef, newRect);
+        uiController.setRect(record.key, newRect);
+      }
+      // cursor는 viewport에 의존해야 하므로, cursor 관련 로직은 별도의 함수에 테스트 작성 (uiSelector 접근)
+      setCursor(getRotatingCursor(uiSelector.query({ key: record.key })!, clientPoint));
+    },
+    [taskPayload, uiController, uiSelector, setCursor],
+  );
 
-    const browserStatus = getBrowserStatus();
-    const mouseStatus = browserStatus.mouse;
-    const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
-    const mouseClientPoint = { x: mouseStatus.clientX, y: mouseStatus.clientY };
-    const handleCoordDegrees = rotateHandleCoordDegreesRef.current;
+  const rotateEnd = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (pingPayload: BaseInteractionPayload) => {
+      setTaskPayload(undefined);
+      setRef(transformLastRectRef, undefined);
+      setRef(rotateHandleCoordDegreesRef, undefined);
+      setCursor(undefined);
 
-    const newRect = handleCoordDegrees != null ? calcRotatedRect(initialRect, mouseOffsetPoint, handleCoordDegrees) : initialRect;
+      if (taskPayload == null) {
+        console.warn(`Rotate interaction is not initialized.`);
+      }
+    },
+    [taskPayload, setCursor],
+  );
 
-    if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
-      setRef(transformLastRectRef, newRect);
-      uiController.setRect(record.key, newRect);
-    }
-    setCursor(getRotatingCursor(target, mouseClientPoint));
-  }, [targetKey, uiController, uiSelector, getBrowserStatus, getItemReference, setCursor]);
-
-  return { rotateStart, rotateEnd, rotateInProgress };
+  return { rotatePrepare, rotateStart: rotateExecute, rotateExecute, rotateEnd };
 }

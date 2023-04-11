@@ -6,7 +6,6 @@ import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
 import { UIDesignToolInteractionType, UIDesignToolMode } from '@/types/Status';
 import useRenderUtils from './useRenderUtils';
 
-/** @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성 */
 export default function useHoveringOverlay() {
   const mode = useMode();
   const statusMetadata = useStatusMetadata();

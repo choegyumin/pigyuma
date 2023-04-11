@@ -29,6 +29,7 @@ export const Protected = makeSymbolicFields(
   ExtendsProtected,
 );
 
+/** @todo 테스트 코드 고도화 */
 export class ModelStore extends ElementSelector {
   #mode: UIDesignToolMode;
   #status: UIDesignToolStatus;
@@ -212,7 +213,11 @@ export class ModelStore extends ElementSelector {
 
   toggleMode(mode: UIDesignToolMode): void {
     if (this.status !== UIDesignToolStatus.idle) {
-      return console.error('mode can only be changed when status is idle.');
+      const message = 'mode can only be changed when status is idle.';
+      if (this[Protected.strict]) {
+        throw new Error(message);
+      }
+      console.error(message);
     }
     const prevMode = this.mode;
     this.#mode = mode;

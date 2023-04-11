@@ -1,107 +1,98 @@
-import useBrowserStatus from '@/hooks/useBrowserStatus';
 import useDispatcher from '@/hooks/useDispatcher';
 import useUIController from '@/hooks/useUIController';
-import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
-import { UIRecordKey } from '@/types/Identifier';
-import { isUIRecordKey } from '@/utils/model';
 import { setRef } from '@pigyuma/react-utils';
 import { isEqual } from '@pigyuma/utils';
 import { useCallback, useRef, useState } from 'react';
-import { useItemReference } from '../UIDesignToolProvider/UIDesignToolProvider.context';
 import { getMovingCursor } from './cursor';
 import { calcMovedRect } from './rect';
+import { BaseInteractionPayload, InteractionTarget, MovingPayload } from './types';
+
+/** @todo 여러 레이어를 한번에 resize 할 수 있도록 개선 */
+const pickTarget = (targets: InteractionTarget[]): InteractionTarget | undefined => {
+  return targets[0];
+};
 
 export default function useMoveFunctions() {
-  const [targetKey, setTargetKey] = useState<UIRecordKey>();
+  const [taskPayload, setTaskPayload] = useState<MovingPayload>();
 
-  const transformInitialRectRef = useRef<UIRecordRect>();
   const transformLastRectRef = useRef<UIRecordRect>();
-
   const moveHandleCoordRef = useRef<{ x: number; y: number }>();
 
   const uiController = useUIController();
-  const uiSelector = useUISelector();
-
-  const getBrowserStatus = useBrowserStatus();
-  const getItemReference = useItemReference();
 
   const { setCursor } = useDispatcher();
 
-  const moveStart = useCallback(
-    (recordKey: UIRecordKey) => {
-      const record = isUIRecordKey(recordKey) ? getItemReference(recordKey) : undefined;
-      const target = isUIRecordKey(recordKey) ? uiSelector.query({ key: recordKey }) : undefined;
-      if (record == null || target == null) {
+  const movePrepare = useCallback(
+    (taskPayload: MovingPayload) => {
+      const {
+        mouse,
+        details: { targets },
+      } = taskPayload;
+
+      const target = pickTarget(targets);
+      if (target == null) {
         return;
       }
 
-      const browserStatus = getBrowserStatus();
-      const mouseStatus = browserStatus.mouse;
-      const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
+      const { rect } = target;
 
-      const rect = UIRecordRect.fromRect(UIRecordRect.fromElement(target).toJSON());
+      const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
 
-      setTargetKey(recordKey);
-      setRef(transformInitialRectRef, rect);
-      setRef(transformLastRectRef, transformInitialRectRef.current);
-      setRef(moveHandleCoordRef, mouseOffsetPoint);
+      setTaskPayload(taskPayload);
+      setRef(transformLastRectRef, rect);
+      setRef(moveHandleCoordRef, offsetPoint);
       setCursor(getMovingCursor());
     },
-    [uiSelector, getBrowserStatus, getItemReference, setCursor],
+    [setCursor],
   );
 
-  const moveEnd = useCallback(() => {
-    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
-    if (record == null) {
-      setTargetKey(undefined);
-      return console.warn(`UIRecord '${targetKey}' not found.`);
-    }
+  const moveExecute = useCallback(
+    (pingPayload: BaseInteractionPayload) => {
+      if (taskPayload == null) {
+        return console.error(`Move interaction is not initialized. Call movePrepare() first.`);
+      }
 
-    const target = isUIRecordKey(targetKey) ? uiSelector.query({ key: targetKey }) : undefined;
-    if (target == null) {
-      setTargetKey(undefined);
-      return console.warn(`Element with recordKey of '${targetKey}' not found.`);
-    }
+      const {
+        details: { targets },
+      } = taskPayload;
 
-    const rect = transformLastRectRef.current ?? UIRecordRect.fromElement(target);
+      const target = pickTarget(targets);
+      if (target == null) {
+        return;
+      }
 
-    setTargetKey(undefined);
-    setRef(transformInitialRectRef, undefined);
-    setRef(transformLastRectRef, undefined);
-    setRef(moveHandleCoordRef, undefined);
-    uiController.setRect(record.key, rect);
-  }, [targetKey, uiController, uiSelector, getItemReference]);
+      const { mouse } = pingPayload;
+      const { record, rect: initialRect } = target;
 
-  const moveInProgress = useCallback(() => {
-    const record = isUIRecordKey(targetKey) ? getItemReference(targetKey) : undefined;
-    if (record == null) {
-      return console.error(`UIRecord '${targetKey}' not found.`);
-    }
+      const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
+      const handleCoord = moveHandleCoordRef.current;
 
-    const target = isUIRecordKey(targetKey) ? uiSelector.query({ key: targetKey }) : undefined;
-    if (target == null) {
-      return console.error(`Element with recordKey of '${targetKey}' not found.`);
-    }
+      const newRect = handleCoord != null ? calcMovedRect(initialRect, offsetPoint, handleCoord) : initialRect;
 
-    const initialRect = transformInitialRectRef.current;
-    if (initialRect == null) {
-      throw new Error("'rotate' event was not properly initialized.");
-    }
+      if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
+        setRef(transformLastRectRef, newRect);
+        uiController.setRect(record.key, newRect);
+      }
+      setCursor(getMovingCursor());
+    },
+    [taskPayload, uiController, setCursor],
+  );
 
-    const browserStatus = getBrowserStatus();
-    const mouseStatus = browserStatus.mouse;
-    const mouseOffsetPoint = { x: mouseStatus.offsetX, y: mouseStatus.offsetY };
-    const handleCoord = moveHandleCoordRef.current;
+  const moveEnd = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (pingPayload: BaseInteractionPayload) => {
+      setTaskPayload(undefined);
+      setRef(transformLastRectRef, undefined);
+      setRef(moveHandleCoordRef, undefined);
+      setCursor(undefined);
 
-    const newRect = handleCoord != null ? calcMovedRect(initialRect, mouseOffsetPoint, handleCoord) : initialRect;
+      if (taskPayload == null) {
+        console.warn(`Resize interaction is not initialized.`);
+      }
+    },
+    [taskPayload, setCursor],
+  );
 
-    if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
-      setRef(transformLastRectRef, newRect);
-      uiController.setRect(record.key, newRect);
-    }
-    setCursor(getMovingCursor());
-  }, [targetKey, uiController, uiSelector, getBrowserStatus, getItemReference, setCursor]);
-
-  return { moveStart, moveEnd, moveInProgress };
+  return { movePrepare, moveStart: moveExecute, moveExecute, moveEnd };
 }

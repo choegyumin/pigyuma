@@ -25,16 +25,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   );
   const setStatus = useCallback((...args: Parameters<typeof privateRef.current.setStatus>) => privateRef.current.setStatus(...args), []);
 
-  const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
-  const [hovered, setHovered] = useState<UIRecordKey>();
+  const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>();
 
   const dispatcher = useMemo(
     () => ({
       setCursor,
-      setHovered,
       setStatus,
     }),
-    [setCursor, setHovered, setStatus],
+    [setCursor, setStatus],
   );
 
   const [mode, applyMode] = useState<UIDesignToolMode>(() => api.mode);
@@ -51,6 +49,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const [pairs, applyPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
   const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
   const [drafts, applyDrafts] = useCloneDeepState<typeof api.drafts>(() => api.drafts);
+  const [hovered, applyHovered] = useState<UIRecordKey | undefined>(() => api.hovered);
   const [selected, applySelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
 
   /** @see ModelStore */
@@ -99,7 +98,6 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       query: ((...args) => api.query(...args)) as typeof api.query,
       queryAll: ((...args) => api.queryAll(...args)) as typeof api.queryAll,
       fromPoint: ((...args) => api.fromPoint(...args)) as typeof api.fromPoint,
-      fromMouse: ((...args) => api.fromMouse(...args)) as typeof api.fromMouse,
     }),
     [api],
   );
@@ -121,6 +119,11 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       subscribeTree: (...args: Parameters<typeof api.subscribeTree>): (() => void) => {
         api.subscribeTree(...args);
         const unsubscribe = () => api.unsubscribeTree(...args);
+        return unsubscribe;
+      },
+      subscribeHovering: (...args: Parameters<typeof api.subscribeHovering>): (() => void) => {
+        api.subscribeHovering(...args);
+        const unsubscribe = () => api.unsubscribeHovering(...args);
         return unsubscribe;
       },
       subscribeSelection: (...args: Parameters<typeof api.subscribeSelection>): (() => void) => {
@@ -181,6 +184,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   }, [api, subscriberInterface, applyPairs, applyDrafts]);
 
   useEffect(() => {
+    const callback = (newHovered?: UIRecordKey) => {
+      applyHovered(newHovered);
+    };
+    const unsubscribe = subscriberInterface.subscribeHovering(callback);
+    return unsubscribe;
+  }, [api, subscriberInterface, applyHovered]);
+
+  useEffect(() => {
     const callback = (newSelected: UIRecordKey[]) => {
       applySelected(new Set(newSelected));
     };
@@ -193,7 +204,6 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     getBrowserStatus,
 
     cursor,
-    hovered,
     mode,
     status,
     statusMetadata,
@@ -202,6 +212,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     tree,
     pairs,
     drafts,
+    hovered,
     selected,
     getItemReference,
     getTreeReference,

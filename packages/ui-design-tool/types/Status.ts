@@ -14,20 +14,20 @@ export const UIDesignToolStatus = {
   idle: 'idle',
   /** Range selection */
   selection: 'selection',
-  drawing: 'drawing',
-  input: 'input',
   moving: 'moving',
   resizing: 'resizing',
   rotating: 'rotating',
+  drawing: 'drawing',
+  input: 'input',
 } as const;
 export type UIDesignToolStatus = keyof typeof UIDesignToolStatus;
 
 export const UIDesignToolInteractionType = {
   idle: 'idle',
   selection: 'selection',
+  transform: 'transform',
   drawing: 'drawing',
   input: 'input',
-  transform: 'transform',
 } as const;
 export type UIDesignToolInteractionType = keyof typeof UIDesignToolInteractionType;
 

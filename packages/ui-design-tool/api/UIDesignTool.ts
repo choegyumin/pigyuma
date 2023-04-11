@@ -1,5 +1,5 @@
 import { UIDesignToolMode, UIDesignToolStatus } from '@/types/Status';
-import { makeSymbolicFields } from '@pigyuma/utils';
+import { cloneDeep, makeSymbolicFields } from '@pigyuma/utils';
 import { Protected as ExtendsProtected, ModelStore, ModelStoreConfig } from './ModelStore';
 
 export interface UIDesignToolConfig extends ModelStoreConfig {}
@@ -29,12 +29,10 @@ export class UIDesignTool extends ModelStore {
   mount() {
     if (this.#mounted) {
       const message = 'UIDesignTool already mounted.';
-
       if (this[Protected.strict]) {
         throw new Error(message);
-      } else {
-        console.error(message);
       }
+      console.error(message);
     } else {
       this.#mounted = true;
       this[Protected.registerEvents]();
@@ -42,7 +40,8 @@ export class UIDesignTool extends ModelStore {
 
     // 외부에 노출할 필요가 없는 인터페이스는, 내부(UIDesignCanvas)에서만 사용하도록 `mount` 함수의 반환 값으로 은닉
     return {
-      getBrowserStatus: () => this[Protected.browserStatus],
+      // 클래스 외부 함수로 추출하면서 참조 제거
+      getBrowserStatus: () => cloneDeep({ ...this[Protected.browserStatus] }),
       setStatus: (status: UIDesignToolStatus) => this[Protected.setStatus](status),
     };
   }

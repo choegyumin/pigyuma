@@ -4,6 +4,7 @@ import {
   UIRecordElementDataset,
   UIRecordElementFilter,
   UIRecordElementFilterItem,
+  UIRecordKey,
   UIRecordType,
 } from '@/types/Identifier';
 import { createUIRecordSelector, NULL_ELEMENT_SELECTOR } from '@/utils/selector';
@@ -31,11 +32,13 @@ export const Protected = makeSymbolicFields(
  * 객체 지향 프로그래밍의 사고방식에 맞추기보다, 사용하기 쉬운 인터페이스 형태로 제공하는 것을 목표로 함.
  * 자식 클래스가 DataSubscriber를 확장하고, ElementSelector 인스턴스를 새로운 프로퍼티에 할당하는 대신,
  * ElementSelector가 DataSubscriber를 확장하는 형태로 구현.
+ *
+ * @todo 테스트 코드 고도화
  */
 export class ElementSelector extends DataSubscriber {
   readonly #browserStatus: BrowserStatus;
 
-  #hoveredElement: HTMLElement | null;
+  #hoveredKey: UIRecordKey | undefined;
 
   readonly #eventHandlers: {
     onMouseMove: (event: MouseEvent) => void;
@@ -50,7 +53,7 @@ export class ElementSelector extends DataSubscriber {
 
     this.#browserStatus = INITIAL_BROWSER_STATUS;
 
-    this.#hoveredElement = null;
+    this.#hoveredKey = undefined;
 
     const onMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
@@ -60,7 +63,9 @@ export class ElementSelector extends DataSubscriber {
       this.#browserStatus.mouse.clientY = clientY;
       this.#browserStatus.mouse.offsetX = clientX - rootBounds.x;
       this.#browserStatus.mouse.offsetY = clientY - rootBounds.y;
-      this.#hoveredElement = target;
+      const hoveredKey = this.dataset(target).key;
+      this.#hoveredKey = hoveredKey;
+      this[Protected.dispatchHoveringChanges](hoveredKey);
     };
     const onKeyDownUp = (event: KeyboardEvent) => {
       const { altKey, ctrlKey, metaKey, shiftKey } = event;
@@ -100,7 +105,12 @@ export class ElementSelector extends DataSubscriber {
     this.#browserStatus.keyboard.ctrlKey = INITIAL_BROWSER_STATUS.keyboard.ctrlKey;
     this.#browserStatus.keyboard.metaKey = INITIAL_BROWSER_STATUS.keyboard.metaKey;
     this.#browserStatus.keyboard.shiftKey = INITIAL_BROWSER_STATUS.keyboard.shiftKey;
-    this.#hoveredElement = null;
+    this.#hoveredKey = undefined;
+    this[Protected.dispatchHoveringChanges](undefined);
+  }
+
+  get hovered(): UIRecordKey | undefined {
+    return this.#hoveredKey;
   }
 
   dataset(element: Element | null): { key: string | undefined; type: string | undefined; layerType: string | undefined } {
@@ -138,9 +148,5 @@ export class ElementSelector extends DataSubscriber {
 
   fromPoint(x: number, y: number): HTMLElement | null {
     return this.closest([{ type: UIRecordType.artboard }, { type: UIRecordType.layer }], document.elementFromPoint(x, y)) ?? null;
-  }
-
-  fromMouse(): HTMLElement | null {
-    return this.#hoveredElement;
   }
 }

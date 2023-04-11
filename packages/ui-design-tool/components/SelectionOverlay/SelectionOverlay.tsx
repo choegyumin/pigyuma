@@ -4,7 +4,6 @@ import React from 'react';
 import * as styles from './SelectionOverlay.css';
 import useSelectionOverlay from './useSelectionOverlay';
 
-/** @todo 설계가 일정 수준 이상 확정되면: 테스트 코드 작성 */
 export const SelectionOverlay: React.FC = React.memo(() => {
   const viewModel = useSelectionOverlay();
   if (viewModel == null) {
