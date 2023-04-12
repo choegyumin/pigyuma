@@ -4,9 +4,9 @@ import { UIRecordRect } from '@/types/Geometry';
 import { setRef } from '@pigyuma/react-utils';
 import { isEqual } from '@pigyuma/utils';
 import { useCallback, useRef, useState } from 'react';
-import { getMovingCursor } from './cursor';
-import { calcMovedRect } from './rect';
-import { BaseInteractionPayload, InteractionTarget, MovingPayload } from './types';
+import { BaseInteractionPayload, InteractionTarget, MovingPayload } from '../types';
+import { getMovingCursor } from '../utils/cursor';
+import { calcMovedRect } from '../utils/rect';
 
 /** @todo 여러 레이어를 한번에 resize 할 수 있도록 개선 */
 const pickTarget = (targets: InteractionTarget[]): InteractionTarget | undefined => {

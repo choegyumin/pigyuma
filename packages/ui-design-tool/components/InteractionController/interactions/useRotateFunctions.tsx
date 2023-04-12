@@ -5,9 +5,9 @@ import { UIRecordRect } from '@/types/Geometry';
 import { setRef } from '@pigyuma/react-utils';
 import { calcDegreesBetweenCoords, isEqual } from '@pigyuma/utils';
 import { useCallback, useRef, useState } from 'react';
-import { getRotatingCursor } from './cursor';
-import { calcRotatedRect } from './rect';
-import { BaseInteractionPayload, InteractionTarget, RotatingPayload } from './types';
+import { BaseInteractionPayload, InteractionTarget, RotatingPayload } from '../types';
+import { getRotatingCursor } from '../utils/cursor';
+import { calcRotatedRect } from '../utils/rect';
 
 /** @todo 여러 레이어를 한번에 rotate 할 수 있도록 개선 */
 const pickTarget = (targets: InteractionTarget[]): InteractionTarget | undefined => {

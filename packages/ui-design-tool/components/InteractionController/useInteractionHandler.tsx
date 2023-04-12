@@ -7,7 +7,6 @@ import { DrawingType } from '@/types/Identifier';
 import { UIDesignToolMode, UIDesignToolStatus } from '@/types/Status';
 import { useStableCallback } from '@pigyuma/react-utils';
 import { calcDistancePointFromPoint } from '@pigyuma/utils';
-import { makeDefaultArtboardArgs, makeDefaultShapeLayerArgs } from './record';
 import {
   ActivateAction,
   DeactivateAction,
@@ -22,6 +21,7 @@ import {
   TriggerAction,
 } from './types';
 import useInteractionTaskManager from './useInteractionTaskManager';
+import { makeDefaultArtboardArgs, makeDefaultShapeLayerArgs } from './utils/record';
 
 /** @todo 테스트 코드 작성 */
 export default function useInteractionHandler() {

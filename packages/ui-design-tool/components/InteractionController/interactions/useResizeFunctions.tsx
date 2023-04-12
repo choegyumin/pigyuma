@@ -6,9 +6,9 @@ import { HandlePlacement } from '@/types/Identifier';
 import { setRef } from '@pigyuma/react-utils';
 import { isEqual } from '@pigyuma/utils';
 import { useCallback, useRef, useState } from 'react';
-import { getResizingCornerCursor, getResizingCursor } from './cursor';
-import { calcResizedRect } from './rect';
-import { BaseInteractionPayload, InteractionTarget, ResizingPayload } from './types';
+import { BaseInteractionPayload, InteractionTarget, ResizingPayload } from '../types';
+import { getResizingCornerCursor, getResizingCursor } from '../utils/cursor';
+import { calcResizedRect } from '../utils/rect';
 
 const checkGrabbingCorner = (handlePlacement: HandlePlacement) =>
   ([HandlePlacement.topLeft, HandlePlacement.topRight, HandlePlacement.bottomLeft, HandlePlacement.bottomRight] as string[]).includes(

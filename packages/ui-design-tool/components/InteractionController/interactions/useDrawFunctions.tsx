@@ -5,9 +5,9 @@ import { HandlePlacement } from '@/types/Identifier';
 import { setRef } from '@pigyuma/react-utils';
 import { isEqual } from '@pigyuma/utils';
 import { useCallback, useRef, useState } from 'react';
-import { getDrawingCursor } from './cursor';
-import { calcResizedRect } from './rect';
-import { BaseInteractionPayload, DrawingPayload } from './types';
+import { BaseInteractionPayload, DrawingPayload } from '../types';
+import { getDrawingCursor } from '../utils/cursor';
+import { calcResizedRect } from '../utils/rect';
 
 export default function useDrawFunctions() {
   const [taskPayload, setTaskPayload] = useState<DrawingPayload>();
