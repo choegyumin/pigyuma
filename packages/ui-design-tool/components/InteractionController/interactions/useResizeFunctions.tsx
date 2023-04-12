@@ -31,35 +31,22 @@ export default function useResizeFunctions() {
 
   const { setCursor } = useDispatcher();
 
-  const resizePrepare = useCallback(
-    (taskPayload: ResizingPayload) => {
-      const {
-        mouse,
-        details: { targets, handlePlacement },
-      } = taskPayload;
+  const resizePrepare = useCallback((taskPayload: ResizingPayload) => {
+    const {
+      details: { targets, handlePlacement },
+    } = taskPayload;
 
-      const target = pickTarget(targets);
-      if (target == null) {
-        return;
-      }
+    const target = pickTarget(targets);
+    if (target == null) {
+      return;
+    }
 
-      const { record, rect } = target;
+    const { rect } = target;
 
-      const clientPoint = { x: mouse.clientX, y: mouse.clientY };
-      const isGrabbingCorner = checkGrabbingCorner(handlePlacement || '');
-
-      setTaskPayload(taskPayload);
-      setRef(transformLastRectRef, rect);
-      setRef(resizeHandlePlacementRef, handlePlacement);
-      // cursor는 viewport에 의존해야 하므로, cursor 관련 로직은 별도의 함수에 테스트 작성 (uiSelector 접근)
-      setCursor(
-        isGrabbingCorner
-          ? getResizingCornerCursor(uiSelector.query({ key: record.key })!, clientPoint)
-          : getResizingCursor(rect.rotate, handlePlacement),
-      );
-    },
-    [uiSelector, setCursor],
-  );
+    setTaskPayload(taskPayload);
+    setRef(transformLastRectRef, rect);
+    setRef(resizeHandlePlacementRef, handlePlacement);
+  }, []);
 
   const resizeExecute = useCallback(
     (pingPayload: BaseInteractionPayload) => {

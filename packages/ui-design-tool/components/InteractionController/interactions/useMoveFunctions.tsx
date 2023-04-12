@@ -23,29 +23,25 @@ export default function useMoveFunctions() {
 
   const { setCursor } = useDispatcher();
 
-  const movePrepare = useCallback(
-    (taskPayload: MovingPayload) => {
-      const {
-        mouse,
-        details: { targets },
-      } = taskPayload;
+  const movePrepare = useCallback((taskPayload: MovingPayload) => {
+    const {
+      mouse,
+      details: { targets },
+    } = taskPayload;
 
-      const target = pickTarget(targets);
-      if (target == null) {
-        return;
-      }
+    const target = pickTarget(targets);
+    if (target == null) {
+      return;
+    }
 
-      const { rect } = target;
+    const { rect } = target;
 
-      const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
+    const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
 
-      setTaskPayload(taskPayload);
-      setRef(transformLastRectRef, rect);
-      setRef(moveHandleCoordRef, offsetPoint);
-      setCursor(getMovingCursor());
-    },
-    [setCursor],
-  );
+    setTaskPayload(taskPayload);
+    setRef(transformLastRectRef, rect);
+    setRef(moveHandleCoordRef, offsetPoint);
+  }, []);
 
   const moveExecute = useCallback(
     (pingPayload: BaseInteractionPayload) => {

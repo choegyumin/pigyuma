@@ -25,34 +25,25 @@ export default function useRotateFunctions() {
 
   const { setCursor } = useDispatcher();
 
-  const rotatePrepare = useCallback(
-    (taskPayload: RotatingPayload) => {
-      const {
-        mouse,
-        details: { targets },
-      } = taskPayload;
+  const rotatePrepare = useCallback((taskPayload: RotatingPayload) => {
+    const {
+      mouse,
+      details: { targets },
+    } = taskPayload;
 
-      const target = pickTarget(targets);
-      if (target == null) {
-        return;
-      }
+    const target = pickTarget(targets);
+    if (target == null) {
+      return;
+    }
 
-      const { record, rect } = target;
+    const { rect } = target;
 
-      const clientPoint = { x: mouse.clientX, y: mouse.clientY };
-      const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
+    const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
 
-      setTaskPayload(taskPayload);
-      setRef(transformLastRectRef, rect);
-      setRef(
-        rotateHandleCoordDegreesRef,
-        calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, offsetPoint),
-      );
-      // cursor는 viewport에 의존해야 하므로, cursor 관련 로직은 별도의 함수에 테스트 작성 (uiSelector 접근)
-      setCursor(getRotatingCursor(uiSelector.query({ key: record.key })!, clientPoint));
-    },
-    [uiSelector, setCursor],
-  );
+    setTaskPayload(taskPayload);
+    setRef(transformLastRectRef, rect);
+    setRef(rotateHandleCoordDegreesRef, calcDegreesBetweenCoords({ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, offsetPoint));
+  }, []);
 
   const rotateExecute = useCallback(
     (pingPayload: BaseInteractionPayload) => {

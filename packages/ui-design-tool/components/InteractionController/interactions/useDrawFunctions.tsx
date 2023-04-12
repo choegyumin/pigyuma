@@ -18,24 +18,20 @@ export default function useDrawFunctions() {
 
   const { setCursor } = useDispatcher();
 
-  const drawPrepare = useCallback(
-    (taskPayload: DrawingPayload) => {
-      const {
-        details: { target },
-      } = taskPayload;
+  const drawPrepare = useCallback((taskPayload: DrawingPayload) => {
+    const {
+      details: { target },
+    } = taskPayload;
 
-      if (target == null) {
-        return;
-      }
+    if (target == null) {
+      return;
+    }
 
-      const { rect } = target;
+    const { rect } = target;
 
-      setTaskPayload(taskPayload);
-      setRef(transformLastRectRef, rect);
-      setCursor(getDrawingCursor);
-    },
-    [setCursor],
-  );
+    setTaskPayload(taskPayload);
+    setRef(transformLastRectRef, rect);
+  }, []);
 
   const drawExecute = useCallback(
     (pingPayload: BaseInteractionPayload) => {

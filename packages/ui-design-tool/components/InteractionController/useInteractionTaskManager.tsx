@@ -21,7 +21,6 @@ export default function useInteractionTaskManager() {
     }
     const newTask = { ...task, queueing: 'scheduled' } as InteractionTask;
     flushSync(() => {
-      setStatus(task.status);
       setCurrentTask(newTask);
       interactPrepare(newTask);
     });
@@ -38,6 +37,7 @@ export default function useInteractionTaskManager() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (currentTask.condition?.(taskPayload as any, pingPayload) ?? true) {
         flushSync(() => {
+          setStatus(currentTask.status);
           currentTask.queueing = 'running';
           currentTask.enter?.();
           interactStart(currentPing);
