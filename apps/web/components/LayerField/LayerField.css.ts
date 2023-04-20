@@ -5,22 +5,22 @@ import { globalStyle, style } from '@vanilla-extract/css';
 export const root = style([
   mixins.textBody2,
   {
-    display: 'block',
+    display: 'flex',
   },
 ]);
 
 export const label = style({
-  float: 'left',
   width: '60px',
   flex: '0 0 60px',
-  marginRight: foundations.spacing(2),
+  marginInlineEnd: foundations.spacing(2),
   lineHeight: '32px',
 });
 
 export const content = style({
   display: 'flex',
+  flex: '1 1 auto',
   flexWrap: 'wrap',
-  width: 'stretch',
+  width: '0px',
   gap: foundations.spacing(1),
 });
 

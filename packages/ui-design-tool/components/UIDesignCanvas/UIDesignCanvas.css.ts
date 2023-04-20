@@ -1,6 +1,8 @@
 import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 
 export const root = style({
+  direction: 'ltr',
+  writingMode: 'horizontal-tb',
   overflow: 'hidden',
   boxSizing: 'border-box',
   position: 'relative',
