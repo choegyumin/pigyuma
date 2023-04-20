@@ -68,19 +68,24 @@ export default function useResizeFunctions() {
 
       const clientPoint = { x: mouse.clientX, y: mouse.clientY };
       const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
+      const precision = keyboard.ctrlKey;
       const fromCenter = keyboard.altKey;
       const isGrabbingCorner = checkGrabbingCorner(handlePlacement || '');
 
-      const newRect = handlePlacement != null ? calcResizedRect(initialRect, offsetPoint, handlePlacement, fromCenter) : initialRect;
+      const newRect =
+        handlePlacement != null ? calcResizedRect(initialRect, offsetPoint, handlePlacement, { precision, fromCenter }) : initialRect;
 
       if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
         setRef(transformLastRectRef, newRect);
         uiController.setRect(record.key, newRect);
       }
-      // cursor는 viewport에 의존해야 하므로, cursor 관련 로직은 별도의 함수에 테스트 작성 (uiSelector 접근)
+      // cursor는 viewport를 기반해 정의해야 하므로 uiSelector를 통해 DOM에 접근함
+      // DOM 의존성 제거를 위해 cursor 관련 로직을 분리하면 계산 로직이 중복되고, 추상화하더라도 복잡도가 올라감
+      // 따라서 굳이 로직을 분리하는 대신, `getResizingCursor` 등의 함수에 테스트 작성
+      // (`uiSelector.query()` 결과는 항상 있지만 테스트를 위해 `document.body`를 주입)
       setCursor(
         isGrabbingCorner
-          ? getResizingCornerCursor(uiSelector.query({ key: record.key })!, clientPoint)
+          ? getResizingCornerCursor(uiSelector.query({ key: record.key }) ?? document.body, clientPoint)
           : getResizingCursor(newRect.rotate, handlePlacement),
       );
     },

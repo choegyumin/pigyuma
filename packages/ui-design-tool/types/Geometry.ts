@@ -8,7 +8,10 @@ function getCombinedRotateDegrees(element: HTMLElement): number {
   let combinedDegrees = 0;
 
   while (currentElement) {
-    const degrees = parseFloat(getComputedUIRecordStyleValue(currentElement, UIRecordStyle.rotate)) || 0;
+    const degrees =
+      parseFloat(getComputedUIRecordStyleValue(currentElement, UIRecordStyle.rotate)) ||
+      parseFloat(window.getComputedStyle(currentElement).rotate) ||
+      0;
     currentElement = currentElement.parentElement;
     combinedDegrees += degrees;
   }
@@ -158,7 +161,11 @@ export class UIRecordRect {
   }
 
   static fromElement(other: HTMLElement): UIRecordRect {
-    const layout = { width: other.offsetWidth, height: other.offsetHeight };
+    const layout = {
+      width: parseFloat(getComputedUIRecordStyleValue(other, UIRecordStyle.width)) || parseFloat(window.getComputedStyle(other).width) || 0,
+      height:
+        parseFloat(getComputedUIRecordStyleValue(other, UIRecordStyle.height)) || parseFloat(window.getComputedStyle(other).height) || 0,
+    };
     const bounds = other.getBoundingClientRect();
     const rootBounds = other.closest(`[${UIDesignToolElementDataAttributeName.id}]`)?.getBoundingClientRect() ?? new DOMRect();
 

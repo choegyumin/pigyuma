@@ -15,12 +15,21 @@ export const calcMovedRect = (
   return UIRecordRect.fromRect(newRectInit);
 };
 
+interface CalcResizedRectOptions {
+  precision?: boolean;
+  fromCenter?: boolean;
+}
+
 export const calcResizedRect = (
   rect: UIRecordRect,
   mousePoint: { x: number; y: number },
   handlePlacement: HandlePlacement,
-  fromCenter: boolean,
+  options: CalcResizedRectOptions = {},
 ): UIRecordRect => {
+  const { precision = false, fromCenter = false } = options;
+
+  const fixValue = precision ? (value: number) => value : (value: number) => Math.round(value);
+
   const quad = UIRecordQuad.fromRect(rect);
 
   const newQuadInit: UIRecordQuadInit = quad.toJSON();
@@ -111,30 +120,45 @@ export const calcResizedRect = (
     'rotate',
   ]);
 
-  newRectInit.x = Math.round(newRectInit.x);
-  newRectInit.y = Math.round(newRectInit.y);
-  newRectInit.width = Math.max(Math.round(newRectInit.width), 1);
-  newRectInit.height = Math.max(Math.round(newRectInit.height), 1);
+  newRectInit.x = fixValue(newRectInit.x);
+  newRectInit.y = fixValue(newRectInit.y);
+  newRectInit.width = Math.max(fixValue(newRectInit.width), 1);
+  newRectInit.height = Math.max(fixValue(newRectInit.height), 1);
   newRectInit.rotate = rect.rotate;
 
   return UIRecordRect.fromRect(newRectInit);
 };
 
-export const calcRotatedRect = (rect: UIRecordRect, mousePoint: { x: number; y: number }, handleCoordDegrees: number): UIRecordRect => {
+interface CalcRotatedRectOptions {
+  precision?: boolean;
+}
+
+export const calcRotatedRect = (
+  rect: UIRecordRect,
+  rotate: number,
+  mousePoint: { x: number; y: number },
+  handleCoordDegrees: number,
+  options: CalcRotatedRectOptions = {},
+): UIRecordRect => {
+  const { precision = false } = options;
+
+  const fixValue = precision ? (value: number) => value : (value: number) => Math.round(value);
+
+  // rect.rotate는 조상을 포함해 계산된 값이므로, rotate를 사용함
   const newRectInit: UIRecordRectInit = pick(rect, ['x', 'y', 'width', 'height', 'rotate']);
 
-  let rotate = calcDegreesBetweenCoords(
+  let newRotate = calcDegreesBetweenCoords(
     {
       x: rect.x + rect.width / 2,
       y: rect.y + rect.height / 2,
     },
     mousePoint,
   );
-  rotate -= handleCoordDegrees;
-  rotate += rect.rotate;
-  rotate = Math.round(rotate);
+  newRotate -= handleCoordDegrees;
+  newRotate += rotate;
+  newRotate = fixValue(newRotate);
 
-  newRectInit.rotate = toDegrees360(rotate);
+  newRectInit.rotate = toDegrees360(newRotate);
 
   return UIRecordRect.fromRect(newRectInit);
 };

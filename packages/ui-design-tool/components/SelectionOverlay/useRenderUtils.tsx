@@ -85,7 +85,7 @@ export default function useRenderUtils() {
     (record: UIRecord) => {
       const element = uiSelector.query({ key: record.key });
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
-      return rect != null ? `${rect.width} × ${rect.height}` : '';
+      return rect != null ? `${Number(rect.width.toFixed(2))} × ${Number(rect.height.toFixed(2))}` : '';
     },
     [uiSelector],
   );
@@ -95,7 +95,7 @@ export default function useRenderUtils() {
       const element = uiSelector.query({ key: record.key });
       /** @todo 우측 패널도 `Layer.rotate.length` 대신 `UIRecordRect.fromElement(element).rotate` 가 노출되어야 함 (데이터를 nested·combined 값으로 조작하면 잦은 변경이 발생하므로 rotate 값만 예외 케이스로 적절한 설계 필요) */
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
-      return rect != null ? `${toDegrees360(rect.rotate)}°` : '';
+      return rect != null ? `${Number(toDegrees360(rect.rotate).toFixed(2))}°` : '';
     },
     [uiSelector],
   );

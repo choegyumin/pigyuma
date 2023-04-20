@@ -37,7 +37,6 @@ export interface ResizingPayloadDetails {
 }
 export interface RotatingPayloadDetails {
   targets: InteractionTarget[];
-  handlePlacement: HandlePlacement;
 }
 export interface DrawingPayloadDetails {
   target: InteractionTarget | undefined;

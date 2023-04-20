@@ -51,9 +51,10 @@ export default function useDrawFunctions() {
       const { record, rect: initialRect } = target;
 
       const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
+      const precision = keyboard.ctrlKey;
       const fromCenter = keyboard.altKey;
 
-      const newRect = calcResizedRect(initialRect, offsetPoint, HandlePlacement.bottomRight, fromCenter);
+      const newRect = calcResizedRect(initialRect, offsetPoint, HandlePlacement.bottomRight, { precision, fromCenter });
 
       if (!isEqual(newRect.toJSON(), transformLastRectRef.current?.toJSON())) {
         setRef(transformLastRectRef, newRect);

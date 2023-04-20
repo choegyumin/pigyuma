@@ -131,8 +131,7 @@ export default function useInteractionController() {
         break;
       }
 
-      case UIDesignToolStatus.resizing:
-      case UIDesignToolStatus.rotating: {
+      case UIDesignToolStatus.resizing: {
         if (handlePlacement == null) {
           console.error('handle placement type is unknown.');
           break;
@@ -143,6 +142,16 @@ export default function useInteractionController() {
           type: InteractionActionType.ACTIVATE,
           status: actionStatus,
           payload: { mouse, keyboard, details: { targets, handlePlacement } },
+        });
+        break;
+      }
+
+      case UIDesignToolStatus.rotating: {
+        const targets = getInteractionTargets([...selectedRecordKeys]);
+        dispatch({
+          type: InteractionActionType.ACTIVATE,
+          status: actionStatus,
+          payload: { mouse, keyboard, details: { targets } },
         });
         break;
       }
