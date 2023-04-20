@@ -4,7 +4,8 @@ import { UIDesignTool } from '@/api/UIDesignTool';
 import { BrowserStatus } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMetadata } from '@/types/Status';
-import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
+import { setRef, useStableCallback } from '@pigyuma/react-utils';
+import { cloneDeep, isEqual } from '@pigyuma/utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export default function useContextValues(initialValues: { api: UIDesignTool }) {
@@ -42,15 +43,12 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     transformMethod: api.transformMethod,
   }));
 
-  /**
-   * 상태의 Life cycle을 React에 의존하기 위해 참조 제거
-   * @todo 성능 저하가 발생하면: 최초 한번 cloneDeep 후, 변경된 아이템만 clone하도록 개선
-   */
-  const [pairs, applyPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
+  /** 상태의 Life cycle을 React에 의존하기 위해 참조 제거 */
+  const [pairs, applyPairs] = useState<typeof api.pairs>(() => cloneDeep(api.pairs));
   const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
-  const [drafts, applyDrafts] = useCloneDeepState<typeof api.drafts>(() => api.drafts);
+  const [drafts, applyDrafts] = useState<typeof api.drafts>(() => cloneDeep(api.drafts));
   const [hovered, applyHovered] = useState<UIRecordKey | undefined>(() => api.hovered);
-  const [selected, applySelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
+  const [selected, applySelected] = useState<typeof api.selected>(() => cloneDeep(api.selected));
 
   /** @see ModelStore */
   const controllerInterface = useMemo(
@@ -176,24 +174,34 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
   useEffect(() => {
     const callback = () => {
-      applyPairs(api.pairs);
-      applyDrafts(api.drafts);
+      applyPairs(cloneDeep(api.pairs));
+      applyDrafts((prev) => {
+        if (isEqual(prev, api.drafts)) {
+          return prev;
+        }
+        return cloneDeep(api.drafts);
+      });
     };
     const unsubscribe = subscriberInterface.subscribeTree(callback);
     return unsubscribe;
   }, [api, subscriberInterface, applyPairs, applyDrafts]);
 
   useEffect(() => {
-    const callback = (newHovered?: UIRecordKey) => {
-      applyHovered(newHovered);
+    const callback = () => {
+      applyHovered(api.hovered);
     };
     const unsubscribe = subscriberInterface.subscribeHovering(callback);
     return unsubscribe;
   }, [api, subscriberInterface, applyHovered]);
 
   useEffect(() => {
-    const callback = (newSelected: UIRecordKey[]) => {
-      applySelected(new Set(newSelected));
+    const callback = () => {
+      applySelected((prev) => {
+        if (isEqual(prev, api.selected)) {
+          return prev;
+        }
+        return cloneDeep(api.selected);
+      });
     };
     const unsubscribe = subscriberInterface.subscribeSelection(callback);
     return unsubscribe;
