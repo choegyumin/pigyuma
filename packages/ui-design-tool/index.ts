@@ -1,7 +1,7 @@
 /** @todo Design token 모델 내보내기 */
 
-export { UIDesignTool as default } from './api/UIDesignTool';
-export type { UIDesignToolOptions } from './api/UIDesignTool';
+export { UIDesignTool as default, Protected as ProtectedUIDesignToolFields } from './api/UIDesignTool';
+export type { UIDesignToolConfig } from './api/UIDesignTool';
 export { UIDesignToolProvider } from './components/UIDesignToolProvider/UIDesignToolProvider';
 
 export * from './api/Artboard/model';
@@ -17,5 +17,5 @@ export type { UIDesignCanvasProps, UIDesignCanvasRef } from './components/UIDesi
 export { default as useUIController } from './hooks/useUIController';
 export { default as useUIData } from './hooks/useUIData';
 export { default as useUISelector } from './hooks/useUISelector';
-export { default as useUISubscription } from './hooks/useUISubscription';
+export { default as useUISubscriber } from './hooks/useUISubscriber';
 export { default as useUIRecord } from './hooks/useUIRecord';

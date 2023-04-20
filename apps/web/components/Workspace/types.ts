@@ -1,6 +1,6 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives/Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import { UIDesignCanvasProps } from '@pigyuma/ui-design-tool';
 
-export type WorkspaceProps = ComponentPropsWithoutRefByBox<'div'> & UIDesignCanvasProps;
+export interface WorkspaceProps extends ComponentPropsWithoutRefByBox<'div'>, UIDesignCanvasProps {}
 
 export type WorkspaceRef = ComponentElementRefByBox<'div'>;

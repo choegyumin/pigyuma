@@ -1,7 +1,7 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives/Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import React from 'react';
 
-export type LayerFieldProps = ComponentPropsWithoutRefByBox<'div'> & {
+export interface LayerFieldProps extends ComponentPropsWithoutRefByBox<'div'> {
   label?: React.ReactNode;
-};
+}
 export type LayerFieldRef = ComponentElementRefByBox<'div'>;

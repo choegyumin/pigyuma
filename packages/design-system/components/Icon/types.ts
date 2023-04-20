@@ -47,15 +47,16 @@ export const InitialIconProps: { [K in IconType]?: Partial<Pick<IconProps, 'rota
   },
 } as const;
 
-export type IconProps = Pick<React.SVGAttributes<SVGElement>, 'role' | 'id' | 'className' | 'style' | 'tabIndex'> &
-  React.DOMAttributes<SVGElement> &
-  React.AriaAttributes & {
-    type: IconType;
-    color?: MDIIconProps['color'];
-    size?: MDIIconProps['size'];
-    rotate?: MDIIconProps['rotate'];
-    flipX?: MDIIconProps['horizontal'];
-    flipY?: MDIIconProps['vertical'];
-    spin?: MDIIconProps['spin'];
-  };
+export interface IconProps
+  extends Pick<React.SVGAttributes<SVGElement>, 'role' | 'id' | 'className' | 'style' | 'tabIndex'>,
+    React.DOMAttributes<SVGElement>,
+    React.AriaAttributes {
+  type: IconType;
+  color?: MDIIconProps['color'];
+  size?: MDIIconProps['size'];
+  rotate?: MDIIconProps['rotate'];
+  flipX?: MDIIconProps['horizontal'];
+  flipY?: MDIIconProps['vertical'];
+  spin?: MDIIconProps['spin'];
+}
 export type IconRef = SVGElement;

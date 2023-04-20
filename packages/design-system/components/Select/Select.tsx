@@ -1,7 +1,6 @@
-import Box from '@/primitives/Box';
 import PrimitiveSelect from '@/primitives/Select';
 import { SelectOnlyHTMLAttributeKeys, SelectOnlyHTMLAttributes } from '@pigyuma/react-utility-types';
-import { useEvent, useForceUpdate, useIsomorphicLayoutMount, useValue } from '@pigyuma/react-utils';
+import { useEvent, useForceUpdate, useIsomorphicLayoutMount, useValue, Box } from '@pigyuma/react-utils';
 import { pick, omit } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React, { useRef } from 'react';
@@ -10,9 +9,12 @@ import * as styles from './Select.css';
 import { SelectProps, SelectRef } from './types';
 
 const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
-  const rootProps = omit(props, SelectOnlyHTMLAttributeKeys) as Omit<typeof props, keyof SelectOnlyHTMLAttributes<HTMLSelectElement>>;
+  const { className, children, ...rootProps } = omit(props, SelectOnlyHTMLAttributeKeys) as Omit<
+    typeof props,
+    keyof SelectOnlyHTMLAttributes<HTMLSelectElement>
+  >;
 
-  const selectProps = pick(props, SelectOnlyHTMLAttributeKeys) as PickExisting<
+  const { value, defaultValue, onChange, ...selectProps } = pick(props, SelectOnlyHTMLAttributeKeys) as PickExisting<
     typeof props,
     keyof SelectOnlyHTMLAttributes<HTMLSelectElement>
   >;
@@ -21,12 +23,12 @@ const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
 
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  const [selected, setSelected] = useValue<string | number | undefined>(selectProps.value, selectProps.defaultValue, {
+  const [selected, setSelected] = useValue<string | number | undefined>(value, defaultValue, {
     notifyError: false,
   });
 
-  const onChange = useEvent<NonNullable<typeof selectProps.onChange>>((event, newSelected) => {
-    selectProps.onChange?.(event, newSelected);
+  const onSelectChange = useEvent<NonNullable<typeof onChange>>((event, newSelected) => {
+    onChange?.(event, newSelected);
     setSelected(newSelected);
   });
 
@@ -38,12 +40,12 @@ const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
   });
 
   return (
-    <Box as="span" {...rootProps} ref={ref} className={clsx(styles.root, rootProps.className)}>
+    <Box as="span" {...rootProps} ref={ref} className={clsx(styles.root, className)}>
       <FieldTrigger className={styles.trigger} aria-hidden={true}>
         <button type="button" dangerouslySetInnerHTML={{ __html: triggerInnerHTML }} />
       </FieldTrigger>
-      <PrimitiveSelect {...selectProps} className={styles.select} onChange={onChange} ref={selectRef}>
-        {rootProps.children}
+      <PrimitiveSelect {...selectProps} className={styles.select} onChange={onSelectChange} ref={selectRef}>
+        {children}
       </PrimitiveSelect>
     </Box>
   );

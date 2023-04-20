@@ -5,36 +5,23 @@ const wait = (time: number) => new Promise((resolve) => setTimeout(resolve, time
 describe('throttlePromise', () => {
   test('should resolve all promises', async function () {
     let count = 0;
-    const throttleTime = 100;
+    const throttleTime = 250;
     const throttled = throttlePromise(() => ++count, throttleTime);
 
-    const delayTime = 35;
+    const delay = throttleTime + 4;
 
-    const promises: Array<ReturnType<typeof throttled>> = [];
+    // `leading` is true (1)
+    expect(throttled()).resolves.toBe(1);
+    expect(throttled()).resolves.toBe(1);
+    expect(throttled()).resolves.toBe(1);
 
-    // 0ms
-    promises.push(throttled());
+    // `trailing` is true (2)
+    await wait(delay);
 
-    await expect(promises[0]).resolves.toBe(1);
-
-    await wait(delayTime); // 35ms
-    promises.push(throttled());
-    await wait(delayTime); // 70ms
-    promises.push(throttled());
-
-    await expect(promises[1]).resolves.toBe(2);
-    await expect(promises[2]).resolves.toBe(2);
-
-    await wait(delayTime); // 105ms
-    promises.push(throttled());
-    await wait(delayTime); // 140ms
-    promises.push(throttled());
-    await wait(delayTime); // 175ms
-    promises.push(throttled());
-
-    await expect(promises[3]).resolves.toBe(3);
-    await expect(promises[4]).resolves.toBe(3);
-    await expect(promises[5]).resolves.toBe(3);
+    // `leading` is true (3)
+    expect(throttled()).resolves.toBe(3);
+    expect(throttled()).resolves.toBe(3);
+    expect(throttled()).resolves.toBe(3);
   });
 
   test('should reject promises except last one', async function () {

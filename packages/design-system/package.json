@@ -8,6 +8,7 @@
     "./foundations.ts",
     "./mixins.ts",
     "./css/index.ts",
+    "./hooks/index.ts",
     "./primitives/index.ts",
     "./patterns/index.ts",
     "./components/index.ts"

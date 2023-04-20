@@ -11,19 +11,48 @@ import {
 
 export type StyleValue = string;
 
-export type FillValueObject = { color: string };
-export type FontSizeValueObject = { length: number; lengthType: FontSizeLengthType };
-export type FontWeightValueObject = { value: number };
-export type HeightValueObject = { length: number; lengthType: HeightLengthType };
-export type LetterSpacingValueObject = { length: number; lengthType: LetterSpacingLengthType };
-export type LineHeightValueObject = { length: number; lengthType: LineHeightLengthType };
-export type RotateValueObject = { degrees: number };
-export type StrokeValueObject = {
+export interface FillValueObject {
+  color: string;
+}
+export interface FontSizeValueObject {
+  length: number;
+  lengthType: FontSizeLengthType;
+}
+export interface FontWeightValueObject {
+  value: number;
+}
+export interface HeightValueObject {
+  length: number;
+  lengthType: HeightLengthType;
+}
+export interface LetterSpacingValueObject {
+  length: number;
+  lengthType: LetterSpacingLengthType;
+}
+export interface LineHeightValueObject {
+  length: number;
+  lengthType: LineHeightLengthType;
+}
+export interface RotateValueObject {
+  degrees: number;
+}
+export interface StrokeValueObject {
   color: string;
   pattern: StrokeStylePattern;
   width: { top: number; right: number; bottom: number; left: number };
-};
-export type TextColorValueObject = { color: string };
-export type WidthValueObject = { length: number; lengthType: WidthLengthType };
-export type XValueObject = { length: number; lengthType: XLengthType };
-export type YValueObject = { length: number; lengthType: YLengthType };
+}
+export interface TextColorValueObject {
+  color: string;
+}
+export interface WidthValueObject {
+  length: number;
+  lengthType: WidthLengthType;
+}
+export interface XValueObject {
+  length: number;
+  lengthType: XLengthType;
+}
+export interface YValueObject {
+  length: number;
+  lengthType: YLengthType;
+}

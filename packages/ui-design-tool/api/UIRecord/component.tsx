@@ -3,12 +3,12 @@ import { RawArtboardComponent } from '../Artboard/component';
 import { Artboard } from '../Artboard/model';
 import { RawLayerComponent } from '../Layer/component';
 import { Layer } from '../Layer/model';
-import withData from '../withData';
+import withModel from '../withModel';
 import { UIRecord } from './model';
 
-export type UIRecordProps = {
+export interface UIRecordProps {
   data: UIRecord;
-};
+}
 
 export type UIRecordRef = HTMLDivElement;
 
@@ -28,5 +28,5 @@ export const RawUIRecordComponent = React.forwardRef<UIRecordRef, UIRecordProps>
 });
 RawUIRecordComponent.displayName = 'RawUIRecord';
 
-export const UIRecordComponent = withData(RawUIRecordComponent);
+export const UIRecordComponent = withModel(RawUIRecordComponent);
 UIRecordComponent.displayName = 'UIRecord';

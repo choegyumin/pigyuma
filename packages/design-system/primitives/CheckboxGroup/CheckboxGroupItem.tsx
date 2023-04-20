@@ -4,7 +4,7 @@ import { useCheckboxConfig, useCheckboxEvents, useSelectedValue } from './Checkb
 import { CheckboxGroupItemProps, CheckboxGroupItemRef } from './types';
 
 const CheckboxGroupItem = React.forwardRef<CheckboxGroupItemRef, CheckboxGroupItemProps>((props, ref) => {
-  const { value } = props;
+  const { value, ...rootProps } = props;
 
   const selectedValue = useSelectedValue();
   const { name, disabled, required } = useCheckboxConfig();
@@ -12,7 +12,7 @@ const CheckboxGroupItem = React.forwardRef<CheckboxGroupItemRef, CheckboxGroupIt
 
   return (
     <Checkbox
-      {...props}
+      {...rootProps}
       ref={ref}
       name={name}
       disabled={disabled}
@@ -20,9 +20,7 @@ const CheckboxGroupItem = React.forwardRef<CheckboxGroupItemRef, CheckboxGroupIt
       checked={selectedValue.find((it) => it === value) != null}
       onChange={onChange as CheckboxProps['onChange']}
       onChangeCapture={onChangeCapture as CheckboxProps['onChangeCapture']}
-    >
-      {props.children}
-    </Checkbox>
+    />
   );
 });
 CheckboxGroupItem.displayName = 'CheckboxGroupItem';

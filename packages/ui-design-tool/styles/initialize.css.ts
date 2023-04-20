@@ -1,22 +1,39 @@
-import rotateECursor from '@/images/cursor-e-rotate.svg';
-import rotateNCursor from '@/images/cursor-n-rotate.svg';
-import rotateNECursor from '@/images/cursor-ne-rotate.svg';
-import rotateNWCursor from '@/images/cursor-nw-rotate.svg';
-import rotateSCursor from '@/images/cursor-s-rotate.svg';
-import rotateSECursor from '@/images/cursor-se-rotate.svg';
-import rotateSWCursor from '@/images/cursor-sw-rotate.svg';
-import rotateWCursor from '@/images/cursor-w-rotate.svg';
 import { globalStyle } from '@vanilla-extract/css';
+
+const rotateE = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" style="filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, .6));" d="M 21.5,9.5 C 24.5184,9.33537 27.5184,9.50204 30.5,10C 29.6433,10.6891 28.9767,11.5224 28.5,12.5C 35.1667,19.8333 35.1667,27.1667 28.5,34.5C 28.9767,35.4776 29.6433,36.3109 30.5,37C 27.5184,37.498 24.5184,37.6646 21.5,37.5C 21.3354,34.4816 21.502,31.4816 22,28.5C 23.0195,29.6872 24.1861,30.6872 25.5,31.5C 30.9678,25.9792 30.8011,20.6459 25,15.5C 24,16.5 23,17.5 22,18.5C 21.502,15.5184 21.3354,12.5184 21.5,9.5 Z"/></svg>',
+);
+const rotateN = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" style="filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, .6));" d="M 19.5,13.5 C 25.3777,12.6088 30.3777,14.2755 34.5,18.5C 35.4776,18.0233 36.3109,17.3567 37,16.5C 37.498,19.4816 37.6646,22.4816 37.5,25.5C 34.4816,25.6646 31.4816,25.498 28.5,25C 29.6872,23.9805 30.6872,22.8139 31.5,21.5C 25.9792,16.0322 20.6459,16.1989 15.5,22C 16.5,23 17.5,24 18.5,25C 15.5184,25.498 12.5184,25.6646 9.5,25.5C 9.33537,22.4816 9.50204,19.4816 10,16.5C 10.6891,17.3567 11.5224,18.0233 12.5,18.5C 14.7243,16.566 17.0576,14.8994 19.5,13.5 Z"/></svg>',
+);
+const rotateNE = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" style="filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, .6));" d="M 16.5,8.5 C 17.4511,9.91866 17.7845,11.5853 17.5,13.5C 27.1667,14.5 32.5,19.8333 33.5,29.5C 35.1992,29.3398 36.8659,29.5065 38.5,30C 36.3171,32.3504 33.9837,34.517 31.5,36.5C 29.0163,34.517 26.6829,32.3504 24.5,30C 26.1341,29.5065 27.8008,29.3398 29.5,29.5C 28.5144,22.5143 24.5144,18.5143 17.5,17.5C 17.6602,19.1992 17.4935,20.8659 17,22.5C 14.6496,20.3171 12.483,17.9837 10.5,15.5C 12.5227,13.1472 14.5227,10.8138 16.5,8.5 Z"/></svg>',
+);
+const rotateNW = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" style="filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, .6));" d="M 29.5,8.5 C 32.1456,10.4789 34.4789,12.8122 36.5,15.5C 34.517,17.9837 32.3504,20.3171 30,22.5C 29.5065,20.8659 29.3398,19.1992 29.5,17.5C 22.5,18.5 18.5,22.5 17.5,29.5C 19.1992,29.3398 20.8659,29.5065 22.5,30C 20.3171,32.3504 17.9837,34.517 15.5,36.5C 13.0163,34.517 10.6829,32.3504 8.5,30C 10.1341,29.5065 11.8008,29.3398 13.5,29.5C 14.5,19.8333 19.8333,14.5 29.5,13.5C 29.5,11.8333 29.5,10.1667 29.5,8.5 Z"/></svg>',
+);
+const rotateS = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" style="filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, .6));" d="M 9.5,21.5 C 12.5184,21.3354 15.5184,21.502 18.5,22C 17.3128,23.0195 16.3128,24.1861 15.5,25.5C 21.0208,30.9678 26.3541,30.8011 31.5,25C 30.5,24 29.5,23 28.5,22C 31.4816,21.502 34.4816,21.3354 37.5,21.5C 37.6646,24.5184 37.498,27.5184 37,30.5C 36.3109,29.6433 35.4776,28.9767 34.5,28.5C 27.1667,35.1667 19.8333,35.1667 12.5,28.5C 11.5224,28.9767 10.6891,29.6433 10,30.5C 9.50204,27.5184 9.33537,24.5184 9.5,21.5 Z"/></svg>',
+);
+const rotateSE = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" style="filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, .6));" d="M 30.5,10.5 C 33.5628,12.0512 36.2295,14.2179 38.5,17C 36.8659,17.4935 35.1992,17.6602 33.5,17.5C 32.5,27.1667 27.1667,32.5 17.5,33.5C 17.6602,35.1992 17.4935,36.8659 17,38.5C 14.6496,36.3171 12.483,33.9837 10.5,31.5C 12.483,29.0163 14.6496,26.6829 17,24.5C 17.4935,26.1341 17.6602,27.8008 17.5,29.5C 24.5,28.5 28.5,24.5 29.5,17.5C 27.8008,17.6602 26.1341,17.4935 24.5,17C 26.7059,14.9633 28.7059,12.7966 30.5,10.5 Z"/></svg>',
+);
+const rotateSW = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" style="filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, .6));" d="M 14.5,10.5 C 17.5628,12.0512 20.2295,14.2179 22.5,17C 20.8659,17.4935 19.1992,17.6602 17.5,17.5C 18.5143,24.5144 22.5143,28.5144 29.5,29.5C 29.3398,27.8008 29.5065,26.1341 30,24.5C 32.3504,26.6829 34.517,29.0163 36.5,31.5C 34.517,33.9837 32.3504,36.3171 30,38.5C 29.5065,36.8659 29.3398,35.1992 29.5,33.5C 19.8333,32.5 14.5,27.1667 13.5,17.5C 11.8008,17.6602 10.1341,17.4935 8.5,17C 10.7059,14.9633 12.7059,12.7966 14.5,10.5 Z"/></svg>',
+);
+const rotateW = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" style="filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, .6));" d="M 16.5,10.5 C 19.2869,9.52333 22.2869,9.19 25.5,9.5C 25.6646,12.5184 25.498,15.5184 25,18.5C 23.9805,17.3128 22.8139,16.3128 21.5,15.5C 16.0322,21.0208 16.1989,26.3541 22,31.5C 23,30.5 24,29.5 25,28.5C 25.498,31.4816 25.6646,34.4816 25.5,37.5C 22.4816,37.6646 19.4816,37.498 16.5,37C 17.3567,36.3109 18.0233,35.4776 18.5,34.5C 11.8333,27.1667 11.8333,19.8333 18.5,12.5C 18.1445,11.4777 17.4778,10.811 16.5,10.5 Z"/></svg>',
+);
 
 globalStyle(':root', {
   vars: {
-    '--e-rotate': `url(${rotateECursor.src}) 8 8, grab`,
-    '--n-rotate': `url(${rotateNCursor.src}) 8 8, grab`,
-    '--ne-rotate': `url(${rotateNECursor.src}) 8 8, grab`,
-    '--nw-rotate': `url(${rotateNWCursor.src}) 8 8, grab`,
-    '--s-rotate': `url(${rotateSCursor.src}) 8 8, grab`,
-    '--se-rotate': `url(${rotateSECursor.src}) 8 8, grab`,
-    '--sw-rotate': `url(${rotateSWCursor.src}) 8 8, grab`,
-    '--w-rotate': `url(${rotateWCursor.src}) 8 8, grab`,
+    '--e-rotate': `url('data:image/svg+xml;utf8,${rotateE}') 8 8, grab`,
+    '--n-rotate': `url('data:image/svg+xml;utf8,${rotateN}') 8 8, grab`,
+    '--ne-rotate': `url('data:image/svg+xml;utf8,${rotateNE}') 8 8, grab`,
+    '--nw-rotate': `url('data:image/svg+xml;utf8,${rotateNW}') 8 8, grab`,
+    '--s-rotate': `url('data:image/svg+xml;utf8,${rotateS}') 8 8, grab`,
+    '--se-rotate': `url('data:image/svg+xml;utf8,${rotateSE}') 8 8, grab`,
+    '--sw-rotate': `url('data:image/svg+xml;utf8,${rotateSW}') 8 8, grab`,
+    '--w-rotate': `url('data:image/svg+xml;utf8,${rotateW}') 8 8, grab`,
   },
 });

@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/design-system/primitives/Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 
-export type LayerTreeSectionProps = ComponentPropsWithoutRefByBox<'div'>;
+export interface LayerTreeSectionProps extends ComponentPropsWithoutRefByBox<'div'> {}
 export type LayerTreeSectionRef = ComponentElementRefByBox<'div'>;

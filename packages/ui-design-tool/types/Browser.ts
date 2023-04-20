@@ -1,18 +1,18 @@
-export interface MouseMeta {
+export interface MouseStatus {
   clientX: number;
   clientY: number;
   offsetX: number;
   offsetY: number;
 }
 
-export interface KeyboardMeta {
+export interface KeyboardStatus {
   altKey: boolean;
   ctrlKey: boolean;
   metaKey: boolean;
   shiftKey: boolean;
 }
 
-export interface BrowserMeta {
-  readonly mouse: MouseMeta;
-  readonly keyboard: KeyboardMeta;
+export interface BrowserStatus {
+  readonly mouse: MouseStatus;
+  readonly keyboard: KeyboardStatus;
 }

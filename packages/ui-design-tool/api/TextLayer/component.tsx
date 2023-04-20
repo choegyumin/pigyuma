@@ -1,12 +1,12 @@
 import { InteractionHandleType, UIInteractionElementDataAttributeName } from '@/types/Identifier';
 import React from 'react';
-import withData from '../withData';
+import withModel from '../withModel';
 import { TextLayer } from './model';
 import * as styles from './styles.css';
 
-export type TextLayerProps = {
+export interface TextLayerProps {
   data: TextLayer;
-};
+}
 
 export type TextLayerRef = HTMLDivElement;
 
@@ -28,5 +28,5 @@ export const RawTextLayerComponent = React.forwardRef<TextLayerRef, TextLayerPro
 });
 RawTextLayerComponent.displayName = 'RawTextLayer';
 
-export const TextLayerComponent = withData(RawTextLayerComponent);
+export const TextLayerComponent = withModel(RawTextLayerComponent);
 TextLayerComponent.displayName = 'TextLayer';

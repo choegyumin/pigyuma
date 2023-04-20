@@ -1,63 +1,56 @@
 import { Canvas } from '@/api/Canvas/model';
+import { INITIAL_BROWSER_STATUS } from '@/api/ElementSelector';
 import { UIDesignTool } from '@/api/UIDesignTool';
-import { INITIAL_BROWSER_META, INITIAL_DOCUMENT_ID } from '@/api/UIDesignToolDOM';
-import { BrowserMeta } from '@/types/Browser';
+import { BrowserStatus } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
-import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMeta } from '@/types/Status';
-import { setRef, useCloneDeepState, useStableCallback } from '@pigyuma/react-utils';
+import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMetadata } from '@/types/Status';
+import { setRef, useStableCallback } from '@pigyuma/react-utils';
+import { cloneDeep, isEqual } from '@pigyuma/utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const { api } = initialValues;
 
   const privateRef = useRef<{
-    id: string;
-    getBrowserMeta: () => BrowserMeta;
+    getBrowserStatus: () => BrowserStatus;
     setStatus: React.Dispatch<UIDesignToolStatus>;
   }>({
-    id: INITIAL_DOCUMENT_ID,
-    getBrowserMeta: () => INITIAL_BROWSER_META,
+    getBrowserStatus: () => INITIAL_BROWSER_STATUS,
     setStatus: () => undefined,
   });
 
-  const instanceId = privateRef.current.id;
-  const getBrowserMeta = useCallback(
-    (...args: Parameters<typeof privateRef.current.getBrowserMeta>) => privateRef.current.getBrowserMeta(...args),
+  const instanceId = api.id;
+  const getBrowserStatus = useCallback(
+    (...args: Parameters<typeof privateRef.current.getBrowserStatus>) => privateRef.current.getBrowserStatus(...args),
     [],
   );
-  const setStatusDispatcher = useCallback(
-    (...args: Parameters<typeof privateRef.current.setStatus>) => privateRef.current.setStatus(...args),
-    [],
-  );
+  const setStatus = useCallback((...args: Parameters<typeof privateRef.current.setStatus>) => privateRef.current.setStatus(...args), []);
 
-  const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>('default');
-  const [hovered, setHovered] = useState<UIRecordKey>();
+  const [cursor, setCursor] = useState<NonNullable<React.CSSProperties['cursor']>>();
 
   const dispatcher = useMemo(
     () => ({
       setCursor,
-      setHovered,
-      setStatus: setStatusDispatcher,
+      setStatus,
     }),
-    [setCursor, setHovered, setStatusDispatcher],
+    [setCursor, setStatus],
   );
 
-  const [mode, setMode] = useState<UIDesignToolMode>(() => api.mode);
-  const [status, setStatus] = useState<UIDesignToolStatus>(() => api.status);
-  const [statusMeta, setStatueMeta] = useState<UIDesignToolStatusMeta>(() => ({
+  const [mode, applyMode] = useState<UIDesignToolMode>(() => api.mode);
+  const [status, applyStatus] = useState<UIDesignToolStatus>(() => api.status);
+  const [statusMetadata, applyStatusMetadata] = useState<UIDesignToolStatusMetadata>(() => ({
     interactionType: api.interactionType,
     transformMethod: api.transformMethod,
   }));
 
-  /**
-   * 상태의 Life cycle을 React에 의존하기 위해 참조 제거
-   * @todo 성능 저하가 발생하면: 최초 한번 cloneDeep 후, 변경된 아이템만 clone하도록 개선
-   */
-  const [pairs, setPairs] = useCloneDeepState<typeof api.pairs>(() => api.pairs);
+  /** 상태의 Life cycle을 React에 의존하기 위해 참조 제거 */
+  const [pairs, applyPairs] = useState<typeof api.pairs>(() => cloneDeep(api.pairs));
   const tree = useMemo<typeof api.tree>(() => pairs.get(Canvas.key) as Canvas, [pairs]);
-  const [drafts, setDrafts] = useCloneDeepState<typeof api.drafts>(() => api.drafts);
-  const [selected, setSelected] = useCloneDeepState<typeof api.selected>(() => api.selected);
+  const [drafts, applyDrafts] = useState<typeof api.drafts>(() => cloneDeep(api.drafts));
+  const [hovered, applyHovered] = useState<UIRecordKey | undefined>(() => api.hovered);
+  const [selected, applySelected] = useState<typeof api.selected>(() => cloneDeep(api.selected));
 
+  /** @see ModelStore */
   const controllerInterface = useMemo(
     () => ({
       toggleMode: ((...args) => api.toggleMode(...args)) as typeof api.toggleMode,
@@ -77,6 +70,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     [api],
   );
 
+  /** @see ModelStore */
   const dataInterface = useMemo(
     () => ({
       mode,
@@ -93,7 +87,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     [api, mode, status, tree, pairs, drafts, selected],
   );
 
-  /** @see UIDesignToolDOM */
+  /** @see ElementSelector */
   const selectorInterface = useMemo(
     () => ({
       dataset: ((...args) => api.dataset(...args)) as typeof api.dataset,
@@ -102,13 +96,13 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       query: ((...args) => api.query(...args)) as typeof api.query,
       queryAll: ((...args) => api.queryAll(...args)) as typeof api.queryAll,
       fromPoint: ((...args) => api.fromPoint(...args)) as typeof api.fromPoint,
-      fromMouse: ((...args) => api.fromMouse(...args)) as typeof api.fromMouse,
     }),
     [api],
   );
 
   // unsubscribe 함수를 `useEffect`의 Clean-up 함수 형태로 제공
-  const subscriptionInterface = useMemo(
+  /** @see DataSubscriber */
+  const subscriberInterface = useMemo(
     () => ({
       subscribeMode: (...args: Parameters<typeof api.subscribeMode>): (() => void) => {
         api.subscribeMode(...args);
@@ -123,6 +117,11 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
       subscribeTree: (...args: Parameters<typeof api.subscribeTree>): (() => void) => {
         api.subscribeTree(...args);
         const unsubscribe = () => api.unsubscribeTree(...args);
+        return unsubscribe;
+      },
+      subscribeHovering: (...args: Parameters<typeof api.subscribeHovering>): (() => void) => {
+        api.subscribeHovering(...args);
+        const unsubscribe = () => api.unsubscribeHovering(...args);
         return unsubscribe;
       },
       subscribeSelection: (...args: Parameters<typeof api.subscribeSelection>): (() => void) => {
@@ -142,16 +141,14 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const getSelectedReference = useStableCallback(() => dataInterface.selected);
 
   useEffect(() => {
-    const { id, getBrowserMeta, setStatus } = api.mount();
+    const { getBrowserStatus, setStatus } = api.mount();
     setRef(privateRef, {
-      id,
-      getBrowserMeta,
+      getBrowserStatus,
       setStatus,
     });
     return () => {
       setRef(privateRef, {
-        id,
-        getBrowserMeta: () => INITIAL_BROWSER_META,
+        getBrowserStatus: () => INITIAL_BROWSER_STATUS,
         setStatus: () => undefined,
       });
       api.unmount();
@@ -160,52 +157,70 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
 
   useEffect(() => {
     const callback = (mode: UIDesignToolMode) => {
-      setMode(mode);
+      applyMode(mode);
     };
-    const unsubscribe = subscriptionInterface.subscribeMode(callback);
+    const unsubscribe = subscriberInterface.subscribeMode(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setMode]);
+  }, [api, subscriberInterface, applyMode]);
 
   useEffect(() => {
-    const callback = (status: UIDesignToolStatus, meta: UIDesignToolStatusMeta) => {
-      setStatus(status);
-      setStatueMeta(meta);
+    const callback = (status: UIDesignToolStatus, meta: UIDesignToolStatusMetadata) => {
+      applyStatus(status);
+      applyStatusMetadata(meta);
     };
-    const unsubscribe = subscriptionInterface.subscribeStatus(callback);
+    const unsubscribe = subscriberInterface.subscribeStatus(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setStatus, setStatueMeta]);
+  }, [api, subscriberInterface, applyStatus, applyStatusMetadata]);
 
   useEffect(() => {
     const callback = () => {
-      setPairs(api.pairs);
-      setDrafts(api.drafts);
+      applyPairs(cloneDeep(api.pairs));
+      applyDrafts((prev) => {
+        if (isEqual(prev, api.drafts)) {
+          return prev;
+        }
+        return cloneDeep(api.drafts);
+      });
     };
-    const unsubscribe = subscriptionInterface.subscribeTree(callback);
+    const unsubscribe = subscriberInterface.subscribeTree(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setPairs, setDrafts]);
+  }, [api, subscriberInterface, applyPairs, applyDrafts]);
 
   useEffect(() => {
-    const callback = (newSelected: UIRecordKey[]) => {
-      setSelected(new Set(newSelected));
+    const callback = () => {
+      applyHovered(api.hovered);
     };
-    const unsubscribe = subscriptionInterface.subscribeSelection(callback);
+    const unsubscribe = subscriberInterface.subscribeHovering(callback);
     return unsubscribe;
-  }, [api, subscriptionInterface, setSelected]);
+  }, [api, subscriberInterface, applyHovered]);
+
+  useEffect(() => {
+    const callback = () => {
+      applySelected((prev) => {
+        if (isEqual(prev, api.selected)) {
+          return prev;
+        }
+        return cloneDeep(api.selected);
+      });
+    };
+    const unsubscribe = subscriberInterface.subscribeSelection(callback);
+    return unsubscribe;
+  }, [api, subscriberInterface, applySelected]);
 
   return {
     instanceId,
-    getBrowserMeta,
+    getBrowserStatus,
 
     cursor,
-    hovered,
     mode,
     status,
-    statusMeta,
+    statusMetadata,
     dispatcher,
 
     tree,
     pairs,
     drafts,
+    hovered,
     selected,
     getItemReference,
     getTreeReference,
@@ -216,6 +231,6 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     controllerInterface,
     dataInterface,
     selectorInterface,
-    subscriptionInterface,
+    subscriberInterface,
   };
 }

@@ -1,7 +1,6 @@
 import { convertInputSelectedValue } from '@/utils/input';
-import { useEvent } from '@pigyuma/react-utils';
+import { useEvent, Box } from '@pigyuma/react-utils';
 import React, { useCallback } from 'react';
-import Box from '../Box';
 import { SelectProps, SelectRef } from './types';
 
 /**
@@ -10,25 +9,23 @@ import { SelectProps, SelectRef } from './types';
  * - select를 input, option을 button으로 대체
  */
 const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
+  const { onChange, onChangeCapture, ...rootProps } = props;
+
   const getSelected = useCallback((select: HTMLSelectElement): string | number | undefined => {
     const { selectedIndex } = select;
     const option = select.querySelectorAll('option')[selectedIndex] as HTMLOptionElement | undefined;
     return option == null ? undefined : convertInputSelectedValue(option);
   }, []);
 
-  const onChange = useEvent((event: React.ChangeEvent<HTMLSelectElement>) => {
-    props.onChange?.(event, getSelected(event.currentTarget));
+  const onFieldChange = useEvent((event: React.ChangeEvent<HTMLSelectElement>) => {
+    onChange?.(event, getSelected(event.currentTarget));
   });
 
-  const onChangeCapture = useEvent((event: React.FormEvent<HTMLSelectElement>) => {
-    props.onChangeCapture?.(event, getSelected(event.currentTarget));
+  const onFieldChangeCapture = useEvent((event: React.FormEvent<HTMLSelectElement>) => {
+    onChangeCapture?.(event, getSelected(event.currentTarget));
   });
 
-  return (
-    <Box {...props} ref={ref} as="select" onChange={onChange} onChangeCapture={onChangeCapture}>
-      {props.children}
-    </Box>
-  );
+  return <Box {...rootProps} ref={ref} as="select" onChange={onFieldChange} onChangeCapture={onFieldChangeCapture} />;
 });
 Select.displayName = 'Select';
 

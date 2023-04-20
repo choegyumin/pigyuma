@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@/primitives/Box';
+import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 
-export type ButtonProps = ComponentPropsWithoutRefByBox<'button'>;
+export interface ButtonProps extends ComponentPropsWithoutRefByBox<'button'> {}
 export type ButtonRef = ComponentElementRefByBox<'button'>;

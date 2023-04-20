@@ -31,13 +31,16 @@ describe('useUIData', () => {
 
   test('should return UIDesignTool status', () => {
     const { result } = renderHook(() => useUIData(), { wrapper });
-    const { status } = result.current;
+    const uiRecord = result.current;
+    const { status } = uiRecord;
+
     expect(status).toEqual(UIDesignToolStatus.idle);
   });
 
   test('should return UIRecord data', () => {
     const { result } = renderHook(() => useUIData(), { wrapper });
-    const { get, pairs, tree } = result.current;
+    const uiRecord = result.current;
+    const { get, pairs, tree } = uiRecord;
 
     expect(get(recordKey)).toEqual(record);
     expect(get(recordKey)).not.toBe(record);
@@ -64,7 +67,8 @@ describe('useUIData', () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
-    const { get, pairs, tree } = uiDataResult.current;
+    const uiData = uiDataResult.current;
+    const { get, pairs, tree } = uiData;
 
     const uiRecordByGet = get(recordKey);
     const uiRecordFromPairs = pairs.get(recordKey);

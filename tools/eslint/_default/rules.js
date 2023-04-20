@@ -3,6 +3,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/ban-types': ['error'],
     'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-constant-condition': ['error', { checkLoops: false }],
     'no-empty': ['error', { allowEmptyCatch: true }],
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-explicit-any': ['error', { ignoreRestArgs: true }],

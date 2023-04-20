@@ -31,13 +31,17 @@ describe('useUIRecord', () => {
 
   test('should return undefined when no recordKey passed', () => {
     const { result } = renderHook(() => useUIRecord(undefined), { wrapper });
-    expect(result.current).toBeUndefined();
+    const uiRecord = result.current;
+
+    expect(uiRecord).toBeUndefined();
   });
 
   test('should return UIRecord when recordKey is passed', () => {
     const { result } = renderHook(() => useUIRecord(recordKey), { wrapper });
-    expect(result.current).toEqual(record);
-    expect(result.current).not.toBe(record);
+    const uiRecord = result.current;
+
+    expect(uiRecord).toEqual(record);
+    expect(uiRecord).not.toBe(record);
   });
 
   test('should update UIRecord data', () => {

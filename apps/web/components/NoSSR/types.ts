@@ -1,1 +1,1 @@
-export type NoSSRProps = React.PropsWithChildren;
+export interface NoSSRProps extends React.PropsWithChildren {}

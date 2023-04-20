@@ -2,13 +2,13 @@ import { InteractionHandleType, UIInteractionElementDataAttributeName, UIRecordE
 import clsx from 'clsx';
 import React from 'react';
 import { LayerComponent } from '../Layer/component';
-import withData from '../withData';
+import withModel from '../withModel';
 import { Artboard } from './model';
 import * as styles from './styles.css';
 
-export type ArtboardProps = {
+export interface ArtboardProps {
   data: Artboard;
-};
+}
 
 export type ArtboardRef = HTMLDivElement;
 
@@ -34,5 +34,5 @@ export const RawArtboardComponent = React.forwardRef<ArtboardRef, ArtboardProps>
 });
 RawArtboardComponent.displayName = 'RawArtboard';
 
-export const ArtboardComponent = withData(RawArtboardComponent);
+export const ArtboardComponent = withModel(RawArtboardComponent);
 ArtboardComponent.displayName = 'Artboard';

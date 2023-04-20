@@ -1,8 +1,8 @@
-import { DynamicComponentByBox, DynamicComponentPropsByBox } from '@pigyuma/design-system/primitives/Box';
+import { DynamicComponentByBox, DynamicComponentPropsByBox } from '@pigyuma/react-utils';
 import React from 'react';
 
-type CustomProps = React.HTMLAttributes<HTMLElement>;
+interface CustomProps extends React.HTMLAttributes<HTMLElement> {}
 
-export type ToolbarProps = DynamicComponentPropsByBox<CustomProps>;
+export interface ToolbarProps extends DynamicComponentPropsByBox<CustomProps> {}
 
 export interface ToolbarComponentFunction extends DynamicComponentByBox<CustomProps> {}

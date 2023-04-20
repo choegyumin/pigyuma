@@ -1,13 +1,13 @@
 import { InteractionHandleType, UIInteractionElementDataAttributeName } from '@/types/Identifier';
 import React from 'react';
 import { LayerComponent } from '../Layer/component';
-import withData from '../withData';
+import withModel from '../withModel';
 import { ShapeLayer } from './model';
 import * as styles from './styles.css';
 
-export type ShapeLayerProps = {
+export interface ShapeLayerProps {
   data: ShapeLayer;
-};
+}
 
 export type ShapeLayerRef = HTMLDivElement;
 
@@ -30,5 +30,5 @@ export const RawShapeLayerComponent = React.forwardRef<ShapeLayerRef, ShapeLayer
 });
 RawShapeLayerComponent.displayName = 'RawShapeLayer';
 
-export const ShapeLayerComponent = withData(RawShapeLayerComponent);
+export const ShapeLayerComponent = withModel(RawShapeLayerComponent);
 ShapeLayerComponent.displayName = 'ShapeLayer';

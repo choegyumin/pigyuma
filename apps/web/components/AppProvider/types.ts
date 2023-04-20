@@ -1,3 +1,3 @@
 import React from 'react';
 
-export type AppProviderProps = React.PropsWithChildren<unknown>;
+export interface AppProviderProps extends React.PropsWithChildren<unknown> {}

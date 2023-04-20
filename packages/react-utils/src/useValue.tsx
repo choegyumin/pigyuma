@@ -3,9 +3,9 @@ import setRef from './setRef';
 import useIsomorphicLayoutEffect from './useIsomorphicLayoutEffect';
 import usePrevious from './usePrevious';
 
-type UseValueConfig = {
+export interface UseValueConfig {
   notifyError?: boolean;
-};
+}
 
 const MESSAGE_WHEN_CONTROLLED_AND_UNCONTROLLED =
   "Warning: A component contains an component with both value and defaultValue props. 'useValue' hooks must be either controlled or uncontrolled (specify either the value prop, or the defaultValue prop, but not both). Decide between using a controlled or uncontrolled 'useValue' hook and remove one of these props. More info: https://reactjs.org/link/controlled-components";

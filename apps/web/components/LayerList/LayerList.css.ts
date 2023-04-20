@@ -23,12 +23,11 @@ export const item = style({
   justifyContent: 'flex-end',
   alignItems: 'center',
   height: '32px',
-  paddingLeft: `calc(${foundations.spacing(2)} + (20px * ${vars.depth}))`,
-  paddingRight: foundations.spacing(2),
+  paddingInline: `calc(${foundations.spacing(2)} + (20px * ${vars.depth})) ${foundations.spacing(2)}`,
 });
 
 export const icon = style({
-  marginRight: foundations.spacing(2),
+  marginInlineEnd: foundations.spacing(2),
   color: '#999',
   fontSize: 16,
   verticalAlign: 'middle',

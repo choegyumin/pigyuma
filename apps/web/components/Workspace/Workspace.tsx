@@ -1,4 +1,4 @@
-import Box from '@pigyuma/design-system/primitives/Box';
+import { Box } from '@pigyuma/react-utils';
 import { UIDesignCanvas } from '@pigyuma/ui-design-tool';
 import clsx from 'clsx';
 import React from 'react';
@@ -11,10 +11,10 @@ import * as styles from './Workspace.css';
 
 const Workspace = React.memo(
   React.forwardRef<WorkspaceRef, WorkspaceProps>((props, ref) => {
-    const { initialData, ...restProps } = props;
+    const { initialData, className, ...restProps } = props;
 
     return (
-      <Box as="div" {...restProps} ref={ref} className={clsx(styles.root, props.className)}>
+      <Box as="div" {...restProps} ref={ref} className={clsx(styles.root, className)}>
         <WorkspaceToolbar />
         <div className={styles.container}>
           <NoSSR>

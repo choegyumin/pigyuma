@@ -1,6 +1,5 @@
-import { useEvent, useValue } from '@pigyuma/react-utils';
+import { useEvent, useValue, Box } from '@pigyuma/react-utils';
 import React from 'react';
-import Box from '../Box';
 import RadioGroupContextProvider from './RadioGroup.context';
 import { RadioGroupProps, RadioGroupRef } from './types';
 
@@ -28,9 +27,7 @@ const RadioGroup = React.forwardRef<RadioGroupRef, RadioGroupProps>((props, ref)
       onChange={onGroupChange}
       onChangeCapture={onGroupChangeCapture}
     >
-      <Box as="span" role="radiogroup" {...rootProps} ref={ref}>
-        {rootProps.children}
-      </Box>
+      <Box as="span" role="radiogroup" {...rootProps} ref={ref} />
     </RadioGroupContextProvider>
   );
 });

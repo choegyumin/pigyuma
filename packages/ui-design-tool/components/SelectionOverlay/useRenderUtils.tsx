@@ -1,7 +1,7 @@
 import { Artboard } from '@/api/Artboard/model';
 import { Layer } from '@/api/Layer/model';
 import { UIRecord } from '@/api/UIRecord/model';
-import useStatusMeta from '@/hooks/useStatusMeta';
+import useStatusMetadata from '@/hooks/useStatusMetadata';
 import useUISelector from '@/hooks/useUISelector';
 import { UIRecordRect } from '@/types/Geometry';
 import { UIDesignToolInteractionType, UIDesignToolTransformMethod } from '@/types/Status';
@@ -28,14 +28,14 @@ const initialInfoText = '';
 export default function useRenderUtils() {
   const uiSelector = useUISelector();
 
-  const statusMeta = useStatusMeta();
+  const statusMetadata = useStatusMetadata();
 
   const getMeta = useCallback(() => {
-    const isIdle = statusMeta.interactionType === UIDesignToolInteractionType.idle;
-    const isDrawing = statusMeta.interactionType === UIDesignToolInteractionType.drawing;
-    const isTransforming = statusMeta.interactionType === UIDesignToolInteractionType.transform;
-    const isResizing = isTransforming && statusMeta.transformMethod === UIDesignToolTransformMethod.resize;
-    const isRotating = isTransforming && statusMeta.transformMethod === UIDesignToolTransformMethod.rotate;
+    const isIdle = statusMetadata.interactionType === UIDesignToolInteractionType.idle;
+    const isDrawing = statusMetadata.interactionType === UIDesignToolInteractionType.drawing;
+    const isTransforming = statusMetadata.interactionType === UIDesignToolInteractionType.transform;
+    const isResizing = isTransforming && statusMetadata.transformMethod === UIDesignToolTransformMethod.resize;
+    const isRotating = isTransforming && statusMetadata.transformMethod === UIDesignToolTransformMethod.rotate;
 
     const handleVisible = isIdle;
     const infoVisible = isDrawing || isResizing || isRotating;
@@ -53,7 +53,7 @@ export default function useRenderUtils() {
       outlineVisible,
       cursorVisible,
     };
-  }, [statusMeta]);
+  }, [statusMetadata]);
 
   const getOverlayShapeStyle = useCallback(
     (record: UIRecord) => {
@@ -85,7 +85,7 @@ export default function useRenderUtils() {
     (record: UIRecord) => {
       const element = uiSelector.query({ key: record.key });
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
-      return rect != null ? `${rect.width} × ${rect.height}` : '';
+      return rect != null ? `${Number(rect.width.toFixed(2))} × ${Number(rect.height.toFixed(2))}` : '';
     },
     [uiSelector],
   );
@@ -95,13 +95,13 @@ export default function useRenderUtils() {
       const element = uiSelector.query({ key: record.key });
       /** @todo 우측 패널도 `Layer.rotate.length` 대신 `UIRecordRect.fromElement(element).rotate` 가 노출되어야 함 (데이터를 nested·combined 값으로 조작하면 잦은 변경이 발생하므로 rotate 값만 예외 케이스로 적절한 설계 필요) */
       const rect = element != null ? UIRecordRect.fromElement(element) : undefined;
-      return rect != null ? `${toDegrees360(rect.rotate)}°` : '';
+      return rect != null ? `${Number(toDegrees360(rect.rotate).toFixed(2))}°` : '';
     },
     [uiSelector],
   );
 
   const getRootStyle = useCallback(
-    (record: UIRecord) => {
+    (record: UIRecord): React.CSSProperties => {
       if (!(record instanceof Artboard || record instanceof Layer)) {
         return initialRootStyle;
       }

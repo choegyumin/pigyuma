@@ -1,115 +1,80 @@
 import Icon from '@pigyuma/design-system/components/Icon';
-import { useEvent, useEventListener } from '@pigyuma/react-utils';
-import { useUIController, useUIData } from '@pigyuma/ui-design-tool';
-import { UIDesignToolMode, UIDesignToolStatus } from '@pigyuma/ui-design-tool/types/Status';
+import { useEventListener } from '@pigyuma/react-utils';
+import { UIDesignToolMode } from '@pigyuma/ui-design-tool/types/Status';
 import clsx from 'clsx';
 import React from 'react';
 import Toolbar from '../Toolbar';
 import { WorkspaceToolbarProps, WorkspaceToolbarRef } from './types';
+import useWorkspaceToolbar from './useWorkspaceToolbar';
 import * as styles from './WorkspaceToolbar.css';
 
 const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarProps>((props, ref) => {
-  const uiController = useUIController();
-  const uiData = useUIData();
+  const viewModel = useWorkspaceToolbar(props, ref);
 
-  const onSelectClick = useEvent(() => {
-    uiController.toggleMode(UIDesignToolMode.select);
-  });
+  useEventListener(() => document, 'keydown', viewModel.onDocumentKeyDown);
 
-  const onArtboardClick = useEvent(() => {
-    uiController.toggleMode(UIDesignToolMode.artboard);
-  });
-
-  const onShapeClick = useEvent(() => {
-    uiController.toggleMode(UIDesignToolMode.shape);
-  });
-
-  const onTextClick = useEvent(() => {
-    uiController.toggleMode(UIDesignToolMode.text);
-  });
-
-  const onHandClick = useEvent(() => {
-    uiController.toggleMode(UIDesignToolMode.hand);
-  });
-
-  const onKeyDown = useEvent((event: KeyboardEvent) => {
-    if (uiData.status !== UIDesignToolStatus.idle) {
-      return;
-    }
-    switch (event.code) {
-      case 'KeyV':
-        return uiController.toggleMode(UIDesignToolMode.select);
-      case 'KeyF':
-        return uiController.toggleMode(UIDesignToolMode.artboard);
-      case 'KeyS':
-        return uiController.toggleMode(UIDesignToolMode.shape);
-      case 'KeyT':
-        return uiController.toggleMode(UIDesignToolMode.text);
-      case 'KeyH':
-        return uiController.toggleMode(UIDesignToolMode.hand);
-    }
-  });
-
-  useEventListener(() => document, 'keydown', onKeyDown);
+  const { selectedMode, onSelectClick, onArtboardClick, onShapeClick } = viewModel;
 
   /** @todo title을 Tooltip 컴포넌트로 대체 */
   return (
     <Toolbar {...props} ref={ref} className={clsx(styles.root, props.className)}>
       <button
         type="button"
-        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.select })}
+        className={clsx(styles.button, { [styles.button_state.selected]: selectedMode === UIDesignToolMode.select })}
         onClick={onSelectClick}
         title="Select & Move (V)"
         aria-label="Select & Move"
         aria-keyshortcuts="V"
-        aria-pressed={uiData.mode === UIDesignToolMode.select}
+        aria-pressed={selectedMode === UIDesignToolMode.select}
       >
         <Icon type="cursorOutline" />
       </button>
       <button
         type="button"
-        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.artboard })}
+        className={clsx(styles.button, { [styles.button_state.selected]: selectedMode === UIDesignToolMode.artboard })}
         onClick={onArtboardClick}
         title="Artboard (F)"
         aria-label="Artboard"
         aria-keyshortcuts="F"
-        aria-pressed={uiData.mode === UIDesignToolMode.artboard}
+        aria-pressed={selectedMode === UIDesignToolMode.artboard}
       >
         <Icon type="layoutOutline" />
       </button>
       <button
         type="button"
-        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.shape })}
+        className={clsx(styles.button, { [styles.button_state.selected]: selectedMode === UIDesignToolMode.shape })}
         onClick={onShapeClick}
         title="Shape (S)"
         aria-label="Shape"
         aria-keyshortcuts="S"
-        aria-pressed={uiData.mode === UIDesignToolMode.shape}
+        aria-pressed={selectedMode === UIDesignToolMode.shape}
       >
         <Icon type="squareOutline" />
       </button>
-      <button
+      {/** @todo TextLayer 추가 및 수정 기능 구현 */}
+      {/* <button
         type="button"
-        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.text })}
+        className={clsx(styles.button, { [styles.button_state.selected]: selectedMode === UIDesignToolMode.text })}
         onClick={onTextClick}
         title="Text (T)"
         aria-label="Text"
         aria-keyshortcuts="T"
-        aria-pressed={uiData.mode === UIDesignToolMode.text}
+        aria-pressed={selectedMode === UIDesignToolMode.text}
       >
         <Icon type="text" />
-      </button>
-      <button
+      </button> */}
+      {/** @todo Zoom & Panning 기능 구현 */}
+      {/* <button
         type="button"
-        className={clsx(styles.button, { [styles.button_state.selected]: uiData.mode === UIDesignToolMode.hand })}
+        className={clsx(styles.button, { [styles.button_state.selected]: selectedMode === UIDesignToolMode.hand })}
         onClick={onHandClick}
         title="Hand (H)"
         aria-label="Hand"
         aria-keyshortcuts="H"
-        aria-pressed={uiData.mode === UIDesignToolMode.hand}
+        aria-pressed={selectedMode === UIDesignToolMode.hand}
       >
         <Icon type="handOutline" />
-      </button>
+      </button> */}
     </Toolbar>
   );
 });

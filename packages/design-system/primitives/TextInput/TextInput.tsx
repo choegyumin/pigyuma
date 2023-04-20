@@ -1,21 +1,20 @@
-import { useEvent } from '@pigyuma/react-utils';
+import { useEvent, Box } from '@pigyuma/react-utils';
 import React from 'react';
-import Box from '../Box';
 import { TextInputProps, TextInputRef } from './types';
 
 const TextInput = React.forwardRef<TextInputRef, TextInputProps>((props, ref) => {
-  const { autoSelect, ...restProps } = props;
+  const { type = 'text', autoSelect, onChange, onChangeCapture, onFocusCapture, ...rootProps } = props;
 
-  const onChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
-    restProps.onChange?.(event, event.currentTarget.value);
+  const onFieldChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event, event.currentTarget.value);
   });
 
-  const onChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
-    restProps.onChangeCapture?.(event, event.currentTarget.value);
+  const onFieldChangeCapture = useEvent((event: React.FormEvent<HTMLInputElement>) => {
+    onChangeCapture?.(event, event.currentTarget.value);
   });
 
-  const onFocusCapture = useEvent((event: React.FocusEvent<HTMLInputElement>) => {
-    restProps.onFocusCapture?.(event);
+  const onFieldFocusCapture = useEvent((event: React.FocusEvent<HTMLInputElement>) => {
+    onFocusCapture?.(event);
     if (autoSelect) {
       const { currentTarget } = event;
       window.requestAnimationFrame(() => {
@@ -26,13 +25,13 @@ const TextInput = React.forwardRef<TextInputRef, TextInputProps>((props, ref) =>
 
   return (
     <Box
-      {...restProps}
+      {...rootProps}
       ref={ref}
       as="input"
-      type={restProps.type ?? 'text'}
-      onChange={onChange}
-      onChangeCapture={onChangeCapture}
-      onFocusCapture={onFocusCapture}
+      type={type}
+      onChange={onFieldChange}
+      onChangeCapture={onFieldChangeCapture}
+      onFocusCapture={onFieldFocusCapture}
     />
   );
 });
