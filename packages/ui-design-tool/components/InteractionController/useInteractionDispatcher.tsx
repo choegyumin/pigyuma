@@ -23,8 +23,7 @@ import {
 import useInteractionTaskManager from './useInteractionTaskManager';
 import { makeDefaultArtboardArgs, makeDefaultShapeLayerArgs } from './utils/record';
 
-/** @todo 테스트 코드 작성 */
-export default function useInteractionHandler() {
+export default function useInteractionDispatcher() {
   const uiController = useUIController();
 
   const [, pushTask, runTask, shiftTask] = useInteractionTaskManager();

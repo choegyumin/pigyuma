@@ -19,7 +19,7 @@ describe('UIDesignTool - DataSubscriber', () => {
   let dummyArtboard: ArtboardJSON;
 
   beforeEach(() => {
-    uiDesignTool = new UIDesignTool();
+    uiDesignTool = new UIDesignTool({ strict: false });
 
     dummyArtboard = makeDummyArtboardJSON({ key: 'artboard' });
     dummyTextLayer = makeDummyTextLayerJSON({ key: 'text-layer' });

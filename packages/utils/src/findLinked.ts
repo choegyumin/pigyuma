@@ -11,7 +11,6 @@ type GetPropWithResult<T, R> = (value?: T | R) => PropWithResult<T, R>;
 type Predicate<T> = (value: T) => boolean;
 type PredicateWithResult<T, R> = (value: T | R) => boolean;
 
-/** @todo 테스트 코드 작성 */
 function findLinked<T extends object>(
   item: T | undefined,
   prop: Prop<T> | GetProp<T>,

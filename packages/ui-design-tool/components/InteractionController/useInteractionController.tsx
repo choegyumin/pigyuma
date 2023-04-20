@@ -23,7 +23,7 @@ import { useEvent } from '@pigyuma/react-utils';
 import { findLinked } from '@pigyuma/utils';
 import { useCallback } from 'react';
 import { InteractionActionType, InteractionTarget } from './types';
-import useInteractionHandler from './useInteractionHandler';
+import useInteractionDispatcher from './useInteractionDispatcher';
 
 export default function useInteractionController() {
   const getBrowserStatus = useBrowserStatus();
@@ -36,7 +36,7 @@ export default function useInteractionController() {
 
   const uiSelector = useUISelector();
 
-  const dispatch = useInteractionHandler();
+  const dispatch = useInteractionDispatcher();
 
   const getInteractionTargets = useCallback(
     (recordKeys: UIRecordKey[]): InteractionTarget[] => {

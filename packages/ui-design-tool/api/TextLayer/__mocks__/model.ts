@@ -3,12 +3,13 @@ import { uuid } from '@pigyuma/utils';
 import { TextLayerJSON } from '../model';
 
 export function makeDummyTextLayerJSON(data: Partial<TextLayerJSON> = {}): TextLayerJSON {
+  const key = uuid.v4();
   return Object.assign(
     {
-      key: uuid.v4(),
+      key,
       type: UIRecordType.layer,
       layerType: LayerType.text,
-      name: 'Text Layer',
+      name: `Text Layer (${key})`,
       x: { length: 0, lengthType: 'auto' },
       y: { length: 0, lengthType: 'auto' },
       rotate: { degrees: 0 },

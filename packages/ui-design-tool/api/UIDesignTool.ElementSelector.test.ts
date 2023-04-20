@@ -4,7 +4,7 @@ describe('UIDesignTool - ElementSelector', () => {
   let uiDesignTool: UIDesignTool;
 
   beforeEach(() => {
-    uiDesignTool = new UIDesignTool();
+    uiDesignTool = new UIDesignTool({ strict: false });
   });
 
   describe('getBrowserStatus', () => {

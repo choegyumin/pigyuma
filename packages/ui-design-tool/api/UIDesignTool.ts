@@ -28,11 +28,9 @@ export class UIDesignTool extends ModelStore {
 
   mount() {
     if (this.#mounted) {
-      const message = 'UIDesignTool already mounted.';
       if (this[Protected.strict]) {
-        throw new Error(message);
+        throw new Error('UIDesignTool already mounted.');
       }
-      console.error(message);
     } else {
       this.#mounted = true;
       this[Protected.registerEvents]();
@@ -48,7 +46,9 @@ export class UIDesignTool extends ModelStore {
 
   unmount() {
     if (!this.#mounted) {
-      console.warn('UIDesignTool is not mounted.');
+      if (this[Protected.strict]) {
+        console.warn('UIDesignTool is not mounted.');
+      }
     }
 
     this[Protected.deregisterEvents]();

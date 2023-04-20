@@ -213,11 +213,7 @@ export class ModelStore extends ElementSelector {
 
   toggleMode(mode: UIDesignToolMode): void {
     if (this.status !== UIDesignToolStatus.idle) {
-      const message = 'mode can only be changed when status is idle.';
-      if (this[Protected.strict]) {
-        throw new Error(message);
-      }
-      console.error(message);
+      console.warn('Changing modes when not idle status can cause bugs');
     }
     const prevMode = this.mode;
     this.#mode = mode;
