@@ -17,27 +17,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
     fill: '#fff',
     children: [
       {
-        key: 'text-layer-hi',
-        type: 'layer',
-        layerType: 'text',
-        name: 'Text Layer HI',
-        x: { length: 0, lengthType: 'auto' },
-        y: { length: 0, lengthType: 'auto' },
-        rotate: { degrees: 0 },
-        width: { length: 0, lengthType: 'flexible' },
-        height: { length: 0, lengthType: 'flexible' },
-        textColor: { color: '#000000' },
-        fontSize: { length: 28, lengthType: 'px' },
-        lineHeight: { length: 150, lengthType: 'percent' },
-        fontWeight: { value: 400 },
-        letterSpacing: { length: 0, lengthType: 'px' },
-        content: 'HI',
-      },
-      {
         key: 'text-layer-hello',
         type: 'layer',
         layerType: 'text',
-        name: 'Text Layer Hello',
+        name: 'Hello',
         x: { length: 0, lengthType: 'auto' },
         y: { length: 0, lengthType: 'auto' },
         rotate: { degrees: 0 },
@@ -51,10 +34,27 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         content: 'Hello',
       },
       {
-        key: 'shape-layer-100',
+        key: 'text-layer-world',
+        type: 'layer',
+        layerType: 'text',
+        name: 'World',
+        x: { length: 0, lengthType: 'auto' },
+        y: { length: 0, lengthType: 'auto' },
+        rotate: { degrees: 0 },
+        width: { length: 0, lengthType: 'flexible' },
+        height: { length: 0, lengthType: 'flexible' },
+        textColor: { color: '#000000' },
+        fontSize: { length: 28, lengthType: 'px' },
+        lineHeight: { length: 150, lengthType: 'percent' },
+        fontWeight: { value: 400 },
+        letterSpacing: { length: 0, lengthType: 'px' },
+        content: 'World',
+      },
+      {
+        key: 'shape-layer-red',
         type: 'layer',
         layerType: 'shape',
-        name: 'Shape Layer 100',
+        name: 'Red',
         shapeType: 'container',
         x: { length: 100, lengthType: 'px' },
         y: { length: 100, lengthType: 'px' },
@@ -65,10 +65,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         fill: { color: '#ffaaaa' },
         children: [
           {
-            key: 'text-layer-100',
+            key: 'text-layer-1234',
             type: 'layer',
             layerType: 'text',
-            name: 'Text Layer 100',
+            name: '1234',
             x: { length: 0, lengthType: 'auto' },
             y: { length: 0, lengthType: 'auto' },
             rotate: { degrees: 0 },
@@ -79,15 +79,15 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
             lineHeight: { length: 150, lengthType: 'percent' },
             fontWeight: { value: 400 },
             letterSpacing: { length: 0, lengthType: 'px' },
-            content: '100',
+            content: '1234',
           },
         ],
       },
       {
-        key: 'shape-layer-200',
+        key: 'shape-layer-green',
         type: 'layer',
         layerType: 'shape',
-        name: 'Shape Layer 200',
+        name: 'Green',
         shapeType: 'container',
         x: { length: 300, lengthType: 'px' },
         y: { length: 100, lengthType: 'px' },
@@ -98,10 +98,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         fill: { color: '#aaffaa' },
         children: [
           {
-            key: 'text-layer-200',
+            key: 'text-layer-abcd',
             type: 'layer',
             layerType: 'text',
-            name: 'Text Layer 200',
+            name: 'ABCD',
             x: { length: 0, lengthType: 'auto' },
             y: { length: 0, lengthType: 'auto' },
             rotate: { degrees: 0 },
@@ -112,15 +112,15 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
             lineHeight: { length: 150, lengthType: 'percent' },
             fontWeight: { value: 400 },
             letterSpacing: { length: 0, lengthType: 'px' },
-            content: '200',
+            content: 'ABCD',
           },
         ],
       },
       {
-        key: 'shape-layer-300',
+        key: 'shape-layer-blue',
         type: 'layer',
         layerType: 'shape',
-        name: 'Shape Layer 300',
+        name: 'Blue',
         shapeType: 'container',
         x: { length: 600, lengthType: 'px' },
         y: { length: 100, lengthType: 'px' },
@@ -131,10 +131,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         fill: { color: '#aaaaff' },
         children: [
           {
-            key: 'text-layer-300',
+            key: 'text-layer-asdf',
             type: 'layer',
             layerType: 'text',
-            name: 'Text Layer 300',
+            name: 'ㅁㄴㅇㄹ',
             x: { length: 0, lengthType: 'auto' },
             y: { length: 0, lengthType: 'auto' },
             rotate: { degrees: 0 },
@@ -145,15 +145,15 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
             lineHeight: { length: 150, lengthType: 'percent' },
             fontWeight: { value: 400 },
             letterSpacing: { length: 0, lengthType: 'px' },
-            content: '300',
+            content: 'ㅁㄴㅇㄹ',
           },
         ],
       },
       {
-        key: 'shape-layer-inside',
+        key: 'shape-layer-yellow',
         type: 'layer',
         layerType: 'shape',
-        name: 'Shape Layer Inside',
+        name: 'Yellow',
         shapeType: 'container',
         x: { length: 100, lengthType: 'px' },
         y: { length: 550, lengthType: 'px' },
@@ -167,7 +167,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
             key: 'text-layer-inside',
             type: 'layer',
             layerType: 'text',
-            name: 'Text Layer Inside',
+            name: 'inside Artboard',
             x: { length: 0, lengthType: 'auto' },
             y: { length: 0, lengthType: 'auto' },
             rotate: { degrees: 0 },
@@ -185,10 +185,10 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
     ],
   },
   {
-    key: 'shape-layer-outside',
+    key: 'shape-layer-pink',
     type: 'layer',
     layerType: 'shape',
-    name: 'Shape Layer Outside',
+    name: 'Pink',
     shapeType: 'container',
     x: { length: 650, lengthType: 'px' },
     y: { length: 650, lengthType: 'px' },
@@ -202,7 +202,7 @@ const dummyData: Array<ArtboardData | ShapeLayerData | TextLayerData> = [
         key: 'text-layer-outside',
         type: 'layer',
         layerType: 'text',
-        name: 'Text Layer Outside',
+        name: 'outside Artboard',
         x: { length: 0, lengthType: 'auto' },
         y: { length: 0, lengthType: 'auto' },
         rotate: { degrees: 0 },
@@ -223,10 +223,10 @@ const Home = () => {
   const uiController = useUIController();
 
   const onButtonClick = useEvent(() => {
-    uiController.set<ShapeLayer>('shape-layer-inside', { y: { length: 700, lengthType: 'px' } });
-    uiController.set<ShapeLayer>('shape-layer-100', { fill: { color: '#ffaaff' } });
-    uiController.set<TextLayer>('text-layer-100', { textColor: { color: '#ffffff' }, content: 'Setted' });
-    uiController.prepend('shape-layer-200', {
+    uiController.set<ShapeLayer>('shape-layer-yellow', { y: { length: 700, lengthType: 'px' } });
+    uiController.set<ShapeLayer>('shape-layer-Red', { fill: { color: '#ffaaff' } });
+    uiController.set<TextLayer>('text-layer-1234', { textColor: { color: '#ffffff' }, content: 'Setted' });
+    uiController.prepend('shape-layer-green', {
       type: 'layer',
       layerType: 'text',
       name: 'prepend()',
@@ -243,7 +243,7 @@ const Home = () => {
       content: 'Prepended',
     });
     uiController.append(
-      'shape-layer-200',
+      'shape-layer-green',
       new TextLayer({
         name: 'append()',
         x: { length: 0, lengthType: 'auto' },
@@ -259,7 +259,7 @@ const Home = () => {
         content: 'Appended',
       }),
     );
-    uiController.insertBefore('text-layer-300', {
+    uiController.insertBefore('text-layer-asdf', {
       type: 'layer',
       layerType: 'text',
       name: 'insertBefore()',
@@ -276,7 +276,7 @@ const Home = () => {
       content: 'Inserted before',
     });
     uiController.insertAfter(
-      'text-layer-300',
+      'text-layer-asdf',
       new TextLayer({
         name: 'insertAfter()',
         x: { length: 0, lengthType: 'auto' },
@@ -292,9 +292,9 @@ const Home = () => {
         content: 'Inserted after',
       }),
     );
-    uiController.remove('shape-layer-outside');
-    uiController.move('prepend', 'text-layer-hi', 'shape-layer-inside');
-    uiController.move('insertAfter', 'text-layer-hello', 'text-layer-inside');
+    uiController.remove('shape-layer-pink');
+    uiController.move('prepend', 'text-layer-hello', 'shape-layer-yellow');
+    uiController.move('insertAfter', 'text-layer-world', 'text-layer-inside');
   });
 
   return (

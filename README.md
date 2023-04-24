@@ -1,61 +1,34 @@
-# Pigyuma
+# 🐷 Pigyuma
 
-## What's inside?
+Pigyuma is a toy project that makes a UI design tool like Figma!
 
-This repository uses [Yarn 2+ (berry)](https://yarnpkg.com/) as a package manager. It includes the following packages/apps:
+![Screenshot of Pigyuma demo](https://github.com/choegyumin/pigyuma/raw/main/docs/screenshot.jpg)
 
-### Workspaces
+## Live Demo
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+https://pigyuma.vercel.app/
 
-#### Apps
+## Features
 
-- `web`: a [Next.js](https://nextjs.org/) app.
+- Selection
+- Artboard Drawing
+- Shape layer Drawing
+- Layer Resizing
+  - Precision resize: <kbd>Ctrl</kbd>
+  - Resize from center: <kbd>Alt</kbd>
+- Layer Rotation
 
-#### Packages
+### Upcoming support
 
-- `@pigyuma/css-utils`: shared CSS-related utility functions.
-- `@pigyuma/design-system`: CSS framework with React component library for design system.
-- `@pigyuma/react-utility-types`: utility types for react.
-- `@pigyuma/react-utils`: shared react utility functions and custom hooks.
-- `@pigyuma/tsconfig`: `tsconfig.json`s used throughout the monorepo.
-- `@pigyuma/utils`: utility functions like `lodash`.
+Visit our [Pigyuma project plan](https://github.com/users/choegyumin/projects/4/views/1) to see the future plans for Pigyuma, including:
 
-#### Tools
-
-- `eslint`: `eslint` configuration presets.
-- `vitest`: `vitest` configuration helpers.
-
-### Utilities
-
-This repository has some additional tools already setup for you:
-
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd MY-APP-OR-PACKAGE-PATH
-yarn run build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd MY-APP-OR-PACKAGE-PATH
-yarn run dev
-```
-
-## Useful Links
-
-- [Pipelines - Turborepo](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching - Turborepo](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching - Turborepo](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering - Turborepo](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options - Turborepo](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage - Turborepo](https://turbo.build/repo/docs/reference/command-line-reference)
+- Layer grouping
+- Range selection
+- Multi-layer Resizing and Rotation
+- Zooming and Panning
+- Text layer Input
+- Image layer support
+- SVG Support
+- Code handoff
+- Design tokens
+- History logging
