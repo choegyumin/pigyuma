@@ -75,10 +75,10 @@ export class Artboard extends UIRecord implements ArtboardJSON {
             Object.assign(it, { parent: this });
             return it;
           }
-          if (ShapeLayer.isModel(it)) {
+          if (ShapeLayer.validate(it)) {
             return new ShapeLayer(it, this);
           }
-          if (TextLayer.isModel(it)) {
+          if (TextLayer.validate(it)) {
             return new TextLayer(it, this);
           }
           return null;
@@ -116,13 +116,8 @@ export class Artboard extends UIRecord implements ArtboardJSON {
 
   /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isJSON(object: any): object is ArtboardJSON {
+  static validate(object: any): object is ArtboardJSON {
     return object != null && typeof object === 'object' && !Array.isArray(object) && object.type === UIRecordType.artboard;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isModel(object: any): object is Artboard | ArtboardJSON {
-    return object instanceof Artboard || Artboard.isJSON(object);
   }
 
   static isElement(element: Element | null): boolean {

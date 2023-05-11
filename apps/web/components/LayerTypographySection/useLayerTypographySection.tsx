@@ -11,7 +11,7 @@ export default function useLayerTypographySection(props: LayerTypographySectionP
   const uiRecord = useUIRecord<Artboard | ShapeLayer | TextLayer>(selectedRecordKey);
   const uiRecordExists = uiRecord != null;
 
-  const textLayerSelected = TextLayer.isModel(uiRecord);
+  const textLayerSelected = uiRecord instanceof TextLayer;
 
   const editable = uiRecordExists && textLayerSelected;
 

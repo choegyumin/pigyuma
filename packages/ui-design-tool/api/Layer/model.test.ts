@@ -50,17 +50,9 @@ describe('Layer', () => {
   });
 
   test('should check if object is LayerJSON', () => {
-    expect(Layer.isJSON(layerJSON)).toBeTruthy();
-    expect(Layer.isJSON({})).toBeFalsy();
-    expect(Layer.isJSON([])).toBeFalsy();
-    expect(Layer.isJSON(null)).toBeFalsy();
-  });
-
-  test('should check if object is Layer model', () => {
-    expect(Layer.isModel(layer)).toBeTruthy();
-    expect(Layer.isModel(layerJSON)).toBeTruthy();
-    expect(Layer.isModel({})).toBeFalsy();
-    expect(Layer.isModel([])).toBeFalsy();
-    expect(Layer.isModel(null)).toBeFalsy();
+    expect(Layer.validate(layerJSON)).toBeTruthy();
+    expect(Layer.validate({})).toBeFalsy();
+    expect(Layer.validate([])).toBeFalsy();
+    expect(Layer.validate(null)).toBeFalsy();
   });
 });

@@ -57,7 +57,7 @@ export default function useLayerListItem(props: LayerListItemProps, ref: React.F
     return;
   }
 
-  const layerType = Artboard.isModel(record) ? 'artboard' : TextLayer.isModel(record) ? 'text' : record.shapeType;
+  const layerType = record instanceof Artboard ? 'artboard' : record instanceof TextLayer ? 'text' : record.shapeType;
 
   const recordResults = { record, toggleable } as
     | { record: ExtractUIRecordWithChildren<typeof record>; toggleable: true }

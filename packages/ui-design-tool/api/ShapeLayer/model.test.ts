@@ -59,17 +59,9 @@ describe('ShapeLayer', () => {
   });
 
   test('should check if object is ShapeLayerJSON', () => {
-    expect(ShapeLayer.isJSON(shapeLayerJSON)).toBeTruthy();
-    expect(ShapeLayer.isJSON({})).toBeFalsy();
-    expect(ShapeLayer.isJSON([])).toBeFalsy();
-    expect(ShapeLayer.isJSON(null)).toBeFalsy();
-  });
-
-  test('should check if object is ShapeLayer model', () => {
-    expect(ShapeLayer.isModel(shapeLayer)).toBeTruthy();
-    expect(ShapeLayer.isModel(shapeLayerJSON)).toBeTruthy();
-    expect(ShapeLayer.isModel({})).toBeFalsy();
-    expect(ShapeLayer.isModel([])).toBeFalsy();
-    expect(ShapeLayer.isModel(null)).toBeFalsy();
+    expect(ShapeLayer.validate(shapeLayerJSON)).toBeTruthy();
+    expect(ShapeLayer.validate({})).toBeFalsy();
+    expect(ShapeLayer.validate([])).toBeFalsy();
+    expect(ShapeLayer.validate(null)).toBeFalsy();
   });
 });

@@ -9,9 +9,9 @@ export default function useControlPanel(props: ControlPanelProps, ref: React.For
 
   const uiRecordExists = selectedRecord != null;
 
-  const artboardSelected = Artboard.isModel(selectedRecord);
-  const shapeLayerSelected = ShapeLayer.isModel(selectedRecord);
-  const textLayerSelected = TextLayer.isModel(selectedRecord);
+  const artboardSelected = selectedRecord instanceof Artboard;
+  const shapeLayerSelected = selectedRecord instanceof ShapeLayer;
+  const textLayerSelected = selectedRecord instanceof TextLayer;
 
   const fillEditable = uiRecordExists && (artboardSelected || shapeLayerSelected);
   const strokeEditable = uiRecordExists && shapeLayerSelected;

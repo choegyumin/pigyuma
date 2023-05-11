@@ -21,17 +21,9 @@ describe('Canvas', () => {
   });
 
   test('should check if object is CanvasJSON', () => {
-    expect(Canvas.isJSON(canvasJSON)).toBeTruthy();
-    expect(Canvas.isJSON({})).toBeFalsy();
-    expect(Canvas.isJSON([])).toBeFalsy();
-    expect(Canvas.isJSON(null)).toBeFalsy();
-  });
-
-  test('should check if object is Canvas model', () => {
-    expect(Canvas.isModel(canvas)).toBeTruthy();
-    expect(Canvas.isModel(canvasJSON)).toBeTruthy();
-    expect(Canvas.isModel({})).toBeFalsy();
-    expect(Canvas.isModel([])).toBeFalsy();
-    expect(Canvas.isModel(null)).toBeFalsy();
+    expect(Canvas.validate(canvasJSON)).toBeTruthy();
+    expect(Canvas.validate({})).toBeFalsy();
+    expect(Canvas.validate([])).toBeFalsy();
+    expect(Canvas.validate(null)).toBeFalsy();
   });
 });

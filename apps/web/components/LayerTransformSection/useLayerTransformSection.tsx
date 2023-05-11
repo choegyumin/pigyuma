@@ -12,9 +12,9 @@ export default function useLayerTransformSection(props: LayerTransformSectionPro
   const uiRecord = useUIRecord<Artboard | ShapeLayer | TextLayer>(selectedRecordKey);
   const uiRecordExists = uiRecord != null;
 
-  const artboardSelected = Artboard.isModel(uiRecord);
-  const shapeLayerSelected = ShapeLayer.isModel(uiRecord);
-  const textLayerSelected = TextLayer.isModel(uiRecord);
+  const artboardSelected = uiRecord instanceof Artboard;
+  const shapeLayerSelected = uiRecord instanceof ShapeLayer;
+  const textLayerSelected = uiRecord instanceof TextLayer;
 
   const positionEditable = uiRecordExists;
   /** @todo shapeType 값 대응 후 TextLayer도 편집 가능하도록 수정 */

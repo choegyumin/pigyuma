@@ -21,7 +21,7 @@ export type ExcludeUIRecordWithParent<T> = T extends UIRecordWithParent ? never 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isUIRecordWithParent = <T extends UIRecordWithParent>(object: any): object is T => {
   // 타입 검증이므로 parent가 null이어도 존재하는 걸로 판단함
-  return UIRecord.isModel(object) && (object as ExtendableAnyObject).parent !== undefined;
+  return object instanceof UIRecord && (object as ExtendableAnyObject).parent !== undefined;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,7 +34,7 @@ export type ExcludeUIRecordWithChildren<T> = T extends UIRecordWithChildren ? ne
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isUIRecordWithChildren = <T extends UIRecordWithChildren>(object: any): object is T => {
-  return UIRecord.isModel(object) && Array.isArray((object as ExtendableAnyObject).children);
+  return object instanceof UIRecord && Array.isArray((object as ExtendableAnyObject).children);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,7 +47,7 @@ export type ExcludeRotatableUIRecord<T> = T extends RotatableUIRecord ? never : 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isRotatableUIRecord = <T extends RotatableUIRecord>(object: any): object is T => {
-  return UIRecord.isModel(object) && (object as ExtendableAnyObject).rotate != null;
+  return object instanceof UIRecord && (object as ExtendableAnyObject).rotate != null;
 };
 
 export interface ToUIRecordInstanceOptions {
@@ -70,23 +70,23 @@ export const toUIRecordInstance = <T extends Artboard | Canvas | ShapeLayer | Te
   }
 
   /* Layer */
-  if (ShapeLayer.isModel(current)) {
+  if (ShapeLayer.validate(current)) {
     return new ShapeLayer(current, parentRecord as ConstructorParameters<typeof ShapeLayer>[1]) as T;
   }
-  if (TextLayer.isModel(current)) {
+  if (TextLayer.validate(current)) {
     return new TextLayer(current, parentRecord as ConstructorParameters<typeof TextLayer>[1]) as T;
   }
-  if (Layer.isModel(current)) {
+  if (Layer.validate(current)) {
     return new Layer(current, parentRecord as ConstructorParameters<typeof Layer>[1]) as T;
   }
 
   /* Artboard */
-  if (Artboard.isModel(current)) {
+  if (Artboard.validate(current)) {
     return new Artboard(current, parentRecord as ConstructorParameters<typeof Artboard>[1]) as T;
   }
 
   /* Canvas */
-  if (Canvas.isModel(current)) {
+  if (Canvas.validate(current)) {
     return new Canvas(current) as T;
   }
 

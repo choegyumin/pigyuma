@@ -88,13 +88,8 @@ export class Layer extends UIRecord implements LayerJSON {
 
   /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isJSON(object: any): object is LayerJSON {
+  static validate(object: any): object is LayerJSON {
     return object != null && typeof object === 'object' && !Array.isArray(object) && object.type === UIRecordType.layer;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isModel(object: any): object is Layer | LayerJSON {
-    return object instanceof Layer || Layer.isJSON(object);
   }
 
   static isElement(element: Element | null): boolean {

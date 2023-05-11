@@ -12,7 +12,7 @@ export default function useLayerStrokeSection(props: LayerStrokeSectionProps, re
   const uiRecord = useUIRecord<Artboard | ShapeLayer | TextLayer>(selectedRecordKey);
   const uiRecordExists = uiRecord != null;
 
-  const shapeLayerSelected = ShapeLayer.isModel(uiRecord);
+  const shapeLayerSelected = uiRecord instanceof ShapeLayer;
 
   const editable = uiRecordExists && shapeLayerSelected;
 

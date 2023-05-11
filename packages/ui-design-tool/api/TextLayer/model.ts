@@ -148,7 +148,7 @@ export class TextLayer extends Layer implements TextLayerJSON {
 
   /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isJSON(object: any): object is TextLayerJSON {
+  static validate(object: any): object is TextLayerJSON {
     return (
       object != null &&
       typeof object === 'object' &&
@@ -156,11 +156,6 @@ export class TextLayer extends Layer implements TextLayerJSON {
       object.type === UIRecordType.layer &&
       object.layerType === LayerType.text
     );
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isModel(object: any): object is TextLayer | TextLayerJSON {
-    return object instanceof TextLayer || TextLayer.isJSON(object);
   }
 
   static isElement(element: Element | null): boolean {

@@ -260,7 +260,7 @@ export class ModelStore extends ElementSelector {
         missingRecordKeys.push(key);
         return;
       }
-      if (!Artboard.isModel(record) && !ShapeLayer.isModel(record) && !TextLayer.isModel(record)) {
+      if (!(record instanceof Artboard) && !(record instanceof ShapeLayer) && !(record instanceof TextLayer)) {
         invalidRecordKeys.push(key);
         return;
       }

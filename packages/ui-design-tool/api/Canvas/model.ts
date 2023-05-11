@@ -50,13 +50,13 @@ export class Canvas extends UIRecord implements CanvasJSON {
             Object.assign(it, { parent: this });
             return it;
           }
-          if (Artboard.isModel(it)) {
+          if (Artboard.validate(it)) {
             return new Artboard(it, this);
           }
-          if (ShapeLayer.isModel(it)) {
+          if (ShapeLayer.validate(it)) {
             return new ShapeLayer(it, this);
           }
-          if (TextLayer.isModel(it)) {
+          if (TextLayer.validate(it)) {
             return new TextLayer(it, this);
           }
           return null;
@@ -74,13 +74,8 @@ export class Canvas extends UIRecord implements CanvasJSON {
 
   /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isJSON(object: any): object is CanvasJSON {
+  static validate(object: any): object is CanvasJSON {
     return object != null && typeof object === 'object' && !Array.isArray(object) && object.type === UIRecordType.canvas;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isModel(object: any): object is Canvas | CanvasJSON {
-    return object instanceof Canvas || Canvas.isJSON(object);
   }
 
   static isElement(element: Element | null): boolean {

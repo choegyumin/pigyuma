@@ -25,17 +25,9 @@ describe('UIRecord', () => {
   });
 
   test('should check if object is UIRecordJSON', () => {
-    expect(UIRecord.isJSON(uiRecordJSON)).toBeTruthy();
-    expect(UIRecord.isJSON({})).toBeFalsy();
-    expect(UIRecord.isJSON([])).toBeFalsy();
-    expect(UIRecord.isJSON(null)).toBeFalsy();
-  });
-
-  test('should check if object is UIRecord model', () => {
-    expect(UIRecord.isModel(uiRecord)).toBeTruthy();
-    expect(UIRecord.isModel(uiRecordJSON)).toBeTruthy();
-    expect(UIRecord.isModel({})).toBeFalsy();
-    expect(UIRecord.isModel([])).toBeFalsy();
-    expect(UIRecord.isModel(null)).toBeFalsy();
+    expect(UIRecord.validate(uiRecordJSON)).toBeTruthy();
+    expect(UIRecord.validate({})).toBeFalsy();
+    expect(UIRecord.validate([])).toBeFalsy();
+    expect(UIRecord.validate(null)).toBeFalsy();
   });
 });

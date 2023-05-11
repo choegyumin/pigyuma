@@ -30,13 +30,8 @@ export class UIRecord implements UIRecordJSON {
 
   /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isJSON(object: any): object is UIRecordJSON {
+  static validate(object: any): object is UIRecordJSON {
     return object != null && typeof object === 'object' && !Array.isArray(object) && Object.values(UIRecordType).includes(object.type);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isModel(object: any): object is UIRecord | UIRecordJSON {
-    return object instanceof UIRecord || UIRecord.isJSON(object);
   }
 
   static isElement(element: Element | null): boolean {

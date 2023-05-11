@@ -47,17 +47,9 @@ describe('Artboard', () => {
   });
 
   test('should check if object is ArtboardJSON', () => {
-    expect(Artboard.isJSON(artboardJSON)).toBeTruthy();
-    expect(Artboard.isJSON({})).toBeFalsy();
-    expect(Artboard.isJSON([])).toBeFalsy();
-    expect(Artboard.isJSON(null)).toBeFalsy();
-  });
-
-  test('should check if object is Artboard model', () => {
-    expect(Artboard.isModel(artboard)).toBeTruthy();
-    expect(Artboard.isModel(artboardJSON)).toBeTruthy();
-    expect(Artboard.isModel({})).toBeFalsy();
-    expect(Artboard.isModel([])).toBeFalsy();
-    expect(Artboard.isModel(null)).toBeFalsy();
+    expect(Artboard.validate(artboardJSON)).toBeTruthy();
+    expect(Artboard.validate({})).toBeFalsy();
+    expect(Artboard.validate([])).toBeFalsy();
+    expect(Artboard.validate(null)).toBeFalsy();
   });
 });

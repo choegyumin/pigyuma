@@ -122,10 +122,10 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
             Object.assign(it, { parent: this });
             return it;
           }
-          if (TextLayer.isModel(it)) {
+          if (TextLayer.validate(it)) {
             return new TextLayer(it, this);
           }
-          if (ShapeLayer.isModel(it)) {
+          if (ShapeLayer.validate(it)) {
             return new ShapeLayer(it, this);
           }
           return null;
@@ -171,7 +171,7 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
 
   /** @todo 정밀한 조건으로 재작성 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isJSON(object: any): object is ShapeLayerJSON {
+  static validate(object: any): object is ShapeLayerJSON {
     return (
       object != null &&
       typeof object === 'object' &&
@@ -179,11 +179,6 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
       object.type === UIRecordType.layer &&
       object.layerType === LayerType.shape
     );
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isModel(object: any): object is ShapeLayer | ShapeLayerJSON {
-    return object instanceof ShapeLayer || ShapeLayer.isJSON(object);
   }
 
   static isElement(element: Element | null): boolean {

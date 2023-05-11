@@ -11,8 +11,8 @@ export default function useLayerFillSection(props: LayerFillSectionProps, ref: R
   const uiRecord = useUIRecord<Artboard | ShapeLayer | TextLayer>(selectedRecordKey);
   const uiRecordExists = uiRecord != null;
 
-  const artboardSelected = Artboard.isModel(uiRecord);
-  const shapeLayerSelected = ShapeLayer.isModel(uiRecord);
+  const artboardSelected = uiRecord instanceof Artboard;
+  const shapeLayerSelected = uiRecord instanceof ShapeLayer;
 
   const editable = uiRecordExists && (artboardSelected || shapeLayerSelected);
 

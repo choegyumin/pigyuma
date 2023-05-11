@@ -62,17 +62,9 @@ describe('TextLayer', () => {
   });
 
   test('should check if object is TextLayerJSON', () => {
-    expect(TextLayer.isJSON(textLayerJSON)).toBeTruthy();
-    expect(TextLayer.isJSON({})).toBeFalsy();
-    expect(TextLayer.isJSON([])).toBeFalsy();
-    expect(TextLayer.isJSON(null)).toBeFalsy();
-  });
-
-  test('should check if object is TextLayer model', () => {
-    expect(TextLayer.isModel(textLayer)).toBeTruthy();
-    expect(TextLayer.isModel(textLayerJSON)).toBeTruthy();
-    expect(TextLayer.isModel({})).toBeFalsy();
-    expect(TextLayer.isModel([])).toBeFalsy();
-    expect(TextLayer.isModel(null)).toBeFalsy();
+    expect(TextLayer.validate(textLayerJSON)).toBeTruthy();
+    expect(TextLayer.validate({})).toBeFalsy();
+    expect(TextLayer.validate([])).toBeFalsy();
+    expect(TextLayer.validate(null)).toBeFalsy();
   });
 });
