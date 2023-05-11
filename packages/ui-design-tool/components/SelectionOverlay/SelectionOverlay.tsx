@@ -10,13 +10,13 @@ export const SelectionOverlay: React.FC = React.memo(() => {
     return null;
   }
 
-  const { isRotatable, isResizable, rootStyle, infoText, resizeHandleCursorMap, rotateHandleCursorMap } = viewModel;
+  const { rotatable, resizable, rootStyle, infoText, resizeHandleCursorMap, rotateHandleCursorMap } = viewModel;
 
   return (
     <div className={styles.root} style={rootStyle}>
       <div className={styles.wrapper}>
         <div className={styles.outline} />
-        {isResizable &&
+        {resizable &&
           (['top', 'right', 'bottom', 'left'] as const).map((cursor) => (
             <div
               key={cursor}
@@ -28,7 +28,7 @@ export const SelectionOverlay: React.FC = React.memo(() => {
               style={{ cursor: resizeHandleCursorMap[cursor] }}
             />
           ))}
-        {isRotatable &&
+        {rotatable &&
           (['topLeft', 'topRight', 'bottomRight', 'bottomLeft'] as const).map((cursor) => (
             <div
               key={cursor}
@@ -40,7 +40,7 @@ export const SelectionOverlay: React.FC = React.memo(() => {
               style={{ cursor: rotateHandleCursorMap[cursor] }}
             />
           ))}
-        {isResizable &&
+        {resizable &&
           (['topLeft', 'topRight', 'bottomRight', 'bottomLeft'] as const).map((cursor) => (
             <div
               key={cursor}

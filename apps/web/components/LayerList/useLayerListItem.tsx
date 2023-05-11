@@ -17,7 +17,7 @@ export default function useLayerListItem(props: LayerListItemProps, ref: React.F
   const uiController = useUIController();
   const uiData = useUIData();
 
-  const hasChildren = hasUIRecordChildren(record);
+  const toggleable = hasUIRecordChildren(record);
 
   const draft = uiData.isDraft(record.key);
   const selected = uiData.isSelected(record.key);
@@ -29,7 +29,7 @@ export default function useLayerListItem(props: LayerListItemProps, ref: React.F
 
   const onToggleClick = useEvent((event: React.MouseEvent) => {
     event.stopPropagation();
-    setExpanded(hasChildren ? !expanded : false);
+    setExpanded(toggleable ? !expanded : false);
   });
 
   const onGroupOpen = useEvent(() => {
@@ -38,10 +38,10 @@ export default function useLayerListItem(props: LayerListItemProps, ref: React.F
   });
 
   useEffect(() => {
-    if (!hasChildren) {
+    if (!toggleable) {
       setExpanded(false);
     }
-  }, [hasChildren]);
+  }, [toggleable]);
 
   useWatch(() => {
     if (!draft && selected) {
@@ -59,9 +59,10 @@ export default function useLayerListItem(props: LayerListItemProps, ref: React.F
 
   const layerType = Artboard.isModel(record) ? 'artboard' : TextLayer.isModel(record) ? 'text' : record.shapeType;
 
-  const recordResults = { record, hasChildren } as
-    | { record: ExtractUIRecordWithChildren<typeof record>; hasChildren: true }
-    | { record: ExcludeUIRecordWithChildren<typeof record>; hasChildren: false };
+  const recordResults = { record, toggleable } as
+    | { record: ExtractUIRecordWithChildren<typeof record>; toggleable: true }
+    | { record: ExcludeUIRecordWithChildren<typeof record>; toggleable: false };
+
   return {
     ...recordResults,
     restProps,

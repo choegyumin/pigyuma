@@ -70,7 +70,7 @@ export default function useResizeFunctions() {
       const offsetPoint = { x: mouse.offsetX, y: mouse.offsetY };
       const precision = keyboard.ctrlKey;
       const fromCenter = keyboard.altKey;
-      const isGrabbingCorner = checkGrabbingCorner(handlePlacement || '');
+      const grabbingCorner = checkGrabbingCorner(handlePlacement || '');
 
       const newRect =
         handlePlacement != null ? calcResizedRect(initialRect, offsetPoint, handlePlacement, { precision, fromCenter }) : initialRect;
@@ -84,7 +84,7 @@ export default function useResizeFunctions() {
       // 따라서 굳이 로직을 분리하는 대신, `getResizingCursor` 등의 함수에 테스트 작성
       // (`uiSelector.query()` 결과는 항상 있지만 테스트를 위해 `document.body`를 주입)
       setCursor(
-        isGrabbingCorner
+        grabbingCorner
           ? getResizingCornerCursor(uiSelector.query({ key: record.key }) ?? document.body, clientPoint)
           : getResizingCursor(newRect.rotate, handlePlacement),
       );

@@ -33,7 +33,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
     role,
     selected,
     expanded,
-    hasChildren,
+    toggleable,
     layerType,
     onItemClick,
     onToggleClick,
@@ -50,7 +50,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
           <Icon type={iconType} className={styles.icon} />
           {record.name}
         </div>
-        {hasChildren && (
+        {toggleable && (
           <button
             className={clsx(styles.toggle, { [styles.toggle_state.expanded]: expanded })}
             aria-controls={listId}
@@ -60,7 +60,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
           />
         )}
       </div>
-      {hasChildren && (
+      {toggleable && (
         <LayerList
           role="group"
           records={record.children}

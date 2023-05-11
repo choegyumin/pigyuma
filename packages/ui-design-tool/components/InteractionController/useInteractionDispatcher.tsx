@@ -78,18 +78,18 @@ export default function useInteractionDispatcher() {
 
         const parentRecord = target.record;
 
-        const isDrawingArtboard = drawingType === DrawingType.artboard;
-        const isDrawingShapeLayer = drawingType === DrawingType.shapeLayer;
+        const drawingArtboard = drawingType === DrawingType.artboard;
+        const drawingShapeLayer = drawingType === DrawingType.shapeLayer;
 
-        if (!isDrawingArtboard && !isDrawingShapeLayer) {
+        if (!drawingArtboard && !drawingShapeLayer) {
           console.error('Drawing is only supported for ShapeLayer and Artboard.');
           return;
         }
-        if (isDrawingArtboard && !(parentRecord instanceof Canvas)) {
+        if (drawingArtboard && !(parentRecord instanceof Canvas)) {
           console.error('Artboard can only be drawn on Canvas.');
           return;
         }
-        if (isDrawingShapeLayer && !(parentRecord instanceof Canvas || parentRecord instanceof Artboard)) {
+        if (drawingShapeLayer && !(parentRecord instanceof Canvas || parentRecord instanceof Artboard)) {
           console.error('ShapeLayer can only be drawn on Canvas or Artboard.');
           return;
         }
@@ -99,7 +99,7 @@ export default function useInteractionDispatcher() {
         const widthLength = 1;
         const heightLength = 1;
 
-        const newRecord = isDrawingArtboard
+        const newRecord = drawingArtboard
           ? new Artboard(makeDefaultArtboardArgs('New artboard', xLength, yLength, widthLength, heightLength))
           : new ShapeLayer(makeDefaultShapeLayerArgs('New shape', xLength, yLength, widthLength, heightLength));
         const newRect = new UIRecordRect(mouse.offsetX, mouse.offsetY, widthLength, heightLength, 0);

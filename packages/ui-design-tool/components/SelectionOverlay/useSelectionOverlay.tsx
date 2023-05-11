@@ -11,19 +11,19 @@ export default function useSelectionOverlay() {
 
   const { getRootStyle, getInfoText, getResizeHandleCursorMap, getRotateHandleCursorMap } = useRenderUtils();
 
-  const isActive = record != null && selected.size > 0;
+  const actived = record != null && selected.size > 0;
 
-  if (!isActive) {
+  if (!actived) {
     return;
   }
 
-  const isResizable = isActive && (record instanceof Layer || record instanceof Artboard);
-  const isRotatable = isActive && record instanceof Layer;
+  const resizable = actived && (record instanceof Layer || record instanceof Artboard);
+  const rotatable = actived && record instanceof Layer;
 
-  const rootStyle = isActive ? getRootStyle(record) : {};
-  const infoText = isActive ? getInfoText(record) : '';
-  const resizeHandleCursorMap = isActive ? getResizeHandleCursorMap(record) : {};
-  const rotateHandleCursorMap = isActive ? getRotateHandleCursorMap(record) : {};
+  const rootStyle = actived ? getRootStyle(record) : {};
+  const infoText = actived ? getInfoText(record) : '';
+  const resizeHandleCursorMap = actived ? getResizeHandleCursorMap(record) : {};
+  const rotateHandleCursorMap = actived ? getRotateHandleCursorMap(record) : {};
 
-  return { isRotatable, isResizable, rootStyle, infoText, resizeHandleCursorMap, rotateHandleCursorMap };
+  return { rotatable, resizable, rootStyle, infoText, resizeHandleCursorMap, rotateHandleCursorMap };
 }

@@ -22,8 +22,8 @@ export default function parseReactStyleValue(name: string, value: unknown, isCus
   // which has lead to a greater discussion about how we're going to
   // trust URLs moving forward. See #2115901
 
-  const isEmpty = value == null || typeof value === 'boolean' || value === '';
-  if (isEmpty) {
+  const valueEmpty = value == null || typeof value === 'boolean' || value === '';
+  if (valueEmpty) {
     return '';
   }
 

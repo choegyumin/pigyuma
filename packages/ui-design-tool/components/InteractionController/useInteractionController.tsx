@@ -160,9 +160,9 @@ export default function useInteractionController() {
         const handleRecord = isUIRecordKey(hoveredRecordKey) ? getItemReference<UIRecordWithParent>(hoveredRecordKey) : undefined;
 
         const drawingType = mode === UIDesignToolMode.artboard ? DrawingType.artboard : DrawingType.shapeLayer;
-        const isDrawingArtboard = drawingType === DrawingType.artboard;
+        const drawingArtboard = drawingType === DrawingType.artboard;
 
-        const predicateFindParentRecord = isDrawingArtboard
+        const predicateFindParentRecord = drawingArtboard
           ? (parent: UIRecordWithParent | Canvas) => parent instanceof Canvas
           : (parent: UIRecordWithParent | Canvas | Artboard) => parent instanceof Canvas || parent instanceof Artboard;
         const parentRecord = (() => {

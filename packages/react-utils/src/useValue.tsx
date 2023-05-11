@@ -35,14 +35,14 @@ function useValue<V>(value: V, defaultValue: V, config: UseValueConfig = {}): [V
   const toBeControlled = !wasControlled && isControlled;
   const toBeUncontrolled = wasControlled && !isControlled;
 
-  const [uncontrolled, setValue] = useState<V>(() => (isControlled ? value : defaultValue));
-  const controlled = value;
+  const [uncontrolledValue, setValue] = useState<V>(() => (isControlled ? value : defaultValue));
+  const controlledValue = value;
 
   useIsomorphicLayoutEffect(() => {
     if (isControlled) {
-      setValue(controlled);
+      setValue(controlledValue);
     }
-  }, [isControlled, controlled]);
+  }, [isControlled, controlledValue]);
 
   useEffect(() => {
     if (!shouldNotifyErrorRef.current) {
@@ -66,7 +66,7 @@ function useValue<V>(value: V, defaultValue: V, config: UseValueConfig = {}): [V
     }
   }, [firstRun, isControlledAndUncontrolled, toBeControlled, toBeUncontrolled]);
 
-  return [isControlled ? controlled : uncontrolled, setValue];
+  return [isControlled ? controlledValue : uncontrolledValue, setValue];
 }
 
 export default useValue;

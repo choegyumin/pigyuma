@@ -87,23 +87,23 @@ export class ModelStore extends ElementSelector {
       throw new Error(`UIRecord '${targetKey}' not found.`);
     }
 
-    const isArtboard = targetValue instanceof Artboard;
-    const isShapeLayer = targetValue instanceof ShapeLayer;
-    const isTextLayer = targetValue instanceof TextLayer;
-    const isLayer = targetValue instanceof Layer;
-    const isCanvas = targetValue instanceof Canvas;
+    const targetIsArtboard = targetValue instanceof Artboard;
+    const targetIsShapeLayer = targetValue instanceof ShapeLayer;
+    const targetIsTextLayer = targetValue instanceof TextLayer;
+    const targetIsLayer = targetValue instanceof Layer;
+    const targetIsCanvas = targetValue instanceof Canvas;
 
     const newChanges = { ...(typeof changes === 'function' ? changes(targetValue as unknown as T) : changes) };
 
-    if (isArtboard) {
+    if (targetIsArtboard) {
       return Artboard.makeChanges(newChanges as UIRecordChanges<ArtboardData>, targetValue) as C;
-    } else if (isShapeLayer) {
+    } else if (targetIsShapeLayer) {
       return ShapeLayer.makeChanges(newChanges as UIRecordChanges<ShapeLayerData>, targetValue) as C;
-    } else if (isTextLayer) {
+    } else if (targetIsTextLayer) {
       return TextLayer.makeChanges(newChanges as UIRecordChanges<TextLayerData>, targetValue) as C;
-    } else if (isLayer) {
+    } else if (targetIsLayer) {
       return Layer.makeChanges(newChanges as UIRecordChanges<LayerData>, targetValue) as C;
-    } else if (isCanvas) {
+    } else if (targetIsCanvas) {
       return Canvas.makeChanges(newChanges as UIRecordChanges<CanvasData>, targetValue) as C;
     }
 
@@ -119,11 +119,11 @@ export class ModelStore extends ElementSelector {
       throw new Error(`UIRecord '${targetKey}' not found.`);
     }
 
-    const isArtboard = targetValue instanceof Artboard;
-    const isShapeLayer = targetValue instanceof ShapeLayer;
-    const isTextLayer = targetValue instanceof TextLayer;
+    const targetIsArtboard = targetValue instanceof Artboard;
+    const targetIsShapeLayer = targetValue instanceof ShapeLayer;
+    const targetIsTextLayer = targetValue instanceof TextLayer;
 
-    if (!isArtboard && !isShapeLayer && !isTextLayer) {
+    if (!targetIsArtboard && !targetIsShapeLayer && !targetIsTextLayer) {
       throw new Error(`UIRecord '${targetKey}' is not a layer. setRect() only supports Artboard and Layer.`);
     }
 
@@ -143,20 +143,20 @@ export class ModelStore extends ElementSelector {
 
     /** @todo px 외 lengthType(unit) 지원 */
     const newChanges = {} as C;
-    if (isArtboard) {
+    if (targetIsArtboard) {
       const v = newChanges as UIRecordChanges<ArtboardData>;
       v.x = x;
       v.y = y;
       v.width = width;
       v.height = height;
-    } else if (isShapeLayer) {
+    } else if (targetIsShapeLayer) {
       const v = newChanges as UIRecordChanges<ShapeLayerData>;
       v.x = { length: x };
       v.y = { length: y };
       v.width = { length: width };
       v.height = { length: height };
       v.rotate = { degrees: rotate };
-    } else if (isTextLayer) {
+    } else if (targetIsTextLayer) {
       const v = newChanges as UIRecordChanges<TextLayerData>;
       v.rotate = { degrees: rotate };
     }
@@ -279,9 +279,9 @@ export class ModelStore extends ElementSelector {
     }
 
     // 순서도 동일한지 확인해야 하므로 stringify 결과를 비교
-    const isSelectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
+    const selectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
 
-    if (isSelectionChanged) {
+    if (selectionChanged) {
       this.#selectedKeys.clear();
       newSelectedKeys.forEach((key) => this.#selectedKeys.add(key));
       this[Protected.dispatchSelectionChanges](newSelectedKeys);
@@ -517,11 +517,11 @@ export class ModelStore extends ElementSelector {
     const canHaveParent = hasUIRecordParent(targetValue);
     const parentKey = canHaveParent ? targetValue.parent.key : undefined;
     const parentValue = this.get(parentKey ?? '');
-    const hasParent = isUIRecordKey(parentKey) && parentValue != null;
+    const parentExists = isUIRecordKey(parentKey) && parentValue != null;
 
     if (canHaveParent) {
       (() => {
-        if (!hasParent) {
+        if (!parentExists) {
           return console.error(`Parent ${parentKey} of UIRecord '${targetKey}' not found.`);
         }
 
@@ -552,30 +552,30 @@ export class ModelStore extends ElementSelector {
     const deletedKeys = deleteTree(targetValue).map((it) => it.key);
     const newSelectedKeys = exclude([...this.#selectedKeys], deletedKeys);
     // 순서도 동일한지 확인해야 하므로 stringify 결과를 비교
-    const isSelectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
+    const selectionChanged = JSON.stringify([...this.#selectedKeys]) !== JSON.stringify(newSelectedKeys);
 
-    if (isSelectionChanged) {
+    if (selectionChanged) {
       this.#selectedKeys.clear();
       newSelectedKeys.forEach((key) => this.#selectedKeys.add(key));
     }
 
-    this[Protected.dispatchTreeChanges]([...this.pairs.values()], hasParent ? [parentValue] : [], deletedKeys);
-    if (isSelectionChanged) {
+    this[Protected.dispatchTreeChanges]([...this.pairs.values()], parentExists ? [parentValue] : [], deletedKeys);
+    if (selectionChanged) {
       this[Protected.dispatchSelectionChanges](newSelectedKeys);
     }
   }
 
   toggleDraft(targetKey: UIRecordKey, draft: boolean): void {
     const targetValue = this.get(targetKey);
-    const hasTarget = targetValue != null;
+    const targetExists = targetValue != null;
 
-    if (hasTarget && draft) {
+    if (targetExists && draft) {
       this.#draftKeys.add(targetKey);
     } else {
       this.#draftKeys.delete(targetKey);
     }
 
-    if (!hasTarget) {
+    if (!targetExists) {
       if (draft) {
         console.error(`UIRecord '${targetKey}' not found.`);
       }

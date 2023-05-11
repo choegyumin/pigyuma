@@ -13,9 +13,9 @@ const LayerTransformSection = React.forwardRef<LayerTransformSectionRef, LayerTr
   const viewModel = useLayerTransformSection(props, ref);
 
   const {
-    canEditPosition,
-    canEditSize,
-    canEditRotate,
+    positionEditable,
+    sizeEditable,
+    rotateEditable,
     x,
     y,
     width,
@@ -34,19 +34,19 @@ const LayerTransformSection = React.forwardRef<LayerTransformSectionRef, LayerTr
       <h2 className={mixins.blind}>Transform</h2>
       <LayerFieldset>
         <LayerField label="X">
-          <NumberField autoSelect={true} value={x} onChange={onXLengthChange} disabled={!canEditPosition} />
+          <NumberField autoSelect={true} value={x} onChange={onXLengthChange} disabled={!positionEditable} />
         </LayerField>
         <LayerField label="Y">
-          <NumberField autoSelect={true} value={y} onChange={onYLengthChange} disabled={!canEditPosition} />
+          <NumberField autoSelect={true} value={y} onChange={onYLengthChange} disabled={!positionEditable} />
         </LayerField>
         <LayerField label="Width">
-          <NumberField autoSelect={true} min={1} value={width} onChange={onWidthLengthChange} disabled={!canEditSize} />
+          <NumberField autoSelect={true} min={1} value={width} onChange={onWidthLengthChange} disabled={!sizeEditable} />
         </LayerField>
         <LayerField label="Height">
-          <NumberField autoSelect={true} min={1} value={height} onChange={onHeightLengthChange} disabled={!canEditSize} />
+          <NumberField autoSelect={true} min={1} value={height} onChange={onHeightLengthChange} disabled={!sizeEditable} />
         </LayerField>
         <LayerField label="Rotate">
-          <NumberField autoSelect={true} value={rotate} onChange={onRotateDegChange} disabled={!canEditRotate} />
+          <NumberField autoSelect={true} value={rotate} onChange={onRotateDegChange} disabled={!rotateEditable} />
         </LayerField>
       </LayerFieldset>
     </Panel.Group>

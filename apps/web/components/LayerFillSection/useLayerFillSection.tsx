@@ -9,25 +9,25 @@ export default function useLayerFillSection(props: LayerFillSectionProps, ref: R
   const uiController = useUIController();
 
   const uiRecord = useUIRecord<Artboard | ShapeLayer | TextLayer>(selectedRecordKey);
-  const hasUIRecord = uiRecord != null;
+  const uiRecordExists = uiRecord != null;
 
-  const isArtboard = Artboard.isModel(uiRecord);
-  const isShapeLayer = ShapeLayer.isModel(uiRecord);
+  const artboardSelected = Artboard.isModel(uiRecord);
+  const shapeLayerSelected = ShapeLayer.isModel(uiRecord);
 
-  const canEdit = hasUIRecord && (isArtboard || isShapeLayer);
+  const editable = uiRecordExists && (artboardSelected || shapeLayerSelected);
 
-  const fillColor = isArtboard ? uiRecord.fill : isShapeLayer ? uiRecord.fill.color : '';
+  const fillColor = artboardSelected ? uiRecord.fill : shapeLayerSelected ? uiRecord.fill.color : '';
 
   const onFillColorChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, color: string) => {
-    if (!canEdit) {
+    if (!editable) {
       return;
     }
-    if (isArtboard) {
+    if (artboardSelected) {
       uiController.set<Artboard>(uiRecord.key, { fill: color });
     } else {
       uiController.set<ShapeLayer>(uiRecord.key, { fill: { color } });
     }
   });
 
-  return { canEdit, fillColor, onFillColorChange };
+  return { editable, fillColor, onFillColorChange };
 }

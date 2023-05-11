@@ -16,13 +16,13 @@ export default function useHoveringOverlay() {
 
   const { getRootStyle } = useRenderUtils();
 
-  const isActive =
+  const actived =
     record != null &&
     !drafts.has(record?.key) &&
     mode === UIDesignToolMode.select &&
     statusMetadata.interactionType === UIDesignToolInteractionType.idle;
 
-  if (!isActive) {
+  if (!actived) {
     return;
   }
 

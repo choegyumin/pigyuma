@@ -10,25 +10,25 @@ export default function useLayerStrokeSection(props: LayerStrokeSectionProps, re
   const uiController = useUIController();
 
   const uiRecord = useUIRecord<Artboard | ShapeLayer | TextLayer>(selectedRecordKey);
-  const hasUIRecord = uiRecord != null;
+  const uiRecordExists = uiRecord != null;
 
-  const isShapeLayer = ShapeLayer.isModel(uiRecord);
+  const shapeLayerSelected = ShapeLayer.isModel(uiRecord);
 
-  const canEdit = hasUIRecord && isShapeLayer;
+  const editable = uiRecordExists && shapeLayerSelected;
 
-  const strokeColor = isShapeLayer ? uiRecord.stroke.color : '';
-  const strokePattern = isShapeLayer ? uiRecord.stroke.pattern : '';
-  const strokeWidth = isShapeLayer ? uiRecord.stroke.width : { top: 0, right: 0, bottom: 0, left: 0 };
+  const strokeColor = shapeLayerSelected ? uiRecord.stroke.color : '';
+  const strokePattern = shapeLayerSelected ? uiRecord.stroke.pattern : '';
+  const strokeWidth = shapeLayerSelected ? uiRecord.stroke.width : { top: 0, right: 0, bottom: 0, left: 0 };
 
   const onStrokeColorChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, color: string) => {
-    if (!canEdit) {
+    if (!editable) {
       return;
     }
     uiController.set<ShapeLayer>(uiRecord.key, { stroke: { color } });
   });
 
   const onStrokePatternChange = useEvent((event: React.ChangeEvent<HTMLSelectElement>, selected: string | number | undefined) => {
-    if (!canEdit || selected == null) {
+    if (!editable || selected == null) {
       return;
     }
     const pattern = selected as StrokeStylePattern;
@@ -36,7 +36,7 @@ export default function useLayerStrokeSection(props: LayerStrokeSectionProps, re
   });
 
   const onStrokeTopWidthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEdit) {
+    if (!editable) {
       return;
     }
     const top = value ?? 0;
@@ -44,7 +44,7 @@ export default function useLayerStrokeSection(props: LayerStrokeSectionProps, re
   });
 
   const onStrokeRightWidthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEdit) {
+    if (!editable) {
       return;
     }
     const right = value ?? 0;
@@ -52,7 +52,7 @@ export default function useLayerStrokeSection(props: LayerStrokeSectionProps, re
   });
 
   const onStrokeBottomWidthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEdit) {
+    if (!editable) {
       return;
     }
     const bottom = value ?? 0;
@@ -60,7 +60,7 @@ export default function useLayerStrokeSection(props: LayerStrokeSectionProps, re
   });
 
   const onStrokeLeftWidthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEdit) {
+    if (!editable) {
       return;
     }
     const left = value ?? 0;
@@ -68,7 +68,7 @@ export default function useLayerStrokeSection(props: LayerStrokeSectionProps, re
   });
 
   return {
-    canEdit,
+    editable,
     strokeColor,
     strokePattern,
     strokeWidth,

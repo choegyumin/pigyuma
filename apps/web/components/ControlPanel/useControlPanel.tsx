@@ -7,15 +7,15 @@ export default function useControlPanel(props: ControlPanelProps, ref: React.For
   const uiData = useUIData();
   const selectedRecord = uiData.get([...uiData.selected][0]);
 
-  const hasUIRecord = selectedRecord != null;
+  const uiRecordExists = selectedRecord != null;
 
-  const isArtboard = Artboard.isModel(selectedRecord);
-  const isShapeLayer = ShapeLayer.isModel(selectedRecord);
-  const isTextLayer = TextLayer.isModel(selectedRecord);
+  const artboardSelected = Artboard.isModel(selectedRecord);
+  const shapeLayerSelected = ShapeLayer.isModel(selectedRecord);
+  const textLayerSelected = TextLayer.isModel(selectedRecord);
 
-  const canEditFill = hasUIRecord && (isArtboard || isShapeLayer);
-  const canEditStroke = hasUIRecord && isShapeLayer;
-  const canEditTypography = hasUIRecord && isTextLayer;
+  const fillEditable = uiRecordExists && (artboardSelected || shapeLayerSelected);
+  const strokeEditable = uiRecordExists && shapeLayerSelected;
+  const typographyEditable = uiRecordExists && textLayerSelected;
 
-  return { selectedRecord, canEditFill, canEditStroke, canEditTypography };
+  return { selectedRecord, fillEditable, strokeEditable, typographyEditable };
 }

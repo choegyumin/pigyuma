@@ -31,23 +31,23 @@ export default function useRenderUtils() {
   const statusMetadata = useStatusMetadata();
 
   const getMeta = useCallback(() => {
-    const isIdle = statusMetadata.interactionType === UIDesignToolInteractionType.idle;
-    const isDrawing = statusMetadata.interactionType === UIDesignToolInteractionType.drawing;
-    const isTransforming = statusMetadata.interactionType === UIDesignToolInteractionType.transform;
-    const isResizing = isTransforming && statusMetadata.transformMethod === UIDesignToolTransformMethod.resize;
-    const isRotating = isTransforming && statusMetadata.transformMethod === UIDesignToolTransformMethod.rotate;
+    const idleStatus = statusMetadata.interactionType === UIDesignToolInteractionType.idle;
+    const drawingStatus = statusMetadata.interactionType === UIDesignToolInteractionType.drawing;
+    const transformingStatus = statusMetadata.interactionType === UIDesignToolInteractionType.transform;
+    const resizingStatus = transformingStatus && statusMetadata.transformMethod === UIDesignToolTransformMethod.resize;
+    const rotatingStatus = transformingStatus && statusMetadata.transformMethod === UIDesignToolTransformMethod.rotate;
 
-    const handleVisible = isIdle;
-    const infoVisible = isDrawing || isResizing || isRotating;
-    const outlineVisible = isIdle || isDrawing || isResizing || isRotating;
-    const cursorVisible = isDrawing || isTransforming;
+    const handleVisible = idleStatus;
+    const infoVisible = drawingStatus || resizingStatus || rotatingStatus;
+    const outlineVisible = idleStatus || drawingStatus || resizingStatus || rotatingStatus;
+    const cursorVisible = drawingStatus || transformingStatus;
 
     return {
-      isIdle,
-      isDrawing,
-      isTransforming,
-      isResizing,
-      isRotating,
+      idle: idleStatus,
+      drawing: drawingStatus,
+      transforming: transformingStatus,
+      resizing: resizingStatus,
+      rotating: rotatingStatus,
       handleVisible,
       infoVisible,
       outlineVisible,
@@ -125,11 +125,7 @@ export default function useRenderUtils() {
       }
 
       const meta = getMeta();
-      return meta.isDrawing || meta.isResizing
-        ? createSizeInfoText(record)
-        : meta.isRotating
-        ? createDegreesInfoText(record)
-        : initialInfoText;
+      return meta.drawing || meta.resizing ? createSizeInfoText(record) : meta.rotating ? createDegreesInfoText(record) : initialInfoText;
     },
     [getMeta, createSizeInfoText, createDegreesInfoText],
   );

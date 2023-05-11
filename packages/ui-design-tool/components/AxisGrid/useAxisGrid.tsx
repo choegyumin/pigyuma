@@ -14,13 +14,13 @@ export default function useAxisGrid() {
 
   const { getRootStyle } = useRenderUtils();
 
-  const isActive =
+  const actived =
     record != null &&
     selected.size === 1 &&
     !drafts.has(record?.key) &&
     statusMetadata.interactionType === UIDesignToolInteractionType.idle;
 
-  if (!isActive) {
+  if (!actived) {
     return;
   }
 
