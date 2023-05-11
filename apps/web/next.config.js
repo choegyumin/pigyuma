@@ -7,9 +7,7 @@ const withVanillaExtract = createVanillaExtractPlugin();
 const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
-  experimental: {
-    transpilePackages: ['@pigyuma/design-system'],
-  },
+  transpilePackages: ['@pigyuma/design-system'],
   webpack(config, options) {
     const { dev, isServer } = options;
     // Do not run type checking twice:

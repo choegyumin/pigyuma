@@ -21,7 +21,7 @@
     "@vanilla-extract/css": "^1.9.2",
     "clsx": "^1.2.1",
     "constate": "^3.3.2",
-    "next": "13.0.0",
+    "next": "^13.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recoil": "^0.7.6"
@@ -46,7 +46,7 @@
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "geometry-polyfill": "^1.0.7",
     "jsdom": "^20.0.3",
-    "typescript": "^4.7.4",
+    "typescript": "4.9.3",
     "vite": "^4.0.4",
     "vitest": "^0.27.1"
   }
