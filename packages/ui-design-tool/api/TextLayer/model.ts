@@ -170,4 +170,9 @@ export class TextLayer extends Layer implements TextLayerJSON {
     const v = Layer.makeChanges(values, origin) as DeepPartial<TextLayerData>;
     return v;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static supportParent(object: any): object is Artboard | Canvas | ShapeLayer {
+    return object instanceof Artboard || object instanceof Canvas || object instanceof ShapeLayer;
+  }
 }

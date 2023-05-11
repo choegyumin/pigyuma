@@ -86,4 +86,9 @@ export class Canvas extends UIRecord implements CanvasJSON {
     const v = UIRecord.makeChanges(values, origin) as DeepPartial<CanvasData>;
     return v;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static supportChildren(object: any): object is Artboard | ShapeLayer | TextLayer {
+    return object instanceof Artboard || object instanceof ShapeLayer || object instanceof TextLayer;
+  }
 }

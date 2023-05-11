@@ -4,6 +4,7 @@ import { convertHeightValue, convertRotateValue, convertWidthValue, convertXValu
 import { clone, cloneDeep, merge, toDegrees360, uuid } from '@pigyuma/utils';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
+import { ShapeLayer } from '../ShapeLayer/model';
 import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
 import * as styles from './styles.css';
 
@@ -37,9 +38,9 @@ export class Layer extends UIRecord implements LayerJSON {
   readonly width: WidthValueObject;
   readonly height: HeightValueObject;
   readonly rotate: RotateValueObject;
-  readonly parent: Artboard | Canvas | Layer | null;
+  readonly parent: Artboard | Canvas | ShapeLayer | null;
 
-  constructor(args: LayerArgs, parent: Artboard | Canvas | Layer | null = null) {
+  constructor(args: LayerArgs, parent: Artboard | Canvas | ShapeLayer | null = null) {
     const superArgs = clone(args) as UIRecordArgs;
     superArgs.key = superArgs.key || uuid.v4();
     superArgs.type = UIRecordType.layer;
@@ -129,5 +130,10 @@ export class Layer extends UIRecord implements LayerJSON {
       v.rotate = merge(cloneDeep(origin.rotate), v.rotate);
     }
     return v;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static supportParent(object: any): object is Artboard | Canvas | ShapeLayer {
+    return object instanceof Artboard || object instanceof Canvas || object instanceof ShapeLayer;
   }
 }

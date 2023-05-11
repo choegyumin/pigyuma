@@ -208,4 +208,14 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
     }
     return v;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static supportParent(object: any): object is Artboard | Canvas | ShapeLayer {
+    return object instanceof Artboard || object instanceof Canvas || object instanceof ShapeLayer;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static supportChildren(object: any): object is ShapeLayer | TextLayer {
+    return object instanceof ShapeLayer || object instanceof TextLayer;
+  }
 }

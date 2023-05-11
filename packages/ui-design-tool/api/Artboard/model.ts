@@ -140,4 +140,9 @@ export class Artboard extends UIRecord implements ArtboardJSON {
     }
     return v;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static supportChildren(object: any): object is ShapeLayer | TextLayer {
+    return object instanceof ShapeLayer || object instanceof TextLayer;
+  }
 }
