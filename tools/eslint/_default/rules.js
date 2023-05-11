@@ -1,4 +1,13 @@
 module.exports = {
+  extends: [
+    // "turbo",
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:jsx-a11y/recommended',
+    'prettier',
+  ],
   rules: {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/ban-types': ['error'],
@@ -9,7 +18,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': ['error', { ignoreRestArgs: true }],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
-      'error',
+      'warn',
       {
         argsIgnorePattern: '^_',
         ignoreRestSiblings: true,

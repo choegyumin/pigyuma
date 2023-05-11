@@ -3,14 +3,6 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 6,
   },
-  extends: [
-    // "turbo",
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:import/recommended',
-    'plugin:import/typescript',
-    'prettier',
-  ],
   plugins: ['@typescript-eslint', 'import'],
   settings: {
     'import/external-module-folders': ['.yarn'],

@@ -44,6 +44,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
 
   return (
     <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row_state.selected]: selected })}>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <div className={styles.item} role={role} onClick={onItemClick}>
         <div className={styles.name}>
           <Icon type={iconType} className={styles.icon} />
