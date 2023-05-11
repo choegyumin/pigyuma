@@ -3,10 +3,10 @@
   "display": "React Package",
   "extends": "./base.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "target": "ES2015",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
-    "target": "es6"
+    "module": "ESNext",
+    "jsx": "react-jsx"
   },
   "files": ["../typescript.d.ts"]
 }
