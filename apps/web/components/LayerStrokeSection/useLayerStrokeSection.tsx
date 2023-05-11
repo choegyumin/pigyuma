@@ -16,9 +16,9 @@ export default function useLayerStrokeSection(props: LayerStrokeSectionProps, re
 
   const editable = uiRecordExists && shapeLayerSelected;
 
-  const strokeColor = shapeLayerSelected ? uiRecord.stroke.color : '';
-  const strokePattern = shapeLayerSelected ? uiRecord.stroke.pattern : '';
-  const strokeWidth = shapeLayerSelected ? uiRecord.stroke.width : { top: 0, right: 0, bottom: 0, left: 0 };
+  const strokeColor = shapeLayerSelected ? uiRecord.values.stroke.color : '';
+  const strokePattern = shapeLayerSelected ? uiRecord.values.stroke.pattern : '';
+  const strokeWidth = shapeLayerSelected ? uiRecord.values.stroke.width : { top: 0, right: 0, bottom: 0, left: 0 };
 
   const onStrokeColorChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, color: string) => {
     if (!editable) {

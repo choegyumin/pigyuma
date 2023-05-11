@@ -15,8 +15,8 @@ export default function useLayerTypographySection(props: LayerTypographySectionP
 
   const editable = uiRecordExists && textLayerSelected;
 
-  const textColor = textLayerSelected ? uiRecord.textColor.color : '';
-  const content = textLayerSelected ? uiRecord.content : '';
+  const textColor = textLayerSelected ? uiRecord.values.textColor.color : '';
+  const content = textLayerSelected ? uiRecord.values.content : '';
 
   const onTextColorChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, color: string) => {
     if (!editable) {

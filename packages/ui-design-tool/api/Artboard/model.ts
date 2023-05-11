@@ -3,23 +3,28 @@ import { HeightLengthType, WidthLengthType, XLengthType, YLengthType } from '@/t
 import { StyleValue } from '@/types/Value';
 import { convertFillValue, convertHeightValue, convertWidthValue, convertXValue, convertYValue, fixNumberValue } from '@/utils/value';
 import { clone, nonNullable, uuid } from '@pigyuma/utils';
+import { produce } from 'immer';
 import { Canvas } from '../Canvas/model';
 import { ShapeLayer, ShapeLayerArgs, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
 import { TextLayer, TextLayerArgs, TextLayerData, TextLayerJSON } from '../TextLayer/model';
 import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
 import * as styles from './styles.css';
 
-export interface ArtboardStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
-
-export interface ArtboardJSON extends UIRecordJSON {
-  key: UIRecordKey;
-  type: Extract<UIRecordType, 'artboard'>;
+export interface ArtboardValues {
   name: string;
   x: number;
   y: number;
   width: number;
   height: number;
   fill: string;
+}
+
+export interface ArtboardStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
+
+export interface ArtboardJSON extends UIRecordJSON {
+  key: UIRecordKey;
+  type: Extract<UIRecordType, 'artboard'>;
+  values: ArtboardValues;
   children: Array<ShapeLayerJSON | TextLayerJSON>;
 }
 
@@ -42,12 +47,7 @@ export interface ArtboardArgs
 export class Artboard extends UIRecord implements ArtboardJSON {
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'artboard'>;
-  readonly name: string;
-  readonly x: number;
-  readonly y: number;
-  readonly width: number;
-  readonly height: number;
-  readonly fill: string;
+  readonly values: Readonly<ArtboardValues>;
   readonly parent: Canvas | null;
   readonly children: Array<ShapeLayer | TextLayer>;
 
@@ -60,12 +60,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
     this.key = superArgs.key;
     this.type = superArgs.type;
 
-    this.name = args.name;
-    this.x = args.x;
-    this.y = args.y;
-    this.width = args.width;
-    this.height = args.height;
-    this.fill = args.fill;
+    this.values = args.values;
     this.parent = parent;
     this.children =
       args.children
@@ -92,11 +87,11 @@ export class Artboard extends UIRecord implements ArtboardJSON {
 
   static getStyle(object: Artboard | ArtboardJSON): ArtboardStyle {
     return {
-      [styles.varNames.x]: convertXValue({ length: object.x, lengthType: XLengthType.px }),
-      [styles.varNames.y]: convertYValue({ length: object.y, lengthType: YLengthType.px }),
-      [styles.varNames.width]: convertWidthValue({ length: object.width, lengthType: WidthLengthType.px }),
-      [styles.varNames.height]: convertHeightValue({ length: object.height, lengthType: HeightLengthType.px }),
-      [styles.varNames.background]: convertFillValue({ color: object.fill }),
+      [styles.varNames.x]: convertXValue({ length: object.values.x, lengthType: XLengthType.px }),
+      [styles.varNames.y]: convertYValue({ length: object.values.y, lengthType: YLengthType.px }),
+      [styles.varNames.width]: convertWidthValue({ length: object.values.width, lengthType: WidthLengthType.px }),
+      [styles.varNames.height]: convertHeightValue({ length: object.values.height, lengthType: HeightLengthType.px }),
+      [styles.varNames.background]: convertFillValue({ color: object.values.fill }),
     };
   }
 
@@ -104,12 +99,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
     return {
       key: this.key,
       type: this.type,
-      name: this.name,
-      x: this.x,
-      y: this.y,
-      width: this.width,
-      height: this.height,
-      fill: this.fill,
+      values: this.values,
       children: this.children.map((it) => it.toJSON()),
     };
   }
@@ -124,20 +114,15 @@ export class Artboard extends UIRecord implements ArtboardJSON {
     return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] === UIRecordType.artboard;
   }
 
-  static makeChanges(values: DeepPartial<ArtboardData>, origin: ArtboardData) {
-    const v = UIRecord.makeChanges(values, origin) as DeepPartial<ArtboardData>;
-    if (v.x != null) {
-      v.x = fixNumberValue(v.x);
-    }
-    if (v.y != null) {
-      v.y = fixNumberValue(v.y);
-    }
-    if (v.width != null) {
-      v.width = fixNumberValue(Math.max(v.width, 1));
-    }
-    if (v.height != null) {
-      v.height = fixNumberValue(Math.max(v.height, 1));
-    }
-    return v;
+  static makeValuesChanges(values: DeepPartial<ArtboardValues>, origin: ArtboardValues) {
+    // prettier-ignore
+    return produce(UIRecord.makeValuesChanges(values, origin) as unknown as ArtboardValues, (draft) => {
+      if (values.name != null) { draft.name = values.name; }
+      if (values.x != null) { draft.x = fixNumberValue(values.x); }
+      if (values.y != null) { draft.y = fixNumberValue(values.y); }
+      if (values.width != null) { draft.width = fixNumberValue(Math.max(values.width, 1)); }
+      if (values.height != null) { draft.height = fixNumberValue(Math.max(values.height, 1)); }
+      if (values.fill != null) { draft.fill = values.fill; }
+    });
   }
 }

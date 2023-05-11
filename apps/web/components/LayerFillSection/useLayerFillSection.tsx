@@ -16,7 +16,7 @@ export default function useLayerFillSection(props: LayerFillSectionProps, ref: R
 
   const editable = uiRecordExists && (artboardSelected || shapeLayerSelected);
 
-  const fillColor = artboardSelected ? uiRecord.fill : shapeLayerSelected ? uiRecord.fill.color : '';
+  const fillColor = artboardSelected ? uiRecord.values.fill : shapeLayerSelected ? uiRecord.values.fill.color : '';
 
   const onFillColorChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, color: string) => {
     if (!editable) {

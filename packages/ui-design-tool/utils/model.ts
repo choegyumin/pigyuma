@@ -8,6 +8,7 @@ import { UIRecordKey } from '@/types/Identifier';
 
 export type UIRecordWithParent = UIRecord & { parent: Artboard | Canvas | ShapeLayer | null };
 export type UIRecordWithChildren = UIRecord & { children: Array<Artboard | ShapeLayer | TextLayer> };
+export type UIRecordWithValues = Artboard | Layer | ShapeLayer | TextLayer;
 export type RotatableUIRecord = Layer | ShapeLayer | TextLayer;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,6 +41,11 @@ export const isUIRecordWithChildren = <T extends UIRecordWithChildren>(object: a
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const hasUIRecordChildren = <T extends UIRecordWithChildren>(object: any): object is T => {
   return isUIRecordWithChildren(object) && object.children.length > 0;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isUIRecordWithValues = <T extends UIRecordWithValues>(object: any): object is T => {
+  return Artboard.isModel(object) || Layer.isModel(object) || ShapeLayer.isModel(object) || TextLayer.isModel(object);
 };
 
 export type ExtractRotatableUIRecord<T> = T extends RotatableUIRecord ? T : never;

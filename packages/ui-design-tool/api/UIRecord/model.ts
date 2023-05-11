@@ -1,5 +1,6 @@
 import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { uuid } from '@pigyuma/utils';
+import { produce } from 'immer';
 
 export interface UIRecordJSON {
   key: UIRecordKey;
@@ -39,7 +40,7 @@ export class UIRecord implements UIRecordJSON {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static makeChanges(values: DeepPartial<UIRecordData>, origin: UIRecordData) {
-    return { ...values };
+  static makeValuesChanges(values: DeepPartial<AnyObject>, origin: AnyObject) {
+    return produce(origin, () => undefined);
   }
 }

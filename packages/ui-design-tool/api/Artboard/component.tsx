@@ -22,7 +22,7 @@ export const RawArtboardComponent = React.forwardRef<ArtboardRef, ArtboardProps>
   return (
     <div {...restProps} ref={ref} className={styles.root} style={artboard.style} {...(selected ? handleProps : {})}>
       <div className={clsx(styles.name, { [styles.name_state.draft]: draft })} {...(selected ? {} : handleProps)}>
-        {artboard.name}
+        {artboard.values.name}
       </div>
       <div className={styles.frame}>
         {artboard.children.map((it) => (

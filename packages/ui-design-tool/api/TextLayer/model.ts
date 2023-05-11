@@ -25,6 +25,7 @@ import {
   convertYValue,
 } from '@/utils/value';
 import { clone, uuid } from '@pigyuma/utils';
+import { produce } from 'immer';
 import React from 'react';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
@@ -32,12 +33,7 @@ import { Layer, LayerArgs, LayerJSON } from '../Layer/model';
 import { ShapeLayer } from '../ShapeLayer/model';
 import * as styles from './styles.css';
 
-export interface TextLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
-
-export interface TextLayerJSON extends LayerJSON {
-  key: UIRecordKey;
-  type: Extract<UIRecordType, 'layer'>;
-  layerType: Extract<LayerType, 'text'>;
+export interface TextLayerValues {
   name: string;
   x: XValueObject;
   y: YValueObject;
@@ -50,6 +46,15 @@ export interface TextLayerJSON extends LayerJSON {
   fontWeight: FontWeightValueObject;
   letterSpacing: LetterSpacingValueObject;
   content: string;
+}
+
+export interface TextLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
+
+export interface TextLayerJSON extends LayerJSON {
+  key: UIRecordKey;
+  type: Extract<UIRecordType, 'layer'>;
+  layerType: Extract<LayerType, 'text'>;
+  values: TextLayerValues;
 }
 
 type OptionalTextLayerDataKey = 'key';
@@ -66,19 +71,7 @@ export class TextLayer extends Layer implements TextLayerJSON {
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'layer'>;
   readonly layerType: Extract<LayerType, 'text'>;
-  readonly name: string;
-  readonly x: XValueObject;
-  readonly y: YValueObject;
-  readonly width: WidthValueObject;
-  readonly height: HeightValueObject;
-  readonly rotate: RotateValueObject;
-  readonly textColor: TextColorValueObject;
-  readonly fontSize: FontSizeValueObject;
-  readonly lineHeight: LineHeightValueObject;
-  /** @todo 폰트에 정의된 값을 기반으로 동작하도록 수정 (e.g. Regular, Medium, Bold, Black, ..) */
-  readonly fontWeight: FontWeightValueObject;
-  readonly letterSpacing: LetterSpacingValueObject;
-  readonly content: string;
+  readonly values: Readonly<TextLayerValues>;
   readonly parent: Artboard | Canvas | ShapeLayer | null;
 
   constructor(args: TextLayerArgs, parent: Artboard | Canvas | ShapeLayer | null = null) {
@@ -92,18 +85,7 @@ export class TextLayer extends Layer implements TextLayerJSON {
     this.type = superArgs.type;
     this.layerType = superArgs.layerType;
 
-    this.name = args.name;
-    this.x = args.x;
-    this.y = args.y;
-    this.width = args.width;
-    this.height = args.height;
-    this.rotate = args.rotate;
-    this.textColor = args.textColor;
-    this.fontSize = args.fontSize;
-    this.lineHeight = args.lineHeight;
-    this.fontWeight = args.fontWeight;
-    this.letterSpacing = args.letterSpacing;
-    this.content = args.content;
+    this.values = args.values;
     this.parent = parent;
   }
 
@@ -113,16 +95,16 @@ export class TextLayer extends Layer implements TextLayerJSON {
 
   static getStyle(object: TextLayer | TextLayerJSON): TextLayerStyle {
     return {
-      [styles.varNames.x]: convertXValue(object.x),
-      [styles.varNames.y]: convertYValue(object.y),
-      [styles.varNames.width]: convertWidthValue(object.width),
-      [styles.varNames.height]: convertHeightValue(object.height),
-      [styles.varNames.rotate]: convertRotateValue(object.rotate),
-      [styles.varNames.textColor]: convertTextColorValue(object.textColor),
-      [styles.varNames.fontSize]: convertFontSizeValue(object.fontSize),
-      [styles.varNames.lineHeight]: convertLineHeightValue(object.lineHeight),
-      [styles.varNames.fontWeight]: convertFontWeightValue(object.fontWeight),
-      [styles.varNames.letterSpacing]: convertLetterSpacingValue(object.letterSpacing),
+      [styles.varNames.x]: convertXValue(object.values.x),
+      [styles.varNames.y]: convertYValue(object.values.y),
+      [styles.varNames.width]: convertWidthValue(object.values.width),
+      [styles.varNames.height]: convertHeightValue(object.values.height),
+      [styles.varNames.rotate]: convertRotateValue(object.values.rotate),
+      [styles.varNames.textColor]: convertTextColorValue(object.values.textColor),
+      [styles.varNames.fontSize]: convertFontSizeValue(object.values.fontSize),
+      [styles.varNames.lineHeight]: convertLineHeightValue(object.values.lineHeight),
+      [styles.varNames.fontWeight]: convertFontWeightValue(object.values.fontWeight),
+      [styles.varNames.letterSpacing]: convertLetterSpacingValue(object.values.letterSpacing),
     };
   }
 
@@ -131,18 +113,7 @@ export class TextLayer extends Layer implements TextLayerJSON {
       key: this.key,
       type: this.type,
       layerType: this.layerType,
-      name: this.name,
-      x: this.x,
-      y: this.y,
-      width: this.width,
-      height: this.height,
-      rotate: this.rotate,
-      textColor: this.textColor,
-      fontSize: this.fontSize,
-      lineHeight: this.lineHeight,
-      fontWeight: this.fontWeight,
-      letterSpacing: this.letterSpacing,
-      content: this.content,
+      values: this.values,
     };
   }
 
@@ -166,8 +137,18 @@ export class TextLayer extends Layer implements TextLayerJSON {
     );
   }
 
-  static makeChanges(values: DeepPartial<TextLayerData>, origin: TextLayerData) {
-    const v = Layer.makeChanges(values, origin) as DeepPartial<TextLayerData>;
-    return v;
+  static makeValuesChanges(values: DeepPartial<TextLayerValues>, origin: TextLayerValues) {
+    // prettier-ignore
+    return produce(Layer.makeValuesChanges(values, origin) as unknown as TextLayerValues, (draft) => {
+      if (values.textColor?.color != null) { draft.textColor.color = values.textColor.color; }
+      if (values.fontSize?.length != null) { draft.fontSize.length = values.fontSize.length; }
+      if (values.fontSize?.lengthType != null) { draft.fontSize.lengthType = values.fontSize.lengthType; }
+      if (values.lineHeight?.length != null) { draft.lineHeight.length = values.lineHeight.length; }
+      if (values.lineHeight?.lengthType != null) { draft.lineHeight.lengthType = values.lineHeight.lengthType; }
+      if (values.fontWeight?.value != null) { draft.fontWeight.value = values.fontWeight.value; }
+      if (values.letterSpacing?.length != null) { draft.letterSpacing.length = values.letterSpacing.length; }
+      if (values.letterSpacing?.lengthType != null) { draft.letterSpacing.lengthType = values.letterSpacing.lengthType; }
+      if (values.content != null) { draft.content = values.content; }
+    });
   }
 }

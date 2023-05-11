@@ -21,7 +21,7 @@ export const RawTextLayerComponent = React.forwardRef<TextLayerRef, TextLayerPro
       style={textLayer.style}
       {...{ [UIInteractionElementDataAttributeName.handleType]: InteractionHandleType.select }}
       dangerouslySetInnerHTML={{
-        __html: textLayer.content.replaceAll(/(\r\n|\r|\n)/g, '<br />'),
+        __html: textLayer.values.content.replaceAll(/(\r\n|\r|\n)/g, '<br />'),
       }}
     />
   );

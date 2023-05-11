@@ -94,8 +94,8 @@ export default function useInteractionDispatcher() {
           return;
         }
 
-        const xLength = mouse.offsetX - ((parentRecord as Artboard).x ?? 0);
-        const yLength = mouse.offsetY - ((parentRecord as Artboard).y ?? 0);
+        const xLength = mouse.offsetX - ((parentRecord as Artboard).values.x ?? 0);
+        const yLength = mouse.offsetY - ((parentRecord as Artboard).values.y ?? 0);
         const widthLength = 1;
         const heightLength = 1;
 

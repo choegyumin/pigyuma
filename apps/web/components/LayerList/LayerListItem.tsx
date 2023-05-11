@@ -48,7 +48,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
       <div className={styles.item} role={role} onClick={onItemClick}>
         <div className={styles.name}>
           <Icon type={iconType} className={styles.icon} />
-          {record.name}
+          {record.values.name}
         </div>
         {toggleable && (
           <button
@@ -68,7 +68,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
           hidden={!expanded}
           onOpen={onGroupOpen}
           id={listId}
-          aria-label={`${record.name}`}
+          aria-label={`${record.values.name}`}
         />
       )}
     </Box>

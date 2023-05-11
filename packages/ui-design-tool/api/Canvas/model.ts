@@ -1,5 +1,6 @@
 import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { clone, nonNullable } from '@pigyuma/utils';
+import { produce } from 'immer';
 import { Artboard, ArtboardJSON, ArtboardData, ArtboardArgs } from '../Artboard/model';
 import { ShapeLayer, ShapeLayerArgs, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
 import { TextLayer, TextLayerArgs, TextLayerData, TextLayerJSON } from '../TextLayer/model';
@@ -82,8 +83,8 @@ export class Canvas extends UIRecord implements CanvasJSON {
     return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] === UIRecordType.canvas;
   }
 
-  static makeChanges(values: DeepPartial<CanvasData>, origin: CanvasData) {
-    const v = UIRecord.makeChanges(values, origin) as DeepPartial<CanvasData>;
-    return v;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static makeValuesChanges(values: DeepPartial<AnyObject>, origin: AnyObject) {
+    return produce<AnyObject>(origin, () => undefined);
   }
 }

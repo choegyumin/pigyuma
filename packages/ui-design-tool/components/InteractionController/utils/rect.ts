@@ -93,22 +93,15 @@ export const calcResizedRect = (
     return rect.height + getDiff(distance) < 0;
   };
 
+  // prettier-ignore
   switch (handlePlacement) {
-    // prettier-ignore
     case HandlePlacement.top: { top(); break; }
-    // prettier-ignore
     case HandlePlacement.left: { left(); break; }
-    // prettier-ignore
     case HandlePlacement.right: { right(); break; }
-    // prettier-ignore
     case HandlePlacement.bottom: { bottom(); break; }
-    // prettier-ignore
     case HandlePlacement.topLeft: { left(top()); break; }
-    // prettier-ignore
     case HandlePlacement.topRight: { right(top()); break; }
-    // prettier-ignore
     case HandlePlacement.bottomLeft: { left(bottom()); break; }
-    // prettier-ignore
     case HandlePlacement.bottomRight: { right(bottom()); break; }
   }
 

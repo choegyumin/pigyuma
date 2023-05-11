@@ -1,11 +1,21 @@
 import { UIRecordKey, LayerType, UIRecordType, UIRecordElementDataset } from '@/types/Identifier';
 import { HeightValueObject, RotateValueObject, StyleValue, WidthValueObject, XValueObject, YValueObject } from '@/types/Value';
 import { convertHeightValue, convertRotateValue, convertWidthValue, convertXValue, convertYValue, fixNumberValue } from '@/utils/value';
-import { clone, cloneDeep, merge, toDegrees360, uuid } from '@pigyuma/utils';
+import { clone, toDegrees360, uuid } from '@pigyuma/utils';
+import { produce } from 'immer';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
 import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
 import * as styles from './styles.css';
+
+export interface LayerValues {
+  name: string;
+  x: XValueObject;
+  y: YValueObject;
+  width: WidthValueObject;
+  height: HeightValueObject;
+  rotate: RotateValueObject;
+}
 
 export interface LayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
 
@@ -13,12 +23,7 @@ export interface LayerJSON extends UIRecordJSON {
   key: UIRecordKey;
   type: Extract<UIRecordType, 'layer'>;
   layerType: LayerType;
-  name: string;
-  x: XValueObject;
-  y: YValueObject;
-  width: WidthValueObject;
-  height: HeightValueObject;
-  rotate: RotateValueObject;
+  values: LayerValues;
 }
 
 type OptionalLayerDataKey = 'key';
@@ -31,12 +36,7 @@ export class Layer extends UIRecord implements LayerJSON {
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'layer'>;
   readonly layerType: LayerType;
-  readonly name: string;
-  readonly x: XValueObject;
-  readonly y: YValueObject;
-  readonly width: WidthValueObject;
-  readonly height: HeightValueObject;
-  readonly rotate: RotateValueObject;
+  readonly values: Readonly<LayerValues>;
   readonly parent: Artboard | Canvas | Layer | null;
 
   constructor(args: LayerArgs, parent: Artboard | Canvas | Layer | null = null) {
@@ -49,12 +49,7 @@ export class Layer extends UIRecord implements LayerJSON {
     this.type = superArgs.type;
     this.layerType = args.layerType;
 
-    this.name = args.name;
-    this.x = args.x;
-    this.y = args.y;
-    this.width = args.width;
-    this.height = args.height;
-    this.rotate = args.rotate;
+    this.values = args.values;
     this.parent = parent;
   }
 
@@ -64,11 +59,11 @@ export class Layer extends UIRecord implements LayerJSON {
 
   static getStyle(object: Layer | LayerJSON): LayerStyle {
     return {
-      [styles.varNames.x]: convertXValue(object.x),
-      [styles.varNames.y]: convertYValue(object.y),
-      [styles.varNames.width]: convertWidthValue(object.width),
-      [styles.varNames.height]: convertHeightValue(object.height),
-      [styles.varNames.rotate]: convertRotateValue(object.rotate),
+      [styles.varNames.x]: convertXValue(object.values.x),
+      [styles.varNames.y]: convertYValue(object.values.y),
+      [styles.varNames.width]: convertWidthValue(object.values.width),
+      [styles.varNames.height]: convertHeightValue(object.values.height),
+      [styles.varNames.rotate]: convertRotateValue(object.values.rotate),
     };
   }
 
@@ -77,12 +72,7 @@ export class Layer extends UIRecord implements LayerJSON {
       key: this.key,
       type: this.type,
       layerType: this.layerType,
-      name: this.name,
-      x: this.x,
-      y: this.y,
-      width: this.width,
-      height: this.height,
-      rotate: this.rotate,
+      values: this.values,
     };
   }
 
@@ -96,38 +86,15 @@ export class Layer extends UIRecord implements LayerJSON {
     return element instanceof HTMLElement && element.dataset[UIRecordElementDataset.type] === UIRecordType.layer;
   }
 
-  static makeChanges(values: DeepPartial<LayerData>, origin: LayerData) {
-    const v = UIRecord.makeChanges(values, origin) as DeepPartial<LayerData>;
-    if (v.x != null) {
-      if (v.x.length != null) {
-        v.x.length = fixNumberValue(v.x.length);
-      }
-      v.x = merge(cloneDeep(origin.x), v.x);
-    }
-    if (v.y != null) {
-      if (v.y.length != null) {
-        v.y.length = fixNumberValue(v.y.length);
-      }
-      v.y = merge(cloneDeep(origin.y), v.y);
-    }
-    if (v.width != null) {
-      if (v.width.length != null) {
-        v.width.length = fixNumberValue(Math.max(v.width.length, 1));
-      }
-      v.width = merge(cloneDeep(origin.width), v.width);
-    }
-    if (v.height != null) {
-      if (v.height.length != null) {
-        v.height.length = fixNumberValue(Math.max(v.height.length, 1));
-      }
-      v.height = merge(cloneDeep(origin.height), v.height);
-    }
-    if (v.rotate != null) {
-      if (v.rotate.degrees != null) {
-        v.rotate.degrees = fixNumberValue(toDegrees360(v.rotate.degrees));
-      }
-      v.rotate = merge(cloneDeep(origin.rotate), v.rotate);
-    }
-    return v;
+  static makeValuesChanges(values: DeepPartial<LayerValues>, origin: LayerValues) {
+    // prettier-ignore
+    return produce(UIRecord.makeValuesChanges(values, origin) as unknown as LayerValues, (draft) => {
+      if (values.name != null) { draft.name = values.name; }
+      if (values.x?.length != null) { draft.x.length = fixNumberValue(values.x.length); }
+      if (values.y?.length != null) { draft.y.length = fixNumberValue(values.y.length); }
+      if (values.width?.length != null) { draft.width.length = fixNumberValue(Math.max(values.width.length, 1)); }
+      if (values.height?.length != null) { draft.height.length = fixNumberValue(Math.max(values.height.length, 1)); }
+      if (values.rotate?.degrees != null) { draft.rotate.degrees = fixNumberValue(toDegrees360(values.rotate.degrees)); }
+    });
   }
 }

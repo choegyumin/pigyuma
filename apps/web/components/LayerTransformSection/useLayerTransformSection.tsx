@@ -21,11 +21,11 @@ export default function useLayerTransformSection(props: LayerTransformSectionPro
   const sizeEditable = uiRecordExists && (artboardSelected || shapeLayerSelected);
   const rotateEditable = uiRecordExists && (shapeLayerSelected || textLayerSelected);
 
-  const x = (artboardSelected ? uiRecord.x : uiRecord?.x.length) ?? 0;
-  const y = (artboardSelected ? uiRecord.y : uiRecord?.y.length) ?? 0;
-  const width = (artboardSelected ? uiRecord.width : uiRecord?.width.length) ?? 0;
-  const height = (artboardSelected ? uiRecord.height : uiRecord?.height.length) ?? 0;
-  const rotate = (artboardSelected ? 0 : uiRecord?.rotate.degrees) ?? 0;
+  const x = (artboardSelected ? uiRecord.values.x : uiRecord?.values.x.length) ?? 0;
+  const y = (artboardSelected ? uiRecord.values.y : uiRecord?.values.y.length) ?? 0;
+  const width = (artboardSelected ? uiRecord.values.width : uiRecord?.values.width.length) ?? 0;
+  const height = (artboardSelected ? uiRecord.values.height : uiRecord?.values.height.length) ?? 0;
+  const rotate = (artboardSelected ? 0 : uiRecord?.values.rotate.degrees) ?? 0;
 
   const onXLengthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
     if (!positionEditable) {

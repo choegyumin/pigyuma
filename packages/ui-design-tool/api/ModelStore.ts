@@ -1,15 +1,22 @@
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolInteractionType, UIDesignToolMode, UIDesignToolStatus, UIDesignToolTransformMethod } from '@/types/Status';
-import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
+import {
+  flatUIRecords,
+  hasUIRecordParent,
+  isUIRecordKey,
+  isUIRecordWithChildren,
+  isUIRecordWithValues,
+  toUIRecordInstance,
+} from '@/utils/model';
 import { getInteractionType, getTransformMethod } from '@/utils/status';
 import { exclude, makeSymbolicFields, nonNullable, nonUndefined, pickBy } from '@pigyuma/utils';
-import { Artboard, ArtboardData } from './Artboard/model';
+import { Artboard, ArtboardData, ArtboardValues } from './Artboard/model';
 import { Canvas, CanvasData } from './Canvas/model';
 import { Protected as ExtendsProtected, ElementSelector, ElementSelectorConfig } from './ElementSelector';
-import { Layer, LayerData } from './Layer/model';
-import { ShapeLayer, ShapeLayerData } from './ShapeLayer/model';
-import { TextLayer, TextLayerData } from './TextLayer/model';
+import { Layer, LayerData, LayerValues } from './Layer/model';
+import { ShapeLayer, ShapeLayerData, ShapeLayerValues } from './ShapeLayer/model';
+import { TextLayer, TextLayerData, TextLayerValues } from './TextLayer/model';
 import { UIRecord, UIRecordData } from './UIRecord/model';
 
 const assignChanges = <T extends UIRecord, C extends DeepPartial<T> = DeepPartial<T>>(record: T, changes: C): T => {
@@ -62,8 +69,8 @@ export class ModelStore extends ElementSelector {
     return instance;
   }
 
-  #assign<T extends UIRecord, C extends DeepPartial<T> = DeepPartial<T>>(targetKey: UIRecordKey, changes: C) {
-    const instance = this.get<UIRecord>(targetKey);
+  #assign<T extends UIRecord, C extends DeepPartial<T> = DeepPartial<T>>(targetKey: UIRecordKey, changes: C): T {
+    const instance = this.get<T>(targetKey);
     if (instance == null) {
       throw new Error(`UIRecord '${targetKey}' not found.`);
     }
@@ -78,10 +85,11 @@ export class ModelStore extends ElementSelector {
     this.#draftKeys.delete(targetKey);
   }
 
-  #makeChanges<T extends UIRecordData, C extends DeepPartial<T> = DeepPartial<T>>(
-    targetKey: UIRecordKey,
-    changes: C | ((prev: T) => C),
-  ): C {
+  #makeValuesChanges<
+    T extends ArtboardData | LayerData | ShapeLayerData | TextLayerData,
+    V extends T['values'] = T['values'],
+    C extends DeepPartial<V> = DeepPartial<V>,
+  >(targetKey: UIRecordKey, changes: C | ((prev: V) => C)): C {
     const targetValue = this.get(targetKey);
     if (targetValue == null) {
       throw new Error(`UIRecord '${targetKey}' not found.`);
@@ -93,33 +101,30 @@ export class ModelStore extends ElementSelector {
     const targetIsLayer = targetValue instanceof Layer;
     const targetIsCanvas = targetValue instanceof Canvas;
 
-    const newChanges = { ...(typeof changes === 'function' ? changes(targetValue as unknown as T) : changes) };
+    const newChanges = { ...(typeof changes === 'function' ? changes((targetValue as unknown as T).values as V) : changes) };
 
     // prettier-ignore
     {
-      if (targetIsArtboard) { return Artboard.makeChanges(newChanges as DeepPartial<ArtboardData>, targetValue) as C; }
-      if (targetIsShapeLayer) { return ShapeLayer.makeChanges(newChanges as DeepPartial<ShapeLayerData>, targetValue) as C; }
-      if (targetIsTextLayer) { return TextLayer.makeChanges(newChanges as DeepPartial<TextLayerData>, targetValue) as C; }
-      if (targetIsLayer) { return Layer.makeChanges(newChanges as DeepPartial<LayerData>, targetValue) as C; }
-      if (targetIsCanvas) { return Canvas.makeChanges(newChanges as DeepPartial<CanvasData>, targetValue) as C; }
-      return UIRecord.makeChanges(newChanges as DeepPartial<UIRecord>, targetValue) as C;
+      if (targetIsArtboard) { return Artboard.makeValuesChanges(newChanges as DeepPartial<ArtboardValues>, targetValue.values) as unknown as C; }
+      if (targetIsShapeLayer) { return ShapeLayer.makeValuesChanges(newChanges as DeepPartial<ShapeLayerValues>, targetValue.values) as unknown as C; }
+      if (targetIsTextLayer) { return TextLayer.makeValuesChanges(newChanges as DeepPartial<TextLayerValues>, targetValue.values) as unknown as C; }
+      if (targetIsLayer) { return Layer.makeValuesChanges(newChanges as DeepPartial<LayerValues>, targetValue.values) as unknown as C; }
+      if (targetIsCanvas) { return Canvas.makeValuesChanges(newChanges as DeepPartial<UnknownObject>, {}) as C; }
+      return UIRecord.makeValuesChanges(newChanges as DeepPartial<UnknownObject>, {}) as C;
     }
   }
 
-  #makeChangesFromRect<T extends UIRecordData, C extends DeepPartial<T> = DeepPartial<T>>(
-    targetKey: UIRecordKey,
-    rect: UIRecordRect | UIRecordRectInit,
-  ): C {
+  #makeValuesChangesFromRect<
+    T extends ArtboardData | LayerData | ShapeLayerData | TextLayerData,
+    V extends T['values'] = T['values'],
+    C extends DeepPartial<V> = DeepPartial<V>,
+  >(targetKey: UIRecordKey, rect: UIRecordRect | UIRecordRectInit): C {
     const targetValue = this.get(targetKey);
     if (targetValue == null) {
       throw new Error(`UIRecord '${targetKey}' not found.`);
     }
 
-    const targetIsArtboard = targetValue instanceof Artboard;
-    const targetIsShapeLayer = targetValue instanceof ShapeLayer;
-    const targetIsTextLayer = targetValue instanceof TextLayer;
-
-    if (!targetIsArtboard && !targetIsShapeLayer && !targetIsTextLayer) {
+    if (!isUIRecordWithValues(targetValue)) {
       throw new Error(`UIRecord '${targetKey}' is not a layer. setRect() only supports Artboard and Layer.`);
     }
 
@@ -139,14 +144,14 @@ export class ModelStore extends ElementSelector {
 
     /** @todo px 외 lengthType(unit) 지원 */
     const newChanges = {} as C;
-    if (targetIsArtboard) {
+    if (targetValue instanceof Artboard) {
       Object.assign(newChanges, {
         x,
         y,
         width,
         height,
       });
-    } else if (targetIsShapeLayer) {
+    } else if (targetValue instanceof ShapeLayer) {
       Object.assign(newChanges, {
         x: { length: x },
         y: { length: y },
@@ -154,13 +159,13 @@ export class ModelStore extends ElementSelector {
         height: { length: height },
         rotate: { degrees: rotate },
       });
-    } else if (targetIsTextLayer) {
+    } else if (targetValue instanceof TextLayer) {
       Object.assign(newChanges, {
         rotate: { degrees: rotate },
       });
     }
 
-    return this.#makeChanges<T, C>(targetKey, newChanges);
+    return this.#makeValuesChanges<T, V, C>(targetKey, newChanges);
   }
 
   protected [Protected.setStatus](status: UIDesignToolStatus): void {
@@ -303,11 +308,20 @@ export class ModelStore extends ElementSelector {
     return this.selected.has(targetKey);
   }
 
-  set<T extends UIRecordData>(targetKey: UIRecordKey, value: DeepPartial<T> | ((prev: T) => DeepPartial<T>)): void {
+  set<T extends ArtboardData | ShapeLayerData | TextLayerData, V extends T['values'] = T['values']>(
+    targetKey: UIRecordKey,
+    value: DeepPartial<V> | ((prev: V) => DeepPartial<V>),
+  ): void {
     try {
-      const changes = this.#makeChanges(targetKey, value);
-      const targetValue = this.#assign(targetKey, changes as DeepPartial<UIRecord>);
-      this[Protected.dispatchTreeChanges]([...this.pairs.values()], [targetValue], []);
+      const targetValue = this.get(targetKey);
+      const targetHasValues = targetValue instanceof Artboard || targetValue instanceof ShapeLayer || targetValue instanceof TextLayer;
+      if (!targetHasValues) {
+        throw new Error(`'${targetKey}' cannot set values.`);
+      }
+      const changes = this.#makeValuesChanges(targetKey, value);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const newTargetValue = this.#assign(targetKey, { values: changes } as any);
+      this[Protected.dispatchTreeChanges]([...this.pairs.values()], [newTargetValue], []);
     } catch (error) {
       console.error(error);
     }
@@ -315,8 +329,9 @@ export class ModelStore extends ElementSelector {
 
   setRect(targetKey: UIRecordKey, rect: UIRecordRect | UIRecordRectInit): void {
     try {
-      const changes = this.#makeChangesFromRect(targetKey, rect);
-      const targetValue = this.#assign(targetKey, changes as DeepPartial<UIRecord>);
+      const changes = this.#makeValuesChangesFromRect(targetKey, rect);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const targetValue = this.#assign(targetKey, { values: changes } as any);
       this[Protected.dispatchTreeChanges]([...this.pairs.values()], [targetValue], []);
     } catch (error) {
       console.error(error);

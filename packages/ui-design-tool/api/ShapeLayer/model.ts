@@ -21,13 +21,25 @@ import {
   convertYValue,
   fixNumberValue,
 } from '@/utils/value';
-import { clone, cloneDeep, merge, nonNullable, uuid } from '@pigyuma/utils';
+import { clone, nonNullable, uuid } from '@pigyuma/utils';
+import { produce } from 'immer';
 import React from 'react';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
 import { Layer, LayerArgs, LayerJSON } from '../Layer/model';
 import { TextLayer, TextLayerArgs, TextLayerData, TextLayerJSON } from '../TextLayer/model';
 import * as styles from './styles.css';
+
+export interface ShapeLayerValues {
+  name: string;
+  x: XValueObject;
+  y: YValueObject;
+  width: WidthValueObject;
+  height: HeightValueObject;
+  rotate: RotateValueObject;
+  stroke: StrokeValueObject;
+  fill: FillValueObject;
+}
 
 export interface ShapeLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
 
@@ -49,15 +61,8 @@ export interface ShapeLayerJSON extends LayerJSON {
   key: UIRecordKey;
   type: Extract<UIRecordType, 'layer'>;
   layerType: Extract<LayerType, 'shape'>;
-  name: string;
   shapeType: ShapeType;
-  x: XValueObject;
-  y: YValueObject;
-  width: WidthValueObject;
-  height: HeightValueObject;
-  rotate: RotateValueObject;
-  stroke: StrokeValueObject;
-  fill: FillValueObject;
+  values: ShapeLayerValues;
   children: Array<ShapeLayerJSON | TextLayerJSON>;
 }
 
@@ -81,15 +86,8 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
   readonly key: UIRecordKey;
   readonly type: Extract<UIRecordType, 'layer'>;
   readonly layerType: Extract<LayerType, 'shape'>;
-  readonly name: string;
   readonly shapeType: ShapeType;
-  readonly x: XValueObject;
-  readonly y: YValueObject;
-  readonly width: WidthValueObject;
-  readonly height: HeightValueObject;
-  readonly rotate: RotateValueObject;
-  readonly stroke: StrokeValueObject;
-  readonly fill: FillValueObject;
+  readonly values: Readonly<ShapeLayerValues>;
   readonly parent: Artboard | Canvas | ShapeLayer | null;
   readonly children: Array<ShapeLayer | TextLayer>;
 
@@ -104,15 +102,8 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
     this.type = superArgs.type;
     this.layerType = superArgs.layerType;
 
-    this.name = args.name;
     this.shapeType = args.shapeType;
-    this.x = args.x;
-    this.y = args.y;
-    this.width = args.width;
-    this.height = args.height;
-    this.rotate = args.rotate;
-    this.stroke = args.stroke;
-    this.fill = args.fill;
+    this.values = args.values;
     this.parent = parent;
     this.children =
       args.children
@@ -139,15 +130,15 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
 
   static getStyle(object: ShapeLayer | ShapeLayerJSON): ShapeLayerStyle {
     return {
-      [styles.varNames.x]: convertXValue(object.x),
-      [styles.varNames.y]: convertYValue(object.y),
-      [styles.varNames.width]: convertWidthValue(object.width),
-      [styles.varNames.height]: convertHeightValue(object.height),
-      [styles.varNames.rotate]: convertRotateValue(object.rotate),
-      [styles.varNames.strokeColor]: convertStrokeColorValue(object.stroke),
-      [styles.varNames.strokePattern]: convertStrokePatternValue(object.stroke),
-      [styles.varNames.strokeWidth]: convertStrokeWidthValue(object.stroke),
-      [styles.varNames.background]: convertFillValue(object.fill),
+      [styles.varNames.x]: convertXValue(object.values.x),
+      [styles.varNames.y]: convertYValue(object.values.y),
+      [styles.varNames.width]: convertWidthValue(object.values.width),
+      [styles.varNames.height]: convertHeightValue(object.values.height),
+      [styles.varNames.rotate]: convertRotateValue(object.values.rotate),
+      [styles.varNames.strokeColor]: convertStrokeColorValue(object.values.stroke),
+      [styles.varNames.strokePattern]: convertStrokePatternValue(object.values.stroke),
+      [styles.varNames.strokeWidth]: convertStrokeWidthValue(object.values.stroke),
+      [styles.varNames.background]: convertFillValue(object.values.fill),
     };
   }
 
@@ -156,15 +147,8 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
       key: this.key,
       type: this.type,
       layerType: this.layerType,
-      name: this.name,
       shapeType: this.shapeType,
-      x: this.x,
-      y: this.y,
-      width: this.width,
-      height: this.height,
-      rotate: this.rotate,
-      stroke: this.stroke,
-      fill: this.fill,
+      values: this.values,
       children: this.children.map((it) => it.toJSON()),
     };
   }
@@ -189,23 +173,16 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
     );
   }
 
-  static makeChanges(values: DeepPartial<ShapeLayerData>, origin: ShapeLayerData) {
-    const v = Layer.makeChanges(values, origin) as DeepPartial<ShapeLayerData>;
-    if (v.stroke != null) {
-      if (v.stroke.width?.top != null) {
-        v.stroke.width.top = fixNumberValue(Math.max(v.stroke.width.top, 0));
-      }
-      if (v.stroke.width?.right != null) {
-        v.stroke.width.right = fixNumberValue(Math.max(v.stroke.width.right, 0));
-      }
-      if (v.stroke.width?.bottom != null) {
-        v.stroke.width.bottom = fixNumberValue(Math.max(v.stroke.width.bottom, 0));
-      }
-      if (v.stroke.width?.left != null) {
-        v.stroke.width.left = fixNumberValue(Math.max(v.stroke.width.left, 0));
-      }
-      v.stroke = merge(cloneDeep(origin.stroke), v.stroke);
-    }
-    return v;
+  static makeValuesChanges(values: DeepPartial<ShapeLayerValues>, origin: ShapeLayerValues) {
+    // prettier-ignore
+    return produce(Layer.makeValuesChanges(values, origin) as unknown as ShapeLayerValues, (draft) => {
+      if (values.stroke?.color != null) { draft.stroke.color = values.stroke.color; }
+      if (values.stroke?.pattern != null) { draft.stroke.pattern = values.stroke.pattern; }
+      if (values.stroke?.width?.top != null) { draft.stroke.width.top = fixNumberValue(Math.max(values.stroke.width.top, 0)); }
+      if (values.stroke?.width?.right != null) { draft.stroke.width.right = fixNumberValue(Math.max(values.stroke.width.right, 0)); }
+      if (values.stroke?.width?.bottom != null) { draft.stroke.width.bottom = fixNumberValue(Math.max(values.stroke.width.bottom, 0)); }
+      if (values.stroke?.width?.left != null) { draft.stroke.width.left = fixNumberValue(Math.max(values.stroke.width.left, 0)); }
+      if (values.fill?.color != null) { draft.fill.color = values.fill.color; }
+    });
   }
 }
