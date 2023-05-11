@@ -1743,6 +1743,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:5.2.0"\
       ],\
       [\
+        "immer",\
+        "npm:10.0.2"\
+      ],\
+      [\
         "import-fresh",\
         "npm:3.3.0"\
       ],\
@@ -4751,6 +4755,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["constate", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:3.3.2"],\
             ["csstype", "npm:3.1.1"],\
             ["geometry-polyfill", "npm:1.0.7"],\
+            ["immer", "npm:10.0.2"],\
             ["jsdom", "virtual:a100b4d37043c7a939a8399069102b037deb717a220fe70a92914f29042d1c7365641b08bd5fca86fd830ff29344fbe91c0cbbba979a2e34ca9d10e8211ea43d#npm:20.0.3"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:48bcf4158e4e408a71787383fdd5b6631485dbe9d10b748b9376208f83f0b95d319a32e4849972115f13c3abc8646372924f21f1c1fbf759fdb469d276d51d36#npm:18.2.0"],\
@@ -9149,6 +9154,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ignore-npm-5.2.0-fc4b58a4f3-6b1f926792.zip/node_modules/ignore/",\
           "packageDependencies": [\
             ["ignore", "npm:5.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["immer", [\
+        ["npm:10.0.2", {\
+          "packageLocation": "./.yarn/cache/immer-npm-10.0.2-c5dc19bd45-525a3b1421.zip/node_modules/immer/",\
+          "packageDependencies": [\
+            ["immer", "npm:10.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\
