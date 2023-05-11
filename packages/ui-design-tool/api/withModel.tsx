@@ -31,7 +31,7 @@ export default function withModel<R, P extends DefaultComponentProps>(
       return null;
     }
 
-    const dataValues: AnyObject | undefined = record;
+    const dataValues: ExtendableAnyObject | undefined = record;
     const dataProps = {
       [UIRecordElementDataAttributeName.key]: dataValues?.key,
       [UIRecordElementDataAttributeName.type]: dataValues?.type,
