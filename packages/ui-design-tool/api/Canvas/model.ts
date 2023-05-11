@@ -3,7 +3,7 @@ import { clone, nonNullable } from '@pigyuma/utils';
 import { Artboard, ArtboardJSON, ArtboardData, ArtboardArgs } from '../Artboard/model';
 import { ShapeLayer, ShapeLayerArgs, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
 import { TextLayer, TextLayerArgs, TextLayerData, TextLayerJSON } from '../TextLayer/model';
-import { UIRecord, UIRecordArgs, UIRecordChanges, UIRecordJSON } from '../UIRecord/model';
+import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
 
 export interface CanvasJSON extends UIRecordJSON {
   key: UIRecordKey;
@@ -88,7 +88,7 @@ export class Canvas extends UIRecord implements CanvasJSON {
   }
 
   static makeChanges(values: DeepPartial<CanvasData>, origin: CanvasData) {
-    const v = UIRecord.makeChanges(values, origin) as UIRecordChanges<CanvasData>;
+    const v = UIRecord.makeChanges(values, origin) as DeepPartial<CanvasData>;
     return v;
   }
 }

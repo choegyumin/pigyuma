@@ -27,7 +27,6 @@ import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
 import { Layer, LayerArgs, LayerJSON } from '../Layer/model';
 import { TextLayer, TextLayerArgs, TextLayerData, TextLayerJSON } from '../TextLayer/model';
-import { UIRecordChanges } from '../UIRecord/model';
 import * as styles from './styles.css';
 
 export interface ShapeLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
@@ -196,7 +195,7 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
   }
 
   static makeChanges(values: DeepPartial<ShapeLayerData>, origin: ShapeLayerData) {
-    const v = Layer.makeChanges(values, origin) as UIRecordChanges<ShapeLayerData>;
+    const v = Layer.makeChanges(values, origin) as DeepPartial<ShapeLayerData>;
     if (v.stroke != null) {
       v.stroke = merge(cloneDeep(origin.stroke), v.stroke);
       if (v.stroke.width?.top != null) {

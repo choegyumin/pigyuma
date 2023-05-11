@@ -30,7 +30,6 @@ import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
 import { Layer, LayerArgs, LayerJSON } from '../Layer/model';
 import { ShapeLayer } from '../ShapeLayer/model';
-import { UIRecordChanges } from '../UIRecord/model';
 import * as styles from './styles.css';
 
 export interface TextLayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
@@ -173,7 +172,7 @@ export class TextLayer extends Layer implements TextLayerJSON {
   }
 
   static makeChanges(values: DeepPartial<TextLayerData>, origin: TextLayerData) {
-    const v = Layer.makeChanges(values, origin) as UIRecordChanges<TextLayerData>;
+    const v = Layer.makeChanges(values, origin) as DeepPartial<TextLayerData>;
     return v;
   }
 }

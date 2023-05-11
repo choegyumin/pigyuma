@@ -4,7 +4,7 @@ import { convertHeightValue, convertRotateValue, convertWidthValue, convertXValu
 import { clone, cloneDeep, merge, toDegrees360, uuid } from '@pigyuma/utils';
 import { Artboard } from '../Artboard/model';
 import { Canvas } from '../Canvas/model';
-import { UIRecord, UIRecordArgs, UIRecordChanges, UIRecordJSON } from '../UIRecord/model';
+import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
 import * as styles from './styles.css';
 
 export interface LayerStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
@@ -102,7 +102,7 @@ export class Layer extends UIRecord implements LayerJSON {
   }
 
   static makeChanges(values: DeepPartial<LayerData>, origin: LayerData) {
-    const v = UIRecord.makeChanges(values, origin) as UIRecordChanges<LayerData>;
+    const v = UIRecord.makeChanges(values, origin) as DeepPartial<LayerData>;
     if (v.x != null) {
       v.x = merge(cloneDeep(origin.x), v.x);
       if (v.x.length != null) {

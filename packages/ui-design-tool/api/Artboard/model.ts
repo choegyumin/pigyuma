@@ -6,7 +6,7 @@ import { clone, nonNullable, uuid } from '@pigyuma/utils';
 import { Canvas } from '../Canvas/model';
 import { ShapeLayer, ShapeLayerArgs, ShapeLayerData, ShapeLayerJSON } from '../ShapeLayer/model';
 import { TextLayer, TextLayerArgs, TextLayerData, TextLayerJSON } from '../TextLayer/model';
-import { UIRecord, UIRecordArgs, UIRecordChanges, UIRecordJSON } from '../UIRecord/model';
+import { UIRecord, UIRecordArgs, UIRecordJSON } from '../UIRecord/model';
 import * as styles from './styles.css';
 
 export interface ArtboardStyle extends React.CSSProperties, Record<ValueOf<typeof styles.varNames>, StyleValue> {}
@@ -130,7 +130,7 @@ export class Artboard extends UIRecord implements ArtboardJSON {
   }
 
   static makeChanges(values: DeepPartial<ArtboardData>, origin: ArtboardData) {
-    const v = UIRecord.makeChanges(values, origin) as UIRecordChanges<ArtboardData>;
+    const v = UIRecord.makeChanges(values, origin) as DeepPartial<ArtboardData>;
     if (v.x != null) {
       v.x = fixNumberValue(v.x);
     }

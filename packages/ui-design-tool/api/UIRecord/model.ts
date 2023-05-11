@@ -1,9 +1,6 @@
 import { UIRecordElementDataset, UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { uuid } from '@pigyuma/utils';
 
-export type UIRecordChanges<T extends UIRecordData> = DeepPartial<Omit<T, 'key'>>;
-export type UIRecordValueChanges<T extends UIRecordData> = DeepPartial<Omit<T, 'key' | 'parent' | 'children'>>;
-
 export interface UIRecordJSON {
   key: UIRecordKey;
   type: UIRecordType;
