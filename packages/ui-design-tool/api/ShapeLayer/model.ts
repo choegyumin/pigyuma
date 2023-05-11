@@ -197,7 +197,6 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
   static makeChanges(values: DeepPartial<ShapeLayerData>, origin: ShapeLayerData) {
     const v = Layer.makeChanges(values, origin) as DeepPartial<ShapeLayerData>;
     if (v.stroke != null) {
-      v.stroke = merge(cloneDeep(origin.stroke), v.stroke);
       if (v.stroke.width?.top != null) {
         v.stroke.width.top = fixNumberValue(Math.max(v.stroke.width.top, 0));
       }
@@ -210,6 +209,7 @@ export class ShapeLayer extends Layer implements ShapeLayerJSON {
       if (v.stroke.width?.left != null) {
         v.stroke.width.left = fixNumberValue(Math.max(v.stroke.width.left, 0));
       }
+      v.stroke = merge(cloneDeep(origin.stroke), v.stroke);
     }
     return v;
   }

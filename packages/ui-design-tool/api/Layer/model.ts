@@ -104,34 +104,34 @@ export class Layer extends UIRecord implements LayerJSON {
   static makeChanges(values: DeepPartial<LayerData>, origin: LayerData) {
     const v = UIRecord.makeChanges(values, origin) as DeepPartial<LayerData>;
     if (v.x != null) {
-      v.x = merge(cloneDeep(origin.x), v.x);
       if (v.x.length != null) {
         v.x.length = fixNumberValue(v.x.length);
       }
+      v.x = merge(cloneDeep(origin.x), v.x);
     }
     if (v.y != null) {
-      v.y = merge(cloneDeep(origin.y), v.y);
       if (v.y.length != null) {
         v.y.length = fixNumberValue(v.y.length);
       }
+      v.y = merge(cloneDeep(origin.y), v.y);
     }
     if (v.width != null) {
-      v.width = merge(cloneDeep(origin.width), v.width);
       if (v.width.length != null) {
         v.width.length = fixNumberValue(Math.max(v.width.length, 1));
       }
+      v.width = merge(cloneDeep(origin.width), v.width);
     }
     if (v.height != null) {
-      v.height = merge(cloneDeep(origin.height), v.height);
       if (v.height.length != null) {
         v.height.length = fixNumberValue(Math.max(v.height.length, 1));
       }
+      v.height = merge(cloneDeep(origin.height), v.height);
     }
     if (v.rotate != null) {
-      v.rotate = merge(cloneDeep(origin.rotate), v.rotate);
       if (v.rotate.degrees != null) {
         v.rotate.degrees = fixNumberValue(toDegrees360(v.rotate.degrees));
       }
+      v.rotate = merge(cloneDeep(origin.rotate), v.rotate);
     }
     return v;
   }
