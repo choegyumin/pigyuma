@@ -12,7 +12,7 @@ import { makeSymbolicFields, mapValues, uuid } from '@pigyuma/utils';
 import { DOMSubscriber } from './DOMSubscriber';
 
 export const INITIAL_BROWSER_STATUS: BrowserStatus = {
-  mouse: { clientX: 0, clientY: 0, offsetX: 0, offsetY: 0 },
+  mouse: { clientX: 0, clientY: 0, offsetX: 0, offsetY: 0, down: false },
   keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
 };
 
@@ -44,6 +44,8 @@ export class DOMSelector extends DOMSubscriber {
 
   readonly #eventHandlers: {
     onMouseMove: (event: MouseEvent) => void;
+    onMouseDown: (event: MouseEvent) => void;
+    onMouseUp: (event: MouseEvent) => void;
     onKeyDown: (event: KeyboardEvent) => void;
     onKeyUp: (event: KeyboardEvent) => void;
   };
@@ -70,15 +72,33 @@ export class DOMSelector extends DOMSubscriber {
       this.#hoveredKey = hoveredKey;
       this[_protected.dispatchHoveringChanges](hoveredKey);
     };
+
+    const onMouseDown = () => {
+      this.#browserStatus.mouse.down = true;
+    };
+
+    const onMouseUp = () => {
+      this.#browserStatus.mouse.down = false;
+    };
+
     const onKeyDownUp = (event: KeyboardEvent) => {
-      const { altKey, ctrlKey, metaKey, shiftKey } = event;
+      const { key, altKey, ctrlKey, metaKey, shiftKey } = event;
       this.#browserStatus.keyboard.altKey = altKey;
       this.#browserStatus.keyboard.ctrlKey = ctrlKey;
       this.#browserStatus.keyboard.metaKey = metaKey;
       this.#browserStatus.keyboard.shiftKey = shiftKey;
+      const focused = document.activeElement?.closest(this.#rootSelector);
+      const mouseDown = this.#browserStatus.mouse.down;
+      const modifierKeyDown = ['Alt', 'Control', 'Meta', 'Shift'].includes(key);
+      if (focused && (mouseDown || modifierKeyDown)) {
+        event.preventDefault();
+      }
     };
+
     this.#eventHandlers = {
       onMouseMove,
+      onMouseDown,
+      onMouseUp,
       onKeyDown: onKeyDownUp,
       onKeyUp: onKeyDownUp,
     };
@@ -99,12 +119,16 @@ export class DOMSelector extends DOMSubscriber {
 
   protected [_protected.registerEvents]() {
     document.addEventListener('mousemove', this.#eventHandlers.onMouseMove, { capture: true });
+    document.addEventListener('mousedown', this.#eventHandlers.onMouseDown, { capture: true });
+    document.addEventListener('mouseup', this.#eventHandlers.onMouseUp, { capture: true });
     document.addEventListener('keydown', this.#eventHandlers.onKeyDown, { capture: true });
     document.addEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
   }
 
   protected [_protected.deregisterEvents]() {
     document.removeEventListener('mousemove', this.#eventHandlers.onMouseMove, { capture: true });
+    document.removeEventListener('mousedown', this.#eventHandlers.onMouseDown, { capture: true });
+    document.removeEventListener('mouseup', this.#eventHandlers.onMouseUp, { capture: true });
     document.removeEventListener('keydown', this.#eventHandlers.onKeyDown, { capture: true });
     document.removeEventListener('keyup', this.#eventHandlers.onKeyUp, { capture: true });
     this.#browserStatus.mouse.clientX = INITIAL_BROWSER_STATUS.mouse.clientX;

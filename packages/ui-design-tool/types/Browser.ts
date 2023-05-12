@@ -3,6 +3,7 @@ export interface MouseStatus {
   clientY: number;
   offsetX: number;
   offsetY: number;
+  down: boolean;
 }
 
 export interface KeyboardStatus {

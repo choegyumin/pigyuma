@@ -21,6 +21,8 @@ export const UIDesignCanvas = React.memo(
         {...restProps}
         ref={ref}
         className={clsx(styles.root, styles.root_mode[mode], className)}
+        /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+        tabIndex={0}
         {...{ [UIDesignToolElementDataAttributeName.id]: id }}
       >
         <div className={styles.ui}>

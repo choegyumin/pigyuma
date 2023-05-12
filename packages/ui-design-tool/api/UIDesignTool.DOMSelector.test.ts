@@ -22,6 +22,7 @@ describe('UIDesignTool - DOMSelector', () => {
           clientY: 0,
           offsetX: 0,
           offsetY: 0,
+          down: false,
         },
       });
     });

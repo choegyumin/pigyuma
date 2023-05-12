@@ -16,6 +16,7 @@ export const root = style({
   fontWeight: '400',
   background: '#202124',
   userSelect: 'none',
+  outline: '0',
   // @ts-ignore
   '-webkit-app-region': 'no-drag',
 });
