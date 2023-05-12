@@ -101,7 +101,10 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   );
 
   // unsubscribe 함수를 `useEffect`의 Clean-up 함수 형태로 제공
-  /** @see DataSubscriber */
+  /**
+   * @see DataSubscriber
+   * @see DOMSubscriber
+   */
   const subscriberInterface = useMemo(
     () => ({
       subscribeMode: (...args: Parameters<typeof api.subscribeMode>): (() => void) => {

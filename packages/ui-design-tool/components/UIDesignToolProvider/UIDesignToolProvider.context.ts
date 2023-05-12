@@ -38,7 +38,10 @@ export const [
   useUIData,
   /** @see DOMSelector */
   useUISelector,
-  /** @see DataSubscriber */
+  /**
+   * @see DataSubscriber
+   * @see DOMSubscriber
+   */
   useUISubscriber,
 
   // 패키지 내부 사용
