@@ -3,10 +3,11 @@ import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolInteractionType, UIDesignToolMode, UIDesignToolStatus, UIDesignToolTransformMethod } from '@/types/Status';
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { getInteractionType, getTransformMethod } from '@/utils/status';
-import { exclude, makeSymbolicFields, nonNullable, nonUndefined, pickBy } from '@pigyuma/utils';
+import { exclude, makeSymbolicFields, nonNullable, nonUndefined, pickBy, uuid } from '@pigyuma/utils';
 import { Artboard, ArtboardData } from './Artboard/model';
 import { Canvas, CanvasData } from './Canvas/model';
-import { Protected as ExtendsProtected, DOMSelector, DOMSelectorConfig } from './DOMSelector';
+import { DataSubscriber } from './DataSubscriber';
+import { DOMSelector } from './DOMSelector';
 import { Layer, LayerData } from './Layer/model';
 import { ShapeLayer, ShapeLayerData } from './ShapeLayer/model';
 import { TextLayer, TextLayerData } from './TextLayer/model';
@@ -20,17 +21,21 @@ export interface UIRecordCreateOptions {
   saveDraft?: boolean;
 }
 
-export interface DataStoreConfig extends DOMSelectorConfig {}
-
-export const Protected = makeSymbolicFields(
+const _protected = makeSymbolicFields(
   {
     setStatus: 'setStatus',
   },
-  ExtendsProtected,
+  DataSubscriber._,
 );
 
+export interface DataStoreConfig {
+  id?: string;
+}
+
 /** @todo 테스트 코드 고도화 */
-export class DataStore extends DOMSelector {
+export class DataStore extends DataSubscriber {
+  readonly #id: string;
+
   #mode: UIDesignToolMode;
   #status: UIDesignToolStatus;
 
@@ -38,10 +43,13 @@ export class DataStore extends DOMSelector {
   readonly #draftKeys: Set<UIRecordKey>;
   readonly #selectedKeys: Set<UIRecordKey>;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(config: DataStoreConfig = {}) {
-    const { strict, id } = config;
+    const { id = uuid.v4() } = config;
 
-    super({ strict, id });
+    super();
+
+    this.#id = id;
 
     this.#mode = UIDesignToolMode.select;
     this.#status = UIDesignToolStatus.idle;
@@ -49,6 +57,15 @@ export class DataStore extends DOMSelector {
     this.#items = flatUIRecords([new Canvas({ children: [] })]);
     this.#draftKeys = new Set();
     this.#selectedKeys = new Set();
+  }
+
+  /**
+   * Protected field names
+   * @protected
+   * @experimental Do not access outside of instance. If JavaScript supports `protected` keyword, it can be removed.
+   */
+  static get _() {
+    return _protected;
   }
 
   #create<T extends UIRecord>(targetKey: UIRecordKey, instance: T, options: UIRecordCreateOptions = {}): T {
@@ -128,7 +145,7 @@ export class DataStore extends DOMSelector {
     }
 
     const parentValue = targetValue.parent;
-    const parentElement = this.query({ key: parentValue.key });
+    const parentElement = DOMSelector.query({ key: parentValue.key }, DOMSelector.root(this.#id));
     const parentRect = parentElement != null ? UIRecordRect.fromElement(parentElement) : new UIRecordRect(0, 0, 0, 0, 0);
 
     const x = rect.x - parentRect.x;
@@ -163,11 +180,11 @@ export class DataStore extends DOMSelector {
     return this.#makeChanges<T, C>(targetKey, newChanges);
   }
 
-  protected [Protected.setStatus](status: UIDesignToolStatus): void {
+  protected [_protected.setStatus](status: UIDesignToolStatus): void {
     const prevStatus = this.status;
     this.#status = status;
     if (prevStatus !== this.status) {
-      this[Protected.dispatchStatusChanges](this.status, {
+      this[_protected.dispatchStatusChanges](this.status, {
         interactionType: this.interactionType,
         transformMethod: this.transformMethod,
       });
@@ -217,7 +234,7 @@ export class DataStore extends DOMSelector {
     const prevMode = this.mode;
     this.#mode = mode;
     if (prevMode !== this.mode) {
-      this[Protected.dispatchModeChanges](this.mode);
+      this[_protected.dispatchModeChanges](this.mode);
     }
   }
 
@@ -244,8 +261,8 @@ export class DataStore extends DOMSelector {
       this.#items.set(it.key, it);
     });
 
-    this[Protected.dispatchTreeChanges]([...this.#items.values()], [...newItems.values()], deletedKeys);
-    this[Protected.dispatchSelectionChanges]([]);
+    this[_protected.dispatchTreeChanges]([...this.#items.values()], [...newItems.values()], deletedKeys);
+    this[_protected.dispatchSelectionChanges]([]);
   }
 
   select(targetKeys: UIRecordKey[]): void {
@@ -283,7 +300,7 @@ export class DataStore extends DOMSelector {
     if (selectionChanged) {
       this.#selectedKeys.clear();
       newSelectedKeys.forEach((key) => this.#selectedKeys.add(key));
-      this[Protected.dispatchSelectionChanges](newSelectedKeys);
+      this[_protected.dispatchSelectionChanges](newSelectedKeys);
     }
   }
 
@@ -307,7 +324,7 @@ export class DataStore extends DOMSelector {
     try {
       const changes = this.#makeChanges(targetKey, value);
       const targetValue = this.#assign(targetKey, changes as DeepPartial<UIRecord>);
-      this[Protected.dispatchTreeChanges]([...this.pairs.values()], [targetValue], []);
+      this[_protected.dispatchTreeChanges]([...this.pairs.values()], [targetValue], []);
     } catch (error) {
       console.error(error);
     }
@@ -317,7 +334,7 @@ export class DataStore extends DOMSelector {
     try {
       const changes = this.#makeChangesFromRect(targetKey, rect);
       const targetValue = this.#assign(targetKey, changes as DeepPartial<UIRecord>);
-      this[Protected.dispatchTreeChanges]([...this.pairs.values()], [targetValue], []);
+      this[_protected.dispatchTreeChanges]([...this.pairs.values()], [targetValue], []);
     } catch (error) {
       console.error(error);
     }
@@ -374,7 +391,7 @@ export class DataStore extends DOMSelector {
       this.#assign<typeof startValue>(startKey, { children: newStartChildren });
       this.#assign<typeof destValue>(destKey, { children: newDestChildren });
 
-      this[Protected.dispatchTreeChanges]([...this.pairs.values()], [startValue, destValue, handleValue], []);
+      this[_protected.dispatchTreeChanges]([...this.pairs.values()], [startValue, destValue, handleValue], []);
     } else if (method === 'insertBefore' || method === 'insertAfter') {
       if (!hasUIRecordParent(destValue)) {
         return console.error(`UIRecord '${destKey}' has no parent.`);
@@ -408,7 +425,7 @@ export class DataStore extends DOMSelector {
       this.#assign<typeof startValue>(startKey, { children: newStartChildren });
       this.#assign<typeof destParentValue>(destParentKey, { children: newDestParentChildren });
 
-      this[Protected.dispatchTreeChanges]([...this.pairs.values()], [startValue, destParentValue, handleValue], []);
+      this[_protected.dispatchTreeChanges]([...this.pairs.values()], [startValue, destParentValue, handleValue], []);
     }
   }
 
@@ -439,7 +456,7 @@ export class DataStore extends DOMSelector {
     this.#create(targetValue.key, targetValue, options);
     this.#assign<typeof parentValue>(parentValue.key, { children: newParentChildren });
 
-    this[Protected.dispatchTreeChanges]([...this.pairs.values()], [parentValue, targetValue], []);
+    this[_protected.dispatchTreeChanges]([...this.pairs.values()], [parentValue, targetValue], []);
   }
 
   append<T extends UIRecord | UIRecordData>(parentKey: UIRecordKey, value: T, options?: UIRecordCreateOptions): void {
@@ -496,7 +513,7 @@ export class DataStore extends DOMSelector {
     this.#create(targetValue.key, targetValue, options);
     this.#assign<typeof parentValue>(parentValue.key, { children: newParentChildren });
 
-    this[Protected.dispatchTreeChanges]([...this.pairs.values()], [parentValue, targetValue], []);
+    this[_protected.dispatchTreeChanges]([...this.pairs.values()], [parentValue, targetValue], []);
   }
 
   insertBefore<T extends UIRecord | UIRecordData>(nextSiblingKey: UIRecordKey, value: T, options?: UIRecordCreateOptions): void {
@@ -558,9 +575,9 @@ export class DataStore extends DOMSelector {
       newSelectedKeys.forEach((key) => this.#selectedKeys.add(key));
     }
 
-    this[Protected.dispatchTreeChanges]([...this.pairs.values()], parentExists ? [parentValue] : [], deletedKeys);
+    this[_protected.dispatchTreeChanges]([...this.pairs.values()], parentExists ? [parentValue] : [], deletedKeys);
     if (selectionChanged) {
-      this[Protected.dispatchSelectionChanges](newSelectedKeys);
+      this[_protected.dispatchSelectionChanges](newSelectedKeys);
     }
   }
 
@@ -581,12 +598,12 @@ export class DataStore extends DOMSelector {
       return;
     }
 
-    this[Protected.dispatchTreeChanges]([...this.pairs.values()], [targetValue], []);
+    this[_protected.dispatchTreeChanges]([...this.pairs.values()], [targetValue], []);
   }
 
   flushDrafts(): void {
     const newValues = [...this.#draftKeys].map((it) => this.get(it)).filter(nonNullable);
     this.#draftKeys.clear();
-    this[Protected.dispatchTreeChanges]([...this.pairs.values()], newValues, []);
+    this[_protected.dispatchTreeChanges]([...this.pairs.values()], newValues, []);
   }
 }
