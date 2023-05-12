@@ -7,6 +7,10 @@ const _protected = makeSymbolicFields({
 
 type HoveringListener = (hovered: UIRecordKey | undefined) => void;
 
+export interface DOMSubscriberConstructor {
+  new (): DOMSubscriber;
+}
+
 /** @todo 테스트 코드 고도화 */
 export class DOMSubscriber {
   readonly #hovering: Set<HoveringListener>;

@@ -31,6 +31,10 @@ export interface DOMSelectorConfig {
   id?: string;
 }
 
+export interface DOMSelectorConstructor {
+  new (config?: DOMSelectorConfig): DOMSelector;
+}
+
 /** @todo 테스트 코드 고도화 */
 export class DOMSelector extends DOMSubscriber {
   readonly #id: string;

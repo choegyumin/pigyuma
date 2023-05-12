@@ -15,6 +15,10 @@ type StatusListener = (status: UIDesignToolStatus, meta: UIDesignToolStatusMetad
 type TreeListener = (tree: UIRecord[], changed: UIRecord[], removed: UIRecordKey[]) => void;
 type SelectionListener = (selected: UIRecordKey[]) => void;
 
+export interface DataSubscriberConstructor {
+  new (): DataSubscriber;
+}
+
 /** @todo 테스트 코드 고도화 */
 export class DataSubscriber {
   readonly #mode: Set<ModeListener>;

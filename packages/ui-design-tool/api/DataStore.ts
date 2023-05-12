@@ -32,6 +32,10 @@ export interface DataStoreConfig {
   id?: string;
 }
 
+export interface DataStoreConstructor {
+  new (config?: DataStoreConfig): DataStore;
+}
+
 /** @todo 테스트 코드 고도화 */
 export class DataStore extends DataSubscriber {
   readonly #id: string;
