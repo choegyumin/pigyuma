@@ -32,11 +32,11 @@ export const [
   // - 은닉한 프로퍼티는 노출해서는 안됨
   // - 재조정 범위는 줄이되 패키지 사용자를 고려해 너무 많은 hook이 생기지 않도록 함
 
-  /** @see ModelStore */
+  /** @see DataStore */
   useUIController,
-  /** @see ModelStore */
+  /** @see DataStore */
   useUIData,
-  /** @see ElementSelector */
+  /** @see DOMSelector */
   useUISelector,
   /** @see DataSubscriber */
   useUISubscriber,

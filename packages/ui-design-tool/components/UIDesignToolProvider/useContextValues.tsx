@@ -1,5 +1,5 @@
 import { Canvas } from '@/api/Canvas/model';
-import { INITIAL_BROWSER_STATUS } from '@/api/ElementSelector';
+import { INITIAL_BROWSER_STATUS } from '@/api/DOMSelector';
 import { UIDesignTool } from '@/api/UIDesignTool';
 import { BrowserStatus } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
@@ -50,7 +50,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
   const [hovered, applyHovered] = useState<UIRecordKey | undefined>(() => api.hovered);
   const [selected, applySelected] = useState<typeof api.selected>(() => cloneDeep(api.selected));
 
-  /** @see ModelStore */
+  /** @see DataStore */
   const controllerInterface = useMemo(
     () => ({
       toggleMode: ((...args) => api.toggleMode(...args)) as typeof api.toggleMode,
@@ -70,7 +70,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     [api],
   );
 
-  /** @see ModelStore */
+  /** @see DataStore */
   const dataInterface = useMemo(
     () => ({
       mode,
@@ -87,7 +87,7 @@ export default function useContextValues(initialValues: { api: UIDesignTool }) {
     [api, mode, status, tree, pairs, drafts, selected],
   );
 
-  /** @see ElementSelector */
+  /** @see DOMSelector */
   const selectorInterface = useMemo(
     () => ({
       dataset: ((...args) => api.dataset(...args)) as typeof api.dataset,

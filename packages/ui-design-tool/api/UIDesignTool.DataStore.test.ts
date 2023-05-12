@@ -10,7 +10,7 @@ import { makeDummyTextLayerJSON } from './TextLayer/__mocks__/model';
 import { TextLayer, TextLayerData, TextLayerJSON } from './TextLayer/model';
 import { UIDesignTool } from './UIDesignTool';
 
-describe('UIDesignTool - ModelStore', () => {
+describe('UIDesignTool - DataStore', () => {
   let uiDesignTool: UIDesignTool;
   let dummyTextLayer: TextLayerJSON;
   let dummyShapeLayer: ShapeLayerJSON;

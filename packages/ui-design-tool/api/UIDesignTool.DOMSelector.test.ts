@@ -1,6 +1,6 @@
 import { UIDesignTool } from './UIDesignTool';
 
-describe('UIDesignTool - ElementSelector', () => {
+describe('UIDesignTool - DOMSelector', () => {
   let uiDesignTool: UIDesignTool;
 
   beforeEach(() => {

@@ -1,8 +1,8 @@
 import { UIDesignToolMode, UIDesignToolStatus } from '@/types/Status';
 import { cloneDeep, makeSymbolicFields } from '@pigyuma/utils';
-import { Protected as ExtendsProtected, ModelStore, ModelStoreConfig } from './ModelStore';
+import { Protected as ExtendsProtected, DataStore, DataStoreConfig } from './DataStore';
 
-export interface UIDesignToolConfig extends ModelStoreConfig {}
+export interface UIDesignToolConfig extends DataStoreConfig {}
 
 export const Protected = makeSymbolicFields({}, ExtendsProtected);
 
@@ -11,7 +11,7 @@ export const Protected = makeSymbolicFields({}, ExtendsProtected);
  * @todo History 관리 방식 설계
  * @todo Exception 발생 및 처리 기준 정의
  */
-export class UIDesignTool extends ModelStore {
+export class UIDesignTool extends DataStore {
   #mounted: boolean;
 
   constructor(config: UIDesignToolConfig = {}) {

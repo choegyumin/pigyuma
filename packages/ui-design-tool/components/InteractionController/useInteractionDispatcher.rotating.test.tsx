@@ -1,4 +1,4 @@
-import { makeDummyKeyboardStatus, makeDummyMouseStatus } from '@/api/__mocks__/ElementSelector';
+import { makeDummyKeyboardStatus, makeDummyMouseStatus } from '@/api/__mocks__/DOMSelector';
 import { makeDummyShapeLayerJSON } from '@/api/ShapeLayer/__mocks__/model';
 import { ShapeLayer } from '@/api/ShapeLayer/model';
 import { UIDesignTool } from '@/api/UIDesignTool';

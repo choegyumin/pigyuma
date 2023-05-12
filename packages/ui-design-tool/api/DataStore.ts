@@ -6,7 +6,7 @@ import { getInteractionType, getTransformMethod } from '@/utils/status';
 import { exclude, makeSymbolicFields, nonNullable, nonUndefined, pickBy } from '@pigyuma/utils';
 import { Artboard, ArtboardData } from './Artboard/model';
 import { Canvas, CanvasData } from './Canvas/model';
-import { Protected as ExtendsProtected, ElementSelector, ElementSelectorConfig } from './ElementSelector';
+import { Protected as ExtendsProtected, DOMSelector, DOMSelectorConfig } from './DOMSelector';
 import { Layer, LayerData } from './Layer/model';
 import { ShapeLayer, ShapeLayerData } from './ShapeLayer/model';
 import { TextLayer, TextLayerData } from './TextLayer/model';
@@ -20,7 +20,7 @@ export interface UIRecordCreateOptions {
   saveDraft?: boolean;
 }
 
-export interface ModelStoreConfig extends ElementSelectorConfig {}
+export interface DataStoreConfig extends DOMSelectorConfig {}
 
 export const Protected = makeSymbolicFields(
   {
@@ -30,7 +30,7 @@ export const Protected = makeSymbolicFields(
 );
 
 /** @todo 테스트 코드 고도화 */
-export class ModelStore extends ElementSelector {
+export class DataStore extends DOMSelector {
   #mode: UIDesignToolMode;
   #status: UIDesignToolStatus;
 
@@ -38,7 +38,7 @@ export class ModelStore extends ElementSelector {
   readonly #draftKeys: Set<UIRecordKey>;
   readonly #selectedKeys: Set<UIRecordKey>;
 
-  constructor(config: ModelStoreConfig = {}) {
+  constructor(config: DataStoreConfig = {}) {
     const { strict, id } = config;
 
     super({ strict, id });

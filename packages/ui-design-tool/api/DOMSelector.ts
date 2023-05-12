@@ -16,7 +16,7 @@ export const INITIAL_BROWSER_STATUS: BrowserStatus = {
   keyboard: { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false },
 };
 
-export interface ElementSelectorConfig extends DataSubscriberConfig {}
+export interface DOMSelectorConfig extends DataSubscriberConfig {}
 
 export const Protected = makeSymbolicFields(
   {
@@ -30,12 +30,12 @@ export const Protected = makeSymbolicFields(
 /**
  * 하나로 완성되어야 의미가 있는 클래스를 코드와 관심사만 적절히 분할하는 것이 목적이므로,
  * 객체 지향 프로그래밍의 사고방식에 맞추기보다, 사용하기 쉬운 인터페이스 형태로 제공하는 것을 목표로 함.
- * 자식 클래스가 DataSubscriber를 확장하고, ElementSelector 인스턴스를 새로운 프로퍼티에 할당하는 대신,
- * ElementSelector가 DataSubscriber를 확장하는 형태로 구현.
+ * 자식 클래스가 DataSubscriber를 확장하고, DOMSelector 인스턴스를 새로운 프로퍼티에 할당하는 대신,
+ * DOMSelector가 DataSubscriber를 확장하는 형태로 구현.
  *
  * @todo 테스트 코드 고도화
  */
-export class ElementSelector extends DataSubscriber {
+export class DOMSelector extends DataSubscriber {
   readonly #browserStatus: BrowserStatus;
 
   #hoveredKey: UIRecordKey | undefined;
@@ -46,7 +46,7 @@ export class ElementSelector extends DataSubscriber {
     onKeyUp: (event: KeyboardEvent) => void;
   };
 
-  constructor(config: ElementSelectorConfig = {}) {
+  constructor(config: DOMSelectorConfig = {}) {
     const { strict, id } = config;
 
     super({ strict, id });
@@ -58,7 +58,7 @@ export class ElementSelector extends DataSubscriber {
     const onMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
       const target = this.fromPoint(clientX, clientY);
-      const rootBounds = document.querySelector(this.#rootElementSelector)?.getBoundingClientRect() ?? new DOMRect();
+      const rootBounds = document.querySelector(this.#rootDOMSelector)?.getBoundingClientRect() ?? new DOMRect();
       this.#browserStatus.mouse.clientX = clientX;
       this.#browserStatus.mouse.clientY = clientY;
       this.#browserStatus.mouse.offsetX = clientX - rootBounds.x;
@@ -81,7 +81,7 @@ export class ElementSelector extends DataSubscriber {
     };
   }
 
-  get #rootElementSelector(): string {
+  get #rootDOMSelector(): string {
     return `[${UIDesignToolElementDataAttributeName.id}="${this.id}"]`;
   }
 
@@ -132,7 +132,7 @@ export class ElementSelector extends DataSubscriber {
     const from =
       container instanceof Element
         ? container
-        : document.querySelector(container ? createUIRecordSelector(container) : this.#rootElementSelector);
+        : document.querySelector(container ? createUIRecordSelector(container) : this.#rootDOMSelector);
     const targetSelector = createUIRecordSelector(target);
     return from?.querySelector<HTMLElement>(targetSelector) ?? null;
   }
@@ -141,7 +141,7 @@ export class ElementSelector extends DataSubscriber {
     const from =
       container instanceof Element
         ? container
-        : document.querySelector(container ? createUIRecordSelector(container) : this.#rootElementSelector);
+        : document.querySelector(container ? createUIRecordSelector(container) : this.#rootDOMSelector);
     const targetSelector = createUIRecordSelector(target);
     return from?.querySelectorAll<HTMLElement>(targetSelector) ?? document.querySelectorAll(NULL_ELEMENT_SELECTOR);
   }
