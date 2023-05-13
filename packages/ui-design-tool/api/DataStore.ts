@@ -388,7 +388,7 @@ export class DataStore extends DataSubscriber {
       const newStartChildren = [...startValue.children];
       newStartChildren.splice(handleIndex, 1);
 
-      const newDestChildren = [...destValue.children];
+      const newDestChildren = startValue === destValue ? newStartChildren : [...destValue.children];
       newDestChildren[method === 'prepend' ? 'unshift' : 'push'](handleValue);
 
       this.#assign<typeof handleValue>(handleKey, { parent: destValue as typeof handleValue['parent'] });
@@ -422,7 +422,7 @@ export class DataStore extends DataSubscriber {
       const newStartChildren = [...startValue.children];
       newStartChildren.splice(handleIndex, 1);
 
-      const newDestParentChildren = [...destParentValue.children];
+      const newDestParentChildren = startValue === destParentValue ? newStartChildren : [...destParentValue.children];
       newDestParentChildren.splice(targetIndex, 0, handleValue);
 
       this.#assign<typeof handleValue>(handleKey, { parent: destParentValue as typeof handleValue['parent'] });
