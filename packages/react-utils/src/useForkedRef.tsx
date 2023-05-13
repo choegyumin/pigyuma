@@ -6,10 +6,10 @@ function useForkedRef<T>(ref: RefObject<T>): RefObject<T>;
 function useForkedRef<T>(ref: RefCallback<T>): MutableRefObject<T>;
 function useForkedRef<T>(ref: ForwardedRef<T>): MutableRefObject<T | null>;
 function useForkedRef<T>(ref?: MutableRefObject<T | null | undefined> | RefCallback<T> | null) {
-  const isRefObject = ref != null && typeof ref === 'object';
+  const refIsObject = ref != null && typeof ref === 'object';
 
-  const forked = useRef<T | undefined>(isRefObject ? ref.current : undefined);
-  if (isRefObject) {
+  const forked = useRef<T | undefined>(refIsObject ? ref.current : undefined);
+  if (refIsObject) {
     setRef(ref, forked.current);
   }
 

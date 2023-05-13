@@ -1,9 +1,9 @@
 import { createGlobalThemeContract } from '@vanilla-extract/css';
 
-type Token = string;
-type TokenName = string;
+export type Token = string;
+export type TokenName = string;
 
-type TokenNames<T extends AnyObject> = {
+export type TokenNames<T extends AnyObject> = {
   [P in keyof T]: T[P] extends AnyObject ? TokenNames<T[P]> : TokenName;
 };
 
@@ -19,7 +19,6 @@ export interface ColorThemeTokens {
     primary: Token;
   };
 }
-export interface ColorThemeTokenNames extends TokenNames<ColorThemeTokens> {}
 
 export interface ShadowThemeTokens {
   box: {
@@ -27,12 +26,10 @@ export interface ShadowThemeTokens {
     level1: Token;
   };
 }
-export interface ShadowThemeTokenNames extends TokenNames<ShadowThemeTokens> {}
 
 export interface SpacingThemeTokens {
   scale: Token;
 }
-export interface SpacingThemeTokenNames extends TokenNames<SpacingThemeTokens> {}
 
 export interface SystemThemeTokens {
   base: {
@@ -48,7 +45,6 @@ export interface SystemThemeTokens {
     focusRingColor: Token;
   };
 }
-export interface SystemThemeTokenNames extends TokenNames<SystemThemeTokens> {}
 
 export interface TransitionThemeTokens {
   duration: {
@@ -62,7 +58,6 @@ export interface TransitionThemeTokens {
     easeOut: Token;
   };
 }
-export interface TransitionThemeTokenNames extends TokenNames<TransitionThemeTokens> {}
 
 export interface TypographyThemeTokens {
   fontFamily: {
@@ -101,7 +96,6 @@ export interface TypographyThemeTokens {
     };
   };
 }
-export interface TypographyThemeTokenNames extends TokenNames<TypographyThemeTokens> {}
 
 export interface GlobalThemeTokens {
   color: ColorThemeTokens;
@@ -111,6 +105,5 @@ export interface GlobalThemeTokens {
   transition: TransitionThemeTokens;
   typography: TypographyThemeTokens;
 }
-export interface GlobalThemeTokenNames extends TokenNames<GlobalThemeTokens> {}
 
-export type GlobalThemeVars = ReturnType<typeof createGlobalThemeContract<GlobalThemeTokenNames>>;
+export type GlobalThemeVars = ReturnType<typeof createGlobalThemeContract<TokenNames<GlobalThemeTokens>>>;

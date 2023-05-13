@@ -10,29 +10,29 @@ export default function useLayerTransformSection(props: LayerTransformSectionPro
   const uiController = useUIController();
 
   const uiRecord = useUIRecord<Artboard | ShapeLayer | TextLayer>(selectedRecordKey);
-  const hasUIRecord = uiRecord != null;
+  const uiRecordExists = uiRecord != null;
 
-  const isArtboard = Artboard.isModel(uiRecord);
-  const isShapeLayer = ShapeLayer.isModel(uiRecord);
-  const isTextLayer = TextLayer.isModel(uiRecord);
+  const artboardSelected = uiRecord instanceof Artboard;
+  const shapeLayerSelected = uiRecord instanceof ShapeLayer;
+  const textLayerSelected = uiRecord instanceof TextLayer;
 
-  const canEditPosition = hasUIRecord;
+  const positionEditable = uiRecordExists;
   /** @todo shapeType 값 대응 후 TextLayer도 편집 가능하도록 수정 */
-  const canEditSize = hasUIRecord && (isArtboard || isShapeLayer);
-  const canEditRotate = hasUIRecord && (isShapeLayer || isTextLayer);
+  const sizeEditable = uiRecordExists && (artboardSelected || shapeLayerSelected);
+  const rotateEditable = uiRecordExists && (shapeLayerSelected || textLayerSelected);
 
-  const x = (isArtboard ? uiRecord.x : uiRecord?.x.length) ?? 0;
-  const y = (isArtboard ? uiRecord.y : uiRecord?.y.length) ?? 0;
-  const width = (isArtboard ? uiRecord.width : uiRecord?.width.length) ?? 0;
-  const height = (isArtboard ? uiRecord.height : uiRecord?.height.length) ?? 0;
-  const rotate = (isArtboard ? 0 : uiRecord?.rotate.degrees) ?? 0;
+  const x = (artboardSelected ? uiRecord.x : uiRecord?.x.length) ?? 0;
+  const y = (artboardSelected ? uiRecord.y : uiRecord?.y.length) ?? 0;
+  const width = (artboardSelected ? uiRecord.width : uiRecord?.width.length) ?? 0;
+  const height = (artboardSelected ? uiRecord.height : uiRecord?.height.length) ?? 0;
+  const rotate = (artboardSelected ? 0 : uiRecord?.rotate.degrees) ?? 0;
 
   const onXLengthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEditPosition) {
+    if (!positionEditable) {
       return;
     }
     const length = value ?? 0;
-    if (isArtboard) {
+    if (artboardSelected) {
       uiController.set<Artboard>(uiRecord.key, { x: length });
     } else {
       uiController.set<ShapeLayer | TextLayer>(uiRecord.key, (prev) => {
@@ -44,11 +44,11 @@ export default function useLayerTransformSection(props: LayerTransformSectionPro
   });
 
   const onYLengthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEditPosition) {
+    if (!positionEditable) {
       return;
     }
     const length = value ?? 0;
-    if (isArtboard) {
+    if (artboardSelected) {
       uiController.set<Artboard>(uiRecord.key, { y: length });
     } else {
       uiController.set<ShapeLayer | TextLayer>(uiRecord.key, (prev) => {
@@ -60,11 +60,11 @@ export default function useLayerTransformSection(props: LayerTransformSectionPro
   });
 
   const onWidthLengthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEditSize) {
+    if (!sizeEditable) {
       return;
     }
     const length = value ?? 1;
-    if (isArtboard) {
+    if (artboardSelected) {
       uiController.set<Artboard>(uiRecord.key, { width: length });
     } else {
       uiController.set<ShapeLayer>(uiRecord.key, (prev) => {
@@ -77,11 +77,11 @@ export default function useLayerTransformSection(props: LayerTransformSectionPro
   });
 
   const onHeightLengthChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEditSize) {
+    if (!sizeEditable) {
       return;
     }
     const length = value ?? 1;
-    if (isArtboard) {
+    if (artboardSelected) {
       uiController.set<Artboard>(uiRecord.key, { height: length });
     } else {
       uiController.set<ShapeLayer>(uiRecord.key, (prev) => {
@@ -94,7 +94,7 @@ export default function useLayerTransformSection(props: LayerTransformSectionPro
   });
 
   const onRotateDegChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, value: number | null) => {
-    if (!canEditRotate) {
+    if (!rotateEditable) {
       return;
     }
     const degrees = value ?? 0;
@@ -102,9 +102,9 @@ export default function useLayerTransformSection(props: LayerTransformSectionPro
   });
 
   return {
-    canEditPosition,
-    canEditSize,
-    canEditRotate,
+    positionEditable,
+    sizeEditable,
+    rotateEditable,
     x,
     y,
     width,

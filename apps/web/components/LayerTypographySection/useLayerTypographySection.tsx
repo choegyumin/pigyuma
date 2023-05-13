@@ -9,28 +9,28 @@ export default function useLayerTypographySection(props: LayerTypographySectionP
   const uiController = useUIController();
 
   const uiRecord = useUIRecord<Artboard | ShapeLayer | TextLayer>(selectedRecordKey);
-  const hasUIRecord = uiRecord != null;
+  const uiRecordExists = uiRecord != null;
 
-  const isTextLayer = TextLayer.isModel(uiRecord);
+  const textLayerSelected = uiRecord instanceof TextLayer;
 
-  const canEdit = hasUIRecord && isTextLayer;
+  const editable = uiRecordExists && textLayerSelected;
 
-  const textColor = isTextLayer ? uiRecord.textColor.color : '';
-  const content = isTextLayer ? uiRecord.content : '';
+  const textColor = textLayerSelected ? uiRecord.textColor.color : '';
+  const content = textLayerSelected ? uiRecord.content : '';
 
   const onTextColorChange = useEvent((event: React.ChangeEvent<HTMLInputElement>, color: string) => {
-    if (!canEdit) {
+    if (!editable) {
       return;
     }
     uiController.set<TextLayer>(uiRecord.key, { textColor: { color } });
   });
 
   const onContentChange = useEvent((event: React.ChangeEvent<HTMLTextAreaElement>, content: string) => {
-    if (!canEdit) {
+    if (!editable) {
       return;
     }
     uiController.set<TextLayer>(uiRecord.key, { content });
   });
 
-  return { canEdit, textColor, content, onTextColorChange, onContentChange };
+  return { editable, textColor, content, onTextColorChange, onContentChange };
 }

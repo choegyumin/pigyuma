@@ -9,7 +9,7 @@ class ReactStyle {
 
   /**
    * Reusing and mutating a `style` object between renders has been deprecated. This mirrors our change to freeze the `props` object.
-   * @see 0.14.0 CHANGELOG - Deprecations {@link https://github.com/facebook/react/blob/main/CHANGELOG.md#0140-october-7-2015}
+   * See 0.14.0 CHANGELOG - Deprecations {@link https://github.com/facebook/react/blob/main/CHANGELOG.md#0140-october-7-2015}
    */
   freeze(): React.CSSProperties {
     return { ...this } as React.CSSProperties;

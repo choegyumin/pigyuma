@@ -5,7 +5,7 @@ import useImmutableCallback from './useImmutableCallback';
 
 /**
  * A Hook to define an event handler with an always-stable function identity.
- * @see {@link https://github.com/reactjs/rfcs/blob/useevent/text/0000-useevent.md}
+ * See {@link https://github.com/reactjs/rfcs/blob/useevent/text/0000-useevent.md}
  */
 export default function useEvent<T extends (...args: any[]) => void>(callback: T): T {
   const callbackRef = useRef<T>(callback);

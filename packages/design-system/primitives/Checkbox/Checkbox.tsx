@@ -8,7 +8,7 @@ const Checkbox = React.forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
   /**
    * name을 기반으로 Vue.js의 `v-model` 처럼 동작하게 함
    * 마운트 된 엘리먼트만 접근하므로, 특정 컴포넌트 Scope 내에서 제어가 필요한 경우 <CheckboxGroup /> 사용
-   * @see {@link https://vuejs.org/guide/essentials/forms.html#checkbox}
+   * See {@link https://vuejs.org/guide/essentials/forms.html#checkbox}
    */
   const getSelected = useCallback(
     (checkbox: HTMLInputElement): string | number | Array<string | number> | undefined => {

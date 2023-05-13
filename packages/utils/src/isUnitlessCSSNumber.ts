@@ -1,6 +1,6 @@
 /**
- * @see {@link https://github.com/facebook/react/blob/v18.0.0/packages/react-dom/src/shared/CSSProperty.js#L8}
- * @see {@link https://github.com/vanilla-extract-css/vanilla-extract/blob/%40vanilla-extract/css%401.9.2/packages/css/src/transformCss.ts#L26}
+ * See {@link https://github.com/facebook/react/blob/v18.0.0/packages/react-dom/src/shared/CSSProperty.js#L8}
+ * See {@link https://github.com/vanilla-extract-css/vanilla-extract/blob/%40vanilla-extract/css%401.9.2/packages/css/src/transformCss.ts#L26}
  *
  * CSS properties which accept numbers but are not in units of "px".
  */

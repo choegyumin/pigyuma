@@ -5,7 +5,7 @@ import { RadioProps, RadioRef } from './types';
 const Radio = React.forwardRef<RadioRef, RadioProps>((props, ref) => {
   const { cancelable, value, onChange, onChangeCapture, ...rootProps } = props;
 
-  const isCheckbox = cancelable;
+  const type = cancelable ? 'checkbox' : 'radio';
 
   const getSelected = useCallback(
     (radio: HTMLInputElement): string | number | undefined => {
@@ -28,7 +28,7 @@ const Radio = React.forwardRef<RadioRef, RadioProps>((props, ref) => {
       {...rootProps}
       ref={ref}
       as="input"
-      type={isCheckbox ? 'checkbox' : 'radio'}
+      type={type}
       value={value}
       data-value={JSON.stringify(value)}
       data-value-type={typeof value}

@@ -13,7 +13,7 @@ module.exports = {
         pathGroups: [
           /**
            * CSS Selector Declaration Order
-           * @see {@link ./css/README.md}
+           * See {@link ./css/README.md}
            */
           {
             pattern: '@/config',

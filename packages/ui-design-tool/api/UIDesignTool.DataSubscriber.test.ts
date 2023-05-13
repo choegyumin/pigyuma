@@ -1,14 +1,14 @@
+import { makeDummyArtboardJSON } from '@/models/Artboard/__mocks__/model';
+import { ArtboardJSON } from '@/models/Artboard/model';
+import { makeDummyShapeLayerJSON } from '@/models/ShapeLayer/__mocks__/model';
+import { ShapeLayerJSON } from '@/models/ShapeLayer/model';
+import { makeDummyTextLayerJSON } from '@/models/TextLayer/__mocks__/model';
+import { TextLayerData, TextLayerJSON } from '@/models/TextLayer/model';
+import { UIRecord } from '@/models/UIRecord/model';
 import { UIRecordRect } from '@/types/Geometry';
 import { UIRecordKey } from '@/types/Identifier';
 import { vi } from 'vitest';
-import { makeDummyArtboardJSON } from './Artboard/__mocks__/model';
-import { ArtboardJSON } from './Artboard/model';
-import { makeDummyShapeLayerJSON } from './ShapeLayer/__mocks__/model';
-import { ShapeLayerJSON } from './ShapeLayer/model';
-import { makeDummyTextLayerJSON } from './TextLayer/__mocks__/model';
-import { TextLayerData, TextLayerJSON } from './TextLayer/model';
 import { UIDesignTool } from './UIDesignTool';
-import { UIRecord } from './UIRecord/model';
 
 describe('UIDesignTool - DataSubscriber', () => {
   let uiDesignTool: UIDesignTool;

@@ -1,14 +1,14 @@
 import { AtomEffect } from 'recoil';
-import { isServer } from '~/utils/env';
+import { SERVER_ENV } from '~/utils/env';
 
 /**
  * Local Storage Persistence
- * @see {@link https://recoiljs.org/docs/guides/atom-effects/#local-storage-persistence}
+ * See {@link https://recoiljs.org/docs/guides/atom-effects/#local-storage-persistence}
  */
 export const localStorageEffect =
   <T>(key: string): AtomEffect<T> =>
   ({ setSelf, onSet }) => {
-    if (!isServer) {
+    if (!SERVER_ENV) {
       const savedValue = localStorage.getItem(key);
       if (savedValue != null) {
         setSelf(JSON.parse(savedValue));

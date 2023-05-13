@@ -1,7 +1,7 @@
 import { DependencyList, EffectCallback, useEffect } from 'react';
 import pushAsyncAfterRender from './pushAsyncAfterRender';
 
-/** @see {@link https://github.com/facebook/react/issues/20863} */
+/** See {@link https://github.com/facebook/react/issues/20863} */
 export default function usePaintEffect(effect: EffectCallback, deps?: DependencyList): void {
   return useEffect(() => {
     pushAsyncAfterRender(effect);

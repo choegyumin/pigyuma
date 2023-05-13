@@ -2,5 +2,10 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Package base",
   "extends": "../_default/base.json",
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": ["esnext"],
+    "module": "ESNext"
+  },
   "files": ["../typescript.d.ts"]
 }

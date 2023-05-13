@@ -11,14 +11,14 @@ import useLayerFillSection from './useLayerFillSection';
 const LayerFillSection = React.forwardRef<LayerFillSectionRef, LayerFillSectionProps>((props, ref) => {
   const viewModel = useLayerFillSection(props, ref);
 
-  const { canEdit, fillColor, onFillColorChange } = viewModel;
+  const { editable, fillColor, onFillColorChange } = viewModel;
   const { selected, className, ...restProps } = props;
 
   return (
     <Panel.Group as="div" {...restProps} ref={ref} className={clsx(styles.root, className)} heading="Fill">
       <LayerFieldset>
         <LayerField label="Color">
-          <ColorPicker value={fillColor} onChange={onFillColorChange} disabled={!canEdit} />
+          <ColorPicker value={fillColor} onChange={onFillColorChange} disabled={!editable} />
         </LayerField>
       </LayerFieldset>
     </Panel.Group>

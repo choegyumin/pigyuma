@@ -33,7 +33,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
     role,
     selected,
     expanded,
-    hasChildren,
+    toggleable,
     layerType,
     onItemClick,
     onToggleClick,
@@ -44,12 +44,13 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
 
   return (
     <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row_state.selected]: selected })}>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <div className={styles.item} role={role} onClick={onItemClick}>
         <div className={styles.name}>
           <Icon type={iconType} className={styles.icon} />
           {record.name}
         </div>
-        {hasChildren && (
+        {toggleable && (
           <button
             className={clsx(styles.toggle, { [styles.toggle_state.expanded]: expanded })}
             aria-controls={listId}
@@ -59,7 +60,7 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
           />
         )}
       </div>
-      {hasChildren && (
+      {toggleable && (
         <LayerList
           role="group"
           records={record.children}

@@ -224,7 +224,7 @@ const Home = () => {
 
   const onButtonClick = useEvent(() => {
     uiController.set<ShapeLayer>('shape-layer-yellow', { y: { length: 700, lengthType: 'px' } });
-    uiController.set<ShapeLayer>('shape-layer-Red', { fill: { color: '#ffaaff' } });
+    uiController.set<ShapeLayer>('shape-layer-red', { fill: { color: '#ffaaff' } });
     uiController.set<TextLayer>('text-layer-1234', { textColor: { color: '#ffffff' }, content: 'Setted' });
     uiController.prepend('shape-layer-green', {
       type: 'layer',

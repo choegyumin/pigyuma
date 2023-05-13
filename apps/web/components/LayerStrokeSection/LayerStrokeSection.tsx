@@ -14,7 +14,7 @@ const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRef, LayerStrokeSe
   const viewModel = useLayerStrokeSection(props, ref);
 
   const {
-    canEdit,
+    editable,
     strokeColor,
     strokePattern,
     strokeWidth,
@@ -31,10 +31,10 @@ const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRef, LayerStrokeSe
     <Panel.Group as="div" {...restProps} ref={ref} className={clsx(styles.root, className)} heading="Stroke">
       <LayerFieldset>
         <LayerField label="Color">
-          <ColorPicker value={strokeColor} onChange={onStrokeColorChange} disabled={!canEdit} />
+          <ColorPicker value={strokeColor} onChange={onStrokeColorChange} disabled={!editable} />
         </LayerField>
         <LayerField label="Pattern">
-          <Select name="strokePattern" value={strokePattern} onChange={onStrokePatternChange} disabled={!canEdit}>
+          <Select name="strokePattern" value={strokePattern} onChange={onStrokePatternChange} disabled={!editable}>
             <Select.Item value="solid">Solid</Select.Item>
             <Select.Item value="dashed">Dashed</Select.Item>
             <Select.Item value="dotted">Dotted</Select.Item>
@@ -43,13 +43,13 @@ const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRef, LayerStrokeSe
         </LayerField>
         <LayerField label="Width">
           Top
-          <NumberField autoSelect={true} min={0} value={strokeWidth.top} onChange={onStrokeTopWidthChange} disabled={!canEdit} />
+          <NumberField autoSelect={true} min={0} value={strokeWidth.top} onChange={onStrokeTopWidthChange} disabled={!editable} />
           Right
-          <NumberField autoSelect={true} min={0} value={strokeWidth.right} onChange={onStrokeRightWidthChange} disabled={!canEdit} />
+          <NumberField autoSelect={true} min={0} value={strokeWidth.right} onChange={onStrokeRightWidthChange} disabled={!editable} />
           Bottom
-          <NumberField autoSelect={true} min={0} value={strokeWidth.bottom} onChange={onStrokeBottomWidthChange} disabled={!canEdit} />
+          <NumberField autoSelect={true} min={0} value={strokeWidth.bottom} onChange={onStrokeBottomWidthChange} disabled={!editable} />
           Left
-          <NumberField autoSelect={true} min={0} value={strokeWidth.left} onChange={onStrokeLeftWidthChange} disabled={!canEdit} />
+          <NumberField autoSelect={true} min={0} value={strokeWidth.left} onChange={onStrokeLeftWidthChange} disabled={!editable} />
         </LayerField>
       </LayerFieldset>
     </Panel.Group>
