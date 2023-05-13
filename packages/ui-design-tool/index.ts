@@ -1,7 +1,7 @@
 /** @todo Design token 모델 내보내기 */
 
 export { UIDesignTool as default } from './api/UIDesignTool';
-export type { UIDesignToolConfig } from './api/UIDesignTool';
+export type { UIDesignToolConfig, UIDesignToolConstructor } from './api/UIDesignTool';
 export { UIDesignToolProvider } from './renderer/components/UIDesignToolProvider/UIDesignToolProvider';
 
 export * from './models/Artboard/model';
