@@ -6,7 +6,7 @@ import React from 'react';
 import AppProvider from '~/components/AppProvider';
 
 const siteName = 'Pigyuma';
-const description = 'UI Design Tool making project. 🐷';
+const description = 'UI Design Tool making project. 🖌️🐷🎨';
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
