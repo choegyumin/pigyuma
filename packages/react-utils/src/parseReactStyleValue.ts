@@ -1,7 +1,7 @@
 import { isUnitlessCSSNumber } from '@pigyuma/utils';
 
 /**
- * @see {@link https://github.com/facebook/react/blob/v18.0.0/packages/react-dom/src/shared/dangerousStyleValue.js#L11}
+ * See {@link https://github.com/facebook/react/blob/v18.0.0/packages/react-dom/src/shared/dangerousStyleValue.js#L11}
  *
  * Convert a value into the proper css writable value. The style name `name`
  * should be logical (no hyphens), as specified

@@ -9,14 +9,14 @@ const CUTOFF_DIGITS = 2;
 /**
  * 부동 소수점 오차가 발생했을 때 계산된 값의 precision은
  * 최대 정수 자릿수인 15부터 최대 소수 자릿수인 17 사이에 해당됨.
- * @see {@link https://www.mycompiler.io/view/BVDNBSp8iVF}
+ * See {@link https://www.mycompiler.io/view/BVDNBSp8iVF}
  */
 export const MAX_CORRECT_PRECISION = 15;
 
 /**
  * 부동 소수점 오류를 판별하기 위한 최소 소수 자릿수
  * 소수 자릿수에 따라 오차 값도 달라지므로 소수가 17자리를 초과해서는 안됨
- * @see {@link https://www.mycompiler.io/view/BVDNBSp8iVF}
+ * See {@link https://www.mycompiler.io/view/BVDNBSp8iVF}
  *
  * 4.9712000000000005 =>
  * '9712' // 유효한 값

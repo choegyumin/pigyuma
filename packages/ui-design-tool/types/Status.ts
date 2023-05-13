@@ -9,7 +9,6 @@ export const UIDesignToolMode = {
 } as const;
 export type UIDesignToolMode = keyof typeof UIDesignToolMode;
 
-/** * @see 플로우차트 (XState를 사용하진 않음) {@link https://stately.ai/viz/6a265ced-0d2c-4412-9088-f511f6105e2e} */
 export const UIDesignToolStatus = {
   idle: 'idle',
   /** Range selection */

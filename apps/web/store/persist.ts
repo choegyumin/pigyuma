@@ -3,7 +3,7 @@ import { SERVER_ENV } from '~/utils/env';
 
 /**
  * Local Storage Persistence
- * @see {@link https://recoiljs.org/docs/guides/atom-effects/#local-storage-persistence}
+ * See {@link https://recoiljs.org/docs/guides/atom-effects/#local-storage-persistence}
  */
 export const localStorageEffect =
   <T>(key: string): AtomEffect<T> =>

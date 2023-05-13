@@ -34,7 +34,7 @@ export const root = style({
     [vars.handleVisibility]: '',
     [vars.infoVisibility]: '',
     [vars.outlineVisibility]: '',
-    /** @see {@link https://help.figma.com/hc/en-us/articles/360039956914-Adjust-alignment-rotation-and-position#Rotation} */
+    /** See {@link https://help.figma.com/hc/en-us/articles/360039956914-Adjust-alignment-rotation-and-position#Rotation} */
     [getter.cssRotate]: `calc(${vars.rotate} * -1)`,
     [getter.overlayBorderWidth]: '2px',
     [getter.handleSize]: '16px',
