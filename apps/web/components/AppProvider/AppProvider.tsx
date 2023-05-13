@@ -12,7 +12,7 @@ console.log(uiDesignTool);
 const AppProvider: React.FC<AppProviderProps> = (props) => {
   return (
     <RecoilRoot>
-      <UIDesignToolProvider {...props} api={uiDesignTool} />
+      <UIDesignToolProvider api={uiDesignTool}>{props.children}</UIDesignToolProvider>
     </RecoilRoot>
   );
 };
