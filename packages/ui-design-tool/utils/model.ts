@@ -1,9 +1,9 @@
-import { Artboard, ArtboardData } from '@/api/Artboard/model';
-import { Canvas, CanvasData } from '@/api/Canvas/model';
-import { Layer, LayerData } from '@/api/Layer/model';
-import { ShapeLayer, ShapeLayerData } from '@/api/ShapeLayer/model';
-import { TextLayer, TextLayerData } from '@/api/TextLayer/model';
-import { UIRecord, UIRecordData } from '@/api/UIRecord/model';
+import { Artboard, ArtboardData } from '@/models/Artboard/model';
+import { Canvas, CanvasData } from '@/models/Canvas/model';
+import { Layer, LayerData } from '@/models/Layer/model';
+import { ShapeLayer, ShapeLayerData } from '@/models/ShapeLayer/model';
+import { TextLayer, TextLayerData } from '@/models/TextLayer/model';
+import { UIRecord, UIRecordData } from '@/models/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 
 export type UIRecordWithParent = UIRecord & { parent: Artboard | Canvas | ShapeLayer | null };

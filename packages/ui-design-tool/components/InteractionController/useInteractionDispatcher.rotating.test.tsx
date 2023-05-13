@@ -1,7 +1,7 @@
 import { makeDummyKeyboardStatus, makeDummyMouseStatus } from '@/api/__mocks__/DOMSelector';
-import { makeDummyShapeLayerJSON } from '@/api/ShapeLayer/__mocks__/model';
-import { ShapeLayer } from '@/api/ShapeLayer/model';
 import { UIDesignTool } from '@/api/UIDesignTool';
+import { makeDummyShapeLayerJSON } from '@/models/ShapeLayer/__mocks__/model';
+import { ShapeLayer } from '@/models/ShapeLayer/model';
 import { makeUIRecordRectFromShapeLayer } from '@/types/__mocks__/Geometry';
 import { UIDesignToolStatus } from '@/types/Status';
 import { act, renderHook } from '@testing-library/react';

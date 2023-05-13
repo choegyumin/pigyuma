@@ -1,7 +1,7 @@
 import { makeDummyKeyboardStatus, makeDummyMouseStatus } from '@/api/__mocks__/DOMSelector';
-import { Artboard } from '@/api/Artboard/model';
-import { ShapeLayer } from '@/api/ShapeLayer/model';
 import { UIDesignTool } from '@/api/UIDesignTool';
+import { Artboard } from '@/models/Artboard/model';
+import { ShapeLayer } from '@/models/ShapeLayer/model';
 import { makeUIRecordRectFromCanvas } from '@/types/__mocks__/Geometry';
 import { DrawingType } from '@/types/Identifier';
 import { UIDesignToolStatus } from '@/types/Status';

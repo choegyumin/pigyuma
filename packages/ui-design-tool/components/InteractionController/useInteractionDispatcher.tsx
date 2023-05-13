@@ -1,7 +1,7 @@
-import { Artboard } from '@/api/Artboard/model';
-import { Canvas } from '@/api/Canvas/model';
-import { ShapeLayer } from '@/api/ShapeLayer/model';
 import useUIController from '@/hooks/useUIController';
+import { Artboard } from '@/models/Artboard/model';
+import { Canvas } from '@/models/Canvas/model';
+import { ShapeLayer } from '@/models/ShapeLayer/model';
 import { UIRecordRect } from '@/types/Geometry';
 import { DrawingType } from '@/types/Identifier';
 import { UIDesignToolMode, UIDesignToolStatus } from '@/types/Status';

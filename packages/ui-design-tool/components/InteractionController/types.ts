@@ -1,4 +1,4 @@
-import { UIRecord } from '@/api/UIRecord/model';
+import { UIRecord } from '@/models/UIRecord/model';
 import { BrowserStatus } from '@/types/Browser';
 import { UIRecordRect } from '@/types/Geometry';
 import { DrawingType, HandlePlacement } from '@/types/Identifier';

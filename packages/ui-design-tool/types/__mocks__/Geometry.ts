@@ -1,5 +1,5 @@
-import { ArtboardData } from '@/api/Artboard/model';
-import { ShapeLayerData } from '@/api/ShapeLayer/model';
+import { ArtboardData } from '@/models/Artboard/model';
+import { ShapeLayerData } from '@/models/ShapeLayer/model';
 import { UIRecordRect } from '../Geometry';
 
 export function makeUIRecordRectFromCanvas(): UIRecordRect {

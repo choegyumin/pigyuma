@@ -1,11 +1,11 @@
-import { Artboard } from '@/api/Artboard/model';
-import { Canvas } from '@/api/Canvas/model';
 import useBrowserStatus from '@/hooks/useBrowserStatus';
 import useHovered from '@/hooks/useHovered';
 import useItemReference from '@/hooks/useItemReference';
 import useMode from '@/hooks/useMode';
 import useSelected from '@/hooks/useSelected';
 import useUISelector from '@/hooks/useUISelector';
+import { Artboard } from '@/models/Artboard/model';
+import { Canvas } from '@/models/Canvas/model';
 import { UIRecordRect } from '@/types/Geometry';
 import {
   UIInteractionElementDataAttributeName,

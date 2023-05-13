@@ -1,13 +1,13 @@
+import { makeDummyArtboardJSON } from '@/models/Artboard/__mocks__/model';
+import { Artboard, ArtboardJSON } from '@/models/Artboard/model';
+import { makeDummyShapeLayerJSON } from '@/models/ShapeLayer/__mocks__/model';
+import { ShapeLayer, ShapeLayerJSON } from '@/models/ShapeLayer/model';
+import { makeDummyTextLayerJSON } from '@/models/TextLayer/__mocks__/model';
+import { TextLayer, TextLayerData, TextLayerJSON } from '@/models/TextLayer/model';
 import { UIRecordRect } from '@/types/Geometry';
 import { UIDesignToolInteractionType, UIDesignToolTransformMethod, UIDesignToolStatus } from '@/types/Status';
 import { XLengthType } from '@/types/Unit';
 import { flatUIRecords } from '@/utils/model';
-import { makeDummyArtboardJSON } from './Artboard/__mocks__/model';
-import { Artboard, ArtboardJSON } from './Artboard/model';
-import { makeDummyShapeLayerJSON } from './ShapeLayer/__mocks__/model';
-import { ShapeLayer, ShapeLayerJSON } from './ShapeLayer/model';
-import { makeDummyTextLayerJSON } from './TextLayer/__mocks__/model';
-import { TextLayer, TextLayerData, TextLayerJSON } from './TextLayer/model';
 import { UIDesignTool } from './UIDesignTool';
 
 describe('UIDesignTool - DataStore', () => {

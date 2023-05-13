@@ -1,6 +1,6 @@
-import { ArtboardArgs } from '@/api/Artboard/model';
-import { ShapeLayerArgs, ShapeType } from '@/api/ShapeLayer/model';
-import { TextLayerArgs } from '@/api/TextLayer/model';
+import { ArtboardArgs } from '@/models/Artboard/model';
+import { ShapeLayerArgs, ShapeType } from '@/models/ShapeLayer/model';
+import { TextLayerArgs } from '@/models/TextLayer/model';
 import {
   FontSizeLengthType,
   HeightLengthType,

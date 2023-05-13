@@ -1,6 +1,6 @@
-import { Layer } from '@/api/Layer/model';
-import { UIRecord } from '@/api/UIRecord/model';
 import useUISelector from '@/hooks/useUISelector';
+import { Layer } from '@/models/Layer/model';
+import { UIRecord } from '@/models/UIRecord/model';
 import { UIRecordRect } from '@/types/Geometry';
 import { useCallback } from 'react';
 import * as styles from './HoveringOverlay.css';

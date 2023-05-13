@@ -1,7 +1,7 @@
-import { Artboard } from '@/api/Artboard/model';
-import { Layer } from '@/api/Layer/model';
 import useSelected from '@/hooks/useSelected';
 import useUIRecordForInteraction from '@/hooks/useUIRecordForInteraction';
+import { Artboard } from '@/models/Artboard/model';
+import { Layer } from '@/models/Layer/model';
 import useRenderUtils from './useRenderUtils';
 
 export default function useSelectionOverlay() {

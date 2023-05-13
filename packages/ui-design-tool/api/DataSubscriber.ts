@@ -1,7 +1,7 @@
+import { UIRecord } from '@/models/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMetadata } from '@/types/Status';
 import { makeSymbolicFields } from '@pigyuma/utils';
-import { UIRecord } from './UIRecord/model';
 
 const _protected = makeSymbolicFields({
   dispatchModeChanges: 'dispatchModeChanges',

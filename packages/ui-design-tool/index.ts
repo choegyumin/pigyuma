@@ -4,12 +4,12 @@ export { UIDesignTool as default } from './api/UIDesignTool';
 export type { UIDesignToolConfig } from './api/UIDesignTool';
 export { UIDesignToolProvider } from './components/UIDesignToolProvider/UIDesignToolProvider';
 
-export * from './api/Artboard/model';
-export * from './api/Canvas/model';
-export * from './api/Layer/model';
-export * from './api/ShapeLayer/model';
-export * from './api/TextLayer/model';
-export * from './api/UIRecord/model';
+export * from './models/Artboard/model';
+export * from './models/Canvas/model';
+export * from './models/Layer/model';
+export * from './models/ShapeLayer/model';
+export * from './models/TextLayer/model';
+export * from './models/UIRecord/model';
 
 export { UIDesignCanvas as UIDesignCanvas } from './components/UIDesignCanvas/UIDesignCanvas';
 export type { UIDesignCanvasProps, UIDesignCanvasRef } from './components/UIDesignCanvas/types';

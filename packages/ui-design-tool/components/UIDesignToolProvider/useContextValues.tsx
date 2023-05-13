@@ -1,6 +1,6 @@
-import { Canvas } from '@/api/Canvas/model';
 import { INITIAL_BROWSER_STATUS } from '@/api/DOMSelector';
 import { UIDesignTool } from '@/api/UIDesignTool';
+import { Canvas } from '@/models/Canvas/model';
 import { BrowserStatus } from '@/types/Browser';
 import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolMode, UIDesignToolStatus, UIDesignToolStatusMetadata } from '@/types/Status';

@@ -1,8 +1,8 @@
-import { Artboard } from '@/api/Artboard/model';
-import { Layer } from '@/api/Layer/model';
-import { UIRecord } from '@/api/UIRecord/model';
 import useStatusMetadata from '@/hooks/useStatusMetadata';
 import useUISelector from '@/hooks/useUISelector';
+import { Artboard } from '@/models/Artboard/model';
+import { Layer } from '@/models/Layer/model';
+import { UIRecord } from '@/models/UIRecord/model';
 import { UIRecordRect } from '@/types/Geometry';
 import { UIDesignToolInteractionType, UIDesignToolTransformMethod } from '@/types/Status';
 import { isRotatableUIRecord } from '@/utils/model';

@@ -1,9 +1,9 @@
-import { Canvas } from '@/api/Canvas/model';
 import { UIDesignTool } from '@/api/UIDesignTool';
-import { UIRecord } from '@/api/UIRecord/model';
 import { UIDesignToolProvider } from '@/components/UIDesignToolProvider/UIDesignToolProvider';
 import useUIController from '@/hooks/useUIController';
 import useUIRecord from '@/hooks/useUIRecord';
+import { Canvas } from '@/models/Canvas/model';
+import { UIRecord } from '@/models/UIRecord/model';
 import { UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { cloneDeep } from '@pigyuma/utils';
 import { act, renderHook } from '@testing-library/react';

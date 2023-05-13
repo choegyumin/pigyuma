@@ -1,7 +1,7 @@
-import { Artboard } from '@/api/Artboard/model';
-import { Layer } from '@/api/Layer/model';
-import { UIRecord } from '@/api/UIRecord/model';
 import useUISelector from '@/hooks/useUISelector';
+import { Artboard } from '@/models/Artboard/model';
+import { Layer } from '@/models/Layer/model';
+import { UIRecord } from '@/models/UIRecord/model';
 import { UIRecordQuad } from '@/types/Geometry';
 import { UIRecordType } from '@/types/Identifier';
 import { hasUIRecordParent } from '@/utils/model';

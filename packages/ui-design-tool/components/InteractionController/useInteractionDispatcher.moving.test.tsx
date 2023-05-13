@@ -1,9 +1,9 @@
 import { makeDummyKeyboardStatus, makeDummyMouseStatus } from '@/api/__mocks__/DOMSelector';
-import { makeDummyArtboardJSON } from '@/api/Artboard/__mocks__/model';
-import { Artboard } from '@/api/Artboard/model';
-import { makeDummyShapeLayerJSON } from '@/api/ShapeLayer/__mocks__/model';
-import { ShapeLayer } from '@/api/ShapeLayer/model';
 import { UIDesignTool } from '@/api/UIDesignTool';
+import { makeDummyArtboardJSON } from '@/models/Artboard/__mocks__/model';
+import { Artboard } from '@/models/Artboard/model';
+import { makeDummyShapeLayerJSON } from '@/models/ShapeLayer/__mocks__/model';
+import { ShapeLayer } from '@/models/ShapeLayer/model';
 import { makeUIRecordRectFromArtboard, makeUIRecordRectFromShapeLayer } from '@/types/__mocks__/Geometry';
 import { UIDesignToolStatus } from '@/types/Status';
 import { act, renderHook } from '@testing-library/react';

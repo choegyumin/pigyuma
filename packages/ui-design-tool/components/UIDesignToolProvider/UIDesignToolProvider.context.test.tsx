@@ -1,6 +1,6 @@
-import { Canvas } from '@/api/Canvas/model';
 import { UIDesignTool } from '@/api/UIDesignTool';
-import { UIRecord } from '@/api/UIRecord/model';
+import { Canvas } from '@/models/Canvas/model';
+import { UIRecord } from '@/models/UIRecord/model';
 import { UIRecordKey, UIRecordType } from '@/types/Identifier';
 import { UIDesignToolStatus } from '@/types/Status';
 import { cloneDeep } from '@pigyuma/utils';

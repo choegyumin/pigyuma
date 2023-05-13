@@ -1,5 +1,5 @@
-import { CanvasComponent } from '@/api/Canvas/component';
-import { Canvas } from '@/api/Canvas/model';
+import { CanvasComponent } from '@/models/Canvas/component';
+import { Canvas } from '@/models/Canvas/model';
 import { UIDesignToolElementDataAttributeName } from '@/types/Identifier';
 import clsx from 'clsx';
 import React from 'react';

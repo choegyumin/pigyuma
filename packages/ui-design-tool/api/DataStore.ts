@@ -1,17 +1,17 @@
+import { Artboard, ArtboardData } from '@/models/Artboard/model';
+import { Canvas, CanvasData } from '@/models/Canvas/model';
+import { Layer, LayerData } from '@/models/Layer/model';
+import { ShapeLayer, ShapeLayerData } from '@/models/ShapeLayer/model';
+import { TextLayer, TextLayerData } from '@/models/TextLayer/model';
+import { UIRecord, UIRecordData } from '@/models/UIRecord/model';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolInteractionType, UIDesignToolMode, UIDesignToolStatus, UIDesignToolTransformMethod } from '@/types/Status';
 import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
 import { getInteractionType, getTransformMethod } from '@/utils/status';
 import { exclude, makeSymbolicFields, nonNullable, nonUndefined, pickBy, uuid } from '@pigyuma/utils';
-import { Artboard, ArtboardData } from './Artboard/model';
-import { Canvas, CanvasData } from './Canvas/model';
 import { DataSubscriber } from './DataSubscriber';
 import { DOMSelector } from './DOMSelector';
-import { Layer, LayerData } from './Layer/model';
-import { ShapeLayer, ShapeLayerData } from './ShapeLayer/model';
-import { TextLayer, TextLayerData } from './TextLayer/model';
-import { UIRecord, UIRecordData } from './UIRecord/model';
 
 const assignChanges = <T extends UIRecord, C extends DeepPartial<T> = DeepPartial<T>>(record: T, changes: C): T => {
   return Object.assign(record, pickBy(changes, nonUndefined));

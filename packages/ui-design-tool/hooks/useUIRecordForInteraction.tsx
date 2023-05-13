@@ -1,6 +1,6 @@
-import { UIRecord } from '@/api/UIRecord/model';
 import useItemReference from '@/hooks/useItemReference';
 import useUISubscriber from '@/hooks/useUISubscriber';
+import { UIRecord } from '@/models/UIRecord/model';
 import { UIRecordKey } from '@/types/Identifier';
 import { isUIRecordKey } from '@/utils/model';
 import { setRef, useForceUpdate, pushAsyncAfterRender } from '@pigyuma/react-utils';
