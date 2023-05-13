@@ -13,6 +13,7 @@ export function makeDummyMouseStatus(data: DummyMouseStatusData = {}): MouseStat
       clientY: y,
       offsetX: x,
       offsetY: y,
+      down: false,
     },
     {
       ...rest,

@@ -14,6 +14,7 @@ describe('Artboard', () => {
     y: 200,
     width: 300,
     height: 400,
+    fill: '#fff',
     children: [],
   };
   const artboardJSON: ArtboardJSON = {
