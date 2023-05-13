@@ -1,4 +1,4 @@
-import * as rootVars from '@/styles/rootVars.css';
+import * as rootVars from '@/renderer/styles/rootVars.css';
 import { UIRecordElementDataAttributeName } from '@/types/Identifier';
 import { UIRecordStyleVarNames, UIRecordStyleVars } from '@/types/Style';
 import { mapEntries, pick } from '@pigyuma/utils';

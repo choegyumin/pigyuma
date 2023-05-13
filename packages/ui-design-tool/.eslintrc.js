@@ -7,11 +7,11 @@ module.exports = {
       {
         paths: [
           {
-            name: '@/components/UIDesignToolProvider/UIDesignToolProvider.context',
-            message: 'Please use `@/hooks/*` instead.',
+            name: '@/renderer/components/UIDesignToolProvider/UIDesignToolProvider.context',
+            message: 'Please use `@/renderer/hooks/*` instead.',
           },
           {
-            name: '@/hooks/useUIData',
+            name: '@/renderer/hooks/useUIData',
             message:
               'Please use useMode, useStatus, useTree, useItemReference... instead inside this package. See UIDesignToolProvider.context.ts',
           },
@@ -21,7 +21,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['components/**/*'],
+      files: ['renderer/components/**/*'],
       rules: {
         'import/no-named-as-default': 'off',
       },

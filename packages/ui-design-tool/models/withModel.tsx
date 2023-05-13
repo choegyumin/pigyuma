@@ -1,6 +1,6 @@
-import useDrafts from '@/hooks/useDrafts';
-import useSelected from '@/hooks/useSelected';
-import useUIRecord from '@/hooks/useUIRecord';
+import useDrafts from '@/renderer/hooks/useDrafts';
+import useSelected from '@/renderer/hooks/useSelected';
+import useUIRecord from '@/renderer/hooks/useUIRecord';
 import { UIRecordElementDataAttributeName, UIRecordKey } from '@/types/Identifier';
 import React from 'react';
 import { UIRecord } from './UIRecord/model';
