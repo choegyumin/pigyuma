@@ -1140,6 +1140,8 @@ __metadata:
     typescript: 4.9.3
     vite: ^4.0.4
     vitest: ^0.27.1
+  peerDependencies:
+    "@vanilla-extract/css": ^1.0.0
   languageName: unknown
   linkType: soft
 
@@ -1179,6 +1181,10 @@ __metadata:
     typescript: 4.9.3
     vite: ^4.0.4
     vitest: ^0.27.1
+  peerDependencies:
+    "@vanilla-extract/css": ^1.0.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
   languageName: unknown
   linkType: soft
 
