@@ -1,9 +1,11 @@
 import { CheckableInputOnlyHTMLAttributes } from '@pigyuma/react-utility-types';
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 
 type Value = string | number;
 
-interface CheckboxCustomProps {
+export const CheckboxElementType = 'input';
+export type CheckboxElementType = typeof CheckboxElementType;
+
+export interface CheckboxCustomProps {
   value?: Value;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>, selected: Value | Array<Value> | undefined) => void;
   onChangeCapture?: (event: React.FormEvent<HTMLInputElement>, selected: Value | Array<Value> | undefined) => void;
@@ -11,8 +13,8 @@ interface CheckboxCustomProps {
 
 export interface CheckboxProps
   extends Omit<
-      ComponentPropsWithoutRefByBox<'span'> & CheckableInputOnlyHTMLAttributes<HTMLInputElement>,
+      React.ComponentPropsWithoutRef<'span'> & CheckableInputOnlyHTMLAttributes<HTMLInputElement>,
       keyof CheckboxCustomProps | 'type'
     >,
     CheckboxCustomProps {}
-export type CheckboxRef = ComponentElementRefByBox<'input'>;
+export type CheckboxRefInstance = React.ElementRef<CheckboxElementType>;

@@ -1,4 +1,7 @@
-import { ComponentElementRefByBox, ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
+export const FieldTriggerElementType = 'span';
+export type FieldTriggerElementType = typeof FieldTriggerElementType;
 
-export interface FieldTriggerProps extends ComponentPropsWithoutRefByBox<'span'> {}
-export type FieldTriggerRef = ComponentElementRefByBox<'span'>;
+export interface FieldTriggerCustomProps {}
+
+export interface FieldTriggerProps extends React.ComponentPropsWithoutRef<FieldTriggerElementType>, FieldTriggerCustomProps {}
+export type FieldTriggerRefInstance = React.ElementRef<FieldTriggerElementType>;

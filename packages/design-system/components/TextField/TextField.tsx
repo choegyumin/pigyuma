@@ -5,10 +5,11 @@ import { pick, omit } from '@pigyuma/utils';
 import clsx from 'clsx';
 import React from 'react';
 import FieldTrigger from '../FieldTrigger';
+import { TextAreaElementType } from '../TextArea';
 import * as styles from './TextField.css';
-import { TextFieldProps, TextFieldRef } from './types';
+import { TextFieldProps, TextFieldRefInstance } from './types';
 
-const TextField = React.forwardRef<TextFieldRef, TextFieldProps>((props, ref) => {
+const TextField = React.forwardRef<TextFieldRefInstance, TextFieldProps>((props, ref) => {
   const { autoSelect, className, ...rootProps } = omit(props, InputOnlyHTMLAttributeKeys) as Omit<
     typeof props,
     keyof InputOnlyHTMLAttributes<HTMLInputElement>
@@ -17,7 +18,7 @@ const TextField = React.forwardRef<TextFieldRef, TextFieldProps>((props, ref) =>
   const inputProps = pick(props, InputOnlyHTMLAttributeKeys) as PickExisting<typeof props, keyof InputOnlyHTMLAttributes<HTMLInputElement>>;
 
   return (
-    <Box as="span" {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box as={TextAreaElementType} {...rootProps} ref={ref} className={clsx(styles.root, className)}>
       <FieldTrigger>
         <PrimitiveTextInput {...inputProps} autoSelect={autoSelect} />
       </FieldTrigger>

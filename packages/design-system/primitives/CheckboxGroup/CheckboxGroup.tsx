@@ -2,9 +2,9 @@ import { convertInputSelectedValue } from '@/utils/input';
 import { useEvent, useValue, Box } from '@pigyuma/react-utils';
 import React, { useCallback } from 'react';
 import CheckboxGroupContextProvider from './CheckboxGroup.context';
-import { CheckboxGroupProps, CheckboxGroupRef } from './types';
+import { CheckboxGroupElementType, CheckboxGroupProps, CheckboxGroupRefInstance } from './types';
 
-const CheckboxGroup = React.forwardRef<CheckboxGroupRef, CheckboxGroupProps>((props, ref) => {
+const CheckboxGroup = React.forwardRef<CheckboxGroupRefInstance, CheckboxGroupProps>((props, ref) => {
   const { name, value, defaultValue, disabled, required, onChange, onChangeCapture, ...rootProps } = props;
 
   const [selected = [], setSelected] = useValue<Array<string | number>>(value, defaultValue);
@@ -49,7 +49,7 @@ const CheckboxGroup = React.forwardRef<CheckboxGroupRef, CheckboxGroupProps>((pr
       onChange={onGroupChange}
       onChangeCapture={onGroupChangeCapture}
     >
-      <Box as="span" role="group" {...rootProps} ref={ref} />
+      <Box as={CheckboxGroupElementType} role="group" {...rootProps} ref={ref} />
     </CheckboxGroupContextProvider>
   );
 });

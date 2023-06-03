@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import React from 'react';
 import LayerList from './LayerList';
 import * as styles from './LayerList.css';
-import { LayerListItemProps, LayerListItemRef } from './types';
+import { LayerListItemElementType, LayerListItemProps, LayerListItemRefInstance } from './types';
 import useLayerListItem from './useLayerListItem';
 
 const IconTypeDict = {
@@ -18,7 +18,7 @@ const IconTypeDict = {
 } as const;
 
 /** @todo type, layerType에 따른 아이콘 추가 */
-const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((props, ref) => {
+const LayerListItem = React.forwardRef<LayerListItemRefInstance, LayerListItemProps>((props, ref) => {
   const viewModel = useLayerListItem(props, ref);
   if (viewModel == null) {
     return null;
@@ -43,7 +43,13 @@ const LayerListItem = React.forwardRef<LayerListItemRef, LayerListItemProps>((pr
   const iconType = IconTypeDict[layerType];
 
   return (
-    <Box {...restProps} ref={forkedRef} as="li" role="none" className={clsx(styles.row, { [styles.row_state.selected]: selected })}>
+    <Box
+      {...restProps}
+      ref={forkedRef}
+      as={LayerListItemElementType}
+      role="none"
+      className={clsx(styles.row, { [styles.row_state.selected]: selected })}
+    >
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <div className={styles.item} role={role} onClick={onItemClick}>
         <div className={styles.name}>

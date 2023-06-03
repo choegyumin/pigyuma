@@ -1,5 +1,12 @@
-import { ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
 import Toolbar from '../Toolbar';
 
-export interface WorkspaceToolbarProps extends ComponentPropsWithoutRefByBox<typeof Toolbar> {}
-export type WorkspaceToolbarRef = HTMLDivElement;
+export const WorkspaceToolbarElementType = 'div';
+export type WorkspaceToolbarElementType = typeof WorkspaceToolbarElementType;
+
+export interface WorkspaceToolbarCustomProps {}
+
+export interface WorkspaceToolbarProps
+  extends React.ComponentPropsWithoutRef<WorkspaceToolbarElementType>,
+    React.ComponentPropsWithoutRef<typeof Toolbar>,
+    WorkspaceToolbarCustomProps {}
+export type WorkspaceToolbarRefInstance = React.ElementRef<WorkspaceToolbarElementType>;

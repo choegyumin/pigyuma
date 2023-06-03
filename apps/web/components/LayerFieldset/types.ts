@@ -1,4 +1,9 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
+import React from 'react';
 
-export interface LayerFieldsetProps extends ComponentPropsWithoutRefByBox<'fieldset'> {}
-export type LayerFieldsetRef = ComponentElementRefByBox<'fieldset'>;
+export const LayerFieldsetElementType = 'fieldset';
+export type LayerFieldsetElementType = typeof LayerFieldsetElementType;
+
+export interface LayerFieldsetCustomProps {}
+
+export interface LayerFieldsetProps extends React.ComponentPropsWithoutRef<LayerFieldsetElementType>, LayerFieldsetCustomProps {}
+export type LayerFieldsetRefInstance = React.ElementRef<LayerFieldsetElementType>;

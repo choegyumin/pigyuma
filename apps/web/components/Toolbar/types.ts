@@ -1,8 +1,11 @@
-import { DynamicComponentByBox, DynamicComponentPropsByBox } from '@pigyuma/react-utils';
+import { DynamicComponent, DynamicComponentPropsWithoutRef } from '@pigyuma/react-utils';
 import React from 'react';
 
-interface CustomProps extends React.HTMLAttributes<HTMLElement> {}
+export const DefaultToolbarElementType = 'div';
+export type DefaultToolbarElementType = typeof DefaultToolbarElementType;
 
-export interface ToolbarProps extends DynamicComponentPropsByBox<CustomProps> {}
+export interface ToolbarCustomProps {}
 
-export interface ToolbarComponentFunction extends DynamicComponentByBox<CustomProps> {}
+export interface ToolbarProps extends DynamicComponentPropsWithoutRef<DefaultToolbarElementType, ToolbarCustomProps> {}
+export type ToolbarRefInstance = React.ElementRef<DefaultToolbarElementType>;
+export interface ToolbarComponent extends DynamicComponent<ToolbarCustomProps, DefaultToolbarElementType> {}

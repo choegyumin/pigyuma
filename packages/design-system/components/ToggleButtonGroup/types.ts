@@ -1,14 +1,25 @@
 import {
-  CheckboxGroupItemProps as PCheckboxGroupItemProps,
-  CheckboxGroupProps as PCheckboxGroupProps,
-  CheckboxGroupRef as PCheckboxGroupRef,
+  CheckboxGroupElementType as PrimitiveCheckboxGroupElementType,
+  CheckboxGroupItemProps as PrimitiveCheckboxGroupItemProps,
+  CheckboxGroupProps as PrimitiveCheckboxGroupProps,
+  CheckboxGroupRefInstance as PrimitiveCheckboxGroupRefInstance,
 } from '@/primitives/CheckboxGroup';
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 
-export interface ToggleButtonGroupProps extends PCheckboxGroupProps {}
-export type ToggleButtonGroupRef = PCheckboxGroupRef;
+export const ToggleButtonGroupElementType = PrimitiveCheckboxGroupElementType;
+export type ToggleButtonGroupElementType = typeof ToggleButtonGroupElementType;
+
+export interface ToggleButtonGroupCustomProps {}
+
+export interface ToggleButtonGroupProps extends PrimitiveCheckboxGroupProps, ToggleButtonGroupCustomProps {}
+export type ToggleButtonGroupRefInstance = PrimitiveCheckboxGroupRefInstance;
+
+export const ToggleButtonGroupItemElementType = 'label';
+export type ToggleButtonGroupItemElementType = typeof ToggleButtonGroupItemElementType;
+
+export interface ToggleButtonGroupItemCustomProps {}
 
 export interface ToggleButtonGroupItemProps
-  extends Omit<ComponentPropsWithoutRefByBox<'label'>, 'for' | keyof PCheckboxGroupItemProps>,
-    PCheckboxGroupItemProps {}
-export type ToggleButtonGroupItemRef = ComponentElementRefByBox<'label'>;
+  extends Omit<React.ComponentPropsWithoutRef<'label'>, 'for' | keyof PrimitiveCheckboxGroupItemProps>,
+    PrimitiveCheckboxGroupItemProps,
+    ToggleButtonGroupItemCustomProps {}
+export type ToggleButtonGroupItemRefInstance = React.ElementRef<ToggleButtonGroupItemElementType>;

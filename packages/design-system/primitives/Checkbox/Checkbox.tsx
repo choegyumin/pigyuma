@@ -1,8 +1,8 @@
 import { useEvent, Box } from '@pigyuma/react-utils';
 import React, { useCallback } from 'react';
-import { CheckboxProps, CheckboxRef } from './types';
+import { CheckboxElementType, CheckboxProps, CheckboxRefInstance } from './types';
 
-const Checkbox = React.forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
+const Checkbox = React.forwardRef<CheckboxRefInstance, CheckboxProps>((props, ref) => {
   const { value, onChange, onChangeCapture, ...rootProps } = props;
 
   /**
@@ -54,7 +54,7 @@ const Checkbox = React.forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
       role="checkbox"
       {...rootProps}
       ref={ref}
-      as="input"
+      as={CheckboxElementType}
       type="checkbox"
       value={value}
       data-value={JSON.stringify(value)}

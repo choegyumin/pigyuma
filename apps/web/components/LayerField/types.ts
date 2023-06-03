@@ -1,7 +1,11 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import React from 'react';
 
-export interface LayerFieldProps extends ComponentPropsWithoutRefByBox<'div'> {
+export const LayerFieldElementType = 'div';
+export type LayerFieldElementType = typeof LayerFieldElementType;
+
+export interface LayerFieldCustomProps {
   label?: React.ReactNode;
 }
-export type LayerFieldRef = ComponentElementRefByBox<'div'>;
+
+export interface LayerFieldProps extends React.ComponentPropsWithoutRef<LayerFieldElementType>, LayerFieldCustomProps {}
+export type LayerFieldRefInstance = React.ElementRef<LayerFieldElementType>;

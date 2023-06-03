@@ -3,11 +3,18 @@ import React from 'react';
 import LayerTreeSection from '../LayerTreeSection';
 import Panel from '../Panel';
 import * as styles from './ExplorePanel.css';
-import { ExplorePanelProps, ExplorePanelRef } from './types';
+import { ExplorePanelElementType, ExplorePanelProps, ExplorePanelRefInstance } from './types';
 
-const ExplorePanel = React.forwardRef<ExplorePanelRef, ExplorePanelProps>((props, ref) => {
+const ExplorePanel = React.forwardRef<ExplorePanelRefInstance, ExplorePanelProps>((props, ref) => {
   return (
-    <Panel {...props} ref={ref} as="nav" role="navigation" className={clsx(styles.root, props.className)} placement="left">
+    <Panel
+      {...props}
+      ref={ref}
+      as={ExplorePanelElementType}
+      role="navigation"
+      className={clsx(styles.root, props.className)}
+      placement="left"
+    >
       <LayerTreeSection />
     </Panel>
   );

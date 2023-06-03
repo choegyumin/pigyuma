@@ -1,18 +1,25 @@
-import { DynamicComponentByBox, DynamicComponentPropsByBox } from '@pigyuma/react-utils';
+import { DynamicComponent, DynamicComponentPropsWithoutRef } from '@pigyuma/react-utils';
 import React from 'react';
 
-interface PanelCustomProps extends React.HTMLAttributes<HTMLElement> {
+export const DefaultPanelElementType = 'aside';
+export type DefaultPanelElementType = typeof DefaultPanelElementType;
+
+export interface PanelCustomProps {
   placement: 'left' | 'right';
 }
 
-export interface PanelProps extends DynamicComponentPropsByBox<PanelCustomProps> {}
+export interface PanelProps extends DynamicComponentPropsWithoutRef<DefaultPanelElementType, PanelCustomProps> {}
+export type PanelRefInstance = React.ElementRef<DefaultPanelElementType>;
+export interface PanelComponent extends DynamicComponent<PanelCustomProps, DefaultPanelElementType> {}
 
-export interface PanelComponentFunction extends DynamicComponentByBox<PanelCustomProps> {}
+export const DefaultPanelGroupElementType = 'div';
+export type DefaultPanelGroupElementType = typeof DefaultPanelGroupElementType;
 
-interface PanelGroupCustomProps extends React.HTMLAttributes<HTMLElement> {
+export interface PanelGroupCustomProps {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   heading?: React.ReactNode;
 }
-export interface PanelGroupProps extends DynamicComponentPropsByBox<PanelGroupCustomProps> {}
 
-export interface PanelGroupComponentFunction extends DynamicComponentByBox<PanelGroupCustomProps> {}
+export interface PanelGroupProps extends DynamicComponentPropsWithoutRef<DefaultPanelGroupElementType, PanelGroupCustomProps> {}
+export type PanelGroupRefInstance = React.ElementRef<DefaultPanelGroupElementType>;
+export interface PanelGroupComponent extends DynamicComponent<PanelGroupCustomProps, DefaultPanelGroupElementType> {}

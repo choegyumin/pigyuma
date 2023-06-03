@@ -1,8 +1,8 @@
 import { useEvent, Box } from '@pigyuma/react-utils';
 import React from 'react';
-import { TextAreaProps, TextAreaRef } from './types';
+import { TextAreaElementType, TextAreaProps, TextAreaRefInstance } from './types';
 
-const TextArea = React.forwardRef<TextAreaRef, TextAreaProps>((props, ref) => {
+const TextArea = React.forwardRef<TextAreaRefInstance, TextAreaProps>((props, ref) => {
   const { autoSelect, onChange, onChangeCapture, onFocusCapture, ...rootProps } = props;
 
   const onFieldChange = useEvent((event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -27,7 +27,7 @@ const TextArea = React.forwardRef<TextAreaRef, TextAreaProps>((props, ref) => {
     <Box
       {...rootProps}
       ref={ref}
-      as="textarea"
+      as={TextAreaElementType}
       onChange={onFieldChange}
       onChangeCapture={onFieldChangeCapture}
       onFocusCapture={onFieldFocusCapture}

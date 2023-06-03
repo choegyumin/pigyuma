@@ -6,10 +6,10 @@ import LayerField from '../LayerField';
 import LayerFieldset from '../LayerFieldset';
 import Panel from '../Panel';
 import * as styles from './LayerTransformSection.css';
-import { LayerTransformSectionProps, LayerTransformSectionRef } from './types';
+import { LayerTransformSectionElementType, LayerTransformSectionProps, LayerTransformSectionRefInstance } from './types';
 import useLayerTransformSection from './useLayerTransformSection';
 
-const LayerTransformSection = React.forwardRef<LayerTransformSectionRef, LayerTransformSectionProps>((props, ref) => {
+const LayerTransformSection = React.forwardRef<LayerTransformSectionRefInstance, LayerTransformSectionProps>((props, ref) => {
   const viewModel = useLayerTransformSection(props, ref);
 
   const {
@@ -30,7 +30,7 @@ const LayerTransformSection = React.forwardRef<LayerTransformSectionRef, LayerTr
   const { selected, className, ...restProps } = props;
 
   return (
-    <Panel.Group as="div" {...restProps} ref={ref} className={clsx(styles.root, className)}>
+    <Panel.Group as={LayerTransformSectionElementType} {...restProps} ref={ref} className={clsx(styles.root, className)}>
       <h2 className={mixins.blind}>Transform</h2>
       <LayerFieldset>
         <LayerField label="X">

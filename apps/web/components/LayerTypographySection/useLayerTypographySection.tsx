@@ -1,9 +1,12 @@
 import { useEvent } from '@pigyuma/react-utils';
 import { Artboard, ShapeLayer, TextLayer, useUIController, useUIRecord } from '@pigyuma/ui-design-tool';
-import { LayerTypographySectionProps, LayerTypographySectionRef } from './types';
+import { LayerTypographySectionProps, LayerTypographySectionRefInstance } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function useLayerTypographySection(props: LayerTypographySectionProps, ref: React.ForwardedRef<LayerTypographySectionRef>) {
+export default function useLayerTypographySection(
+  props: LayerTypographySectionProps,
+  ref: React.ForwardedRef<LayerTypographySectionRefInstance>,
+) {
   const { selected: selectedRecordKey } = props;
 
   const uiController = useUIController();

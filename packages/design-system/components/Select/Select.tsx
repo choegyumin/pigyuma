@@ -6,9 +6,9 @@ import clsx from 'clsx';
 import React, { useRef } from 'react';
 import FieldTrigger from '../FieldTrigger';
 import * as styles from './Select.css';
-import { SelectProps, SelectRef } from './types';
+import { SelectElementType, SelectProps, SelectRefInstance } from './types';
 
-const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
+const Select = React.forwardRef<SelectRefInstance, SelectProps>((props, ref) => {
   const { className, children, ...rootProps } = omit(props, SelectOnlyHTMLAttributeKeys) as Omit<
     typeof props,
     keyof SelectOnlyHTMLAttributes<HTMLSelectElement>
@@ -40,7 +40,7 @@ const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
   });
 
   return (
-    <Box as="span" {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box as={SelectElementType} {...rootProps} ref={ref} className={clsx(styles.root, className)}>
       <FieldTrigger className={styles.trigger} aria-hidden={true}>
         <button type="button" dangerouslySetInnerHTML={{ __html: triggerInnerHTML }} />
       </FieldTrigger>

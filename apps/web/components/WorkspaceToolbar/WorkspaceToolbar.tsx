@@ -4,11 +4,11 @@ import { UIDesignToolMode } from '@pigyuma/ui-design-tool/types/Status';
 import clsx from 'clsx';
 import React from 'react';
 import Toolbar from '../Toolbar';
-import { WorkspaceToolbarProps, WorkspaceToolbarRef } from './types';
+import { WorkspaceToolbarElementType, WorkspaceToolbarProps, WorkspaceToolbarRefInstance } from './types';
 import useWorkspaceToolbar from './useWorkspaceToolbar';
 import * as styles from './WorkspaceToolbar.css';
 
-const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarProps>((props, ref) => {
+const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRefInstance, WorkspaceToolbarProps>((props, ref) => {
   const viewModel = useWorkspaceToolbar(props, ref);
 
   useEventListener(() => document, 'keydown', viewModel.onDocumentKeyDown);
@@ -17,7 +17,7 @@ const WorkspaceToolbar = React.forwardRef<WorkspaceToolbarRef, WorkspaceToolbarP
 
   /** @todo title을 Tooltip 컴포넌트로 대체 */
   return (
-    <Toolbar {...props} ref={ref} className={clsx(styles.root, props.className)}>
+    <Toolbar {...props} ref={ref} as={WorkspaceToolbarElementType} className={clsx(styles.root, props.className)}>
       <button
         type="button"
         className={clsx(styles.button, { [styles.button_state.selected]: selectedMode === UIDesignToolMode.select })}

@@ -1,8 +1,8 @@
 import PrimitiveSelect from '@/primitives/Select';
 import React from 'react';
-import { SelectItemProps, SelectItemRef } from './types';
+import { SelectItemProps, SelectItemRefInstance } from './types';
 
-const SelectItem = React.forwardRef<SelectItemRef, SelectItemProps>((props, ref) => {
+const SelectItem = React.forwardRef<SelectItemRefInstance, SelectItemProps>((props, ref) => {
   return <PrimitiveSelect.Item {...props} ref={ref} />;
 });
 SelectItem.displayName = 'SelectItem';

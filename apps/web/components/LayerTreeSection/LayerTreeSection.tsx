@@ -5,13 +5,13 @@ import clsx from 'clsx';
 import React from 'react';
 import LayerList from '../LayerList';
 import * as styles from './LayerTreeSection.css';
-import { LayerTreeSectionProps, LayerTreeSectionRef } from './types';
+import { LayerTreeSectionElementType, LayerTreeSectionProps, LayerTreeSectionRefInstance } from './types';
 
-const LayerTreeSection = React.forwardRef<LayerTreeSectionRef, LayerTreeSectionProps>((props, ref) => {
+const LayerTreeSection = React.forwardRef<LayerTreeSectionRefInstance, LayerTreeSectionProps>((props, ref) => {
   const uiData = useUIData();
 
   return (
-    <Box as="div" {...props} ref={ref} className={clsx(styles.root, props.className)}>
+    <Box {...props} ref={ref} as={LayerTreeSectionElementType} className={clsx(styles.root, props.className)}>
       <h2 className={mixins.blind}>Layers</h2>
       <LayerList records={uiData.tree.children} />
     </Box>

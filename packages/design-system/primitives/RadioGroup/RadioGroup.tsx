@@ -1,9 +1,9 @@
 import { useEvent, useValue, Box } from '@pigyuma/react-utils';
 import React from 'react';
 import RadioGroupContextProvider from './RadioGroup.context';
-import { RadioGroupProps, RadioGroupRef } from './types';
+import { RadioGroupElementType, RadioGroupProps, RadioGroupRefInstance } from './types';
 
-const RadioGroup = React.forwardRef<RadioGroupRef, RadioGroupProps>((props, ref) => {
+const RadioGroup = React.forwardRef<RadioGroupRefInstance, RadioGroupProps>((props, ref) => {
   const { name, value, defaultValue, disabled, required, cancelable, onChange, onChangeCapture, ...rootProps } = props;
 
   const [selected, setSelected] = useValue<string | number | undefined>(value, defaultValue);
@@ -27,7 +27,7 @@ const RadioGroup = React.forwardRef<RadioGroupRef, RadioGroupProps>((props, ref)
       onChange={onGroupChange}
       onChangeCapture={onGroupChangeCapture}
     >
-      <Box as="span" role="radiogroup" {...rootProps} ref={ref} />
+      <Box as={RadioGroupElementType} role="radiogroup" {...rootProps} ref={ref} />
     </RadioGroupContextProvider>
   );
 });

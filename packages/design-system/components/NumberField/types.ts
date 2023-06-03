@@ -1,7 +1,12 @@
 import { NumberInputProps as PrimitiveNumberInputProps } from '@/primitives/NumberInput';
-import { ComponentElementRefByBox, ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
+
+export const NumberFieldElementType = 'span';
+export type NumberFieldElementType = typeof NumberFieldElementType;
+
+export interface NumberFieldCustomProps {}
 
 export interface NumberFieldProps
-  extends Omit<ComponentPropsWithoutRefByBox<'span'>, keyof PrimitiveNumberInputProps>,
-    Omit<PrimitiveNumberInputProps, 'type'> {}
-export type NumberFieldRef = ComponentElementRefByBox<'span'>;
+  extends Omit<React.ComponentPropsWithoutRef<'span'>, keyof PrimitiveNumberInputProps>,
+    PrimitiveNumberInputProps,
+    NumberFieldCustomProps {}
+export type NumberFieldRefInstance = React.ElementRef<NumberFieldElementType>;
