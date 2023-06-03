@@ -3,7 +3,6 @@ import { Artboard, ShapeLayer, TextLayer, useUIController, useUIRecord } from '@
 import { HeightLengthType, WidthLengthType, XLengthType, YLengthType } from '@pigyuma/ui-design-tool/types/Unit';
 import { LayerTransformSectionProps, LayerTransformSectionRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useLayerTransformSection(
   props: LayerTransformSectionProps,
   ref: React.ForwardedRef<LayerTransformSectionRefInstance>,

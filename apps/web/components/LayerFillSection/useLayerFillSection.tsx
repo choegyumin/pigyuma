@@ -2,7 +2,6 @@ import { useEvent } from '@pigyuma/react-utils';
 import { Artboard, ShapeLayer, TextLayer, useUIController, useUIRecord } from '@pigyuma/ui-design-tool';
 import { LayerFillSectionProps, LayerFillSectionRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useLayerFillSection(props: LayerFillSectionProps, ref: React.ForwardedRef<LayerFillSectionRefInstance>) {
   const { selected: selectedRecordKey } = props;
 

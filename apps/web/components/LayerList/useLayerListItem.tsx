@@ -4,7 +4,6 @@ import { ExcludeUIRecordWithChildren, ExtractUIRecordWithChildren, hasUIRecordCh
 import { useEffect, useId, useState } from 'react';
 import { LayerListItemProps, LayerListItemRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useLayerListItem(props: LayerListItemProps, ref: React.ForwardedRef<LayerListItemRefInstance>) {
   const componentId = useId();
 

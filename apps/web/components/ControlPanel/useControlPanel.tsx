@@ -2,7 +2,6 @@ import { Artboard, ShapeLayer, TextLayer, useUIData } from '@pigyuma/ui-design-t
 import React from 'react';
 import { ControlPanelProps, ControlPanelRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useControlPanel(props: ControlPanelProps, ref: React.ForwardedRef<ControlPanelRefInstance>) {
   const uiData = useUIData();
   const selectedRecord = uiData.get([...uiData.selected][0]);

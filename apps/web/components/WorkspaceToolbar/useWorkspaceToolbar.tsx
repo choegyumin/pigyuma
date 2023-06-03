@@ -3,7 +3,6 @@ import { useUIController, useUIData } from '@pigyuma/ui-design-tool';
 import { UIDesignToolMode, UIDesignToolStatus } from '@pigyuma/ui-design-tool/types/Status';
 import { WorkspaceToolbarProps, WorkspaceToolbarRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useWorkspaceToolbar(props: WorkspaceToolbarProps, ref: React.ForwardedRef<WorkspaceToolbarRefInstance>) {
   const uiController = useUIController();
   const uiData = useUIData();

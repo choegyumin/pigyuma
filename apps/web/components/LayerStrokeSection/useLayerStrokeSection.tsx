@@ -3,7 +3,6 @@ import { Artboard, ShapeLayer, TextLayer, useUIController, useUIRecord } from '@
 import { StrokeStylePattern } from '@pigyuma/ui-design-tool/types/Unit';
 import { LayerStrokeSectionProps, LayerStrokeSectionRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useLayerStrokeSection(props: LayerStrokeSectionProps, ref: React.ForwardedRef<LayerStrokeSectionRefInstance>) {
   const { selected: selectedRecordKey } = props;
 

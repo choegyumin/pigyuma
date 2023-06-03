@@ -5,7 +5,6 @@ import { useMount } from '@pigyuma/react-utils';
 import { cloneDeep } from '@pigyuma/utils';
 import { UIDesignCanvasProps, UIDesignCanvasRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useUIDesignCanvas(props: UIDesignCanvasProps, ref: React.ForwardedRef<UIDesignCanvasRefInstance>) {
   const { initialData } = props;
 
