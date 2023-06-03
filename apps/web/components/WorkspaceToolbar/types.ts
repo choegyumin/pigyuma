@@ -1,6 +1,6 @@
-import Toolbar from '../Toolbar';
+import Toolbar, { DefaultToolbarElementType } from '../Toolbar';
 
-export const WorkspaceToolbarElementType = 'div';
+export const WorkspaceToolbarElementType = DefaultToolbarElementType;
 export type WorkspaceToolbarElementType = typeof WorkspaceToolbarElementType;
 
 export interface WorkspaceToolbarCustomProps {}
