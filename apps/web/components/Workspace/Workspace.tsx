@@ -14,7 +14,7 @@ const Workspace = React.memo(
     const { initialData, className, ...restProps } = props;
 
     return (
-      <Box as={WorkspaceElementType} {...restProps} ref={ref} className={clsx(styles.root, className)}>
+      <Box {...restProps} ref={ref} as={WorkspaceElementType} className={clsx(styles.root, className)}>
         <WorkspaceToolbar />
         <div className={styles.container}>
           <NoSSR>

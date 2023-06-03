@@ -30,7 +30,7 @@ const LayerTransformSection = React.forwardRef<LayerTransformSectionRefInstance,
   const { selected, className, ...restProps } = props;
 
   return (
-    <Panel.Group as={LayerTransformSectionElementType} {...restProps} ref={ref} className={clsx(styles.root, className)}>
+    <Panel.Group {...restProps} ref={ref} as={LayerTransformSectionElementType} className={clsx(styles.root, className)}>
       <h2 className={mixins.blind}>Transform</h2>
       <LayerFieldset>
         <LayerField label="X">

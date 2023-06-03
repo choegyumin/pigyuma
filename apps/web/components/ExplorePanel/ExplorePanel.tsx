@@ -8,10 +8,10 @@ import { ExplorePanelElementType, ExplorePanelProps, ExplorePanelRefInstance } f
 const ExplorePanel = React.forwardRef<ExplorePanelRefInstance, ExplorePanelProps>((props, ref) => {
   return (
     <Panel
+      role="navigation"
       {...props}
       ref={ref}
       as={ExplorePanelElementType}
-      role="navigation"
       className={clsx(styles.root, props.className)}
       placement="left"
     >

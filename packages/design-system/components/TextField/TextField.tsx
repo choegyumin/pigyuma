@@ -18,7 +18,7 @@ const TextField = React.forwardRef<TextFieldRefInstance, TextFieldProps>((props,
   const inputProps = pick(props, InputOnlyHTMLAttributeKeys) as PickExisting<typeof props, keyof InputOnlyHTMLAttributes<HTMLInputElement>>;
 
   return (
-    <Box as={TextAreaElementType} {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box {...rootProps} ref={ref} as={TextAreaElementType} className={clsx(styles.root, className)}>
       <FieldTrigger>
         <PrimitiveTextInput {...inputProps} autoSelect={autoSelect} />
       </FieldTrigger>

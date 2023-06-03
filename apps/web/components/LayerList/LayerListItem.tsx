@@ -44,10 +44,10 @@ const LayerListItem = React.forwardRef<LayerListItemRefInstance, LayerListItemPr
 
   return (
     <Box
+      role="none"
       {...restProps}
       ref={forkedRef}
       as={LayerListItemElementType}
-      role="none"
       className={clsx(styles.row, { [styles.row_state.selected]: selected })}
     >
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}

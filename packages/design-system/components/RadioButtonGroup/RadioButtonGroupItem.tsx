@@ -16,7 +16,7 @@ const RadioButtonGroupItem = React.forwardRef<RadioButtonGroupItemRefInstance, R
   const inputProps = pick(props, InputOnlyHTMLAttributeKeys) as PickExisting<typeof props, keyof InputOnlyHTMLAttributes<HTMLInputElement>>;
 
   return (
-    <Box as={RadioButtonGroupItemElementType} {...rootProps} ref={ref} className={clsx(styles.item, className)}>
+    <Box {...rootProps} ref={ref} as={RadioButtonGroupItemElementType} className={clsx(styles.item, className)}>
       <PrimitiveRadioGroup.Item {...inputProps} />
       {children}
     </Box>

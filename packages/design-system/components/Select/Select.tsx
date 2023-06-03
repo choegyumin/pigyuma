@@ -40,7 +40,7 @@ const Select = React.forwardRef<SelectRefInstance, SelectProps>((props, ref) => 
   });
 
   return (
-    <Box as={SelectElementType} {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box {...rootProps} ref={ref} as={SelectElementType} className={clsx(styles.root, className)}>
       <FieldTrigger className={styles.trigger} aria-hidden={true}>
         <button type="button" dangerouslySetInnerHTML={{ __html: triggerInnerHTML }} />
       </FieldTrigger>

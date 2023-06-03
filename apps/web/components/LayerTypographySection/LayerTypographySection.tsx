@@ -17,9 +17,9 @@ const LayerTypographySection = React.forwardRef<LayerTypographySectionRefInstanc
 
   return (
     <Panel.Group
-      as={LayerTypographySectionElementType}
       {...restProps}
       ref={ref}
+      as={LayerTypographySectionElementType}
       className={clsx(styles.root, className)}
       heading="Typography"
     >

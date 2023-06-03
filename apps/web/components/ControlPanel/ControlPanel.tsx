@@ -16,10 +16,10 @@ const ControlPanel = React.forwardRef<ControlPanelRefInstance, ControlPanelProps
 
   return (
     <Panel
+      role="toolbar"
       {...props}
       ref={ref}
       as={ControlPanelElementType}
-      role="toolbar"
       className={clsx(styles.root, props.className)}
       placement="right"
     >

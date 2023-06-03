@@ -15,7 +15,7 @@ const LayerFillSection = React.forwardRef<LayerFillSectionRefInstance, LayerFill
   const { selected, className, ...restProps } = props;
 
   return (
-    <Panel.Group as={LayerFillSectionElementType} {...restProps} ref={ref} className={clsx(styles.root, className)} heading="Fill">
+    <Panel.Group {...restProps} ref={ref} as={LayerFillSectionElementType} className={clsx(styles.root, className)} heading="Fill">
       <LayerFieldset>
         <LayerField label="Color">
           <ColorPicker value={fillColor} onChange={onFillColorChange} disabled={!editable} />

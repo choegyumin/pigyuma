@@ -17,9 +17,9 @@ const Icon = React.forwardRef<IconRefInstance, IconProps>((props, ref) => {
 
   return (
     <Box
-      as={MDIIcon}
       {...restProps}
       ref={ref as React.ComponentProps<typeof MDIIcon>['ref']}
+      as={MDIIcon}
       className={clsx(styles.root, className)}
       path={path}
       horizontal={horizontal}

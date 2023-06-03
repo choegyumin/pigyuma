@@ -17,7 +17,7 @@ const NumberField = React.forwardRef<NumberFieldRefInstance, NumberFieldProps>((
   const inputProps = pick(props, InputOnlyHTMLAttributeKeys) as PickExisting<typeof props, keyof InputOnlyHTMLAttributes<HTMLInputElement>>;
 
   return (
-    <Box as={NumberFieldElementType} {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box {...rootProps} ref={ref} as={NumberFieldElementType} className={clsx(styles.root, className)}>
       <FieldTrigger>
         <PrimitiveNumberInput {...inputProps} type="number" autoSelect={autoSelect} />
       </FieldTrigger>

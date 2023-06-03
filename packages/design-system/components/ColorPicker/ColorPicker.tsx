@@ -28,7 +28,7 @@ const ColorPicker = React.forwardRef<ColorPickerRefInstance, ColorPickerProps>((
   });
 
   return (
-    <Box as={ColorPickerElementType} {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box {...rootProps} ref={ref} as={ColorPickerElementType} className={clsx(styles.root, className)}>
       <FieldTrigger className={styles.trigger} aria-hidden={true}>
         <button type="button">
           <span className={styles.color} style={{ [styles.varNames.color]: color }} />

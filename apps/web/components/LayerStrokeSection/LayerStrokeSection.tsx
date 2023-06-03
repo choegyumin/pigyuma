@@ -28,7 +28,7 @@ const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRefInstance, Layer
   const { selected, className, ...restProps } = props;
 
   return (
-    <Panel.Group as={LayerStrokeSectionElementType} {...restProps} ref={ref} className={clsx(styles.root, className)} heading="Stroke">
+    <Panel.Group {...restProps} ref={ref} as={LayerStrokeSectionElementType} className={clsx(styles.root, className)} heading="Stroke">
       <LayerFieldset>
         <LayerField label="Color">
           <ColorPicker value={strokeColor} onChange={onStrokeColorChange} disabled={!editable} />

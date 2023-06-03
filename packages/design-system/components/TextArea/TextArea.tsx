@@ -20,7 +20,7 @@ const TextArea = React.forwardRef<TextAreaRefInstance, TextAreaProps>((props, re
   >;
 
   return (
-    <Box as={TextAreaElementType} {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box {...rootProps} ref={ref} as={TextAreaElementType} className={clsx(styles.root, className)}>
       <FieldTrigger>
         <PrimitiveTextArea {...inputProps} autoSelect={autoSelect} />
       </FieldTrigger>

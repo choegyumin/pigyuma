@@ -16,7 +16,7 @@ const ToggleButtonGroupItem = React.forwardRef<ToggleButtonGroupItemRefInstance,
   const inputProps = pick(props, InputOnlyHTMLAttributeKeys) as PickExisting<typeof props, keyof InputOnlyHTMLAttributes<HTMLInputElement>>;
 
   return (
-    <Box as={ToggleButtonGroupItemElementType} {...rootProps} ref={ref} className={clsx(styles.item, className)}>
+    <Box {...rootProps} ref={ref} as={ToggleButtonGroupItemElementType} className={clsx(styles.item, className)}>
       <PrimitiveCheckboxGroup.Item {...inputProps} />
       {children}
     </Box>
