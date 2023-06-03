@@ -4,13 +4,13 @@ import { UIDesignToolElementDataAttributeName } from '@/types/Identifier';
 import clsx from 'clsx';
 import React from 'react';
 import { InteractionController } from '../InteractionController/InteractionController';
-import { UIDesignCanvasProps, UIDesignCanvasRef } from './types';
+import { UIDesignCanvasProps, UIDesignCanvasRefInstance } from './types';
 import * as styles from './UIDesignCanvas.css';
 import useUIDesignCanvas from './useUIDesignCanvas';
 
 /** @todo 오픈 소스로 전환 시: 빌드 시 적은 용량을 가지는 SolidJS 등의 기술로 마이그레이션 (UIDesignTool과 연결된 라이브러리별 API 제공) */
 export const UIDesignCanvas = React.memo(
-  React.forwardRef<UIDesignCanvasRef, UIDesignCanvasProps>((props, ref) => {
+  React.forwardRef<UIDesignCanvasRefInstance, UIDesignCanvasProps>((props, ref) => {
     const viewModel = useUIDesignCanvas(props, ref);
 
     const { id, mode } = viewModel;

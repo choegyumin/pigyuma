@@ -12,7 +12,7 @@ export * from './models/TextLayer/model';
 export * from './models/UIRecord/model';
 
 export { UIDesignCanvas as UIDesignCanvas } from './renderer/components/UIDesignCanvas/UIDesignCanvas';
-export type { UIDesignCanvasProps, UIDesignCanvasRef } from './renderer/components/UIDesignCanvas/types';
+export type { UIDesignCanvasProps, UIDesignCanvasRefInstance } from './renderer/components/UIDesignCanvas/types';
 
 export { default as useUIController } from './renderer/hooks/useUIController';
 export { default as useUIData } from './renderer/hooks/useUIData';

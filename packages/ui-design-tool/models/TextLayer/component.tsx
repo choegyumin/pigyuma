@@ -8,9 +8,9 @@ export interface TextLayerProps {
   data: TextLayer;
 }
 
-export type TextLayerRef = HTMLDivElement;
+export type TextLayerRefInstance = HTMLDivElement;
 
-export const RawTextLayerComponent = React.forwardRef<TextLayerRef, TextLayerProps>((props, ref) => {
+export const RawTextLayerComponent = React.forwardRef<TextLayerRefInstance, TextLayerProps>((props, ref) => {
   const { data: textLayer, ...restProps } = props;
 
   return (

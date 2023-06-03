@@ -5,4 +5,4 @@ export interface UIDesignToolProviderProps
     api: UIDesignTool;
   }> {}
 
-export type UIDesignToolProviderRef = unknown;
+export type UIDesignToolProviderRefInstance = unknown;

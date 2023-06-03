@@ -5,24 +5,24 @@ import { useRef } from 'react';
 describe('useForkedRef', () => {
   test('should return same value as original ref', () => {
     const { result: originalResult } = renderHook(() => useRef<number>(1));
-    const originalRef = originalResult.current;
+    const originalInstance = originalResult.current;
 
-    const { result: forkedResult } = renderHook(() => useForkedRef(originalRef));
-    const forkedRef = forkedResult.current;
+    const { result: forkedResult } = renderHook(() => useForkedRef(originalInstance));
+    const forkedInstance = forkedResult.current;
 
-    expect(originalRef.current).toBe(1);
-    expect(forkedRef.current).toBe(1);
+    expect(originalInstance.current).toBe(1);
+    expect(forkedInstance.current).toBe(1);
   });
 
   test('should update original ref object when forked ref object is updated', () => {
     const { result: originalResult } = renderHook(() => useRef<number>(1));
-    const originalRef = originalResult.current;
+    const originalInstance = originalResult.current;
 
-    const { result: forkedResult } = renderHook(() => useForkedRef(originalRef));
-    const forkedRef = forkedResult.current;
+    const { result: forkedResult } = renderHook(() => useForkedRef(originalInstance));
+    const forkedInstance = forkedResult.current;
 
-    forkedRef.current = 2;
-    expect(originalRef.current).toBe(2);
-    expect(forkedRef.current).toBe(2);
+    forkedInstance.current = 2;
+    expect(originalInstance.current).toBe(2);
+    expect(forkedInstance.current).toBe(2);
   });
 });

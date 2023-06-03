@@ -3,9 +3,9 @@ import { Box } from '@pigyuma/react-utils';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './Icon.css';
-import { IconPath, IconProps, IconRef, InitialIconProps } from './types';
+import { IconPath, IconProps, IconRefInstance, InitialIconProps } from './types';
 
-const Icon = React.forwardRef<IconRef, IconProps>((props, ref) => {
+const Icon = React.forwardRef<IconRefInstance, IconProps>((props, ref) => {
   const { type, color, size, rotate: rotateProp, flipX: flipXProp, flipY: flipYProp, spin, className, style, ...restProps } = props;
 
   const initialProps = InitialIconProps[type];

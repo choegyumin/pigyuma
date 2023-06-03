@@ -9,9 +9,9 @@ export interface ShapeLayerProps {
   data: ShapeLayer;
 }
 
-export type ShapeLayerRef = HTMLDivElement;
+export type ShapeLayerRefInstance = HTMLDivElement;
 
-export const RawShapeLayerComponent = React.forwardRef<ShapeLayerRef, ShapeLayerProps>((props, ref) => {
+export const RawShapeLayerComponent = React.forwardRef<ShapeLayerRefInstance, ShapeLayerProps>((props, ref) => {
   const { data: shapeLayer, ...restProps } = props;
 
   return (

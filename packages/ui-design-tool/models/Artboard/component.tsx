@@ -10,9 +10,9 @@ export interface ArtboardProps {
   data: Artboard;
 }
 
-export type ArtboardRef = HTMLDivElement;
+export type ArtboardRefInstance = HTMLDivElement;
 
-export const RawArtboardComponent = React.forwardRef<ArtboardRef, ArtboardProps>((props, ref) => {
+export const RawArtboardComponent = React.forwardRef<ArtboardRefInstance, ArtboardProps>((props, ref) => {
   const { data: artboard, ...restProps } = props;
 
   const selected = !!restProps[UIRecordElementDataAttributeName.selected];
