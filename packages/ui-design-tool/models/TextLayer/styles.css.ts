@@ -34,6 +34,8 @@ export const root = style({
   lineHeight: vars.lineHeight,
   fontWeight: vars.fontWeight,
   letterSpacing: vars.letterSpacing,
+  /** @todo 기본값은 지정하되, 부모 UIRecord에 따라 정렬 기준을 변경할 수 있도록 개선 */
+  verticalAlign: 'top',
   contentVisibility: 'auto',
 });
 
