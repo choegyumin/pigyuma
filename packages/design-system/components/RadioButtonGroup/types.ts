@@ -1,14 +1,25 @@
 import {
-  RadioGroupItemProps as PRadioGroupItemProps,
-  RadioGroupProps as PRadioGroupProps,
-  RadioGroupRef as PRadioGroupRef,
+  RadioGroupElementType as PrimitiveRadioGroupElementType,
+  RadioGroupItemProps as PrimitiveRadioGroupItemProps,
+  RadioGroupProps as PrimitiveRadioGroupProps,
+  RadioGroupRefInstance as PrimitiveRadioGroupRefInstance,
 } from '@/primitives/RadioGroup';
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 
-export interface RadioButtonGroupProps extends PRadioGroupProps {}
-export type RadioButtonGroupRef = PRadioGroupRef;
+export const RadioButtonGroupElementType = PrimitiveRadioGroupElementType;
+export type RadioButtonGroupElementType = typeof RadioButtonGroupElementType;
+
+export interface RadioButtonGroupCustomProps {}
+
+export interface RadioButtonGroupProps extends PrimitiveRadioGroupProps, RadioButtonGroupCustomProps {}
+export type RadioButtonGroupRefInstance = PrimitiveRadioGroupRefInstance;
+
+export const RadioButtonGroupItemElementType = 'label';
+export type RadioButtonGroupItemElementType = typeof RadioButtonGroupItemElementType;
+
+export interface RadioButtonGroupItemCustomProps {}
 
 export interface RadioButtonGroupItemProps
-  extends Omit<ComponentPropsWithoutRefByBox<'label'>, 'for' | keyof PRadioGroupItemProps>,
-    PRadioGroupItemProps {}
-export type RadioButtonGroupItemRef = ComponentElementRefByBox<'label'>;
+  extends Omit<React.ComponentPropsWithoutRef<'label'>, 'for' | keyof PrimitiveRadioGroupItemProps>,
+    PrimitiveRadioGroupItemProps,
+    RadioButtonGroupItemCustomProps {}
+export type RadioButtonGroupItemRefInstance = React.ElementRef<RadioButtonGroupItemElementType>;

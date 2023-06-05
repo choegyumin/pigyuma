@@ -1,7 +1,12 @@
 import { ColorPickerProps as PrimitiveColorPickerProps } from '@/primitives/ColorPicker';
-import { ComponentElementRefByBox, ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
+
+export const ColorPickerElementType = 'span';
+export type ColorPickerElementType = typeof ColorPickerElementType;
+
+export interface ColorPickerCustomProps {}
 
 export interface ColorPickerProps
-  extends Omit<ComponentPropsWithoutRefByBox<'span'>, keyof PrimitiveColorPickerProps>,
-    PrimitiveColorPickerProps {}
-export type ColorPickerRef = ComponentElementRefByBox<'span'>;
+  extends Omit<React.ComponentPropsWithoutRef<'span'>, keyof PrimitiveColorPickerProps>,
+    PrimitiveColorPickerProps,
+    ColorPickerCustomProps {}
+export type ColorPickerRefInstance = React.ElementRef<ColorPickerElementType>;

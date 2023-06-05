@@ -1,10 +1,8 @@
 import React from 'react';
 
 const Box = React.forwardRef((props, ref) => {
-  const { as = 'div', ...componentProps } = props;
-  const elementProps = { ...componentProps, ref };
-  delete elementProps.component;
-  return React.createElement(as, elementProps);
+  const { as = 'div', ...elementProps } = props;
+  return React.createElement(as, { ...elementProps, ref });
 });
 Box.displayName = 'Box';
 

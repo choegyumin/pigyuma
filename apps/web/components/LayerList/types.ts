@@ -1,17 +1,27 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import { Artboard, ShapeLayer, TextLayer } from '@pigyuma/ui-design-tool';
+import React from 'react';
 
-export interface LayerListProps extends ComponentPropsWithoutRefByBox<'ul'> {
+export const LayerListElementType = 'ul';
+export type LayerListElementType = typeof LayerListElementType;
+
+export interface LayerListCustomProps {
   records: Array<Artboard | ShapeLayer | TextLayer>;
   depth?: number;
   hidden?: boolean;
   onOpen?: () => void;
 }
-export type LayerListRef = ComponentElementRefByBox<'ul'>;
 
-export interface LayerListItemProps extends ComponentPropsWithoutRefByBox<'li'> {
+export interface LayerListProps extends React.ComponentPropsWithoutRef<LayerListElementType>, LayerListCustomProps {}
+export type LayerListRefInstance = React.ElementRef<LayerListElementType>;
+
+export const LayerListItemElementType = 'li';
+export type LayerListItemElementType = typeof LayerListItemElementType;
+
+export interface LayerListItemCustomProps {
   record: Artboard | ShapeLayer | TextLayer;
   depth?: number;
   onGroupOpen?: () => void;
 }
-export type LayerListItemRef = ComponentElementRefByBox<'li'>;
+
+export interface LayerListItemProps extends React.ComponentPropsWithoutRef<LayerListItemElementType>, LayerListItemCustomProps {}
+export type LayerListItemRefInstance = React.ElementRef<LayerListItemElementType>;

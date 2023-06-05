@@ -1,11 +1,11 @@
-import PRadioGroup from '@/primitives/RadioGroup';
+import PrimitiveRadioGroup from '@/primitives/RadioGroup';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './RadioButtonGroup.css';
-import { RadioButtonGroupProps, RadioButtonGroupRef } from './types';
+import { RadioButtonGroupProps, RadioButtonGroupRefInstance } from './types';
 
-const RadioButtonGroup = React.forwardRef<RadioButtonGroupRef, RadioButtonGroupProps>((props, ref) => {
-  return <PRadioGroup {...props} ref={ref} className={clsx(styles.root, props.className)} />;
+const RadioButtonGroup = React.forwardRef<RadioButtonGroupRefInstance, RadioButtonGroupProps>((props, ref) => {
+  return <PrimitiveRadioGroup {...props} ref={ref} className={clsx(styles.root, props.className)} />;
 });
 RadioButtonGroup.displayName = 'RadioButtonGroup';
 

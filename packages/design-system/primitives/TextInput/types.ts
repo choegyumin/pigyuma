@@ -1,9 +1,12 @@
 import { TextInputOnlyHTMLAttributes } from '@pigyuma/react-utility-types';
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
+import React from 'react';
 
 type Value = string;
 
-interface TextInputCustomProps {
+export const TextInputElementType = 'input';
+export type TextInputElementType = typeof TextInputElementType;
+
+export interface TextInputCustomProps {
   value?: Value;
   defaultValue?: Value;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>, value: Value) => void;
@@ -12,6 +15,6 @@ interface TextInputCustomProps {
 }
 
 export interface TextInputProps
-  extends Omit<ComponentPropsWithoutRefByBox<'span'> & TextInputOnlyHTMLAttributes<HTMLInputElement>, keyof TextInputCustomProps>,
+  extends Omit<React.ComponentPropsWithoutRef<'span'> & TextInputOnlyHTMLAttributes<HTMLInputElement>, keyof TextInputCustomProps>,
     TextInputCustomProps {}
-export type TextInputRef = ComponentElementRefByBox<'input'>;
+export type TextInputRefInstance = React.ElementRef<TextInputElementType>;

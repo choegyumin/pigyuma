@@ -1,8 +1,8 @@
 import { useEvent, Box } from '@pigyuma/react-utils';
 import React, { useCallback } from 'react';
-import { RadioProps, RadioRef } from './types';
+import { RadioElementType, RadioProps, RadioRefInstance } from './types';
 
-const Radio = React.forwardRef<RadioRef, RadioProps>((props, ref) => {
+const Radio = React.forwardRef<RadioRefInstance, RadioProps>((props, ref) => {
   const { cancelable, value, onChange, onChangeCapture, ...rootProps } = props;
 
   const type = cancelable ? 'checkbox' : 'radio';
@@ -27,7 +27,7 @@ const Radio = React.forwardRef<RadioRef, RadioProps>((props, ref) => {
       role="radio"
       {...rootProps}
       ref={ref}
-      as="input"
+      as={RadioElementType}
       type={type}
       value={value}
       data-value={JSON.stringify(value)}

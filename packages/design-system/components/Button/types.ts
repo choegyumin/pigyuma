@@ -1,4 +1,7 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
+export const ButtonElementType = 'button';
+export type ButtonElementType = typeof ButtonElementType;
 
-export interface ButtonProps extends ComponentPropsWithoutRefByBox<'button'> {}
-export type ButtonRef = ComponentElementRefByBox<'button'>;
+export interface ButtonCustomProps {}
+
+export interface ButtonProps extends React.ComponentPropsWithoutRef<ButtonElementType>, ButtonCustomProps {}
+export type ButtonRefInstance = React.ElementRef<ButtonElementType>;

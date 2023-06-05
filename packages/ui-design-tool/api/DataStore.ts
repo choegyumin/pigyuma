@@ -47,7 +47,6 @@ export class DataStore extends DataSubscriber {
   readonly #draftKeys: Set<UIRecordKey>;
   readonly #selectedKeys: Set<UIRecordKey>;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(config: DataStoreConfig = {}) {
     const { id = uuid.v4() } = config;
 

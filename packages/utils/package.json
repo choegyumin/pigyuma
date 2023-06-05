@@ -5,10 +5,10 @@
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
-    "format": "cd ../../ && yarn prettier \"packages/utils/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
-    "lint": "cd ../../ && TIMING=1 yarn eslint \"packages/utils/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
     "test": "vitest watch --ui --open=false",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "format": "cd ../../ && yarn prettier \"packages/utils/**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
+    "lint": "cd ../../ && TIMING=1 yarn eslint \"packages/utils/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to ."
   },
   "dependencies": {
     "lodash-es": "^4.17.6",

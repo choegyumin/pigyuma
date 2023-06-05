@@ -6,17 +6,23 @@ import LayerField from '../LayerField';
 import LayerFieldset from '../LayerFieldset';
 import Panel from '../Panel';
 import * as styles from './LayerTypographySection.css';
-import { LayerTypographySectionProps, LayerTypographySectionRef } from './types';
+import { LayerTypographySectionElementType, LayerTypographySectionProps, LayerTypographySectionRefInstance } from './types';
 import useLayerTypographySection from './useLayerTypographySection';
 
-const LayerTypographySection = React.forwardRef<LayerTypographySectionRef, LayerTypographySectionProps>((props, ref) => {
+const LayerTypographySection = React.forwardRef<LayerTypographySectionRefInstance, LayerTypographySectionProps>((props, ref) => {
   const viewModel = useLayerTypographySection(props, ref);
 
   const { editable, textColor, content, onTextColorChange, onContentChange } = viewModel;
   const { selected, className, ...restProps } = props;
 
   return (
-    <Panel.Group as="div" {...restProps} ref={ref} className={clsx(styles.root, className)} heading="Typography">
+    <Panel.Group
+      {...restProps}
+      ref={ref}
+      as={LayerTypographySectionElementType}
+      className={clsx(styles.root, className)}
+      heading="Typography"
+    >
       <LayerFieldset>
         <LayerField label="Color">
           <ColorPicker value={textColor} onChange={onTextColorChange} disabled={!editable} />

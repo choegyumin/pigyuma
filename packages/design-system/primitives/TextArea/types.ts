@@ -1,9 +1,12 @@
 import { TextareaOnlyHTMLAttributes } from '@pigyuma/react-utility-types';
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
+import React from 'react';
 
 type Value = string;
 
-interface TextAreaCustomProps {
+export const TextAreaElementType = 'textarea';
+export type TextAreaElementType = typeof TextAreaElementType;
+
+export interface TextAreaCustomProps {
   value?: Value;
   defaultValue?: Value;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>, value: Value) => void;
@@ -12,6 +15,6 @@ interface TextAreaCustomProps {
 }
 
 export interface TextAreaProps
-  extends Omit<ComponentPropsWithoutRefByBox<'span'> & TextareaOnlyHTMLAttributes<HTMLTextAreaElement>, keyof TextAreaCustomProps>,
+  extends Omit<React.ComponentPropsWithoutRef<'span'> & TextareaOnlyHTMLAttributes<HTMLTextAreaElement>, keyof TextAreaCustomProps>,
     TextAreaCustomProps {}
-export type TextAreaRef = ComponentElementRefByBox<'textarea'>;
+export type TextAreaRefInstance = React.ElementRef<TextAreaElementType>;

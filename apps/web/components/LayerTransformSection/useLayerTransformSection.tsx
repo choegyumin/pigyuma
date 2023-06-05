@@ -1,10 +1,12 @@
 import { useEvent } from '@pigyuma/react-utils';
 import { Artboard, ShapeLayer, TextLayer, useUIController, useUIRecord } from '@pigyuma/ui-design-tool';
 import { HeightLengthType, WidthLengthType, XLengthType, YLengthType } from '@pigyuma/ui-design-tool/types/Unit';
-import { LayerTransformSectionProps, LayerTransformSectionRef } from './types';
+import { LayerTransformSectionProps, LayerTransformSectionRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function useLayerTransformSection(props: LayerTransformSectionProps, ref: React.ForwardedRef<LayerTransformSectionRef>) {
+export default function useLayerTransformSection(
+  props: LayerTransformSectionProps,
+  ref: React.ForwardedRef<LayerTransformSectionRefInstance>,
+) {
   const { selected: selectedRecordKey } = props;
 
   const uiController = useUIController();

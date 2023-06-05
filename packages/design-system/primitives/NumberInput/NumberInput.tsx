@@ -1,12 +1,12 @@
 import { useEvent, useForkedRef, Box } from '@pigyuma/react-utils';
 import React, { useCallback, useState } from 'react';
-import { NumberInputProps, NumberInputRef } from './types';
+import { NumberInputElementType, NumberInputProps, NumberInputRefInstance } from './types';
 
 /**
  * @todo NumberInput 컴포넌트 고도화
  * - `step`이 `value`, `min`, `max` HTML Attributes 대신, 현재 입력된 값을 기준으로 동작하도록 개선
  */
-const NumberInput = React.forwardRef<NumberInputRef, NumberInputProps>((props, ref) => {
+const NumberInput = React.forwardRef<NumberInputRefInstance, NumberInputProps>((props, ref) => {
   const {
     autoSelect,
     value: valueProp,
@@ -61,7 +61,7 @@ const NumberInput = React.forwardRef<NumberInputRef, NumberInputProps>((props, r
     <Box
       {...rootProps}
       ref={forkedRef}
-      as="input"
+      as={NumberInputElementType}
       type="number"
       inputMode="decimal"
       spellCheck={false}

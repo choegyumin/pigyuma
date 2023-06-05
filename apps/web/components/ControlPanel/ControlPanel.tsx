@@ -6,16 +6,23 @@ import LayerTransformSection from '../LayerTransformSection';
 import LayerTypographySection from '../LayerTypographySection';
 import Panel from '../Panel';
 import * as styles from './ControlPanel.css';
-import { ControlPanelProps, ControlPanelRef } from './types';
+import { ControlPanelElementType, ControlPanelProps, ControlPanelRefInstance } from './types';
 import useControlPanel from './useControlPanel';
 
-const ControlPanel = React.forwardRef<ControlPanelRef, ControlPanelProps>((props, ref) => {
+const ControlPanel = React.forwardRef<ControlPanelRefInstance, ControlPanelProps>((props, ref) => {
   const viewModel = useControlPanel(props, ref);
 
   const { selectedRecord, fillEditable, strokeEditable, typographyEditable } = viewModel;
 
   return (
-    <Panel {...props} ref={ref} as="div" role="toolbar" className={clsx(styles.root, props.className)} placement="right">
+    <Panel
+      role="toolbar"
+      {...props}
+      ref={ref}
+      as={ControlPanelElementType}
+      className={clsx(styles.root, props.className)}
+      placement="right"
+    >
       <LayerTransformSection selected={selectedRecord?.key} />
       {fillEditable && <LayerFillSection selected={selectedRecord?.key} />}
       {strokeEditable && <LayerStrokeSection selected={selectedRecord?.key} />}

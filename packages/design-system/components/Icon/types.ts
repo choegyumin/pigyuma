@@ -59,4 +59,4 @@ export interface IconProps
   flipY?: MDIIconProps['vertical'];
   spin?: MDIIconProps['spin'];
 }
-export type IconRef = SVGElement;
+export type IconRefInstance = SVGElement;

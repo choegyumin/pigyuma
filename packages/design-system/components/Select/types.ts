@@ -1,12 +1,25 @@
 import {
+  SelectItemElementType as PrimitiveSelectItemElementType,
   SelectItemProps as PrimitiveSelectItemProps,
-  SelectItemRef as PrimitiveSelectItemRef,
+  SelectItemRefInstance as PrimitiveSelectItemRefInstance,
   SelectProps as PrimitiveSelectProps,
 } from '@/primitives/Select';
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 
-export interface SelectProps extends Omit<ComponentPropsWithoutRefByBox<'span'>, keyof PrimitiveSelectProps>, PrimitiveSelectProps {}
-export type SelectRef = ComponentElementRefByBox<'span'>;
+export const SelectElementType = 'span';
+export type SelectElementType = typeof SelectElementType;
 
-export interface SelectItemProps extends PrimitiveSelectItemProps {}
-export type SelectItemRef = PrimitiveSelectItemRef;
+export interface SelectCustomProps {}
+
+export interface SelectProps
+  extends Omit<React.ComponentPropsWithoutRef<'span'>, keyof PrimitiveSelectProps>,
+    PrimitiveSelectProps,
+    SelectCustomProps {}
+export type SelectRefInstance = React.ElementRef<SelectElementType>;
+
+export const SelectItemElementType = PrimitiveSelectItemElementType;
+export type SelectItemElementType = typeof SelectItemElementType;
+
+export interface SelectItemCustomProps {}
+
+export interface SelectItemProps extends PrimitiveSelectItemProps, SelectItemCustomProps {}
+export type SelectItemRefInstance = PrimitiveSelectItemRefInstance;

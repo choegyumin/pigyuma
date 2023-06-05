@@ -2,10 +2,9 @@ import { useEvent, useForkedRef, useWatch } from '@pigyuma/react-utils';
 import { Artboard, TextLayer, useUIController, useUIData } from '@pigyuma/ui-design-tool';
 import { ExcludeUIRecordWithChildren, ExtractUIRecordWithChildren, hasUIRecordChildren } from '@pigyuma/ui-design-tool/utils/model';
 import { useEffect, useId, useState } from 'react';
-import { LayerListItemProps, LayerListItemRef } from './types';
+import { LayerListItemProps, LayerListItemRefInstance } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function useLayerListItem(props: LayerListItemProps, ref: React.ForwardedRef<LayerListItemRef>) {
+export default function useLayerListItem(props: LayerListItemProps, ref: React.ForwardedRef<LayerListItemRefInstance>) {
   const componentId = useId();
 
   const forkedRef = useForkedRef(ref);

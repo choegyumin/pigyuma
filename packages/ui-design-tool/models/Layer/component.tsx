@@ -10,10 +10,10 @@ export interface LayerProps {
   data: Layer;
 }
 
-export type LayerRef = HTMLDivElement;
+export type LayerRefInstance = HTMLDivElement;
 
 /** @todo component와 model의 개념을 지속해서 반대로 가져갈 것인지 검토 */
-export const RawLayerComponent = React.forwardRef<LayerRef, LayerProps>((props, ref) => {
+export const RawLayerComponent = React.forwardRef<LayerRefInstance, LayerProps>((props, ref) => {
   const { data: layer, ...restProps } = props;
 
   if (layer instanceof ShapeLayer) {

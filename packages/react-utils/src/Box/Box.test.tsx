@@ -5,29 +5,30 @@ import { vi } from 'vitest';
 import Box from './Box';
 
 describe('<Box />', () => {
-  test('should render correctly', () => {
-    const { asFragment } = render(<Box />);
-    expect(asFragment).toMatchSnapshot();
-  });
-
   test('should render box to div element', () => {
     const { container } = render(<Box />);
     const box = container.firstElementChild;
 
-    expect(box?.tagName).toBe('DIV');
     expect(box).toBeInstanceOf(HTMLDivElement);
   });
 
   test('should render box to span element', () => {
-    const { container } = render(<Box as="span" />);
+    const { container } = render(<Box as="button" />);
     const box = container.firstElementChild;
 
-    expect(box?.tagName).toBe('SPAN');
-    expect(box).toBeInstanceOf(HTMLSpanElement);
+    expect(box).toBeInstanceOf(HTMLButtonElement);
+  });
+
+  test('should render box to MyComponent element', () => {
+    const MyComponent = () => <input />;
+    const { container } = render(<Box as={MyComponent} />);
+    const box = container.firstElementChild;
+
+    expect(box).toBeInstanceOf(HTMLInputElement);
   });
 
   test('should ref is correct element', () => {
-    const ref = React.createRef();
+    const ref = React.createRef<HTMLDivElement>();
     const { container } = render(<Box ref={ref} />);
     const box = container.firstElementChild;
 
@@ -38,7 +39,7 @@ describe('<Box />', () => {
     const user = userEvent.setup();
 
     const onClick = vi.fn();
-    const { container } = render(<Box className="class" data-test="data" onClick={onClick} />);
+    const { container } = render(<Box className="class" data-attribute="data" onClick={onClick} />);
     const box = container.firstElementChild;
 
     if (box) {
@@ -46,7 +47,7 @@ describe('<Box />', () => {
     }
 
     expect(box?.className).toBe('class');
-    expect(box?.getAttribute('data-test')).toBe('data');
+    expect(box?.getAttribute('data-attribute')).toBe('data');
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

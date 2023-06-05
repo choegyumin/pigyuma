@@ -8,9 +8,9 @@ export interface CanvasProps {
   data: Canvas;
 }
 
-export type CanvasRef = HTMLDivElement;
+export type CanvasRefInstance = HTMLDivElement;
 
-export const RawCanvasComponent = React.forwardRef<CanvasRef, CanvasProps>((props, ref) => {
+export const RawCanvasComponent = React.forwardRef<CanvasRefInstance, CanvasProps>((props, ref) => {
   const { data: canvas, ...restProps } = props;
 
   return (

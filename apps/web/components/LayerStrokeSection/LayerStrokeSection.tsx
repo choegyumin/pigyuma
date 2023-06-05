@@ -7,10 +7,10 @@ import LayerField from '../LayerField';
 import LayerFieldset from '../LayerFieldset';
 import Panel from '../Panel';
 import * as styles from './LayerStrokeSection.css';
-import { LayerStrokeSectionProps, LayerStrokeSectionRef } from './types';
+import { LayerStrokeSectionElementType, LayerStrokeSectionProps, LayerStrokeSectionRefInstance } from './types';
 import useLayerStrokeSection from './useLayerStrokeSection';
 
-const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRef, LayerStrokeSectionProps>((props, ref) => {
+const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRefInstance, LayerStrokeSectionProps>((props, ref) => {
   const viewModel = useLayerStrokeSection(props, ref);
 
   const {
@@ -28,7 +28,7 @@ const LayerStrokeSection = React.forwardRef<LayerStrokeSectionRef, LayerStrokeSe
   const { selected, className, ...restProps } = props;
 
   return (
-    <Panel.Group as="div" {...restProps} ref={ref} className={clsx(styles.root, className)} heading="Stroke">
+    <Panel.Group {...restProps} ref={ref} as={LayerStrokeSectionElementType} className={clsx(styles.root, className)} heading="Stroke">
       <LayerFieldset>
         <LayerField label="Color">
           <ColorPicker value={strokeColor} onChange={onStrokeColorChange} disabled={!editable} />

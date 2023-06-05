@@ -2,13 +2,13 @@ import { Box } from '@pigyuma/react-utils';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './LayerField.css';
-import { LayerFieldProps, LayerFieldRef } from './types';
+import { LayerFieldElementType, LayerFieldProps, LayerFieldRefInstance } from './types';
 
-const LayerField = React.forwardRef<LayerFieldRef, LayerFieldProps>((props, ref) => {
+const LayerField = React.forwardRef<LayerFieldRefInstance, LayerFieldProps>((props, ref) => {
   const { label, className, children, ...restProps } = props;
 
   return (
-    <Box {...restProps} ref={ref} as="div" className={clsx(styles.root, className)}>
+    <Box {...restProps} ref={ref} as={LayerFieldElementType} className={clsx(styles.root, className)}>
       {label != null && <div className={styles.label}>{label}</div>}
       <div className={styles.content}>{children}</div>
     </Box>

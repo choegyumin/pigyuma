@@ -7,9 +7,9 @@ import Color from 'color';
 import React from 'react';
 import FieldTrigger from '../FieldTrigger';
 import * as styles from './ColorPicker.css';
-import { ColorPickerProps, ColorPickerRef } from './types';
+import { ColorPickerElementType, ColorPickerProps, ColorPickerRefInstance } from './types';
 
-const ColorPicker = React.forwardRef<ColorPickerRef, ColorPickerProps>((props, ref) => {
+const ColorPicker = React.forwardRef<ColorPickerRefInstance, ColorPickerProps>((props, ref) => {
   const { className, ...rootProps } = omit(props, InputOnlyHTMLAttributeKeys) as Omit<
     typeof props,
     keyof InputOnlyHTMLAttributes<HTMLInputElement>
@@ -28,7 +28,7 @@ const ColorPicker = React.forwardRef<ColorPickerRef, ColorPickerProps>((props, r
   });
 
   return (
-    <Box as="span" {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box {...rootProps} ref={ref} as={ColorPickerElementType} className={clsx(styles.root, className)}>
       <FieldTrigger className={styles.trigger} aria-hidden={true}>
         <button type="button">
           <span className={styles.color} style={{ [styles.varNames.color]: color }} />

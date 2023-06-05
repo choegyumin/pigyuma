@@ -1,7 +1,12 @@
 import { TextInputProps as PrimitiveTextInputProps } from '@/primitives/TextInput';
-import { ComponentElementRefByBox, ComponentPropsWithoutRefByBox } from '@pigyuma/react-utils';
+
+export const TextFieldElementType = 'span';
+export type TextFieldElementType = typeof TextFieldElementType;
+
+export interface TextFieldCustomProps {}
 
 export interface TextFieldProps
-  extends Omit<ComponentPropsWithoutRefByBox<'span'>, keyof PrimitiveTextInputProps>,
-    PrimitiveTextInputProps {}
-export type TextFieldRef = ComponentElementRefByBox<'span'>;
+  extends Omit<React.ComponentPropsWithoutRef<'span'>, keyof PrimitiveTextInputProps>,
+    PrimitiveTextInputProps,
+    TextFieldCustomProps {}
+export type TextFieldRefInstance = React.ElementRef<TextFieldElementType>;

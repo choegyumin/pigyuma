@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 import Icon from './Icon';
-import { IconRef } from './types';
+import { IconRefInstance } from './types';
 
 describe('<Icon />', () => {
   test('should render correctly', () => {
@@ -13,7 +13,7 @@ describe('<Icon />', () => {
   });
 
   test('should ref is correctly', () => {
-    const ref = React.createRef<IconRef>();
+    const ref = React.createRef<IconRefInstance>();
     const { container } = render(<Icon type="square" ref={ref} />);
     const icon = container.firstElementChild;
 

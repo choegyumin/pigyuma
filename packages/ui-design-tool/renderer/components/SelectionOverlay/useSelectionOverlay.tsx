@@ -1,5 +1,6 @@
 import { Artboard } from '@/models/Artboard/model';
 import { Layer } from '@/models/Layer/model';
+import { ShapeLayer } from '@/models/ShapeLayer/model';
 import useSelected from '@/renderer/hooks/useSelected';
 import useUIRecordForInteraction from '@/renderer/hooks/useUIRecordForInteraction';
 import useRenderUtils from './useRenderUtils';
@@ -17,7 +18,8 @@ export default function useSelectionOverlay() {
     return;
   }
 
-  const resizable = actived && (record instanceof Layer || record instanceof Artboard);
+  /** @todo TextLayer resize 기능 지원 후 ShapeLayer를 Layer로 대체 */
+  const resizable = actived && (record instanceof ShapeLayer || record instanceof Artboard);
   const rotatable = actived && record instanceof Layer;
 
   const rootStyle = actived ? getRootStyle(record) : {};

@@ -1,10 +1,13 @@
 import { NumberInputOnlyHTMLAttributes } from '@pigyuma/react-utility-types';
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
+import React from 'react';
 
 type Value = number | null;
 
-interface NumberInputCustomProps {
-  type?: Extract<ComponentPropsWithoutRefByBox<'input'>['type'], 'number' | 'range'>;
+export const NumberInputElementType = 'input';
+export type NumberInputElementType = typeof NumberInputElementType;
+
+export interface NumberInputCustomProps {
+  type?: Extract<React.ComponentPropsWithoutRef<'input'>['type'], 'number' | 'range'>;
   value?: Value;
   defaultValue?: Value;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>, value: Value) => void;
@@ -13,6 +16,6 @@ interface NumberInputCustomProps {
 }
 
 export interface NumberInputProps
-  extends Omit<ComponentPropsWithoutRefByBox<'span'> & NumberInputOnlyHTMLAttributes<HTMLInputElement>, keyof NumberInputCustomProps>,
+  extends Omit<React.ComponentPropsWithoutRef<'span'> & NumberInputOnlyHTMLAttributes<HTMLInputElement>, keyof NumberInputCustomProps>,
     NumberInputCustomProps {}
-export type NumberInputRef = ComponentElementRefByBox<'input'>;
+export type NumberInputRefInstance = React.ElementRef<NumberInputElementType>;

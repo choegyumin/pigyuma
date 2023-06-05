@@ -6,9 +6,9 @@ import clsx from 'clsx';
 import React from 'react';
 import FieldTrigger from '../FieldTrigger';
 import * as styles from './TextArea.css';
-import { TextAreaProps, TextAreaRef } from './types';
+import { TextAreaElementType, TextAreaProps, TextAreaRefInstance } from './types';
 
-const TextArea = React.forwardRef<TextAreaRef, TextAreaProps>((props, ref) => {
+const TextArea = React.forwardRef<TextAreaRefInstance, TextAreaProps>((props, ref) => {
   const { autoSelect, className, ...rootProps } = omit(props, TextareaOnlyHTMLAttributeKeys) as Omit<
     typeof props,
     keyof TextareaOnlyHTMLAttributes<HTMLTextAreaElement>
@@ -20,7 +20,7 @@ const TextArea = React.forwardRef<TextAreaRef, TextAreaProps>((props, ref) => {
   >;
 
   return (
-    <Box as="span" {...rootProps} ref={ref} className={clsx(styles.root, className)}>
+    <Box {...rootProps} ref={ref} as={TextAreaElementType} className={clsx(styles.root, className)}>
       <FieldTrigger>
         <PrimitiveTextArea {...inputProps} autoSelect={autoSelect} />
       </FieldTrigger>

@@ -1,8 +1,8 @@
 import { useEvent, Box } from '@pigyuma/react-utils';
 import React from 'react';
-import { TextInputProps, TextInputRef } from './types';
+import { TextInputElementType, TextInputProps, TextInputRefInstance } from './types';
 
-const TextInput = React.forwardRef<TextInputRef, TextInputProps>((props, ref) => {
+const TextInput = React.forwardRef<TextInputRefInstance, TextInputProps>((props, ref) => {
   const { type = 'text', autoSelect, onChange, onChangeCapture, onFocusCapture, ...rootProps } = props;
 
   const onFieldChange = useEvent((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +27,7 @@ const TextInput = React.forwardRef<TextInputRef, TextInputProps>((props, ref) =>
     <Box
       {...rootProps}
       ref={ref}
-      as="input"
+      as={TextInputElementType}
       type={type}
       onChange={onFieldChange}
       onChangeCapture={onFieldChangeCapture}

@@ -1,6 +1,10 @@
-import { ComponentPropsWithoutRefByBox, ComponentElementRefByBox } from '@pigyuma/react-utils';
 import { UIDesignCanvasProps } from '@pigyuma/ui-design-tool';
+import React from 'react';
 
-export interface WorkspaceProps extends ComponentPropsWithoutRefByBox<'div'>, UIDesignCanvasProps {}
+export const WorkspaceElementType = 'div';
+export type WorkspaceElementType = typeof WorkspaceElementType;
 
-export type WorkspaceRef = ComponentElementRefByBox<'div'>;
+export interface WorkspaceCustomProps extends Pick<UIDesignCanvasProps, 'initialData'> {}
+
+export interface WorkspaceProps extends React.ComponentPropsWithoutRef<WorkspaceElementType>, WorkspaceCustomProps {}
+export type WorkspaceRefInstance = React.ElementRef<WorkspaceElementType>;
