@@ -14,7 +14,7 @@ describe('Artboard', () => {
     y: 200,
     width: 300,
     height: 400,
-    fill: 'whyte',
+    fill: 'white',
     children: [],
   };
   const artboardJSON: ArtboardJSON = {
@@ -39,7 +39,7 @@ describe('Artboard', () => {
       [styles.varNames.y]: '200px',
       [styles.varNames.width]: '300px',
       [styles.varNames.height]: '400px',
-      [styles.varNames.background]: 'whyte',
+      [styles.varNames.background]: 'white',
     });
     expect(artboard.style).toEqual(Artboard.getStyle(artboardJSON));
   });
