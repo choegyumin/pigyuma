@@ -1,4 +1,3 @@
-// @ts-nocheck
 /* eslint-disable */
 
 import React from 'react';
@@ -19,7 +18,8 @@ const Foo = React.forwardRef<FooRefInstance, FooProps>((props, ref) => {
 Foo.displayName = 'Foo';
 
 interface BarProps extends React.ComponentPropsWithoutRef<'label'> {
-  test: string;
+  string: string;
+  optionalNumber?: number;
 }
 type BarRefInstance = React.ElementRef<'label'>;
 
@@ -41,11 +41,10 @@ type FromBarProps = DynamicComponentPropsWithoutRef<typeof Bar>;
 type FromBarRefInstance = React.ElementRef<typeof Foo>;
 type FromBarType = React.ElementType<typeof Foo>;
 
-type FooHTMLForProp = FooProps['htmlFor'];
-type BarHTMLForProp = BarProps['htmlFor'];
-
-type FooTestProp = FooProps['test'];
-type BarTestProp = BarProps['test'];
+type ErrorProp = FooProps['any'] | BarProps['any'];
+type HTMLForProp = FooProps['htmlFor'] | BarProps['htmlFor'];
+type StringProp = BarProps['string'];
+type OptionalNumberProp = BarProps['optionalNumber'];
 
 const SuccessSample = () => {
   // prettier-ignore
@@ -59,8 +58,8 @@ const SuccessSample = () => {
       <Box as="input" value="Hello" />
       {/* Foo(label) Box는 `htmlFor`를 받을 수 있어야 한다. */}
       <Box as={Foo} htmlFor="id" />
-      {/* Bar(label) Box는 `htmlFor`와 `test`를 받을 수 있어야 한다. */}
-      <Box as={Bar} htmlFor="id" test="dummy" />
+      {/* Bar(label) Box는 `htmlFor`와 `string`, `optionalNumber`를 받을 수 있어야 한다. */}
+      <Box as={Bar} htmlFor="id" string="s" optionalNumber={undefined} />
     </>
   );
 };
@@ -77,10 +76,10 @@ const FailureSample = () => {
       <Box as="p" value="Hello" />
       {/* Foo(label) Box는 `test`를 받으면 오류가 발생해야 한다. */}
       <Box as={Foo} test="dummy" />
-      {/* Bar(label) Box는 `test`를 받지 못하면 오류가 발생해야 한다. */}
+      {/* Bar(label) Box는 `string`를 받지 못하면 오류가 발생해야 한다. */}
       <Box as={Bar} htmlFor="id" />
-      {/* Bar(label) Box는 `test`로 number를 받으면 오류가 발생해야 한다. */}
-      <Box as={Bar} htmlFor="id" test={0} />
+      {/* Bar(label) Box는 `optionalNumber`로 string을 받으면 오류가 발생해야 한다. */}
+      <Box as={Bar} htmlFor="id" string="s" optionalNumber="s" />
     </>
   );
 };
