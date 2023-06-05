@@ -5,7 +5,16 @@ import { SelectItemElementType, SelectItemProps, SelectItemRefInstance } from '.
 const SelectItem = React.forwardRef<SelectItemRefInstance, SelectItemProps>((props, ref) => {
   const { value, ...rootProps } = props;
 
-  return <Box {...rootProps} ref={ref} as={SelectItemElementType} data-value={JSON.stringify(value)} data-value-type={typeof value} />;
+  return (
+    <Box
+      {...rootProps}
+      ref={ref}
+      as={SelectItemElementType}
+      value={value}
+      data-value={JSON.stringify(value)}
+      data-value-type={typeof value}
+    />
+  );
 });
 SelectItem.displayName = 'SelectItem';
 

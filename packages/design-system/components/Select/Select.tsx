@@ -44,7 +44,7 @@ const Select = React.forwardRef<SelectRefInstance, SelectProps>((props, ref) => 
       <FieldTrigger className={styles.trigger} aria-hidden={true}>
         <button type="button" dangerouslySetInnerHTML={{ __html: triggerInnerHTML }} />
       </FieldTrigger>
-      <PrimitiveSelect {...selectProps} className={styles.select} onChange={onSelectChange} ref={selectRef}>
+      <PrimitiveSelect {...selectProps} className={styles.select} value={selected} onChange={onSelectChange} ref={selectRef}>
         {children}
       </PrimitiveSelect>
     </Box>
