@@ -1,24 +1,24 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
-    "dev": {
-      "cache": false
-    },
-    "format": {
-      "outputs": []
-    },
-    "lint": {
-      "outputs": []
+    "start": {
+      "cache": false,
+      "persistent": true
     },
     "test": {
-      "outputs": []
+      "cache": false,
+      "persistent": true
     },
     "coverage": {
-      "outputs": []
+      "outputs": ["coverage/**"]
     }
   }
 }

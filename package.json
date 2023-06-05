@@ -7,12 +7,13 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
-    "lint": "TIMING=1 eslint \"{apps,packages,tools}/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
+    "build": "turbo run build",
+    "start": "turbo run start",
     "test": "turbo run test",
     "coverage": "turbo run coverage",
+    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,md}\" --ignore-path .prettierignore --write",
+    "lint": "TIMING=1 eslint \"{apps,packages,tools}/**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore --resolve-plugins-relative-to .",
     "postinstall": "husky install",
     "commit": "git-cz"
   },
