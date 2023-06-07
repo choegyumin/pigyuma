@@ -8,28 +8,28 @@ interface Person {
 
 describe('findLinked', () => {
   const grandFather: Person = {
-    name: '최최최',
+    name: '할아버지',
   };
   const father: Person = {
-    name: '최최',
+    name: '아빠',
     father: grandFather,
   };
   const mother: Person = {
-    name: '권권',
+    name: '엄마',
   };
   const me: Person = {
-    name: '최',
+    name: '나',
     father,
     mother,
   };
 
   test('should find linked object with property and predicate', () => {
-    const result = findLinked(me, 'father', (person) => person.name === '최최');
+    const result = findLinked(me, 'father', (person) => person.name === '아빠');
     expect(result).toBe(father);
   });
 
   test('should return undefined if no linked object matches predicate', () => {
-    const result = findLinked(me, 'father', (person) => person.name === '권권');
+    const result = findLinked(me, 'father', (person) => person.name === '엄마');
     expect(result).toBeUndefined();
   });
 
@@ -39,23 +39,23 @@ describe('findLinked', () => {
   });
 
   test('should find linked object itself with self option', () => {
-    const result = findLinked(me, 'father', (person) => person.name === '최', { self: true });
+    const result = findLinked(me, 'father', (person) => person.name === '나', { self: true });
     expect(result).toBe(me);
   });
 
   test('should return undefined if find itself without self option', () => {
-    const result = findLinked(me, 'father', (person) => person.name === '최');
+    const result = findLinked(me, 'father', (person) => person.name === '나');
     expect(result).toBeUndefined();
   });
 
   test('should find deep linked object', () => {
-    const result = findLinked(me, 'father', (person) => person.name === '최최최');
+    const result = findLinked(me, 'father', (person) => person.name === '할아버지');
     expect(result).toBe(grandFather);
   });
 
   test('should find linked object with property getter and predicate', () => {
     const getParent = (person?: Person) => (person?.mother ? 'mother' : 'father');
-    const result = findLinked(me, getParent, (person) => person.name === '권권');
+    const result = findLinked(me, getParent, (person) => person.name === '엄마');
     expect(result).toBe(mother);
   });
 });

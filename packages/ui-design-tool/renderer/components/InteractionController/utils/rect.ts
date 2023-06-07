@@ -135,7 +135,6 @@ interface CalcRotatedRectOptions {
 
 export const calcRotatedRect = (
   rect: UIRecordRect,
-  rotate: number,
   mousePoint: { x: number; y: number },
   handleCoordDegrees: number,
   options: CalcRotatedRectOptions = {},
@@ -144,7 +143,6 @@ export const calcRotatedRect = (
 
   const fixValue = precision ? (value: number) => value : (value: number) => Math.round(value);
 
-  // rect.rotate는 조상을 포함해 계산된 값이므로, rotate를 사용함
   const newRectInit: UIRecordRectInit = pick(rect, ['x', 'y', 'width', 'height', 'rotate']);
 
   let newRotate = calcDegreesBetweenCoords(
@@ -155,10 +153,11 @@ export const calcRotatedRect = (
     mousePoint,
   );
   newRotate -= handleCoordDegrees;
-  newRotate += rotate;
+  newRotate += rect.rotate;
   newRotate = fixValue(newRotate);
+  newRotate = toDegrees360(newRotate);
 
-  newRectInit.rotate = toDegrees360(newRotate);
+  newRectInit.rotate = newRotate;
 
   return UIRecordRect.fromRect(newRectInit);
 };

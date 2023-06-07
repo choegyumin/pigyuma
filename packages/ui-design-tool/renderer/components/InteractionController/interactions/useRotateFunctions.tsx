@@ -84,9 +84,7 @@ export default function useRotateFunctions() {
       const handleCoordDegrees = rotateHandleCoordDegreesRef.current;
 
       const newRect =
-        handleCoordDegrees != null
-          ? calcRotatedRect(initialRect, (record as RotatableUIRecord).rotate.degrees, offsetPoint, handleCoordDegrees, { precision })
-          : initialRect;
+        handleCoordDegrees != null ? calcRotatedRect(initialRect, offsetPoint, handleCoordDegrees, { precision }) : initialRect;
 
       if (!isEqual(newRect.toJSON(), lastRect?.toJSON())) {
         setRef(transformLastRectRef, newRect);

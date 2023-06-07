@@ -7,9 +7,16 @@ import { UIRecord, UIRecordData } from '@/models/UIRecord/model';
 import { UIRecordRect, UIRecordRectInit } from '@/types/Geometry';
 import { UIRecordKey } from '@/types/Identifier';
 import { UIDesignToolInteractionType, UIDesignToolMode, UIDesignToolStatus, UIDesignToolTransformMethod } from '@/types/Status';
-import { flatUIRecords, hasUIRecordParent, isUIRecordKey, isUIRecordWithChildren, toUIRecordInstance } from '@/utils/model';
+import {
+  flatUIRecords,
+  hasUIRecordParent,
+  isUIRecordKey,
+  isUIRecordWithChildren,
+  toUIRecordInstance,
+  isRotatableUIRecord,
+} from '@/utils/model';
 import { getInteractionType, getTransformMethod } from '@/utils/status';
-import { exclude, makeSymbolicFields, nonNullable, nonUndefined, pickBy, uuid } from '@pigyuma/utils';
+import { exclude, reduceLinked, makeSymbolicFields, nonNullable, nonUndefined, pickBy, uuid, toDegrees360 } from '@pigyuma/utils';
 import { DataSubscriber } from './DataSubscriber';
 import { DOMSelector } from './DOMSelector';
 
@@ -150,12 +157,23 @@ export class DataStore extends DataSubscriber {
     const parentValue = targetValue.parent;
     const parentElement = DOMSelector.query({ key: parentValue.key }, DOMSelector.root(this.#id));
     const parentRect = parentElement != null ? UIRecordRect.fromElement(parentElement) : new UIRecordRect(0, 0, 0, 0, 0);
+    const inheritedRotate = reduceLinked(
+      targetValue,
+      'parent',
+      (acc, cur) => {
+        if (isRotatableUIRecord(cur)) {
+          return acc + cur.rotate.degrees;
+        }
+        return acc;
+      },
+      { initialValue: 0 },
+    );
 
     const x = rect.x - parentRect.x;
     const y = rect.y - parentRect.y;
     const width = rect.width;
     const height = rect.height;
-    const rotate = rect.rotate;
+    const rotate = toDegrees360(rect.rotate - inheritedRotate);
 
     /** @todo px 외 lengthType(unit) 지원 */
     const newChanges = {} as C;
