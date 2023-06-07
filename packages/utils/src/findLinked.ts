@@ -1,4 +1,4 @@
-export interface findLinkedOptions {
+export interface FindLinkedOptions {
   self?: boolean;
 }
 
@@ -15,19 +15,19 @@ function findLinked<T extends object>(
   item: T | undefined,
   prop: Prop<T> | GetProp<T>,
   predicate: Predicate<T>,
-  options?: findLinkedOptions,
+  options?: FindLinkedOptions,
 ): T | undefined;
 function findLinked<T extends object, R extends object>(
   item: T | undefined,
   prop: PropWithResult<T, R> | GetPropWithResult<T, R>,
   predicate: PredicateWithResult<T, R>,
-  options?: findLinkedOptions,
+  options?: FindLinkedOptions,
 ): R | undefined;
 function findLinked<T extends object, R extends object = T>(
   item: T | undefined,
   prop: PropWithResult<T, R> | GetPropWithResult<T, R>,
   predicate: PredicateWithResult<T, R>,
-  options: findLinkedOptions = {},
+  options: FindLinkedOptions = {},
 ): R | undefined {
   const { self = false } = options;
 

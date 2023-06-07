@@ -35,6 +35,7 @@ export { default as omitBy } from 'lodash-es/omitBy';
 export { default as pascalCase } from './pascalCase';
 export { default as pick } from 'lodash-es/pick';
 export { default as pickBy } from 'lodash-es/pickBy';
+export { default as reduceLinked } from './reduceLinked';
 export { default as snakeCase } from 'lodash-es/snakeCase';
 export { default as toCorrectFloat } from './toCorrectFloat';
 export { default as toDegrees } from './toDegrees';
